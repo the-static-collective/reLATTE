@@ -60,6 +60,8 @@ The portable P-256 public key identity is exactly:
 
 Runtime/export metadata such as `ext` or `key_ops` is not identity-bearing here because different conforming runtimes may serialize it differently.
 
+Both `x` and `y` MUST be the canonical unpadded base64url encoding of exactly 32 coordinate bytes. Alternate textual encodings of the same bytes are rejected rather than normalized, so key identity has one portable textual form.
+
 A JWK containing private member `d` is rejected.
 
 ```text
@@ -168,14 +170,18 @@ Signature profile:
 algorithm field: ECDSA-P256-SHA256
 curve: P-256
 hash: SHA-256
-portable signature encoding: unpadded base64url of Web Crypto ECDSA signature bytes
+portable signature encoding: canonical unpadded base64url of the 64 raw P-256 ECDSA signature bytes
 signing.domain field: relatte.crossing-signature/v0
 ```
 
-Verification requires both:
+Verification requires all of the following:
 
-1. the stored `crossing_id` exactly equals a fresh derivation from the envelope; and
-2. the public key verifies the signature over the exact signature bytes above.
+1. the envelope contains no unknown root fields and its `signing` object contains no unknown fields;
+2. the stored `crossing_id` exactly equals a fresh derivation from the envelope;
+3. public-key coordinates and signature text use their single canonical base64url forms; and
+4. the public key verifies the signature over the exact signature bytes above.
+
+The same closed-field guard applies to receipts. This is deliberately narrower than full JSON Schema validation: nested payload/reference semantics and the rest of R1 structural validation remain separate work.
 
 Changing only `crossing_id` therefore fails verification even though the ID is not part of its own hash preimage.
 
@@ -246,7 +252,9 @@ The v0 witness currently proves:
 - wrong public key fails verification;
 - wrong signing domain fails verification;
 - crossing and receipt may be signed by distinct P-256 keys;
-- a serialized crossing verifies in a fresh Node process using only portable public material;
+- serialized crossings and receipts verify in fresh Node processes using only portable public material;
+- unknown root/signing fields cannot ride beside a valid signature as unsigned data;
+- non-canonical P-256 coordinate or signature text is rejected;
 - fixed signed crossing/receipt fixtures verify without committed private keys.
 
 The fixtures live at:
