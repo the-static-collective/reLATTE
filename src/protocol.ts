@@ -1,4 +1,9 @@
-import { canonicalizeDomainValue, sha256Hex, validateTimestamp } from './canonical.ts';
+import {
+  canonicalizeDomainValue,
+  sha256Hex,
+  validateForCanonicalization,
+  validateTimestamp,
+} from './canonical.ts';
 
 export const CROSSING_ID_DOMAIN = 'reLATTE-CrossingEnvelope-v0|';
 export const CROSSING_SIGNATURE_DOMAIN = 'reLATTE-CrossingSignature-v0|';
@@ -129,6 +134,7 @@ function signingIdentity(signingValue: unknown, expectedDomain: string): Record<
 
 export function constructCrossingIdentityBody(envelopeValue: unknown): Record<string, unknown> {
   const envelope = asRecord(envelopeValue);
+  validateForCanonicalization(envelope);
   assertOnlyKeys(envelope, CROSSING_ENVELOPE_KEYS, 'UNEXPECTED_CROSSING_FIELD');
   if (envelope.schema !== 'relatte.crossing-envelope/v0') throw new Error('INVALID_SCHEMA');
   if (envelope.protocol_version !== '0') throw new Error('INVALID_PROTOCOL_VERSION');
@@ -169,6 +175,7 @@ export function crossingSignatureBytes(envelope: unknown): Buffer {
 
 export function constructReceiptIdentityBody(receiptValue: unknown): Record<string, unknown> {
   const receipt = asRecord(receiptValue);
+  validateForCanonicalization(receipt);
   assertOnlyKeys(receipt, RECEIPT_KEYS, 'UNEXPECTED_RECEIPT_FIELD');
   if (receipt.schema !== 'relatte.receipt/v0') throw new Error('INVALID_SCHEMA');
   const createdAt = requiredString(receipt, 'created_at');
