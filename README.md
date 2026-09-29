@@ -70,6 +70,7 @@ The first slice is:
 - [Architecture](docs/ARCHITECTURE.md)
 - [Organ Registry](docs/ORGAN-REGISTRY.md)
 - [Roadmap](docs/ROADMAP.md)
+- [Early Source Packet — authority, replay, witness, sovereign histories](docs/research/EARLY-SOURCE-PACKET.md)
 
 It proposes that the stable nonfungible object is not a coin or token but a **particular consequential relation/crossing**.
 
