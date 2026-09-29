@@ -129,3 +129,26 @@ test('stored genesis signed fixtures verify without private key material', async
   assert.equal(await verifyReceipt(receipt), true);
   assert.equal(receipt.crossing_id, crossing.crossing_id);
 });
+
+
+test('tampering only with the stored crossing id fails verification', async () => {
+  const keys = await generateP256KeyPair();
+  const envelope = await sealCrossingEnvelope(crossingDraft(), keys);
+  const tampered = {
+    ...envelope,
+    crossing_id: 'relatte-crossing-v0:' + '0'.repeat(64),
+  };
+  assert.equal(await verifyCrossingEnvelope(tampered), false);
+});
+
+test('tampering only with the stored receipt id fails verification', async () => {
+  const sourceKeys = await generateP256KeyPair();
+  const receiverKeys = await generateP256KeyPair();
+  const envelope = await sealCrossingEnvelope(crossingDraft(), sourceKeys);
+  const receipt = await sealReceipt(receiptDraft(envelope.crossing_id), receiverKeys);
+  const tampered = {
+    ...receipt,
+    receipt_id: 'relatte-receipt-v0:' + '0'.repeat(64),
+  };
+  assert.equal(await verifyReceipt(tampered), false);
+});

@@ -165,3 +165,30 @@ test('public signing metadata rejects private JWK material', () => {
   });
   assert.throws(() => computeCrossingId(privateKeyEnvelope), /PRIVATE_KEY_MATERIAL/);
 });
+
+
+test('P-256 coordinate changes alter identity while runtime-only JWK metadata does not', () => {
+  const base = crossing();
+  const withRuntimeMetadata = crossing({
+    signing: {
+      ...crossing().signing,
+      public_key: {
+        ...PUBLIC_JWK,
+        ext: true,
+        key_ops: ['verify'],
+      },
+    },
+  });
+  const withDifferentCoordinate = crossing({
+    signing: {
+      ...crossing().signing,
+      public_key: {
+        ...PUBLIC_JWK,
+        x: 'A' + PUBLIC_JWK.x.slice(1),
+      },
+    },
+  });
+
+  assert.equal(computeCrossingId(base), computeCrossingId(withRuntimeMetadata));
+  assert.notEqual(computeCrossingId(base), computeCrossingId(withDifferentCoordinate));
+});
