@@ -40,8 +40,8 @@
 
 1. **Journal truncation/corruption:** any non-empty malformed line must fail reconstruction with `CORRUPT_RECEIVER_JOURNAL`; never skip bad history. Covered in Task 1.
 2. **Duplicate final disposition:** a journal containing two final dispositions for one `crossing_id` must fail reconstruction with `CONFLICTING_DISPOSITION`; never last-write-wins. Covered in Task 1.
-3. **Crossing ID collision with different bytes:** receiving a second verified object with an already-known `crossing_id` but different canonical content must fail with `CROSSING_ID_CONFLICT`, not silently deduplicate. Covered in Task 2.
-4. **Disposition callback throws:** leave the crossing HELD, append no final disposition, and preserve protected state. Covered in Task 3.
+3. **Equivalent crossing with different valid signature bytes:** because signature bytes are excluded from crossing identity, a legitimately re-signed envelope with the same canonical identity body must deduplicate to the existing receiver record rather than conflict. Covered in Task 2.
+4. **Persisted semantic-state tampering:** a JSON-valid journal whose `protected_state_after` no longer matches the signed receipt's `post_state_ref` must fail reopening with `PERSISTED_STATE_REF_MISMATCH`; never trust unsigned local state blindly. Covered in Tasks 1–2.
 5. **Restart after final disposition:** delivering the same crossing after reopening the journal must return the established record/receipt and never run the disposition callback or state transition again. Covered in Task 4.
 
 ---
@@ -133,12 +133,16 @@ relatte-local-state-v0:<sha256 hex of UTF-8 canonicalize(value)>
 Replay rules:
 
 - first `RECEIVED` for a crossing creates `HELD`;
-- repeated byte-equivalent `RECEIVED` may be tolerated by projection but normal runtime must not append it;
-- repeated `RECEIVED` with different crossing content for the same ID throws `CROSSING_ID_CONFLICT`;
+- repeated `RECEIVED` may be tolerated only when `canonicalize(constructCrossingIdentityBody(crossing))` matches the already-recorded identity body; signature-byte differences alone are not a conflict;
+- repeated `RECEIVED` with a different canonical identity body for the same ID throws `CROSSING_ID_CONFLICT`;
 - `DISPOSED` without prior `RECEIVED` throws `ORPHAN_DISPOSITION`;
 - second `DISPOSED` for the same crossing throws `CONFLICTING_DISPOSITION`;
-- map `ADMIT → ADMITTED`, `REFUSE → REFUSED`, `RETURN → RETURNED`;
-- update projected protected state only from the single final `DISPOSED.protected_state_after`.
+- map `ADMIT → ADMITTED`, `REFUSE → REFUSED`, `RETURN → RETURNED` and reject mismatched persisted receipt kind/effect;
+- require `receipt.crossing_id === event.crossing_id`;
+- require `receipt.pre_state_ref === stateRef(currentProtectedState)` and `receipt.post_state_ref === stateRef(event.protected_state_after)`; otherwise throw `PERSISTED_STATE_REF_MISMATCH`;
+- require REFUSE and RETURN `protected_state_after` to be canonically equal to the prior protected state;
+- require ADMIT to produce a different state reference from the prior protected state;
+- update projected protected state only from the single validated final `DISPOSED.protected_state_after`.
 
 - [ ] **Step 6: Run focused journal tests and verify GREEN**
 
@@ -200,8 +204,14 @@ test('duplicate delivery while HELD is idempotent', async () => {
   // returned records are equivalent
 });
 
-test('same crossing id with different crossing bytes fails closed', async () => {
-  // use a test journal/projection conflict fixture
+test('equivalent re-signed crossing identity deduplicates despite signature-byte differences', async () => {
+  // seal the same draft twice with the same key and timestamp
+  // assert crossing_id matches
+  // receive both and assert one RECEIVED event / one HELD record
+});
+
+test('same crossing id with a different identity body fails closed', async () => {
+  // construct a hostile persisted fixture rather than relying on a hash collision at runtime
   // assert /CROSSING_ID_CONFLICT/
 });
 ```
@@ -218,7 +228,9 @@ Expected: FAIL because `ReceiverRuntime` does not exist.
 
 - [ ] **Step 3: Implement `ReceiverRuntime.open()`, `get()`, and `getProtectedState()`**
 
-`open()` must read all journal events and reconstruct the projection before returning.
+`open()` must read all journal events, re-verify every persisted `RECEIVED.crossing`, re-verify every persisted `DISPOSED.receipt`, confirm each receipt names `identity.worldId` and `identity.receiverParticular`, and only then reconstruct the projection. Reject failures with `INVALID_PERSISTED_CROSSING`, `INVALID_PERSISTED_RECEIPT`, or `RECEIVER_IDENTITY_MISMATCH` as appropriate.
+
+Projection replay then enforces the signed pre/post state-reference links, so tampered `protected_state_after` fails with `PERSISTED_STATE_REF_MISMATCH`.
 
 `getProtectedState()` returns the current reconstructed protected JSON state without mutation.
 
@@ -229,9 +241,9 @@ Required order:
 1. `await verifyCrossingEnvelope(envelope)`;
 2. reject false with `INVALID_CROSSING`;
 3. read `crossing_id` from the verified object;
-4. if an existing record is present, compare canonical crossing content:
-   - equivalent -> return existing record without append;
-   - different -> throw `CROSSING_ID_CONFLICT`;
+4. if an existing record is present, compare `canonicalize(constructCrossingIdentityBody(envelope))` with the stored crossing identity body:
+   - equivalent identity body -> return existing record without append, even when valid signature bytes differ;
+   - different identity body -> throw `CROSSING_ID_CONFLICT`;
 5. append one `RECEIVED` event using injected `now()` or current UTC timestamp;
 6. update/rebuild the local projection;
 7. return the resulting `HELD` record.
@@ -315,6 +327,16 @@ test('disposition callback failure leaves crossing HELD and appends no DISPOSED 
 test('disposing an unknown crossing fails', async () => {
   // assert /UNKNOWN_CROSSING/
 });
+
+test('ADMIT requires an actual protected-state change', async () => {
+  // ADMIT with canonically identical nextState rejects /ADMIT_REQUIRES_STATE_CHANGE/
+  // crossing remains HELD
+});
+
+test('RETURN requires at least one explicit descendant ref', async () => {
+  // RETURN with [] rejects /RETURN_REQUIRES_DESCENDANT/
+  // crossing remains HELD
+});
 ```
 
 - [ ] **Step 2: Run disposition tests and verify RED**
@@ -333,7 +355,8 @@ Keep the adapter deliberately bounded:
 
 - `ADMIT` must provide the complete next protected JSON state;
 - `REFUSE` cannot provide a next state;
-- `RETURN` cannot provide a next state and must provide explicit `descendantRefs`;
+- `RETURN` cannot provide a next state and must provide a non-empty explicit `descendantRefs` array;
+- `ADMIT` must change the canonical protected-state reference or reject with `ADMIT_REQUIRES_STATE_CHANGE`;
 - callers do not choose `ReceiptV0.semantic_effect`; runtime derives it from disposition.
 
 - [ ] **Step 4: Implement `ReceiverRuntime.dispose()`**
@@ -344,10 +367,10 @@ Required behavior:
 2. if already final, return the established record without calling `decide`;
 3. capture current protected state and pre-state ref;
 4. invoke `decide` with read-only crossing/state values;
-5. derive:
-   - `ADMIT → kind: 'ADMITTED', semantic_effect: 'local-state-change', protected_state_after = nextState`;
+5. validate the decision and derive:
+   - `ADMIT → kind: 'ADMITTED', semantic_effect: 'local-state-change', protected_state_after = nextState`; require a changed state ref;
    - `REFUSE → kind: 'REFUSED', semantic_effect: 'none', protected_state_after = prior state`;
-   - `RETURN → kind: 'RETURNED', semantic_effect: 'return-created', protected_state_after = prior state`;
+   - `RETURN → kind: 'RETURNED', semantic_effect: 'return-created', protected_state_after = prior state`; require at least one descendant ref;
 6. compute post-state ref from `protected_state_after`;
 7. build a `ReceiptV0` draft with:
    - `crossing_id`;
@@ -430,6 +453,11 @@ test('HELD survives restart without implicit admission', async () => {
 test('ADMITTED survives restart and duplicate delivery does not rerun disposition', async () => {
   // admit, reopen, receive same crossing, call dispose with callback that would throw if invoked
   // established ADMITTED record/receipt returns unchanged
+});
+
+test('reopen rejects JSON-valid tampering of protected_state_after', async () => {
+  // alter stored protected_state_after while leaving signed receipt unchanged
+  // open rejects /PERSISTED_STATE_REF_MISMATCH/
 });
 
 test('duplicate delivery before and after restart produces one protected-state transition', async () => {
