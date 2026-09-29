@@ -211,3 +211,32 @@ test('P-256 coordinates require canonical unpadded 32-byte base64url', () => {
   assert.throws(() => computeCrossingId(padded), /INVALID_PUBLIC_KEY/);
   assert.throws(() => computeCrossingId(short), /INVALID_PUBLIC_KEY/);
 });
+
+
+test('protocol identity rejects accessor fields before evaluating them', () => {
+  let evaluated = false;
+  const envelope = crossing();
+  Object.defineProperty(envelope, 'source_particular', {
+    enumerable: true,
+    get() {
+      evaluated = true;
+      throw new Error('must not execute');
+    },
+  });
+
+  assert.throws(() => computeCrossingId(envelope), /ACCESSOR_PROPERTY/);
+  assert.equal(evaluated, false);
+});
+
+test('protocol identity rejects symbol-keyed and non-enumerable root state', () => {
+  const symbolEnvelope = crossing() as Record<string | symbol, unknown>;
+  symbolEnvelope[Symbol('unsigned')] = 'hidden';
+  assert.throws(() => computeCrossingId(symbolEnvelope), /SYMBOL_KEYED_PROPERTY/);
+
+  const hiddenEnvelope = crossing();
+  Object.defineProperty(hiddenEnvelope, 'hidden', {
+    enumerable: false,
+    value: 'unsigned',
+  });
+  assert.throws(() => computeCrossingId(hiddenEnvelope), /NON_ENUMERABLE_PROPERTY/);
+});
