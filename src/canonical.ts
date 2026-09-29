@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { canonicalize as canonicalizeJcs } from 'json-canonicalize';
 
 export const MAX_CANONICALIZATION_DEPTH = 100;
 const TIMESTAMP_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/;
@@ -77,27 +78,11 @@ export function validateForCanonicalization(value: unknown): void {
   validateAtDepth(value, new WeakSet<object>(), 0);
 }
 
-function jcs(value: unknown): string {
-  if (value === null || typeof value !== 'object') {
-    const encoded = JSON.stringify(value);
-    if (encoded === undefined) throw new Error('CANONICALIZATION_FAILED');
-    return encoded;
-  }
-
-  if (Array.isArray(value)) {
-    return `[${value.map((entry) => jcs(entry)).join(',')}]`;
-  }
-
-  const object = value as Record<string, unknown>;
-  const members = Object.keys(object)
-    .sort()
-    .map((key) => `${JSON.stringify(key)}:${jcs(object[key])}`);
-  return `{${members.join(',')}}`;
-}
-
 export function canonicalize(value: unknown): string {
   validateForCanonicalization(value);
-  return jcs(value);
+  const encoded = canonicalizeJcs(value);
+  if (encoded === undefined) throw new Error('CANONICALIZATION_FAILED');
+  return encoded;
 }
 
 export function canonicalizeDomainValue(domainPrefix: string, value: unknown): Buffer {
