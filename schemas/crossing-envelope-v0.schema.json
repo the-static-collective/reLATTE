@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://the-static-collective.github.io/reLATTE/schemas/crossing-envelope-v0.schema.json",
+  "title": "CrossingEnvelopeV0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "crossing_id",
+    "protocol_version",
+    "source_particular",
+    "source_world",
+    "declared_kind",
+    "payload_refs",
+    "created_at",
+    "signing"
+  ],
+  "properties": {
+    "schema": {
+      "const": "relatte.crossing-envelope/v0"
+    },
+    "crossing_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "protocol_version": {
+      "const": "0"
+    },
+    "source_particular": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_world": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_history_head": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "parents": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "default": []
+    },
+    "declared_kind": {
+      "type": "string",
+      "minLength": 1
+    },
+    "payload_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "address",
+          "role"
+        ],
+        "properties": {
+          "address": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1
+          },
+          "media_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "requested_effect": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
+    },
+    "capability_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "privacy_policy": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
+    },
+    "audience_policy": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
+    },
+    "return_address": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "public_key",
+        "signature",
+        "domain"
+      ],
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "minLength": 1
+        },
+        "public_key": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "signature": {
+          "type": "string",
+          "minLength": 1
+        },
+        "domain": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}
