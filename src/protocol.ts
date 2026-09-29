@@ -1,4 +1,3 @@
-import { webcrypto } from 'node:crypto';
 import { canonicalizeDomainValue, sha256Hex, validateTimestamp } from './canonical.ts';
 
 export const CROSSING_ID_DOMAIN = 'reLATTE-CrossingEnvelope-v0|';
@@ -148,12 +147,12 @@ function normalizedPublicJwk(value: JsonWebKey): JsonWebKey {
 }
 
 export async function generateP256KeyPair(): Promise<P256KeyMaterial> {
-  const pair = await webcrypto.subtle.generateKey(
+  const pair = await crypto.subtle.generateKey(
     { name: 'ECDSA', namedCurve: 'P-256' },
     true,
     ['sign', 'verify'],
   ) as CryptoKeyPair;
-  const exported = await webcrypto.subtle.exportKey('jwk', pair.publicKey);
+  const exported = await crypto.subtle.exportKey('jwk', pair.publicKey);
   return {
     privateKey: pair.privateKey,
     publicKey: pair.publicKey,
@@ -165,16 +164,20 @@ function base64url(bytes: ArrayBuffer): string {
   return Buffer.from(bytes).toString('base64url');
 }
 
-function fromBase64url(value: string): Buffer {
+function toWebCryptoBytes(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
+  return new Uint8Array(bytes);
+}
+
+function fromBase64url(value: string): Uint8Array<ArrayBuffer> {
   if (typeof value !== 'string' || value.length === 0) throw new Error('INVALID_SIGNATURE');
-  return Buffer.from(value, 'base64url');
+  return new Uint8Array(Buffer.from(value, 'base64url'));
 }
 
 async function signBytes(privateKey: CryptoKey, bytes: Uint8Array): Promise<string> {
-  const signature = await webcrypto.subtle.sign(
+  const signature = await crypto.subtle.sign(
     { name: 'ECDSA', hash: 'SHA-256' },
     privateKey,
-    bytes,
+    toWebCryptoBytes(bytes),
   );
   return base64url(signature);
 }
@@ -186,7 +189,7 @@ async function importVerificationKey(publicKeyValue: unknown): Promise<CryptoKey
     signature: 'not-used',
     domain: CROSSING_SIGNING_DOMAIN,
   }, CROSSING_SIGNING_DOMAIN);
-  return webcrypto.subtle.importKey(
+  return crypto.subtle.importKey(
     'jwk',
     identity.public_key as JsonWebKey,
     { name: 'ECDSA', namedCurve: 'P-256' },
@@ -231,11 +234,11 @@ export async function verifyCrossingEnvelope(envelopeValue: unknown): Promise<bo
     const signing = asRecord(envelope.signing);
     if (signing.algorithm !== P256_ALGORITHM || signing.domain !== CROSSING_SIGNING_DOMAIN) return false;
     const key = await importVerificationKey(signing.public_key);
-    return webcrypto.subtle.verify(
+    return crypto.subtle.verify(
       { name: 'ECDSA', hash: 'SHA-256' },
       key,
       fromBase64url(requiredString(signing, 'signature')),
-      crossingSignatureBytes(envelope),
+      toWebCryptoBytes(crossingSignatureBytes(envelope)),
     );
   } catch {
     return false;
@@ -275,18 +278,18 @@ export async function verifyReceipt(receiptValue: unknown): Promise<boolean> {
       signature: 'not-used',
       domain: RECEIPT_SIGNING_DOMAIN,
     }, RECEIPT_SIGNING_DOMAIN);
-    const key = await webcrypto.subtle.importKey(
+    const key = await crypto.subtle.importKey(
       'jwk',
       identity.public_key as JsonWebKey,
       { name: 'ECDSA', namedCurve: 'P-256' },
       false,
       ['verify'],
     );
-    return webcrypto.subtle.verify(
+    return crypto.subtle.verify(
       { name: 'ECDSA', hash: 'SHA-256' },
       key,
       fromBase64url(requiredString(signing, 'signature')),
-      receiptSignatureBytes(receipt),
+      toWebCryptoBytes(receiptSignatureBytes(receipt)),
     );
   } catch {
     return false;
