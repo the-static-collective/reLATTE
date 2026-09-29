@@ -152,3 +152,58 @@ test('tampering only with the stored receipt id fails verification', async () =>
   };
   assert.equal(await verifyReceipt(tampered), false);
 });
+
+
+test('extra root fields cannot ride unsigned across crossing or receipt verification', async () => {
+  const sourceKeys = await generateP256KeyPair();
+  const receiverKeys = await generateP256KeyPair();
+  const envelope = await sealCrossingEnvelope(crossingDraft(), sourceKeys);
+  const receipt = await sealReceipt(receiptDraft(envelope.crossing_id), receiverKeys);
+
+  assert.equal(await verifyCrossingEnvelope({ ...envelope, injected: 'unsigned-root-data' }), false);
+  assert.equal(await verifyReceipt({ ...receipt, injected: 'unsigned-root-data' }), false);
+});
+
+test('extra signing fields cannot ride unsigned across crossing or receipt verification', async () => {
+  const sourceKeys = await generateP256KeyPair();
+  const receiverKeys = await generateP256KeyPair();
+  const envelope = await sealCrossingEnvelope(crossingDraft(), sourceKeys);
+  const receipt = await sealReceipt(receiptDraft(envelope.crossing_id), receiverKeys);
+
+  assert.equal(
+    await verifyCrossingEnvelope({
+      ...envelope,
+      signing: { ...envelope.signing, injected: 'unsigned-signing-data' },
+    }),
+    false,
+  );
+  assert.equal(
+    await verifyReceipt({
+      ...receipt,
+      signing: { ...receipt.signing, injected: 'unsigned-signing-data' },
+    }),
+    false,
+  );
+});
+
+test('signature text must use canonical unpadded base64url', async () => {
+  const sourceKeys = await generateP256KeyPair();
+  const receiverKeys = await generateP256KeyPair();
+  const envelope = await sealCrossingEnvelope(crossingDraft(), sourceKeys);
+  const receipt = await sealReceipt(receiptDraft(envelope.crossing_id), receiverKeys);
+
+  assert.equal(
+    await verifyCrossingEnvelope({
+      ...envelope,
+      signing: { ...envelope.signing, signature: envelope.signing.signature + '=' },
+    }),
+    false,
+  );
+  assert.equal(
+    await verifyReceipt({
+      ...receipt,
+      signing: { ...receipt.signing, signature: receipt.signing.signature + '=' },
+    }),
+    false,
+  );
+});
