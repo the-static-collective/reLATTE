@@ -207,3 +207,24 @@ test('signature text must use canonical unpadded base64url', async () => {
     false,
   );
 });
+
+
+test('serialized receipt verifies in a fresh Node process', async () => {
+  const sourceKeys = await generateP256KeyPair();
+  const receiverKeys = await generateP256KeyPair();
+  const envelope = await sealCrossingEnvelope(crossingDraft(), sourceKeys);
+  const receipt = await sealReceipt(receiptDraft(envelope.crossing_id), receiverKeys);
+  const script = [
+    "import { verifyReceipt } from './src/index.ts';",
+    "const chunks=[]; for await (const chunk of process.stdin) chunks.push(chunk);",
+    "const receipt=JSON.parse(Buffer.concat(chunks).toString('utf8'));",
+    "process.stdout.write(String(await verifyReceipt(receipt)));",
+  ].join(' ');
+  const child = spawnSync(
+    process.execPath,
+    ['--experimental-strip-types', '--input-type=module', '--eval', script],
+    { cwd: process.cwd(), input: JSON.stringify(receipt), encoding: 'utf8' },
+  );
+  assert.equal(child.status, 0, child.stderr);
+  assert.equal(child.stdout, 'true');
+});
