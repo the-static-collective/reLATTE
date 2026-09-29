@@ -65,6 +65,11 @@ FOREIGN CHECKPOINT != GLOBAL CANON
 The first slice is:
 
 - [Slice 001 — The Relation Is the Block](slices/001-the-relation-is-the-block.md)
+- [Adoption Roadmap — 87-repo open-world relation map](docs/ADOPTION-ROADMAP.md)
+- [Ethereum Inversion](docs/ETHEREUM-INVERSION.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Organ Registry](docs/ORGAN-REGISTRY.md)
+- [Roadmap](docs/ROADMAP.md)
 
 It proposes that the stable nonfungible object is not a coin or token but a **particular consequential relation/crossing**.
 
