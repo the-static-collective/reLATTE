@@ -1,0 +1,40 @@
+{
+  "schema": "relatte.organ-contract/v0",
+  "contract_id": "relatte.genesis.echo-receiver",
+  "version": "0.0.1",
+  "owner_project": "the-static-collective/reLATTE",
+  "description": "Synthetic no-effect receiver used only to prove the portable contract surface.",
+  "accepted_crossing_kinds": [
+    "GENESIS_ECHO"
+  ],
+  "input_schema_refs": [
+    "../schemas/crossing-envelope-v0.schema.json"
+  ],
+  "allowed_dispositions": [
+    "HOLD",
+    "ADMIT",
+    "REFUSE",
+    "RETURN"
+  ],
+  "effect_classes": [
+    "none",
+    "return-created"
+  ],
+  "receipt_kinds": [
+    "RECEIVED",
+    "HELD",
+    "ADMITTED",
+    "REFUSED",
+    "RETURNED"
+  ],
+  "authority_scope": "owner-local",
+  "dependencies": [],
+  "implementation_refs": [],
+  "non_authorities": [
+    "human identity",
+    "global truth",
+    "foreign domain admission",
+    "economic value",
+    "legal authority"
+  ]
+}
