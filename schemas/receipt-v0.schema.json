@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://the-static-collective.github.io/reLATTE/schemas/receipt-v0.schema.json",
+  "title": "ReceiptV0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "receipt_id",
+    "crossing_id",
+    "world_id",
+    "receiver_particular",
+    "kind",
+    "semantic_effect",
+    "created_at",
+    "signing"
+  ],
+  "properties": {
+    "schema": {
+      "const": "relatte.receipt/v0"
+    },
+    "receipt_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "crossing_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "world_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "receiver_particular": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "enum": [
+        "RECEIVED",
+        "VERIFIED",
+        "HELD",
+        "ADMITTED",
+        "REFUSED",
+        "RETURNED",
+        "EXECUTED",
+        "FAILED",
+        "RECONSTITUTED",
+        "REPAIRED",
+        "TRANSMITTED",
+        "REPRODUCED",
+        "CHECKPOINTED"
+      ]
+    },
+    "semantic_effect": {
+      "enum": [
+        "none",
+        "local-state-change",
+        "artifact-created",
+        "descendant-created",
+        "capability-issued",
+        "capability-revoked",
+        "return-created",
+        "projection-updated",
+        "field-pressure-updated",
+        "unknown"
+      ]
+    },
+    "contract_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "pre_state_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "post_state_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "descendant_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "residual_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "public_key",
+        "signature",
+        "domain"
+      ],
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "minLength": 1
+        },
+        "public_key": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "signature": {
+          "type": "string",
+          "minLength": 1
+        },
+        "domain": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "REFUSED"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "semantic_effect": {
+            "const": "none"
+          }
+        }
+      }
+    }
+  ]
+}
