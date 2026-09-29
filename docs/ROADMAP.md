@@ -8,8 +8,9 @@ Already present:
 
 - Slice 001: relation/crossing as the irreducible shared object.
 - Ethereum inversion and organ ownership map.
+- A bounded executable identity/signature witness for crossing and receipt particulars.
 
-No executable protocol is claimed yet.
+The executable witness does not yet constitute a receiver runtime or complete R1.
 
 ## R1 — Canonical Crossing Envelope
 
@@ -26,6 +27,23 @@ Required proof:
 - signature field;
 - hostile fixtures for mutation and ambiguity.
 
+Current bounded proof:
+
+- explicit `CrossingIdentityBodyV0` construction;
+- Project0-conformant RFC 8785/JCS canonical bytes;
+- domain-separated SHA-256 crossing IDs;
+- source-world/signing-domain/public-key binding;
+- fixed signed fixtures and hostile mutation checks.
+
+Still open before R1 is complete:
+
+- full structural JSON Schema conformance in the runtime;
+- parent existence/ancestry validation;
+- payload-address resolution/verification;
+- broader ambiguity fixtures and cross-runtime conformance beyond the current Node witness.
+
+See [Identity + Signature Profile v0](../spec/IDENTITY-SIGNATURE-PROFILE-V0.md).
+
 ## R2 — Real Signature + Verification
 
 Use a real cryptographic implementation, initially informed by Formation Trace's ECDSA P-256 specimen.
@@ -37,6 +55,16 @@ Required proof:
 - wrong key fails;
 - wrong world/domain fails;
 - signature proves key continuity only.
+
+Current bounded proof:
+
+- ECDSA P-256 + SHA-256 signing via Web Crypto;
+- derive-ID-first / sign-ID-plus-body construction with separate signature domains;
+- fresh-process verification from serialized public material;
+- semantic mutation, wrong-key, wrong-world, and wrong-domain failures;
+- fixed crossing and receipt fixtures with no committed private key material.
+
+This proves the cryptographic mechanism only. `SIGNATURE != HUMAN IDENTITY`, `SIGNED != TRUE`, and R3 admission remains local and unimplemented.
 
 ## R3 — RECEIVE / HOLD / DISPOSITION
 

@@ -65,6 +65,7 @@ FOREIGN CHECKPOINT != GLOBAL CANON
 The first slice is:
 
 - [Slice 001 — The Relation Is the Block](slices/001-the-relation-is-the-block.md)
+- [Identity + Signature Profile v0](spec/IDENTITY-SIGNATURE-PROFILE-V0.md) — bounded executable R1/R2 witness
 - [Adoption Roadmap — 87-repo open-world relation map](docs/ADOPTION-ROADMAP.md)
 - [Ethereum Inversion](docs/ETHEREUM-INVERSION.md)
 - [Architecture](docs/ARCHITECTURE.md)
@@ -73,6 +74,27 @@ The first slice is:
 - [Early Source Packet — authority, replay, witness, sovereign histories](docs/research/EARLY-SOURCE-PACKET.md)
 
 It proposes that the stable nonfungible object is not a coin or token but a **particular consequential relation/crossing**.
+
+## Current executable edge
+
+The first bounded runtime seam now covers canonical identity and cryptographic verification for `CrossingEnvelopeV0` and `ReceiptV0`:
+
+```text
+explicit identity body
+→ Project0-conformant RFC 8785/JCS bytes
+→ domain-separated SHA-256 ID
+→ ECDSA P-256 signature
+→ independent verification
+```
+
+The proof includes fixed signed fixtures, hostile mutation/key/domain tests, and verification in a fresh Node process. It deliberately stops before R3 receiver semantics.
+
+```bash
+npm install
+npm run verify
+```
+
+This executable profile does **not** make a signature truth, human identity, admission, or authority.
 
 ## What reLATTE may absorb
 
