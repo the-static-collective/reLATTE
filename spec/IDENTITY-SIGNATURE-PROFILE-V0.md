@@ -27,6 +27,8 @@ For structured semantic bodies this profile uses:
 - maximum traversal depth `100`, where the root is depth `0`;
 - strict timestamps matching `YYYY-MM-DDTHH:MM:SSZ` or exactly three fractional millisecond digits followed by `Z`.
 
+Before identity projection, the complete crossing/receipt runtime object passes these hostile-state checks so accessors are rejected without execution and hidden symbol/non-enumerable state cannot bypass the projection.
+
 The executable validator rejects at least:
 
 ```text
