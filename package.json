@@ -10,10 +10,10 @@
     "verify": "npm run check && npm test && npm run build"
   },
   "dependencies": {
-    "json-canonicalize": "^2.0.0"
+    "json-canonicalize": "3.0.1"
   },
   "devDependencies": {
-    "@types/node": "^26.1.2",
-    "typescript": "^7.0.2"
+    "@types/node": "26.1.2",
+    "typescript": "7.0.2"
   }
 }
