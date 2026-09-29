@@ -65,6 +65,8 @@ FOREIGN CHECKPOINT != GLOBAL CANON
 The first slice is:
 
 - [Slice 001 — The Relation Is the Block](slices/001-the-relation-is-the-block.md)
+- [Slice 002 — The Cup Is a Graph Disguised as a Noun](slices/002-the-cup-is-a-graph-disguised-as-a-noun.md) — National Coffee Day lineage pressure test; no promotion
+- [Candidate Lineage Operators](docs/LINEAGE-OPERATORS.md) — SPLIT / MERGE / TRANSFORM / EXTRACT vocabulary; non-normative
 - [Adoption Roadmap — 87-repo open-world relation map](docs/ADOPTION-ROADMAP.md)
 - [Ethereum Inversion](docs/ETHEREUM-INVERSION.md)
 - [Architecture](docs/ARCHITECTURE.md)
