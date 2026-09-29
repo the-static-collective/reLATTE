@@ -192,3 +192,22 @@ test('P-256 coordinate changes alter identity while runtime-only JWK metadata do
   assert.equal(computeCrossingId(base), computeCrossingId(withRuntimeMetadata));
   assert.notEqual(computeCrossingId(base), computeCrossingId(withDifferentCoordinate));
 });
+
+
+test('P-256 coordinates require canonical unpadded 32-byte base64url', () => {
+  const padded = crossing({
+    signing: {
+      ...crossing().signing,
+      public_key: { ...PUBLIC_JWK, x: PUBLIC_JWK.x + '=' },
+    },
+  });
+  const short = crossing({
+    signing: {
+      ...crossing().signing,
+      public_key: { ...PUBLIC_JWK, x: Buffer.alloc(31).toString('base64url') },
+    },
+  });
+
+  assert.throws(() => computeCrossingId(padded), /INVALID_PUBLIC_KEY/);
+  assert.throws(() => computeCrossingId(short), /INVALID_PUBLIC_KEY/);
+});
