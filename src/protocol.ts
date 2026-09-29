@@ -8,9 +8,78 @@ export const P256_ALGORITHM = 'ECDSA-P256-SHA256';
 export const CROSSING_SIGNING_DOMAIN = 'relatte.crossing-signature/v0';
 export const RECEIPT_SIGNING_DOMAIN = 'relatte.receipt-signature/v0';
 
+const CROSSING_ENVELOPE_KEYS = [
+  'schema',
+  'crossing_id',
+  'protocol_version',
+  'source_particular',
+  'source_world',
+  'source_history_head',
+  'parents',
+  'declared_kind',
+  'payload_refs',
+  'requested_effect',
+  'capability_ref',
+  'privacy_policy',
+  'audience_policy',
+  'return_address',
+  'created_at',
+  'signing',
+  'extensions',
+] as const;
+
+const RECEIPT_KEYS = [
+  'schema',
+  'receipt_id',
+  'crossing_id',
+  'world_id',
+  'receiver_particular',
+  'kind',
+  'semantic_effect',
+  'contract_ref',
+  'pre_state_ref',
+  'post_state_ref',
+  'descendant_refs',
+  'residual_refs',
+  'note',
+  'created_at',
+  'signing',
+  'extensions',
+] as const;
+
+const SIGNING_KEYS = ['algorithm', 'public_key', 'signature', 'domain'] as const;
+const BASE64URL_RE = /^[A-Za-z0-9_-]+$/;
+
 function asRecord(value: unknown, code = 'INVALID_TYPE'): Record<string, unknown> {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new Error(code);
   return value as Record<string, unknown>;
+}
+
+function assertOnlyKeys(
+  object: Record<string, unknown>,
+  allowed: readonly string[],
+  code: string,
+): void {
+  const allowedSet = new Set(allowed);
+  for (const key of Object.keys(object)) {
+    if (!allowedSet.has(key)) throw new Error(code);
+  }
+}
+
+function canonicalBase64urlBytes(value: unknown, expectedLength: number, code: string): Uint8Array<ArrayBuffer> {
+  if (typeof value !== 'string' || value.length === 0 || !BASE64URL_RE.test(value)) {
+    throw new Error(code);
+  }
+  const decoded = Buffer.from(value, 'base64url');
+  if (decoded.length !== expectedLength || decoded.toString('base64url') !== value) {
+    throw new Error(code);
+  }
+  return new Uint8Array(decoded);
+}
+
+function normalizeP256Coordinate(value: unknown): string {
+  canonicalBase64urlBytes(value, 32, 'INVALID_PUBLIC_KEY');
+  return value as string;
 }
 
 function requiredString(object: Record<string, unknown>, key: string): string {
@@ -41,6 +110,7 @@ function normalizeObject(object: Record<string, unknown>, key: string): Record<s
 
 function signingIdentity(signingValue: unknown, expectedDomain: string): Record<string, unknown> {
   const signing = asRecord(signingValue);
+  assertOnlyKeys(signing, SIGNING_KEYS, 'UNEXPECTED_SIGNING_FIELD');
   const algorithm = requiredString(signing, 'algorithm');
   const domain = requiredString(signing, 'domain');
   if (algorithm !== P256_ALGORITHM) throw new Error('UNSUPPORTED_SIGNING_ALGORITHM');
@@ -48,16 +118,18 @@ function signingIdentity(signingValue: unknown, expectedDomain: string): Record<
   const publicKey = asRecord(signing.public_key);
   if (Object.prototype.hasOwnProperty.call(publicKey, 'd')) throw new Error('PRIVATE_KEY_MATERIAL');
   if (publicKey.kty !== 'EC' || publicKey.crv !== 'P-256') throw new Error('INVALID_PUBLIC_KEY');
-  if (typeof publicKey.x !== 'string' || typeof publicKey.y !== 'string') throw new Error('INVALID_PUBLIC_KEY');
+  const x = normalizeP256Coordinate(publicKey.x);
+  const y = normalizeP256Coordinate(publicKey.y);
   return {
     algorithm,
-    public_key: { kty: 'EC', crv: 'P-256', x: publicKey.x, y: publicKey.y },
+    public_key: { kty: 'EC', crv: 'P-256', x, y },
     domain,
   };
 }
 
 export function constructCrossingIdentityBody(envelopeValue: unknown): Record<string, unknown> {
   const envelope = asRecord(envelopeValue);
+  assertOnlyKeys(envelope, CROSSING_ENVELOPE_KEYS, 'UNEXPECTED_CROSSING_FIELD');
   if (envelope.schema !== 'relatte.crossing-envelope/v0') throw new Error('INVALID_SCHEMA');
   if (envelope.protocol_version !== '0') throw new Error('INVALID_PROTOCOL_VERSION');
   const createdAt = requiredString(envelope, 'created_at');
@@ -97,6 +169,7 @@ export function crossingSignatureBytes(envelope: unknown): Buffer {
 
 export function constructReceiptIdentityBody(receiptValue: unknown): Record<string, unknown> {
   const receipt = asRecord(receiptValue);
+  assertOnlyKeys(receipt, RECEIPT_KEYS, 'UNEXPECTED_RECEIPT_FIELD');
   if (receipt.schema !== 'relatte.receipt/v0') throw new Error('INVALID_SCHEMA');
   const createdAt = requiredString(receipt, 'created_at');
   validateTimestamp(createdAt);
@@ -140,10 +213,15 @@ export interface P256KeyMaterial {
 
 function normalizedPublicJwk(value: JsonWebKey): JsonWebKey {
   if (value.d !== undefined) throw new Error('PRIVATE_KEY_MATERIAL');
-  if (value.kty !== 'EC' || value.crv !== 'P-256' || typeof value.x !== 'string' || typeof value.y !== 'string') {
+  if (value.kty !== 'EC' || value.crv !== 'P-256') {
     throw new Error('INVALID_PUBLIC_KEY');
   }
-  return { kty: 'EC', crv: 'P-256', x: value.x, y: value.y };
+  return {
+    kty: 'EC',
+    crv: 'P-256',
+    x: normalizeP256Coordinate(value.x),
+    y: normalizeP256Coordinate(value.y),
+  };
 }
 
 export async function generateP256KeyPair(): Promise<P256KeyMaterial> {
@@ -169,8 +247,7 @@ function toWebCryptoBytes(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
 }
 
 function fromBase64url(value: string): Uint8Array<ArrayBuffer> {
-  if (typeof value !== 'string' || value.length === 0) throw new Error('INVALID_SIGNATURE');
-  return new Uint8Array(Buffer.from(value, 'base64url'));
+  return canonicalBase64urlBytes(value, 64, 'INVALID_SIGNATURE');
 }
 
 async function signBytes(privateKey: CryptoKey, bytes: Uint8Array): Promise<string> {
