@@ -428,3 +428,21 @@ Daily Slice       Haunted Toaster
 The shared substrate is forbidden from learning either donor family's semantics.
 
 > **EDGE ADAPTER != CORE EXCEPTION**
+
+
+## DWN Road 001
+
+[DWN Road 001](docs/DWN-ROAD-001.md) plugs a materially foreign Decentralized Web Node into the replaceable-transport seam without promoting DWN storage permission into receiver authority.
+
+```text
+SIGNED CROSSING X
+   ├─→ filesystem
+   ├─→ HTTP
+   └─→ DWN RecordsWrite / RecordsRead
+                 ↓
+          SAME LocalReceiver
+```
+
+The bounded witness uses an actual in-process DWN reference implementation and proves that DWN acceptance can still end in owner-local REFUSE.
+
+> **DWN ACCEPTED != RELATTE ADMITTED**
