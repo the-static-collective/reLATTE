@@ -315,3 +315,29 @@ SYNC != OVERWRITE
 PERSPECTIVE SET != CONSENSUS
 ACCOUNT != CARRIER MUTATION
 ```
+
+
+## Field consequence witness
+
+[Field Consequence 001](FIELD-CONSEQUENCE-001.md) gives L7 a bounded executable projection over admitted L5 history plus R8 plural witness.
+
+```text
+admitted receipts
+    +
+perspectives
+    ↓
+typed features
+    ↓
+owner-local lens
+    ↓
+susceptibility
+```
+
+The field keeps a deterministic history root independent of the lens, so differing local interpretations do not rewrite shared evidence.
+
+```text
+HISTORY != WEATHER
+LENS != HISTORY
+WEATHER != AUTHORITY
+SUSCEPTIBILITY != INSTRUCTION
+```

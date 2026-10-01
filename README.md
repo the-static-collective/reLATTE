@@ -298,3 +298,24 @@ replay = preserve both
 Neither perspective can mutate the carrier it witnesses.
 
 > **DIVERGENCE != OVERWRITE**
+
+
+## Field Consequence 001
+
+[Field Consequence 001](docs/FIELD-CONSEQUENCE-001.md) turns admitted local history and plural witness into owner-local susceptibility without making weather sovereign:
+
+```text
+admitted receipts
+      +
+R8 perspectives
+      ↓
+typed features
+      ↓
+local Field Lens
+      ↓
+weather / susceptibility
+```
+
+Two worlds may interpret the same history through different lenses while retaining the same history root.
+
+> **WEATHER MAY DIFFER WHILE HISTORY REMAINS THE SAME.**
