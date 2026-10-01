@@ -13,6 +13,7 @@
     "json-canonicalize": "3.0.1"
   },
   "devDependencies": {
+    "@tbd54566975/dwn-sdk-js": "0.5.2",
     "@types/node": "26.1.2",
     "typescript": "7.0.2"
   }
