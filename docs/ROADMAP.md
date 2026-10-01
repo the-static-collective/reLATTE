@@ -218,3 +218,22 @@ Success requires attributable continuity without hidden authority transfer.
 ## Release rule
 
 > **Do not call reLATTE a general substrate until two materially different organ families can cross it without reLATTE-specific semantic hacks.**
+
+
+## Composite witness lane
+
+The roadmap remains milestone-gated, but later ideas may be assembled early as bounded synthetic witnesses when doing so exposes useful seams.
+
+Current composite witness:
+
+- [Ecology Machine 001](ECOLOGY-MACHINE-001.md)
+
+It composes candidate grammar discovery, COM⁵ capsules, transport-shaped carriers, Porch/Customs, local divergent disposition, Fog HOLD, Cultural Weather, Tradition, capacity proposals, release/rest declarations, and Commuter Line routing.
+
+This composite does **not** advance R3–R13 to complete status.
+
+```text
+COMPOSITE WITNESS != MILESTONE COMPLETION
+SYNTHETIC SEAM != PRODUCTION RECEIVER
+PRESSURE TEST != GENERALITY
+```

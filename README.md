@@ -172,3 +172,26 @@ Creative Customs evaluates an arriving capsule against that declaration and emit
 > **WELCOME != ADMIT**
 
 A world may welcome a knock at its porch and still refuse the proposed grammar under separate interior law.
+
+
+## Ecology Machine 001
+
+[Ecology Machine 001](docs/ECOLOGY-MACHINE-001.md) composes the current cultural-crossing organs into one bounded executable round:
+
+```text
+GRAMMAR CANDIDATE
+  → COM⁵ CAPSULE
+  → SIGNED CROSSING
+  → POSTAL CARRIER
+  → PORCH / CUSTOMS
+  → FRONT DOOR
+  → LOCAL DISPOSITION
+  → FOG or CONSEQUENCE
+  → WEATHER / TRADITION / CAPACITY
+  → REST / RELEASE / MORTALITY
+  → COMMUTER LINE / RETURN
+```
+
+It proves seams between organs without claiming completion of the corresponding roadmap milestones.
+
+> **The machine composes the organs. It does not become their sovereign.**
