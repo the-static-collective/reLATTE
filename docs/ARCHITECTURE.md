@@ -421,3 +421,43 @@ CONTINUITY != IDENTITY
 ANCESTRY != AUTHORITY
 PREDECESSOR ADMIT != SUCCESSOR ADMIT
 ```
+
+
+## Composition pulse witness
+
+[Composition Pulse 001](COMPOSITION-PULSE-001.md) composes the earned admission, field, developmental-witness, heredity, and return boundaries into one executable round.
+
+```text
+crossing
+  ↓
+local admission
+  ↓
+field projection
+  ↓
+fresh local act + receipt
+  ↓
+slow witness
+  ↓
+question
+  ↓
+owner-local adaptation
+  ↓
+descendant
+  ↓
+sovereign receive
+  ↓
+return crossing
+  ↓
+origin receive
+```
+
+The pulse trace records continuity across these seams without becoming another authority layer.
+
+```text
+FIELD != AUTHORITY
+WITNESS != CANON
+QUESTION != AUTHORITY
+DESCENDANT != ADMISSION
+RETURN != ADMISSION
+PULSE != CONSENSUS
+```
