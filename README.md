@@ -10,6 +10,47 @@ The working answer:
 
 > **Many sovereign histories may share verifiable crossings without sharing one global state.**
 
+## COM⁵ — the metabolism
+
+> **The relation is the block. COM⁵ is the metabolism.**
+
+reLATTE is not only a crossing protocol. It is substrate for histories that can remain fertile, form new relations, produce local consequence, cross boundaries, and participate in shared life without requiring one sovereign interior.
+
+```text
+COMPOST
+   ↓
+COMPOSE
+   ↓
+COMPUTE
+   ↓
+COMMUTE
+   ↓
+COMMUNE
+   ↓
+COMPOST
+   ↺
+```
+
+These are roles in a derived metabolic projection, not mandatory lifecycle states.
+
+```text
+COMPOST != GARBAGE
+COMPOSE != MERGER
+COMPUTE != SOVEREIGNTY
+COMMUTE != SEMANTIC UNIFORMITY
+COMMUNE != ABSORPTION
+```
+
+A particular may occupy several COM⁵ roles at once.
+
+The narrow commuting law is especially important:
+
+> **The road may commute while the worlds diverge.**
+
+Different carriers may preserve the same signed crossing invariants while sovereign receivers lawfully ADMIT, HOLD, REFUSE, or RETURN differently.
+
+See [COM⁵ — The reLATTE Metabolism](docs/COM5.md) and [Slice 004 — The Road May Commute While the Worlds Diverge](slices/004-the-road-may-commute-while-worlds-diverge.md).
+
 ## Core inversion
 
 Ethereum's durable contribution was not merely cryptocurrency. It provided a general substrate in which independently authored programs could share common addressing, execution, receipts, and composability.
@@ -65,6 +106,8 @@ FOREIGN CHECKPOINT != GLOBAL CANON
 The first slice is:
 
 - [Slice 001 — The Relation Is the Block](slices/001-the-relation-is-the-block.md)
+- [COM⁵ — The reLATTE Metabolism](docs/COM5.md) — derived lifecycle/metabolism projection
+- [Slice 004 — The Road May Commute While the Worlds Diverge](slices/004-the-road-may-commute-while-worlds-diverge.md)
 - [Identity + Signature Profile v0](spec/IDENTITY-SIGNATURE-PROFILE-V0.md) — bounded executable R1/R2 witness
 - [Adoption Roadmap — 87-repo open-world relation map](docs/ADOPTION-ROADMAP.md)
 - [Ethereum Inversion](docs/ETHEREUM-INVERSION.md)
@@ -87,6 +130,8 @@ explicit identity body
 → independent verification
 ```
 
+COM⁵ adds a deliberately non-authoritative observability seam that can group explicitly supplied metabolic observations and render a stable trace without changing crossing or receipt identity.
+
 The proof includes fixed signed fixtures, hostile mutation/key/domain tests, and verification in a fresh Node process. It deliberately stops before R3 receiver semantics.
 
 ```bash
@@ -94,7 +139,7 @@ npm install
 npm run verify
 ```
 
-This executable profile does **not** make a signature truth, human identity, admission, or authority.
+This executable profile does **not** make a signature truth, human identity, admission, authority, or COM⁵ role into protocol truth.
 
 ## What reLATTE may absorb
 
