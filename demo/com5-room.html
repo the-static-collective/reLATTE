@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>COM⁵ Five-Door Room</title>
+  <style>
+    :root { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color-scheme: dark; }
+    body { max-width: 1100px; margin: 0 auto; padding: 2rem; line-height: 1.45; }
+    h1 { margin-bottom: .2rem; }
+    .seal { opacity: .75; margin-top: 0; }
+    label { display:block; margin: 1rem 0 .35rem; }
+    input, textarea, button { font: inherit; }
+    input, textarea { width: 100%; box-sizing: border-box; padding: .7rem; }
+    textarea { min-height: 13rem; }
+    button { margin-top: .75rem; padding: .6rem 1rem; cursor: pointer; }
+    .doors { display:grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: .7rem; margin-top: 1.5rem; }
+    .door { border: 1px solid currentColor; padding: .75rem; min-height: 11rem; overflow-wrap:anywhere; }
+    .door h2 { font-size: 1rem; margin-top:0; }
+    .entry { border-top: 1px dotted currentColor; padding-top:.55rem; margin-top:.55rem; }
+    .fog { opacity:.6; }
+    .error { white-space: pre-wrap; margin-top: 1rem; }
+    @media (max-width: 800px) { .doors { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <h1>COM⁵ Five-Door Room</h1>
+  <p class="seal">The relation is the block. COM⁵ is the metabolism.</p>
+
+  <label for="subject">Focal subject</label>
+  <input id="subject" value="artifact:A">
+
+  <label for="observations">Explicit COM⁵ observations (JSON array)</label>
+  <textarea id="observations">[
+  {"role":"COMPOST","subject":"artifact:A","relation":"available-as-substrate"},
+  {"role":"COMPOSE","subject":"artifact:A","relation":"parent-of"},
+  {"role":"COMMUTE","subject":"artifact:A","relation":"carried-by-git"},
+  {"role":"COMMUNE","subject":"room:R","relation":"hosts","evidence_refs":["artifact:A"]}
+]</textarea>
+
+  <button id="render">Open room</button>
+  <div id="error" class="error"></div>
+  <div id="doors" class="doors"></div>
+
+  <script type="module">
+    const roles = ['COMPOST','COMPOSE','COMPUTE','COMMUTE','COMMUNE'];
+    const subject = document.querySelector('#subject');
+    const input = document.querySelector('#observations');
+    const doors = document.querySelector('#doors');
+    const error = document.querySelector('#error');
+
+    function esc(value) {
+      return String(value)
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;');
+    }
+
+    function render() {
+      error.textContent = '';
+      doors.innerHTML = '';
+
+      try {
+        const focal = subject.value;
+        if (!focal.trim()) throw new Error('Focal subject is required.');
+
+        const observations = JSON.parse(input.value);
+        if (!Array.isArray(observations)) throw new Error('Observations must be a JSON array.');
+
+        const direct = observations.filter((observation) => observation.subject === focal);
+
+        for (const role of roles) {
+          const section = document.createElement('section');
+          section.className = 'door';
+          const matching = direct.filter((observation) => observation.role === role);
+          section.innerHTML = '<h2>' + role + '</h2>';
+
+          if (matching.length === 0) {
+            section.innerHTML += '<p class="fog">(no direct observation)</p>';
+          } else {
+            for (const observation of matching) {
+              const relation = observation.relation ? ' — ' + esc(observation.relation) : '';
+              const note = observation.note ? '<br><span class="fog">' + esc(observation.note) + '</span>' : '';
+              section.innerHTML += '<div class="entry">' + esc(observation.subject) + relation + note + '</div>';
+            }
+          }
+          doors.append(section);
+        }
+      } catch (cause) {
+        error.textContent = cause instanceof Error ? cause.message : String(cause);
+      }
+    }
+
+    document.querySelector('#render').addEventListener('click', render);
+    render();
+  </script>
+</body>
+</html>

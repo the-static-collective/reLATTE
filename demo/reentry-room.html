@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>COM⁵ Re-entry Room</title>
+  <style>
+    :root { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color-scheme: dark; }
+    body { max-width: 1050px; margin: 0 auto; padding: 2rem; line-height: 1.45; }
+    .panel { border:1px solid currentColor; padding:1rem; margin:.75rem 0; overflow-wrap:anywhere; }
+    .doors { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.6rem; }
+    .door { border:1px solid currentColor; padding:.7rem; min-height:8rem; overflow-wrap:anywhere; }
+    .fog { opacity:.65; }
+    button { font:inherit; padding:.5rem .7rem; margin:.25rem; cursor:pointer; }
+    @media(max-width:800px){ .doors { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <h1>COM⁵ Re-entry Room</h1>
+  <p class="fog">Interaction specimen. SAME PLACE != SAME ARRIVAL.</p>
+  <div id="trail" class="panel"></div>
+  <div id="encounter" class="panel"></div>
+  <div id="doors" class="doors"></div>
+  <div class="panel">
+    <strong>Neighbors</strong>
+    <div id="neighbors"></div>
+  </div>
+  <div id="return" class="panel fog">No return witnessed yet.</div>
+
+<script>
+const roles = ['COMPOST','COMPOSE','COMPUTE','COMMUTE','COMMUNE'];
+const A = 'relatte-crossing-v0:d12ecb2b583a6531814797d1ec71a38543fe5ea20d12da0e99ac97debb9d9670';
+const B = 'particular:genesis-b';
+
+const rooms = {
+  [A]: {
+    COMPOST: [],
+    COMPOSE: [{relation:'declared-relation',refs:['particular:genesis-a','world:alpha']}],
+    COMPUTE: [{relation:'receiver-receipt:VERIFIED',refs:['world:beta',B]}],
+    COMMUTE: [{relation:'receiver-signed-receipt-at',refs:['world:beta',B]}],
+    COMMUNE: []
+  },
+  [B]: {
+    COMPOST: [],
+    COMPOSE: [],
+    COMPUTE: [{relation:'issued-receipt:VERIFIED',refs:[A,'world:beta']}],
+    COMMUTE: [],
+    COMMUNE: []
+  }
+};
+
+let focal = A;
+const trail = [A];
+const counts = new Map([[A,1]]);
+let lastReturn = null;
+
+function esc(v){
+  return String(v).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+}
+
+function neighbors(subject){
+  const out=[];
+  const room=rooms[subject] ?? Object.fromEntries(roles.map(r=>[r,[]]));
+  for(const role of roles){
+    for(const obs of room[role] ?? []){
+      for(const ref of obs.refs ?? []){
+        if((rooms[ref] || ref===A || ref===B) && ref!==subject && !out.includes(ref)) out.push(ref);
+      }
+    }
+  }
+  return out;
+}
+
+function openNeighbor(next){
+  if(!neighbors(focal).includes(next)) return;
+  const from=focal;
+  focal=next;
+  trail.push(next);
+  const count=(counts.get(next) ?? 0)+1;
+  counts.set(next,count);
+
+  if(count>1){
+    const first=trail.indexOf(next);
+    lastReturn={
+      subject:next,
+      occurrence:count,
+      first,
+      now:trail.length-1,
+      from,
+      between:trail.slice(first+1,-1)
+    };
+  }
+  render();
+}
+
+function render(){
+  document.querySelector('#trail').textContent='TRAIL: '+trail.join('  →  ');
+  const occurrence=counts.get(focal) ?? 1;
+  document.querySelector('#encounter').innerHTML=
+    '<strong>FOCAL:</strong> '+esc(focal)+
+    '<br><strong>ENCOUNTER:</strong> #'+occurrence+
+    (occurrence>1 ? ' — RE-ENTRY' : ' — INITIAL');
+
+  const doorEl=document.querySelector('#doors');
+  doorEl.innerHTML='';
+  const room=rooms[focal] ?? Object.fromEntries(roles.map(r=>[r,[]]));
+  for(const role of roles){
+    const section=document.createElement('section');
+    section.className='door';
+    section.innerHTML='<strong>'+role+'</strong>';
+    const entries=room[role] ?? [];
+    if(entries.length===0){
+      section.innerHTML+='<p class="fog">(no direct observation)</p>';
+    } else {
+      for(const entry of entries){
+        section.innerHTML+='<p>'+esc(entry.relation)+'<br><span class="fog">'+esc(entry.refs.join(', '))+'</span></p>';
+      }
+    }
+    doorEl.append(section);
+  }
+
+  const n=document.querySelector('#neighbors');
+  n.innerHTML='';
+  for(const ref of neighbors(focal)){
+    const button=document.createElement('button');
+    button.textContent='Open '+ref;
+    button.onclick=()=>openNeighbor(ref);
+    n.append(button);
+  }
+
+  const r=document.querySelector('#return');
+  if(lastReturn){
+    r.innerHTML=
+      '<strong>RE-ENTRY WITNESS</strong><br>'+
+      'same subject: '+esc(lastReturn.subject)+'<br>'+
+      'occurrence: #'+lastReturn.occurrence+'<br>'+
+      'first encounter index: '+lastReturn.first+'<br>'+
+      're-entry index: '+lastReturn.now+'<br>'+
+      'return road: '+esc(lastReturn.from)+' → '+esc(lastReturn.subject)+'<br>'+
+      'intervening subjects: '+esc(lastReturn.between.join(' → ') || '(none)')+'<br>'+
+      '<span class="fog">underlying subject mutation claimed: no</span>';
+    r.className='panel';
+  }
+}
+
+render();
+</script>
+</body>
+</html>
