@@ -195,3 +195,22 @@ GRAMMAR CANDIDATE
 It proves seams between organs without claiming completion of the corresponding roadmap milestones.
 
 > **The machine composes the organs. It does not become their sovereign.**
+
+
+## Local Receiver 001
+
+[Local Receiver 001](docs/LOCAL-RECEIVER-001.md) gives reLATTE its first durable owner-local interior witness:
+
+```text
+VERIFY
+  → RECEIVE
+  → signed receipt
+  → HOLD / ADMIT / REFUSE / RETURN
+  → signed disposition
+  → append-only journal
+  → restart replay
+```
+
+Duplicate delivery is idempotent, refused payloads gain no protected semantic effect, and derived local state reconstructs from the verified journal rather than a mutable global state file.
+
+> **RESTART != NEW HISTORY**
