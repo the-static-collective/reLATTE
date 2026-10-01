@@ -482,13 +482,24 @@ export class LocalReceiver {
 
   async acceptSuccession(args: {
     anchor_crossing_id: string;
-    predecessor_seed_receipt_id: string;
-    predecessor_world_id: string;
-    predecessor_receiver_particular: string;
+    predecessor_seed_receipt: unknown;
     created_at: string;
   }): Promise<Record<string, any>> {
     const anchor = this.received.get(args.anchor_crossing_id);
     if (!anchor) throw new Error('SUCCESSOR_ANCHOR_NOT_RECEIVED');
+    if (!(await verifyReceipt(args.predecessor_seed_receipt))) {
+      throw new Error('INVALID_SUCCESSOR_PREDECESSOR_SEED');
+    }
+    const predecessorSeed = asRecord(
+      args.predecessor_seed_receipt,
+      'INVALID_SUCCESSOR_PREDECESSOR_SEED',
+    );
+    if (
+      predecessorSeed.kind !== 'R12_MORTALITY_SEED' ||
+      predecessorSeed.semantic_effect !== 'none'
+    ) {
+      throw new Error('INVALID_SUCCESSOR_PREDECESSOR_SEED');
+    }
     validateTimestamp(args.created_at);
 
     const snapshot = this.snapshot();
@@ -509,15 +520,15 @@ export class LocalReceiver {
       extensions: {
         succession: {
           predecessor_seed_receipt_id: nonEmpty(
-            args.predecessor_seed_receipt_id,
+            predecessorSeed.receipt_id,
             'INVALID_SUCCESSOR_SEED_RECEIPT_ID',
           ),
           predecessor_world_id: nonEmpty(
-            args.predecessor_world_id,
+            predecessorSeed.world_id,
             'INVALID_SUCCESSOR_PREDECESSOR_WORLD',
           ),
           predecessor_receiver_particular: nonEmpty(
-            args.predecessor_receiver_particular,
+            predecessorSeed.receiver_particular,
             'INVALID_SUCCESSOR_PREDECESSOR_PARTICULAR',
           ),
           successor_world_id: this.config.world_id,
