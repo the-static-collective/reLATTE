@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://the-static-collective.github.io/reLATTE/schemas/porch-v0.schema.json",
+  "title": "CreativePorchV0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "porch_id",
+    "world_id",
+    "owner_project",
+    "receiver_particular",
+    "title",
+    "welcome",
+    "hold",
+    "refuse",
+    "return",
+    "release",
+    "created_at"
+  ],
+  "properties": {
+    "schema": { "const": "relatte.porch/v0" },
+    "porch_id": {
+      "type": "string",
+      "pattern": "^relatte-porch-v0:[0-9a-f]{64}$"
+    },
+    "world_id": { "type": "string", "minLength": 1 },
+    "owner_project": { "type": "string", "minLength": 1 },
+    "receiver_particular": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "welcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["crossing_kinds", "grammar_ids", "required_non_authorities"],
+      "properties": {
+        "crossing_kinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "grammar_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "required_non_authorities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "hold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unmatched", "note"],
+      "properties": {
+        "unmatched": { "type": "boolean" },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    },
+    "refuse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["crossing_kinds", "grammar_ids", "missing_non_authority", "note"],
+      "properties": {
+        "crossing_kinds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "grammar_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "missing_non_authority": { "type": "boolean" },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    },
+    "return": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["address", "requested_receipts"],
+      "properties": {
+        "address": { "type": "string", "minLength": 1 },
+        "requested_receipts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["offered_refs", "license_refs", "note"],
+      "properties": {
+        "offered_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "license_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "extensions": { "type": "object", "additionalProperties": true }
+  }
+}

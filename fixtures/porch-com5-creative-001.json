@@ -1,0 +1,43 @@
+{
+  "schema": "relatte.porch/v0",
+  "porch_id": "relatte-porch-v0:21eab75962521a61c6ed2e7fa3890eeec101662fdfb1ee0505256b5f52c677db",
+  "world_id": "world:com5-creative-porch",
+  "owner_project": "reLATTE",
+  "receiver_particular": "particular:com5-creative-porch",
+  "title": "COM5 Creative Porch 001",
+  "welcome": {
+    "crossing_kinds": ["COM5_GRAMMAR_CAPSULE"],
+    "grammar_ids": ["grammar:cost-carrying-return/v0"],
+    "required_non_authorities": [
+      "SOURCE_PERSON != GRAMMAR",
+      "INFLUENCE != ENDORSEMENT"
+    ]
+  },
+  "hold": {
+    "unmatched": true,
+    "note": "Unrecognized creative grammars wait at the porch rather than being silently admitted."
+  },
+  "refuse": {
+    "crossing_kinds": [],
+    "grammar_ids": ["grammar:impersonation/v0"],
+    "missing_non_authority": true,
+    "note": "Missing source/authority boundaries or explicitly refused grammars do not cross customs."
+  },
+  "return": {
+    "address": "relatte:return:com5-creative-porch",
+    "requested_receipts": [
+      "customs-receipt",
+      "local-disposition",
+      "descendant-ref-if-created"
+    ]
+  },
+  "release": {
+    "offered_refs": [],
+    "license_refs": [],
+    "note": "No rights-bearing release is offered by this specimen porch."
+  },
+  "created_at": "2026-10-01T19:10:00.000Z",
+  "extensions": {
+    "specimen": "PORCH-001"
+  }
+}
