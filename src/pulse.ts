@@ -19,6 +19,50 @@ import type { P256KeyMaterial } from './protocol.ts';
 export const COMPOSITION_QUESTION_ID_DOMAIN = 'reLATTE-CompositionQuestion-v0|';
 export const COMPOSITION_PULSE_ID_DOMAIN = 'reLATTE-CompositionPulse-v0|';
 
+const QUESTION_KEYS = [
+  'schema',
+  'question_id',
+  'slow_witness_receipt_id',
+  'origin_crossing_id',
+  'local_act_crossing_id',
+  'field_projection_id',
+  'question',
+  'constraints',
+  'semantic_effect',
+  'authority',
+  'created_at',
+  'laws',
+] as const;
+
+const PULSE_TRACE_KEYS = [
+  'schema',
+  'pulse_id',
+  'origin_crossing_id',
+  'origin_admit_receipt_id',
+  'field_projection_id',
+  'local_act_crossing_id',
+  'local_act_admit_receipt_id',
+  'slow_witness_receipt_id',
+  'question_id',
+  'uptake_id',
+  'adaptation_receipt_id',
+  'descendant_crossing_id',
+  'descendant_receive_receipt_id',
+  'return_crossing_id',
+  'return_receive_receipt_id',
+  'laws',
+] as const;
+
+const SLOW_POSTURES = new Set([
+  'OBSERVATION',
+  'QUESTION',
+  'SPECULATION',
+  'CANDIDATE',
+  'TESTED',
+  'REFUTED',
+  'SUPERSEDED',
+]);
+
 export interface CompositionalQuestion {
   schema: 'relatte.compositional-question/v0';
   question_id?: string;
@@ -58,6 +102,17 @@ function asRecord(value: unknown, code: string): Record<string, any> {
     throw new Error(code);
   }
   return value as Record<string, any>;
+}
+
+function assertOnlyKeys(
+  object: Record<string, any>,
+  allowed: readonly string[],
+  code: string,
+): void {
+  const allowedSet = new Set(allowed);
+  for (const key of Object.keys(object)) {
+    if (!allowedSet.has(key)) throw new Error(code);
+  }
 }
 
 function nonEmpty(value: unknown, code: string): string {
@@ -204,6 +259,9 @@ export async function sealSlowDevelopmentalWitness(args: {
     throw new Error('INVALID_SLOW_WITNESS_FIELD');
   }
   validateTimestamp(args.created_at);
+  if (!SLOW_POSTURES.has(args.posture)) {
+    throw new Error('INVALID_SLOW_WITNESS_POSTURE');
+  }
 
   const origin = asRecord(args.origin_crossing, 'INVALID_SLOW_WITNESS_ORIGIN');
   const act = asRecord(args.local_act_crossing, 'INVALID_SLOW_WITNESS_ACT');
@@ -373,6 +431,11 @@ export async function createCompositionalQuestion(args: {
 export function verifyCompositionalQuestion(value: unknown): boolean {
   try {
     const question = asRecord(value, 'INVALID_COMPOSITIONAL_QUESTION');
+    assertOnlyKeys(
+      question,
+      QUESTION_KEYS,
+      'UNEXPECTED_COMPOSITIONAL_QUESTION_FIELD',
+    );
     if (question.schema !== 'relatte.compositional-question/v0') return false;
     validateTimestamp(question.created_at);
     if (
@@ -935,6 +998,11 @@ export async function assembleCompositionPulse(args: {
 export function verifyCompositionPulseTrace(value: unknown): boolean {
   try {
     const trace = asRecord(value, 'INVALID_COMPOSITION_PULSE');
+    assertOnlyKeys(
+      trace,
+      PULSE_TRACE_KEYS,
+      'UNEXPECTED_COMPOSITION_PULSE_FIELD',
+    );
     if (trace.schema !== 'relatte.composition-pulse/v0') return false;
 
     const body: Omit<CompositionPulseTrace, 'pulse_id'> = {
