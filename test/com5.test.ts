@@ -24,6 +24,7 @@ function sourceCapsule(): any {
 }
 
 test('COM5 capsule seals to a stable content address and verifies', () => {
+  assert.equal(verifyCom5Capsule(sourceCapsule()), true);
   const sealed = sealCom5Capsule(sourceCapsule());
   assert.match(sealed.capsule_id!, /^relatte-com5-v0:[0-9a-f]{64}$/);
   assert.equal(verifyCom5Capsule(sealed), true);
