@@ -537,6 +537,23 @@ test('pulse trace is content-addressed and tamper evident', async () => {
 
     assert.equal(verifyCompositionPulseTrace(trace), true);
     assert.equal(verifyCompositionPulseTrace(tampered), false);
+
+    const sidecar = {
+      ...trace,
+      unsigned_interpretation: 'smuggled meaning',
+    };
+    assert.equal(verifyCompositionPulseTrace(sidecar), false);
+
+    const questionSidecar = {
+      ...p.question,
+      unsigned_interpretation: 'question sidecar',
+    };
+    assert.equal(
+      (await import('../src/index.ts')).verifyCompositionalQuestion(
+        questionSidecar,
+      ),
+      false,
+    );
   } finally {
     await rm(base, { recursive: true, force: true });
   }
