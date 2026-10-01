@@ -188,6 +188,19 @@ RECEIVED
 
 Required proof: a dead source node can be reconstructed from independently retained addressed artifacts and receipts.
 
+Current bounded proof:
+
+- [Mirror / Store / Serve 001](MIRROR-STORE-SERVE-001.md) has the source sign both a crossing and a distinct PUBLISHED claim with the same key;
+- two independent mirrors retain the same canonical signed crossing object under separate local STORED receipts;
+- both converge on the same object address without shared mutable state;
+- the source directory and one mirror are deleted;
+- the surviving mirror reopens from disk, verifies retained material, reconstructs the original signed crossing, and signs SERVED;
+- a fresh Local Receiver then signs RECEIVED;
+- the reconstructed crossing continues to name the dead source rather than the mirror;
+- PUBLISHED / STORED / SERVED / RECEIVED remain cryptographically and semantically distinct.
+
+This earns the stated R7 artifact-survival proof at the current envelope level. It does not recover source private keys, source authority, or an entire dead node's private local journal.
+
 ## R8 — Moment / Perspective Composition
 
 Bind a crossing to a Trust-style shared Moment.
