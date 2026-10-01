@@ -214,3 +214,20 @@ VERIFY
 Duplicate delivery is idempotent, refused payloads gain no protected semantic effect, and derived local state reconstructs from the verified journal rather than a mutable global state file.
 
 > **RESTART != NEW HISTORY**
+
+
+## Sovereign Nodes 001
+
+[Sovereign Nodes 001](docs/SOVEREIGN-NODES-001.md) gives the durable receiver a real multi-world crossing proof:
+
+```text
+A signs one crossing
+   ├─→ B → ADMIT → signed response
+   └─→ C → REFUSE → signed response
+
+A verifies both.
+```
+
+B and C keep separate keys, journals, histories, and state references. Both survive restart. The source never needs access to either receiver's mutable interior.
+
+> **SHARED CROSSING IDENTITY != SHARED MUTABLE STATE**

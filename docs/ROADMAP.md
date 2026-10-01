@@ -113,6 +113,17 @@ Required proof:
 - A can verify B's response;
 - neither node needs a shared mutable database.
 
+Current bounded proof:
+
+- [Sovereign Nodes 001](SOVEREIGN-NODES-001.md) has source A create one signed crossing;
+- durable node B independently verifies, RECEIVE-records, and ADMITs it;
+- B returns a content-addressed response bundle containing its signed RECEIVE and disposition receipts;
+- A verifies the returned response from signed material without reading B's journal;
+- B's local history and signing continuity survive restart;
+- no shared mutable state is required.
+
+This earns the stated R4 semantics at the current envelope level. Network transport and endpoint identity remain open.
+
 ## R5 — Divergent Lawful Receivers
 
 Send the same crossing to B and C.
@@ -126,6 +137,17 @@ same source crossing
 ```
 
 Both outcomes remain valid and attributable.
+
+Current bounded proof:
+
+- [Sovereign Nodes 001](SOVEREIGN-NODES-001.md) sends the exact same signed crossing to durable B and C;
+- B ADMITs and C REFUSEs;
+- each receiver uses its own world ID, key, journal, history head, and state reference;
+- both response bundles independently verify at the source;
+- both divergent histories reconstruct after restart;
+- no reconciliation step selects one receiver's consequence as globally authoritative.
+
+This earns the stated R5 divergent-receiver semantics at the current envelope level.
 
 This is the first decisive anti-global-state proof.
 
