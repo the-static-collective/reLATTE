@@ -473,3 +473,29 @@ new key + new DID + B2 --supersedes--> B1
 ```
 
 > **KEY ROTATION != HISTORY REWRITE**
+
+
+## DID:DHT Discovery 001
+
+[DID:DHT Discovery 001](docs/DID-DHT-DISCOVERY-001.md) adds a bounded discovery seam for DWN service endpoints advertised by a real locally-created `did:dht` document.
+
+```text
+did:dht
+  ↓
+DID document
+  ↓
+DecentralizedWebNode service
+  ↓
+non-executable road candidate
+```
+
+Discovery distinguishes **candidate observed**, **no candidate observed**, and **unknown because resolution failed**. A discovered endpoint carries no authorization, delivery, or semantic effect.
+
+```text
+DISCOVERED != SELECTED
+SELECTED != AUTHORIZED
+AUTHORIZED != DELIVERED
+DELIVERED != ADMITTED
+```
+
+> **A map may reveal a road. It may not move the traveler.**
