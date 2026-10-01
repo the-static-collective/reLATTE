@@ -406,3 +406,25 @@ crossing
 A second world may refuse the same descendant while the pulse still closes.
 
 > **GLOBAL AGREEMENT != PULSE SUCCESS**
+
+
+## Release Rule Hostile 001
+
+[Release Rule Hostile 001](docs/RELEASE-RULE-HOSTILE-001.md) attacks the independent generality gate with two materially different donor families:
+
+```text
+Daily Slice       Haunted Toaster
+    \                 /
+     \               /
+      opaque organ adapter
+              ↓
+       signed crossing
+              ↓
+     file / HTTP transport
+              ↓
+       LocalReceiver
+```
+
+The shared substrate is forbidden from learning either donor family's semantics.
+
+> **EDGE ADAPTER != CORE EXCEPTION**
