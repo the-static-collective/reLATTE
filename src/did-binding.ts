@@ -164,7 +164,10 @@ function bindingSignatureBytes(domain: string, value: unknown): Buffer {
 }
 
 function base64url(bytes: ArrayBuffer | Uint8Array): string {
-  return Buffer.from(bytes).toString('base64url');
+  const normalized = bytes instanceof ArrayBuffer
+    ? new Uint8Array(bytes)
+    : Uint8Array.from(bytes);
+  return Buffer.from(normalized).toString('base64url');
 }
 
 function equalCanonical(a: unknown, b: unknown): boolean {
@@ -249,7 +252,7 @@ export async function createDidBinding(args: {
   relatte_keys: P256KeyMaterial;
   did_uri: string;
   did_verification_method_id: string;
-  did_public_key_jwk: JsonWebKey;
+  did_public_key_jwk: unknown;
   did_signer: DidBindingSigner;
   created_at: string;
   supersedes_binding_id?: string | null;
