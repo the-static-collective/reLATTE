@@ -235,6 +235,20 @@ Required proof:
 - weather does not rewrite history;
 - weather cannot authorize an action.
 
+Current bounded proof:
+
+- [Field Consequence 001](FIELD-CONSEQUENCE-001.md) projects only signed R3 ADMIT receipts from the lens's own world;
+- signed R8 Perspectives may contribute only when attached to a crossing already present in admitted local history;
+- typed structural features feed an owner-local Field Lens rather than a universal weighting model;
+- admitted history changes susceptibility relative to baseline;
+- two different lenses over the exact same history retain the same history root while producing different field projections;
+- source receipts, Moments, and Perspectives remain unchanged and verifiable after projection;
+- input order does not alter projection identity;
+- every field projection fixes semantic_effect=none, authorization=null, and recommended_action=null;
+- field projections cannot verify as receipts or crossings and cannot be received as if they were actions.
+
+This earns the stated R9 field-consequence semantics at the current envelope level. It does not claim prediction, ranking, governance, or objective social measurement.
+
 ## R10 — Cultural Descendant
 
 Pass one admitted local consequence through MEMENTO-style uptake/reproduction.
