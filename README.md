@@ -151,3 +151,24 @@ It tests one content-addressed grammar crossing against divergent sovereign rece
 > **A PERSON MAY REVEAL A GRAMMAR. THEY MUST NOT BECOME THE GRAMMAR.**
 
 The specimen does not complete R3–R5; it pressure-tests the desired receiver semantics without claiming persistence or generality.
+
+
+## Porch 001 + Creative Customs
+
+[Porch 001 + Creative Customs 001](docs/PORCH-CUSTOMS-001.md) adds a public boundary declaration for COM⁵ crossings.
+
+A porch can declare:
+
+```text
+WELCOME
+HOLD
+REFUSE
+RETURN
+RELEASE
+```
+
+Creative Customs evaluates an arriving capsule against that declaration and emits a signed receipt with no local semantic effect.
+
+> **WELCOME != ADMIT**
+
+A world may welcome a knock at its porch and still refuse the proposed grammar under separate interior law.
