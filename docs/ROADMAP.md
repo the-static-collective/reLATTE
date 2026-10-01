@@ -358,6 +358,21 @@ This earns the stated R13 composition-pulse semantics at the current envelope le
 
 > **Do not call reLATTE a general substrate until two materially different organ families can cross it without reLATTE-specific semantic hacks.**
 
+Current bounded proof:
+
+- [Release Rule Hostile 001](RELEASE-RULE-HOSTILE-001.md) sends The Daily Slice and The Haunted Toaster through one generic opaque-organ adapter;
+- the donor families differ materially in purpose, payload shape, media type, donor claims, and requested effect;
+- both use the same canonical crossing envelope, signature implementation, file transport, HTTP transport, and durable LocalReceiver;
+- donor semantics remain signed opaque extension data and are not interpreted by the substrate;
+- a source-code tripwire fails if donor-specific identifiers or vocabulary appear in the tested adapter/protocol/transport/receiver source;
+- a synthetic unknown third family crosses the same adapter without adding an enum or branch;
+- local law may ADMIT one family and HOLD the other after identical substrate ingress;
+- donor-claim/payload mutation and semantic sidecars fail closed.
+
+If the repository verifier passes, this satisfies the stated two-materially-different-family release rule at the current crossing boundary and supports describing reLATTE as a **general substrate at that bounded boundary**.
+
+This does not claim universal applicability, production readiness, semantic compatibility with every donor system, or completion of still-open lower-level roadmap gaps.
+
 
 ## Composite witness lane
 
