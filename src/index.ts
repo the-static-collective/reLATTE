@@ -6,3 +6,4 @@ export * from './neighborhood.ts';
 export * from './traversal.ts';
 export * from './reentry.ts';
 export * from './enterable.ts';
+export * from './room-return.ts';
