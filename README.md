@@ -360,3 +360,25 @@ local receiver keeps operating
 ```
 
 > **CHECKPOINT AVAILABILITY != LOCAL LIVENESS**
+
+
+## Mortality Test 001
+
+[Mortality Test 001](docs/MORTALITY-TEST-001.md) kills a durable sovereign node and reconstitutes a fresh successor from surviving mirrors and peer archives:
+
+```text
+PREDECESSOR
+   ↓ history + checkpoint + seed
+mirrors + peer archives
+   ↓
+KILL predecessor + key + one peer + Git
+   ↓
+surviving mirror + capsule
+   ↓
+SUCCESSOR
+fresh world / particular / key
+```
+
+Historical receipts still name the dead predecessor. New acts name the successor.
+
+> **RECONSTITUTION != RESURRECTION**
