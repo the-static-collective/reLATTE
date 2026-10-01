@@ -20,6 +20,19 @@ export interface TransportFrame {
   laws: string[];
 }
 
+const TRANSPORT_FRAME_KEYS = [
+  'schema',
+  'transport_id',
+  'transport',
+  'crossing_id',
+  'canonical_body_sha256',
+  'media_type',
+  'body',
+  'route_note',
+  'created_at',
+  'laws',
+] as const;
+
 export interface TransportAck {
   schema: 'relatte.transport-ack/v0';
   transport_id: string;
@@ -32,6 +45,20 @@ export interface TransportAck {
 function asRecord(value: unknown, code: string): Record<string, any> {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new Error(code);
   return value as Record<string, any>;
+}
+
+function assertOnlyKeys(object: Record<string, any>, allowed: readonly string[], code: string): void {
+  const allowedSet = new Set(allowed);
+  for (const key of Object.keys(object)) {
+    if (!allowedSet.has(key)) throw new Error(code);
+  }
+}
+
+function stringArray(value: unknown, code: string): string[] {
+  if (!Array.isArray(value) || value.some((entry) => typeof entry !== 'string' || entry.trim() === '')) {
+    throw new Error(code);
+  }
+  return [...value];
 }
 
 function nonEmpty(value: unknown, code: string): string {
@@ -99,11 +126,15 @@ export async function verifyAndExtractTransportFrame(
   value: unknown,
 ): Promise<Record<string, any>> {
   const frame = asRecord(value, 'INVALID_TRANSPORT_FRAME');
+  assertOnlyKeys(frame, TRANSPORT_FRAME_KEYS, 'UNEXPECTED_TRANSPORT_FRAME_FIELD');
   if (frame.schema !== 'relatte.transport-frame/v0') throw new Error('INVALID_TRANSPORT_FRAME_SCHEMA');
   if (frame.transport !== 'file-bundle' && frame.transport !== 'http-relay') {
     throw new Error('INVALID_TRANSPORT_KIND');
   }
   validateTimestamp(frame.created_at);
+  if (frame.media_type !== 'application/vnd.relatte.crossing+json') {
+    throw new Error('INVALID_TRANSPORT_MEDIA_TYPE');
+  }
 
   const crossingId = nonEmpty(frame.crossing_id, 'INVALID_TRANSPORT_CROSSING_ID');
   const body = nonEmpty(frame.body, 'INVALID_TRANSPORT_BODY');
@@ -124,7 +155,7 @@ export async function verifyAndExtractTransportFrame(
     body,
     route_note: nonEmpty(frame.route_note, 'INVALID_TRANSPORT_ROUTE_NOTE'),
     created_at: frame.created_at,
-    laws: Array.isArray(frame.laws) ? [...frame.laws] : [],
+    laws: stringArray(frame.laws, 'INVALID_TRANSPORT_LAWS'),
   };
   if (
     typeof frame.transport_id !== 'string' ||
