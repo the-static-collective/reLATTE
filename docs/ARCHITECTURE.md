@@ -180,3 +180,48 @@ Not yet established:
 ## Governing rule
 
 > **reLATTE may standardize the crossing. It may not standardize the destination's meaning.**
+
+
+## Experimental ecology composition
+
+Ecology Machine 001 overlays the existing layers without adding a new sovereign layer.
+
+```text
+L9 composition/discrimination
+      ↓ candidate grammar
+
+COM⁵ capsule + L3 crossing
+      ↓
+
+L4 carrier
+      ↓
+
+Porch / Customs boundary
+      ↓
+
+L5 local disposition
+   ↙      ↓       ↘
+ Fog    L7 field   L8 inheritance
+ HOLD   weather    tradition
+          ↓          ↓
+      capacity    release/rest
+          \        /
+            return
+              ↓
+        Commuter Line
+```
+
+The composition is intentionally cross-layer.
+
+No projection authorizes another layer.
+
+```text
+CANDIDATE != CROSSING
+CROSSING != DELIVERY
+DELIVERY != WELCOME
+WELCOME != ADMISSION
+ADMISSION != WEATHER
+WEATHER != AUTHORITY
+ANCESTRY != AUTHORITY
+ROUTE != AUTHORITY
+```
