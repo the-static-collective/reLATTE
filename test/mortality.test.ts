@@ -131,7 +131,7 @@ async function buildPredecessor(base: string): Promise<{
       a.crossing.crossing_id,
       b.crossing.crossing_id,
     ],
-    checkpoint_commitment_id: checkpoint.commitment_id,
+    checkpoint_commitment_id: checkpoint.commitment_id!,
     checkpoint_receipt_set_root: checkpoint.receipt_set_root,
     created_at: '2026-10-02T00:27:00.000Z',
   });
