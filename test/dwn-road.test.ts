@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import type { AddressInfo } from 'node:net';
 import test from 'node:test';
 
+import { DidKey, UniversalResolver } from '@web5/dids';
 import {
   DataStoreLevel,
   Dwn,
@@ -61,7 +62,9 @@ async function crossing(): Promise<any> {
 }
 
 async function openDwn(base: string): Promise<Dwn> {
+  const didResolver = new UniversalResolver({ didResolvers: [DidKey] });
   return Dwn.create({
+    didResolver,
     messageStore: new MessageStoreLevel({
       blockstoreLocation: join(base, 'messages'),
       indexLocation: join(base, 'index'),
