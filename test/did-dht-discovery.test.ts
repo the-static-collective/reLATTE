@@ -148,13 +148,14 @@ test('hostile endpoint shapes are retained as ignored observations rather than e
 
   assert.equal(report.candidates.length, 1);
   assert.equal(report.candidates[0].endpoint, 'https://good.example/dwn');
-  assert.equal(report.ignored.length, 3);
+  assert.equal(report.ignored.length, 4);
   assert.deepEqual(
     report.ignored.map((entry) => entry.reason).sort(),
     [
       'ENDPOINT_CREDENTIALS_FORBIDDEN',
       'INVALID_SERVICE_ID',
       'UNSUPPORTED_ENDPOINT_PROTOCOL',
+      'UNSUPPORTED_ENDPOINT_SHAPE',
     ].sort(),
   );
 });
