@@ -1,0 +1,75 @@
+{
+  "schema": "relatte.com5-capsule/v0",
+  "capsule_id": "PENDING_GENERATED_BY_RUNTIME",
+  "title": "Cost-Carrying Return / Jubilee Release — Specimen 001",
+  "origin": {
+    "source_kind": "documented-creative-method",
+    "source_refs": [
+      "external:story-circle-eight-beat-lineage",
+      "conversation:pirate-dock-specimen-001"
+    ],
+    "attribution": [
+      "Dan Harmon / Story Circle lineage is an influence aperture for the eight-beat return structure.",
+      "Static Collective adds the Jubilee RELEASE question as a descendant mutation."
+    ],
+    "non_authorities": [
+      "SOURCE_PERSON != GRAMMAR",
+      "INFLUENCE != ENDORSEMENT",
+      "RESEMBLANCE != AUTHORITY",
+      "DESCENDANT != ANCESTOR"
+    ]
+  },
+  "grammar": {
+    "grammar_id": "grammar:cost-carrying-return/v0",
+    "name": "Cost-Carrying Return",
+    "proposition": "A return may preserve the cost of transformation; a Jubilee descendant may ask which constraint can now be released without erasing ancestry.",
+    "portable_operators": [
+      "ENTER",
+      "NEED",
+      "ADAPT",
+      "PAY",
+      "RETURN",
+      "CHANGE",
+      "RELEASE"
+    ]
+  },
+  "stages": [
+    {
+      "stage": "COMPOST",
+      "input": "A documented creative method encountered in an external ecology.",
+      "output": "Source/person, observed grammar, residue, and non-authority are separated.",
+      "receipt": "The person remains attributable but is not made remotely executable."
+    },
+    {
+      "stage": "COMPOSE",
+      "input": "The separated cost-carrying-return grammar.",
+      "output": "A portable operator set with Jubilee RELEASE added as explicit descendant mutation.",
+      "receipt": "The mutation names its ancestry and its introduced operator."
+    },
+    {
+      "stage": "COMPUTE",
+      "input": "The proposed portable grammar.",
+      "output": "A bounded candidate required to survive source, authority, and receiver-local controls.",
+      "receipt": "Recommendation is not admission; same capsule must tolerate divergent receiver outcomes."
+    },
+    {
+      "stage": "COMMUTE",
+      "input": "The pressure-tested grammar capsule.",
+      "output": "One addressable reLATTE crossing can be delivered unchanged to multiple sovereign worlds.",
+      "receipt": "Transport and delivery do not authorize local semantic effect."
+    },
+    {
+      "stage": "COMMUNE",
+      "input": "Divergent local receipts over the same crossing.",
+      "output": "Shared addressability plus sovereign response plus lawful return.",
+      "receipt": "COMMUNE != CONSENSUS."
+    }
+  ],
+  "requested_relation": "Receiver may adapt the portable grammar under receiver-local law and return a receipt without inheriting source-person authority.",
+  "return_address": "relatte:return:com5-capsule-001",
+  "created_at": "2026-10-01T18:40:00.000Z",
+  "extensions": {
+    "specimen": "COM5-CAPSULE-001",
+    "web5_claim": "sovereign histories compose"
+  }
+}
