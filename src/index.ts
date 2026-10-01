@@ -3,3 +3,4 @@ export * from './protocol.ts';
 export * from './com5.ts';
 export * from './room.ts';
 export * from './neighborhood.ts';
+export * from './traversal.ts';
