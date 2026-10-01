@@ -250,3 +250,33 @@ Both roads carry the same JCS-canonical crossing body and crossing ID while prod
 > **ROAD CHANGE != IDENTITY CHANGE**
 
 The HTTP ACK is transport-only and has no semantic effect. Receiver admission remains local.
+
+
+## Mirror / Store / Serve 001
+
+[Mirror / Store / Serve 001](docs/MIRROR-STORE-SERVE-001.md) gives reLATTE its first dead-source artifact-survival proof:
+
+```text
+SOURCE
+  ├─ signs crossing X
+  └─ signs PUBLISHED(X)
+         |
+      mirrors B + C
+         |
+       STORED
+         |
+   source disappears
+   mirror B disappears
+         |
+      mirror C
+         |
+       SERVED
+         |
+    fresh receiver
+         |
+      RECEIVED
+```
+
+The surviving crossing still names the original source. The mirror never inherits source authority.
+
+> **SOURCE DEATH != ARTIFACT DEATH**
