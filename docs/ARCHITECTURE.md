@@ -461,3 +461,31 @@ DESCENDANT != ADMISSION
 RETURN != ADMISSION
 PULSE != CONSENSUS
 ```
+
+
+## Generality gate witness
+
+[Release Rule Hostile 001](RELEASE-RULE-HOSTILE-001.md) tests the shared crossing substrate against two materially different donor families without promoting donor semantics into core.
+
+```text
+donor-owned semantics
+       ↓
+opaque signed adapter descriptor
+       ↓
+canonical crossing
+       ↓
+replaceable transport
+       ↓
+durable receiver
+       ↓
+owner-local disposition
+```
+
+The substrate may bind donor claims without interpreting them.
+
+```text
+DONOR SEMANTICS != SUBSTRATE SEMANTICS
+FAMILY != DISPOSITION
+OPAQUE != UNBOUND
+EDGE ADAPTER != CORE EXCEPTION
+```
