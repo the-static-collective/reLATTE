@@ -260,6 +260,20 @@ Required proof:
 - variation is explicit;
 - another world receives descendant as fresh candidate.
 
+Current bounded proof:
+
+- [Cultural Descendant 001](CULTURAL-DESCENDANT-001.md) starts from a verified ancestor crossing that a durable local receiver has explicitly ADMITted;
+- an R9 field projection includes that admission but remains context-only and non-authoritative;
+- a content-addressed Cultural Uptake binds the ancestor crossing, ADMIT receipt, field projection, field history root, local world/particular, and explicit preserved / varied / introduced / retired declarations;
+- at least one explicit variation is required;
+- the descendant is a new signed crossing whose parent is the ancestor crossing and whose source identity is the local maker;
+- descendant lineage fixes inherited_authority=false and field_authorized_action=false;
+- another durable Local Receiver receives the descendant as RECEIVED with semantic_effect=none and no inherited disposition;
+- modifying uptake variation breaks uptake identity;
+- modifying descendant ancestry breaks crossing verification.
+
+This earns the stated R10 cultural-descendant semantics at the current envelope level. It does not claim automatic reproduction, fitness, ranking, licensing inheritance, truth preservation, or downstream admission.
+
 ## R11 — External Checkpoint
 
 Commit a local receipt-set root to one replaceable foreign witness.
