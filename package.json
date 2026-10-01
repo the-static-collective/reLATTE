@@ -11,7 +11,9 @@
     "browse:genesis": "node --experimental-strip-types demo/browse-genesis.ts",
     "walk:genesis": "node --experimental-strip-types demo/walk-genesis.ts",
     "reenter:genesis": "node --experimental-strip-types demo/reenter-genesis.ts",
-    "enter:song": "node --experimental-strip-types demo/enterable-song.ts"
+    "enter:song": "node --experimental-strip-types demo/enterable-song.ts",
+    "enter:bundle": "node --experimental-strip-types demo/enterable-song-bundle.ts",
+    "follow:room": "node --experimental-strip-types demo/follow-room-request.ts"
   },
   "dependencies": {
     "json-canonicalize": "3.0.1"

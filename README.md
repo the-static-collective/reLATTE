@@ -194,6 +194,30 @@ npm run enter:song
 
 See [Slice 008 — The Block Opens Into a Room](slices/008-the-block-opens-into-a-room.md).
 
+### The Room may ask for a road
+
+ROroomOM can now return a bounded navigation intention to reLATTE.
+
+```text
+Room asks: A → B
+↓
+reLATTE ignores the claim of reachability
+↓
+re-verifies A's neighborhood from the supplied history cut
+↓
+only then emits fresh enterable B
+```
+
+```text
+ROOM REQUEST != VERIFIED ROAD
+REQUESTED SUBJECT != AUTHORIZED SUBJECT
+reLATTE MUST REVERIFY NEIGHBOR
+```
+
+The Room owns the encounter and the desire to move. reLATTE retains authority over traversal proof.
+
+See [Slice 009 — The Room May Ask for a Road](slices/009-the-room-may-ask-for-a-road.md).
+
 ## Core inversion
 
 Ethereum's durable contribution was not merely cryptocurrency. It provided a general substrate in which independently authored programs could share common addressing, execution, receipts, and composability.
