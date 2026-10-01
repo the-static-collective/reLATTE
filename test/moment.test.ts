@@ -99,7 +99,7 @@ test('Moment is a stable address over the exact signed crossing carrier', async 
   assert.equal(await verifyCrossingEnvelope(crossing), true);
   assert.equal(await verifyMomentAnchor(moment), true);
   assert.equal(moment.crossing_id, crossing.crossing_id);
-  assert.match(moment.moment_id, /^relatte-moment-v0:[0-9a-f]{64}$/);
+  assert.match(moment.moment_id!, /^relatte-moment-v0:[0-9a-f]{64}$/);
 
   const reparsed = JSON.parse(moment.canonical_body);
   assert.equal(reparsed.crossing_id, crossing.crossing_id);
