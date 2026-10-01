@@ -195,7 +195,7 @@ async function verifyRelatteSignature(
   return crypto.subtle.verify(
     { name: 'ECDSA', hash: 'SHA-256' },
     key,
-    Buffer.from(canonicalBase64url(signatureText, 'INVALID_RELATTE_BINDING_SIGNATURE'), 'base64url'),
+    new Uint8Array(Buffer.from(canonicalBase64url(signatureText, 'INVALID_RELATTE_BINDING_SIGNATURE'), 'base64url')),
     new Uint8Array(data),
   );
 }
@@ -220,7 +220,7 @@ async function verifyDidSignature(
       false,
       ['verify'],
     );
-    return crypto.subtle.verify('Ed25519', key, signature, new Uint8Array(data));
+    return crypto.subtle.verify('Ed25519', key, new Uint8Array(signature), new Uint8Array(data));
   }
 
   if (publicJwk.kty === 'EC' && publicJwk.crv === 'P-256') {
@@ -235,7 +235,7 @@ async function verifyDidSignature(
     return crypto.subtle.verify(
       { name: 'ECDSA', hash: 'SHA-256' },
       key,
-      signature,
+      new Uint8Array(signature),
       new Uint8Array(data),
     );
   }
