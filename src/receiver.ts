@@ -168,16 +168,23 @@ function parseConfig(value: unknown): LocalReceiverConfig {
 }
 
 export class LocalReceiver {
+  readonly root: string;
+  readonly config: LocalReceiverConfig;
+  private readonly keys: P256KeyMaterial;
   private readonly received = new Map<string, ReceivedEntry>();
   private readonly dispositions = new Map<string, DispositionEntry>();
   private historyHead: string | null = null;
   private eventCount = 0;
 
   private constructor(
-    readonly root: string,
-    readonly config: LocalReceiverConfig,
-    private readonly keys: P256KeyMaterial,
-  ) {}
+    root: string,
+    config: LocalReceiverConfig,
+    keys: P256KeyMaterial,
+  ) {
+    this.root = root;
+    this.config = config;
+    this.keys = keys;
+  }
 
   static async create(
     root: string,
