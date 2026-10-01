@@ -156,6 +156,44 @@ There is also a clickable [COM⁵ Re-entry Room](demo/reentry-room.html).
 
 See [Slice 007 — The Return Is a New Encounter](slices/007-the-return-is-a-new-encounter.md).
 
+### Enter the particular
+
+The navigator can now hand an addressed particular to a room renderer as a bounded **enterable particular** projection.
+
+```text
+reLATTE particular
+→ five COM⁵ doors
+→ door-specific renderer hints
+→ optional addressed media instruments
+→ receiver-local room
+```
+
+For verified media payload refs, the COMPOSE door can propose:
+
+```text
+audio/*         → audio player
+text/*          → text sheet
+video/*         → video player
+image/*         → image viewer
+application/pdf → document viewer
+```
+
+The packet carries addresses and renderer hints, not media bytes or authority.
+
+```text
+MEDIA REF != MEDIA CONTENT
+ROOM RENDERING != SOURCE MUTATION
+RECEIVER ENCOUNTER != SOURCE IDENTITY
+```
+
+Try the media specimen:
+
+```bash
+npm run enter:song
+```
+
+See [Slice 008 — The Block Opens Into a Room](slices/008-the-block-opens-into-a-room.md).
+
 ## Core inversion
 
 Ethereum's durable contribution was not merely cryptocurrency. It provided a general substrate in which independently authored programs could share common addressing, execution, receipts, and composability.
