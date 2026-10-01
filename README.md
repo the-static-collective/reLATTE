@@ -122,6 +122,40 @@ There is also a non-authoritative clickable UI specimen at [Walkable Provenance 
 
 See [Slice 006 — Re-center Without Forgetting the Road](slices/006-recenter-without-forgetting-the-road.md).
 
+### Return as encounter
+
+A walk can now distinguish returning to the same particular from merely rendering the same room twice.
+
+```text
+A → B → A
+```
+
+produces:
+
+```text
+same subject: yes
+same encounter position: no
+underlying subject mutation claimed: no
+```
+
+The re-entry witness carries occurrence number, first encounter index, intervening subjects, and the verified return step.
+
+```text
+SAME PLACE != SAME ARRIVAL
+RETURN != MUTATION
+RE-ENTRY != NEW SUBJECT
+```
+
+Try it:
+
+```bash
+npm run reenter:genesis
+```
+
+There is also a clickable [COM⁵ Re-entry Room](demo/reentry-room.html).
+
+See [Slice 007 — The Return Is a New Encounter](slices/007-the-return-is-a-new-encounter.md).
+
 ## Core inversion
 
 Ethereum's durable contribution was not merely cryptocurrency. It provided a general substrate in which independently authored programs could share common addressing, execution, receipts, and composability.
