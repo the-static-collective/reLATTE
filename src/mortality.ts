@@ -332,13 +332,7 @@ export async function reconstituteSuccessor(args: {
   );
   const acceptance = await successor.acceptSuccession({
     anchor_crossing_id: capsule.recoverable_crossing_ids[0],
-    predecessor_seed_receipt_id: nonEmpty(
-      seed.receipt_id,
-      'INVALID_MORTALITY_SEED_RECEIPT_ID',
-    ),
-    predecessor_world_id: capsule.predecessor_world_id,
-    predecessor_receiver_particular:
-      capsule.predecessor_receiver_particular,
+    predecessor_seed_receipt: seed,
     created_at: args.accepted_at,
   });
 
