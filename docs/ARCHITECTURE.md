@@ -341,3 +341,33 @@ LENS != HISTORY
 WEATHER != AUTHORITY
 SUSCEPTIBILITY != INSTRUCTION
 ```
+
+
+## Cultural descendant witness
+
+[Cultural Descendant 001](CULTURAL-DESCENDANT-001.md) gives L8 a bounded executable heredity path downstream of admitted L5 history and non-authoritative L7 field context.
+
+```text
+ancestor crossing
+      ↓
+local ADMIT
+      ↓
+field projection
+      ↓
+owner-local uptake
+      ↓
+explicit variation
+      ↓
+fresh descendant crossing
+      ↓
+next sovereign receiver
+```
+
+The descendant uses the ancestor as a parent reference but owns fresh source identity and arrives elsewhere without inherited admission.
+
+```text
+ANCESTRY != AUTHORITY
+FIELD != AUTHORITY
+VARIATION != RETCON
+REPRODUCTION != ADMISSION
+```
