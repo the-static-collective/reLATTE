@@ -114,6 +114,7 @@ export function constructCom5CapsuleIdentityBody(value: unknown): Omit<Com5Capsu
   if (!Array.isArray(capsule.stages) || capsule.stages.length !== COM5_STAGES.length) {
     throw new Error('INVALID_COM5_STAGE_COUNT');
   }
+  const stages = capsule.stages as unknown[];
 
   const createdAt = nonEmptyString(capsule.created_at, 'INVALID_COM5_CREATED_AT');
   validateTimestamp(createdAt);
@@ -133,7 +134,7 @@ export function constructCom5CapsuleIdentityBody(value: unknown): Omit<Com5Capsu
       proposition: nonEmptyString(grammar.proposition, 'INVALID_COM5_PROPOSITION'),
       portable_operators: stringArray(grammar.portable_operators, 'INVALID_COM5_OPERATORS', 1),
     },
-    stages: COM5_STAGES.map((stage, index) => normalizeStage(capsule.stages![index], stage)),
+    stages: COM5_STAGES.map((stage, index) => normalizeStage(stages[index], stage)),
     requested_relation: nonEmptyString(capsule.requested_relation, 'INVALID_COM5_REQUESTED_RELATION'),
     return_address: nonEmptyString(capsule.return_address, 'INVALID_COM5_RETURN_ADDRESS'),
     created_at: createdAt,
