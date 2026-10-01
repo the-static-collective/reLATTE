@@ -233,3 +233,29 @@ WEATHER != AUTHORITY
 ANCESTRY != AUTHORITY
 ROUTE != AUTHORITY
 ```
+
+
+## Replaceable transport witness
+
+[Replaceable Transport 001](REPLACEABLE-TRANSPORT-001.md) gives L4 a bounded executable proof over two real roads: filesystem I/O and localhost HTTP.
+
+```text
+canonical signed crossing
+      |
+   +--+--+
+   |     |
+ file   HTTP
+   |     |
+   +--+--+
+      |
+ same crossing identity
+```
+
+Transport frames are separately addressed road events. They may vary without mutating the crossing carried inside them.
+
+```text
+TRANSPORT FRAME != CROSSING
+ACK != RECEIVE RECEIPT
+DELIVERY != ADMISSION
+ROAD CHANGE != IDENTITY CHANGE
+```

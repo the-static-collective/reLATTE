@@ -160,6 +160,19 @@ Move the identical canonical crossing using at least two transports, for example
 
 Transport replacement must not change crossing identity.
 
+Current bounded proof:
+
+- [Replaceable Transport 001](REPLACEABLE-TRANSPORT-001.md) serializes one signed crossing to RFC 8785/JCS canonical JSON;
+- a filesystem bundle writes/reads that crossing through actual disk I/O;
+- an HTTP relay POSTs the same canonical crossing through an actual localhost socket;
+- both roads preserve the same crossing ID and canonical-body SHA-256;
+- the two road events have distinct transport-frame IDs;
+- the same durable receiver treats second-road delivery as an idempotent duplicate rather than new history;
+- HTTP transport ACK remains non-semantic and distinct from receiver RECEIVE receipt;
+- hostile frame/body/route/sidecar mutations fail verification.
+
+This earns the stated R6 replaceable-transport semantics at the current local-process/network boundary. Internet transport, remote peer discovery, TLS identity, retries, and store-and-forward remain open.
+
 ## R7 — Mirror / Store / Serve Receipts
 
 Recover the old Proof-of-Sharing insight without token economics.

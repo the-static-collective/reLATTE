@@ -231,3 +231,22 @@ A verifies both.
 B and C keep separate keys, journals, histories, and state references. Both survive restart. The source never needs access to either receiver's mutable interior.
 
 > **SHARED CROSSING IDENTITY != SHARED MUTABLE STATE**
+
+
+## Replaceable Transport 001
+
+[Replaceable Transport 001](docs/REPLACEABLE-TRANSPORT-001.md) proves that one signed crossing survives two materially different roads:
+
+```text
+SIGNED CROSSING X
+   ├─→ filesystem bundle ─┐
+   └─→ HTTP POST relay ───┤
+                          ↓
+                    SAME RECEIVER
+```
+
+Both roads carry the same JCS-canonical crossing body and crossing ID while producing distinct transport-frame IDs.
+
+> **ROAD CHANGE != IDENTITY CHANGE**
+
+The HTTP ACK is transport-only and has no semantic effect. Receiver admission remains local.
