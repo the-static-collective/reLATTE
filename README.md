@@ -319,3 +319,23 @@ weather / susceptibility
 Two worlds may interpret the same history through different lenses while retaining the same history root.
 
 > **WEATHER MAY DIFFER WHILE HISTORY REMAINS THE SAME.**
+
+
+## Cultural Descendant 001
+
+[Cultural Descendant 001](docs/CULTURAL-DESCENDANT-001.md) turns admitted local consequence into explicit, attributable heredity:
+
+```text
+ancestor
+  → local ADMIT
+  → field context
+  → owner-local uptake
+  → explicit variation
+  → fresh signed descendant
+  → another world
+  → RECEIVED as fresh candidate
+```
+
+The descendant preserves ancestry without inheriting the ancestor's authority or the producing world's admission.
+
+> **ANCESTRY != AUTHORITY**
