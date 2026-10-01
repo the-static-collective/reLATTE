@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://the-static-collective.github.io/reLATTE/schemas/com5-capsule-v0.schema.json",
+  "title": "COM5CapsuleV0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "capsule_id",
+    "title",
+    "origin",
+    "grammar",
+    "stages",
+    "requested_relation",
+    "return_address",
+    "created_at"
+  ],
+  "properties": {
+    "schema": { "const": "relatte.com5-capsule/v0" },
+    "capsule_id": {
+      "type": "string",
+      "pattern": "^relatte-com5-v0:[0-9a-f]{64}$"
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_kind", "source_refs", "attribution", "non_authorities"],
+      "properties": {
+        "source_kind": { "type": "string", "minLength": 1 },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "attribution": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "non_authorities": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "grammar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grammar_id", "name", "proposition", "portable_operators"],
+      "properties": {
+        "grammar_id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "proposition": { "type": "string", "minLength": 1 },
+        "portable_operators": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "stages": {
+      "type": "array",
+      "prefixItems": [
+        { "$ref": "#/$defs/compost" },
+        { "$ref": "#/$defs/compose" },
+        { "$ref": "#/$defs/compute" },
+        { "$ref": "#/$defs/commute" },
+        { "$ref": "#/$defs/commune" }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 5
+    },
+    "requested_relation": { "type": "string", "minLength": 1 },
+    "return_address": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "extensions": { "type": "object", "additionalProperties": true }
+  },
+  "$defs": {
+    "stageBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "input", "output", "receipt"],
+      "properties": {
+        "stage": { "type": "string" },
+        "input": { "type": "string", "minLength": 1 },
+        "output": { "type": "string", "minLength": 1 },
+        "receipt": { "type": "string", "minLength": 1 }
+      }
+    },
+    "compost": {
+      "allOf": [
+        { "$ref": "#/$defs/stageBase" },
+        { "properties": { "stage": { "const": "COMPOST" } } }
+      ]
+    },
+    "compose": {
+      "allOf": [
+        { "$ref": "#/$defs/stageBase" },
+        { "properties": { "stage": { "const": "COMPOSE" } } }
+      ]
+    },
+    "compute": {
+      "allOf": [
+        { "$ref": "#/$defs/stageBase" },
+        { "properties": { "stage": { "const": "COMPUTE" } } }
+      ]
+    },
+    "commute": {
+      "allOf": [
+        { "$ref": "#/$defs/stageBase" },
+        { "properties": { "stage": { "const": "COMMUTE" } } }
+      ]
+    },
+    "commune": {
+      "allOf": [
+        { "$ref": "#/$defs/stageBase" },
+        { "properties": { "stage": { "const": "COMMUNE" } } }
+      ]
+    }
+  }
+}
