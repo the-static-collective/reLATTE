@@ -446,3 +446,30 @@ SIGNED CROSSING X
 The bounded witness uses an actual in-process DWN reference implementation and proves that DWN acceptance can still end in owner-local REFUSE.
 
 > **DWN ACCEPTED != RELATTE ADMITTED**
+
+
+## DID Binding 001
+
+[DID Binding 001](docs/DID-BINDING-001.md) attaches a DID to a reLATTE particular as a dual-attested relation rather than substituting DID identity for particular, key, human, or authority.
+
+```text
+PARTICULAR
+   |
+reLATTE P-256 key
+   |
+dual-attested binding
+   |
+DID + verification method
+```
+
+The binding is signed independently by both the historical reLATTE key and the DID verification key. Historical verification uses the recorded public material; current DID resolution is a separate corroboration step.
+
+Rotation is append-only:
+
+```text
+old key + old DID + B1
+          ↓
+new key + new DID + B2 --supersedes--> B1
+```
+
+> **KEY ROTATION != HISTORY REWRITE**
