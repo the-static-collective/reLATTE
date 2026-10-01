@@ -418,6 +418,135 @@ export class LocalReceiver {
     return receipt;
   }
 
+  async createMortalitySeed(args: {
+    anchor_crossing_id: string;
+    recoverable_crossing_ids: string[];
+    checkpoint_commitment_id: string;
+    checkpoint_receipt_set_root: string;
+    created_at: string;
+  }): Promise<Record<string, any>> {
+    const anchor = this.received.get(args.anchor_crossing_id);
+    if (!anchor) throw new Error('MORTALITY_ANCHOR_NOT_RECEIVED');
+    if (
+      !Array.isArray(args.recoverable_crossing_ids) ||
+      args.recoverable_crossing_ids.length === 0 ||
+      args.recoverable_crossing_ids.some(
+        (id) => typeof id !== 'string' || id.trim() === '',
+      )
+    ) {
+      throw new Error('INVALID_MORTALITY_RECOVERABLE_CROSSINGS');
+    }
+    validateTimestamp(args.created_at);
+
+    const snapshot = this.snapshot();
+    return sealReceipt({
+      schema: 'relatte.receipt/v0',
+      crossing_id: args.anchor_crossing_id,
+      world_id: this.config.world_id,
+      receiver_particular: this.config.receiver_particular,
+      kind: 'R12_MORTALITY_SEED',
+      semantic_effect: 'none',
+      contract_ref: 'relatte:r12-mortality/v0',
+      pre_state_ref: snapshot.state_ref,
+      post_state_ref: snapshot.state_ref,
+      descendant_refs: [],
+      residual_refs: [...args.recoverable_crossing_ids],
+      note: 'predecessor leaves attributable material for a future successor with fresh authority',
+      created_at: args.created_at,
+      extensions: {
+        mortality: {
+          predecessor_world_id: this.config.world_id,
+          predecessor_receiver_particular: this.config.receiver_particular,
+          predecessor_history_head: snapshot.history_head,
+          predecessor_state_ref: snapshot.state_ref,
+          recoverable_crossing_ids: [...args.recoverable_crossing_ids].sort(),
+          checkpoint_commitment_id: nonEmpty(
+            args.checkpoint_commitment_id,
+            'INVALID_MORTALITY_CHECKPOINT_COMMITMENT',
+          ),
+          checkpoint_receipt_set_root: nonEmpty(
+            args.checkpoint_receipt_set_root,
+            'INVALID_MORTALITY_CHECKPOINT_ROOT',
+          ),
+          successor_policy: 'fresh-identity-required',
+          laws: [
+            'SUCCESSOR != PREDECESSOR',
+            'RECONSTITUTION != RESURRECTION',
+            'HISTORY != AUTHORITY TRANSFER',
+            'DEAD KEY != SUCCESSOR KEY',
+          ],
+        },
+      },
+    }, this.keys);
+  }
+
+  async acceptSuccession(args: {
+    anchor_crossing_id: string;
+    predecessor_seed_receipt: unknown;
+    created_at: string;
+  }): Promise<Record<string, any>> {
+    const anchor = this.received.get(args.anchor_crossing_id);
+    if (!anchor) throw new Error('SUCCESSOR_ANCHOR_NOT_RECEIVED');
+    if (!(await verifyReceipt(args.predecessor_seed_receipt))) {
+      throw new Error('INVALID_SUCCESSOR_PREDECESSOR_SEED');
+    }
+    const predecessorSeed = asRecord(
+      args.predecessor_seed_receipt,
+      'INVALID_SUCCESSOR_PREDECESSOR_SEED',
+    );
+    if (
+      predecessorSeed.kind !== 'R12_MORTALITY_SEED' ||
+      predecessorSeed.semantic_effect !== 'none'
+    ) {
+      throw new Error('INVALID_SUCCESSOR_PREDECESSOR_SEED');
+    }
+    validateTimestamp(args.created_at);
+
+    const snapshot = this.snapshot();
+    return sealReceipt({
+      schema: 'relatte.receipt/v0',
+      crossing_id: args.anchor_crossing_id,
+      world_id: this.config.world_id,
+      receiver_particular: this.config.receiver_particular,
+      kind: 'R12_SUCCESSOR_ACCEPTANCE',
+      semantic_effect: 'none',
+      contract_ref: 'relatte:r12-mortality/v0',
+      pre_state_ref: snapshot.state_ref,
+      post_state_ref: snapshot.state_ref,
+      descendant_refs: [],
+      residual_refs: [],
+      note: 'successor accepts continuity reference under fresh local identity and authority',
+      created_at: args.created_at,
+      extensions: {
+        succession: {
+          predecessor_seed_receipt_id: nonEmpty(
+            predecessorSeed.receipt_id,
+            'INVALID_SUCCESSOR_SEED_RECEIPT_ID',
+          ),
+          predecessor_world_id: nonEmpty(
+            predecessorSeed.world_id,
+            'INVALID_SUCCESSOR_PREDECESSOR_WORLD',
+          ),
+          predecessor_receiver_particular: nonEmpty(
+            predecessorSeed.receiver_particular,
+            'INVALID_SUCCESSOR_PREDECESSOR_PARTICULAR',
+          ),
+          successor_world_id: this.config.world_id,
+          successor_receiver_particular: this.config.receiver_particular,
+          authority: 'fresh-local',
+          inherited_private_key: false,
+          inherited_admission: false,
+          laws: [
+            'SUCCESSOR != PREDECESSOR',
+            'CONTINUITY != IDENTITY',
+            'ANCESTRY != AUTHORITY',
+            'SUCCESSION CLAIM != INHERITED ADMISSION',
+          ],
+        },
+      },
+    }, this.keys);
+  }
+
   snapshot(): ReceiverSnapshot {
     const ids = [...this.received.keys()].sort();
     const by = (kind: LocalDisposition) => ids.filter((id) => this.dispositions.get(id)?.disposition === kind);

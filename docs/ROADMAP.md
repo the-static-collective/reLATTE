@@ -308,6 +308,20 @@ Required proof:
 - successor has fresh local identity/authority;
 - historical receipts still name the dead node where appropriate.
 
+Current bounded proof:
+
+- [Mortality Test 001](MORTALITY-TEST-001.md) builds durable predecessor history, covers it with an R11 receipt-set commitment, and emits a signed mortality seed;
+- two R7 mirrors retain every declared recoverable crossing and two peer archives retain the same content-addressed succession capsule;
+- the predecessor receiver root/private key, one mirror, one peer archive, and the foreign Git witness are then deleted;
+- the surviving mirror plus surviving succession capsule are sufficient to create a successor with a different world ID, receiver particular, and fresh local key;
+- the successor re-receives surviving crossings with no inherited admission;
+- successor acceptance explicitly declares fresh-local authority, no inherited private key, and no inherited admission;
+- predecessor historical receipts remain valid and continue to name the dead predecessor;
+- a later successor ADMIT is a separate fresh local act signed under the successor key;
+- reusing the predecessor world or receiver identity is rejected by the reconstitution helper.
+
+This earns the stated R12 mortality/succession semantics at the current local durability boundary. It does not recover the dead private journal/key, elect successors, or establish legal/organizational succession.
+
 ## R13 — Composition Pulse
 
 Only after R1–R12, test the larger round:

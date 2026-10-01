@@ -395,3 +395,29 @@ FOREIGN WITNESS != LOCAL AUTHORITY
 GIT COMMIT != GLOBAL CANON
 CHECKPOINT AVAILABILITY != LOCAL LIVENESS
 ```
+
+
+## Mortality / succession witness
+
+[Mortality Test 001](MORTALITY-TEST-001.md) composes R3 durability, R7 mirrors, and R11 checkpointing into an explicit node-death boundary.
+
+```text
+predecessor local history
+       ↓
+checkpoint + mortality seed
+       ↓
+mirrors + succession archives
+       ↓
+predecessor death
+       ↓
+fresh successor
+```
+
+The successor re-receives surviving artifacts under a new local identity and key. Historical predecessor receipts remain immutable attribution records.
+
+```text
+SUCCESSOR != PREDECESSOR
+CONTINUITY != IDENTITY
+ANCESTRY != AUTHORITY
+PREDECESSOR ADMIT != SUCCESSOR ADMIT
+```
