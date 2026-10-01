@@ -278,7 +278,7 @@ test('one full composition pulse closes from crossing to return without hidden a
     });
 
     assert.equal(verifyCompositionPulseTrace(trace), true);
-    assert.match(trace.pulse_id, /^relatte-composition-pulse-v0:[0-9a-f]{64}$/);
+    assert.match(trace.pulse_id!, /^relatte-composition-pulse-v0:[0-9a-f]{64}$/);
 
     assert.equal(p.originAdmit.kind, 'R3_ADMIT');
     assert.equal(p.field.semantic_effect, 'none');
