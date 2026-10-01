@@ -12,6 +12,7 @@ import {
   Jws,
   MessageStoreLevel,
   ResumableTaskStoreLevel,
+  TestDataGenerator,
 } from '@tbd54566975/dwn-sdk-js';
 
 import {
@@ -143,7 +144,8 @@ test('DID binding rejects key, subject, crossing, and proof substitution', async
   assert.equal(await verifyDidBindingForCrossing(changedDid, signed), false);
 
   const changedProof = structuredClone(binding);
-  changedProof.proofs.did.signature = changedProof.proofs.did.signature.slice(0, -1) + 'A';
+  changedProof.proofs.did.signature =
+    (changedProof.proofs.did.signature[0] === 'A' ? 'B' : 'A') + changedProof.proofs.did.signature.slice(1);
   assert.equal(await verifyDidBindingForCrossing(changedProof, signed), false);
 
   const otherKeys = await generateP256KeyPair();
@@ -241,19 +243,19 @@ test('DWN road preserves the crossing that a DID binding independently attests',
       created_at: '2026-10-01T23:10:00.000Z',
     });
 
-    const dwnTenant = await DidKey.create();
-    const dwnSigner = Jws.createSigner(await dwnTenant.export());
+    const dwnTenant = await TestDataGenerator.generateDidKeyPersona();
+    const dwnSigner = Jws.createSigner(dwnTenant);
 
     const road = await writeCrossingToDwn({
       dwn,
-      tenant_did: dwnTenant.uri,
+      tenant_did: dwnTenant.did,
       signer: dwnSigner,
       crossing: signed,
     });
 
     const recovered = await readCrossingFromDwn({
       dwn,
-      tenant_did: dwnTenant.uri,
+      tenant_did: dwnTenant.did,
       signer: dwnSigner,
       record_id: road.dwn_record_id,
     });
