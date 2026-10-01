@@ -51,6 +51,22 @@ Different carriers may preserve the same signed crossing invariants while sovere
 
 See [COM⁵ — The reLATTE Metabolism](docs/COM5.md) and [Slice 004 — The Road May Commute While the Worlds Diverge](slices/004-the-road-may-commute-while-worlds-diverge.md).
 
+### Web 5.0 — the Five-Door view
+
+**Web 5.0** is a working shorthand for making COM⁵ inspectable as a web surface, not a claim about an industry-standard web version.
+
+The first interface is deliberately small:
+
+> **Every focal particular gets five doors.**
+
+```text
+[ COMPOST ] [ COMPOSE ] [ COMPUTE ] [ COMMUTE ] [ COMMUNE ]
+```
+
+Each door shows explicit observations about the focal subject. Empty doors preserve fog; references do not silently become relations; opening the room does not mutate the subject.
+
+See [Web 5.0 / COM⁵ — The Five-Door Web](docs/WEB5-COM5.md) and the zero-dependency [Five-Door Room browser demo](demo/com5-room.html).
+
 ## Core inversion
 
 Ethereum's durable contribution was not merely cryptocurrency. It provided a general substrate in which independently authored programs could share common addressing, execution, receipts, and composability.
@@ -107,6 +123,7 @@ The first slice is:
 
 - [Slice 001 — The Relation Is the Block](slices/001-the-relation-is-the-block.md)
 - [COM⁵ — The reLATTE Metabolism](docs/COM5.md) — derived lifecycle/metabolism projection
+- [Web 5.0 / COM⁵ — The Five-Door Web](docs/WEB5-COM5.md) — inspectable five-door surface
 - [Slice 004 — The Road May Commute While the Worlds Diverge](slices/004-the-road-may-commute-while-worlds-diverge.md)
 - [Identity + Signature Profile v0](spec/IDENTITY-SIGNATURE-PROFILE-V0.md) — bounded executable R1/R2 witness
 - [Adoption Roadmap — 87-repo open-world relation map](docs/ADOPTION-ROADMAP.md)
@@ -131,6 +148,8 @@ explicit identity body
 ```
 
 COM⁵ adds a deliberately non-authoritative observability seam that can group explicitly supplied metabolic observations and render a stable trace without changing crossing or receipt identity.
+
+The Five-Door Room adds a conservative focal-subject projection over those observations. It does not infer relation from mention, note text, or evidence references.
 
 The proof includes fixed signed fixtures, hostile mutation/key/domain tests, and verification in a fresh Node process. It deliberately stops before R3 receiver semantics.
 
