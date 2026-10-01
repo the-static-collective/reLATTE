@@ -1,4 +1,5 @@
 import {
+  canonicalize,
   canonicalizeDomainValue,
   sha256Hex,
   validateForCanonicalization,
@@ -11,6 +12,31 @@ import {
 import type { P256KeyMaterial } from './protocol.ts';
 
 export const ORGAN_ADAPTER_ID_DOMAIN = 'reLATTE-OrganAdapter-v0|';
+
+const SPEC_KEYS = [
+  'schema',
+  'family_ref',
+  'donor_contract_ref',
+  'artifact_kind',
+  'source_world',
+  'source_particular',
+  'source_history_head',
+  'payload_refs',
+  'donor_claims',
+  'requested_effect',
+  'return_address',
+  'created_at',
+] as const;
+
+const DESCRIPTOR_KEYS = [
+  'schema',
+  'adapter_id',
+  'family_ref',
+  'donor_contract_ref',
+  'artifact_kind',
+  'donor_claims',
+  'laws',
+] as const;
 
 export interface OrganPayloadRef {
   address: string;
@@ -48,6 +74,17 @@ function asRecord(value: unknown, code: string): Record<string, any> {
     throw new Error(code);
   }
   return value as Record<string, any>;
+}
+
+function assertOnlyKeys(
+  object: Record<string, any>,
+  allowed: readonly string[],
+  code: string,
+): void {
+  const allowedSet = new Set(allowed);
+  for (const key of Object.keys(object)) {
+    if (!allowedSet.has(key)) throw new Error(code);
+  }
 }
 
 function nonEmpty(value: unknown, code: string): string {
@@ -96,6 +133,7 @@ export function createOrganAdapterDescriptor(
   specValue: unknown,
 ): OrganAdapterDescriptor {
   const spec = asRecord(specValue, 'INVALID_ORGAN_SPEC');
+  assertOnlyKeys(spec, SPEC_KEYS, 'UNEXPECTED_ORGAN_SPEC_FIELD');
   if (spec.schema !== 'relatte.opaque-organ-spec/v0') {
     throw new Error('INVALID_ORGAN_SPEC_SCHEMA');
   }
@@ -140,6 +178,7 @@ export async function sealOpaqueOrganCrossing(
   keys: P256KeyMaterial,
 ): Promise<Record<string, any>> {
   const spec = asRecord(specValue, 'INVALID_ORGAN_SPEC');
+  assertOnlyKeys(spec, SPEC_KEYS, 'UNEXPECTED_ORGAN_SPEC_FIELD');
   if (spec.schema !== 'relatte.opaque-organ-spec/v0') {
     throw new Error('INVALID_ORGAN_SPEC_SCHEMA');
   }
@@ -194,6 +233,11 @@ export async function verifyOpaqueOrganCrossing(
       asRecord(crossing.extensions, 'INVALID_ORGAN_EXTENSIONS').organ_adapter,
       'INVALID_ORGAN_ADAPTER_DESCRIPTOR',
     );
+    assertOnlyKeys(
+      extension,
+      DESCRIPTOR_KEYS,
+      'UNEXPECTED_ORGAN_ADAPTER_DESCRIPTOR_FIELD',
+    );
     const descriptor = createOrganAdapterDescriptor({
       schema: 'relatte.opaque-organ-spec/v0',
       family_ref: extension.family_ref,
@@ -211,7 +255,8 @@ export async function verifyOpaqueOrganCrossing(
 
     return (
       typeof extension.adapter_id === 'string' &&
-      extension.adapter_id === descriptor.adapter_id
+      extension.adapter_id === descriptor.adapter_id &&
+      canonicalize(extension) === canonicalize(descriptor)
     );
   } catch {
     return false;
