@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>COM⁵ Walkable Provenance Room</title>
+  <style>
+    :root { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color-scheme: dark; }
+    body { max-width: 1180px; margin: 0 auto; padding: 2rem; line-height: 1.45; }
+    h1 { margin-bottom: .2rem; }
+    .seal, .fog { opacity: .68; }
+    .trail { padding: .8rem; border: 1px solid currentColor; margin: 1rem 0; overflow-wrap:anywhere; }
+    .doors { display:grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap:.65rem; }
+    .door, .neighbors, .road { border:1px solid currentColor; padding:.75rem; }
+    .door { min-height: 10rem; overflow-wrap:anywhere; }
+    .door h2, .neighbors h2, .road h2 { font-size:1rem; margin-top:0; }
+    .entry { border-top:1px dotted currentColor; padding-top:.5rem; margin-top:.5rem; }
+    button { font:inherit; padding:.45rem .65rem; margin:.25rem .25rem .25rem 0; cursor:pointer; max-width:100%; overflow-wrap:anywhere; }
+    .lower { display:grid; grid-template-columns:1fr 1fr; gap:.65rem; margin-top:.65rem; }
+    @media (max-width:850px) {
+      .doors { grid-template-columns:1fr; }
+      .lower { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <h1>COM⁵ Walkable Provenance Room</h1>
+  <p class="seal">Walk the provenance. Keep the road. Preserve the fog.</p>
+  <p class="fog">Interaction specimen only. The production traversal law lives in the verified TypeScript API; this page does not perform cryptographic verification.</p>
+
+  <div id="trail" class="trail"></div>
+  <h2 id="focal"></h2>
+  <div id="doors" class="doors"></div>
+
+  <div class="lower">
+    <section class="neighbors">
+      <h2>Verified-neighbor specimen</h2>
+      <div id="neighbors"></div>
+    </section>
+    <section class="road">
+      <h2>Road memory</h2>
+      <div id="road" class="fog">No hop yet.</div>
+    </section>
+  </div>
+
+<script>
+const roles = ['COMPOST','COMPOSE','COMPUTE','COMMUTE','COMMUNE'];
+
+const crossing = 'relatte-crossing-v0:d12ecb2b583a6531814797d1ec71a38543fe5ea20d12da0e99ac97debb9d9670';
+
+const rooms = {
+  [crossing]: {
+    doors: {
+      COMPOST: [],
+      COMPOSE: [
+        { relation:'declared-relation', refs:['particular:genesis-a','world:alpha','sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'] }
+      ],
+      COMPUTE: [
+        { relation:'receiver-receipt:VERIFIED', refs:['relatte-receipt-v0:f0834456f3be4e9976db0e20da3c355997dfd0727c1d12eb6baa7624dd156c9a','world:beta','particular:genesis-b'] }
+      ],
+      COMMUTE: [
+        { relation:'receiver-signed-receipt-at', refs:['world:beta','particular:genesis-b','relatte-receipt-v0:f0834456f3be4e9976db0e20da3c355997dfd0727c1d12eb6baa7624dd156c9a'] }
+      ],
+      COMMUNE: []
+    }
+  },
+  'particular:genesis-b': {
+    doors: {
+      COMPOST: [],
+      COMPOSE: [],
+      COMPUTE: [
+        { relation:'issued-receipt:VERIFIED', refs:[crossing,'relatte-receipt-v0:f0834456f3be4e9976db0e20da3c355997dfd0727c1d12eb6baa7624dd156c9a','world:beta'] }
+      ],
+      COMMUTE: [],
+      COMMUNE: []
+    }
+  },
+  'world:beta': {
+    doors: { COMPOST:[], COMPOSE:[], COMPUTE:[], COMMUTE:[], COMMUNE:[] }
+  },
+  'particular:genesis-a': {
+    doors: {
+      COMPOST: [],
+      COMPOSE: [{ relation:'source-of-crossing', refs:[crossing] }],
+      COMPUTE: [],
+      COMMUTE: [],
+      COMMUNE: []
+    }
+  }
+};
+
+let focal = crossing;
+const trail = [focal];
+let lastRoad = null;
+
+function esc(value) {
+  return String(value)
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;');
+}
+
+function observationsFor(subject) {
+  return rooms[subject]?.doors ?? Object.fromEntries(roles.map(role => [role, []]));
+}
+
+function neighborsOf(subject) {
+  const refs = [];
+  const doors = observationsFor(subject);
+  for (const role of roles) {
+    for (const observation of doors[role] ?? []) {
+      for (const ref of observation.refs ?? []) {
+        if (ref !== subject && !refs.includes(ref)) refs.push(ref);
+      }
+    }
+  }
+  return refs;
+}
+
+function roadBetween(from, to) {
+  const road = [];
+  const doors = observationsFor(from);
+  for (const role of roles) {
+    for (const observation of doors[role] ?? []) {
+      if ((observation.refs ?? []).includes(to)) {
+        road.push({ role, relation:observation.relation, refs:observation.refs });
+      }
+    }
+  }
+  return road;
+}
+
+function openNeighbor(next) {
+  const available = neighborsOf(focal);
+  if (!available.includes(next)) return;
+
+  const road = roadBetween(focal, next);
+  if (road.length === 0) return;
+
+  lastRoad = { from:focal, to:next, road };
+  focal = next;
+  trail.push(next);
+  render();
+}
+
+function render() {
+  document.querySelector('#focal').textContent = 'FOCAL: ' + focal;
+  document.querySelector('#trail').textContent = 'TRAIL: ' + trail.join('  →  ');
+
+  const doorsEl = document.querySelector('#doors');
+  doorsEl.innerHTML = '';
+  const doors = observationsFor(focal);
+
+  for (const role of roles) {
+    const section = document.createElement('section');
+    section.className = 'door';
+    section.innerHTML = '<h2>' + role + '</h2>';
+    const entries = doors[role] ?? [];
+
+    if (entries.length === 0) {
+      section.innerHTML += '<p class="fog">(no direct observation)</p>';
+    } else {
+      for (const entry of entries) {
+        section.innerHTML += '<div class="entry">' +
+          esc(entry.relation) +
+          '<br><span class="fog">' + esc((entry.refs ?? []).join(', ')) + '</span>' +
+          '</div>';
+      }
+    }
+    doorsEl.append(section);
+  }
+
+  const neighborsEl = document.querySelector('#neighbors');
+  neighborsEl.innerHTML = '';
+  const neighbors = neighborsOf(focal);
+
+  if (neighbors.length === 0) {
+    neighborsEl.innerHTML = '<p class="fog">(no one-hop neighbor in this specimen)</p>';
+  } else {
+    for (const neighbor of neighbors) {
+      const button = document.createElement('button');
+      button.textContent = neighbor;
+      button.addEventListener('click', () => openNeighbor(neighbor));
+      neighborsEl.append(button);
+    }
+  }
+
+  const roadEl = document.querySelector('#road');
+  if (lastRoad === null) {
+    roadEl.textContent = 'No hop yet.';
+  } else {
+    roadEl.innerHTML =
+      '<strong>' + esc(lastRoad.from) + ' → ' + esc(lastRoad.to) + '</strong>' +
+      lastRoad.road.map(item =>
+        '<div class="entry">' + esc(item.role + ': ' + item.relation) +
+        '<br><span class="fog">' + esc(item.refs.join(', ')) + '</span></div>'
+      ).join('');
+  }
+}
+
+render();
+</script>
+</body>
+</html>
