@@ -290,3 +290,28 @@ MIRROR != SOURCE
 RETENTION != OWNERSHIP
 RECONSTRUCTION != SUCCESSION
 ```
+
+
+## Moment / Perspective witness
+
+[Moment / Perspective 001](MOMENT-PERSPECTIVE-001.md) adds a bounded plural-witness composition above stable crossing identity.
+
+```text
+signed crossing
+      ↓
+stable Moment
+   ↙       ↘
+Perspective A
+Perspective B
+   ↘       ↙
+ immutable set union
+```
+
+The Moment anchors the carrier. Perspectives remain separately signed observer accounts.
+
+```text
+MOMENT != PERSPECTIVE
+SYNC != OVERWRITE
+PERSPECTIVE SET != CONSENSUS
+ACCOUNT != CARRIER MUTATION
+```
