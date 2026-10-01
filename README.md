@@ -382,3 +382,27 @@ fresh world / particular / key
 Historical receipts still name the dead predecessor. New acts name the successor.
 
 > **RECONSTITUTION != RESURRECTION**
+
+
+## Composition Pulse 001
+
+[Composition Pulse 001](docs/COMPOSITION-PULSE-001.md) executes the first complete roadmap round:
+
+```text
+crossing
+→ local ADMIT
+→ field
+→ fresh local act
+→ local act receipt
+→ slow witness
+→ compositional question
+→ owner-local adaptation
+→ descendant
+→ another sovereign world
+→ return crossing
+→ origin RECEIVE
+```
+
+A second world may refuse the same descendant while the pulse still closes.
+
+> **GLOBAL AGREEMENT != PULSE SUCCESS**

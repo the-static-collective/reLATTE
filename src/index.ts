@@ -12,3 +12,4 @@ export * from './field.ts';
 export * from './descendant.ts';
 export * from './checkpoint.ts';
 export * from './mortality.ts';
+export * from './pulse.ts';

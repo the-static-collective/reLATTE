@@ -343,6 +343,17 @@ Success does not require global agreement.
 
 Success requires attributable continuity without hidden authority transfer.
 
+Current bounded proof:
+
+- [Composition Pulse 001](COMPOSITION-PULSE-001.md) executes one complete round from signed origin crossing through local RECEIVE/ADMIT, R9 field projection, fresh signed local act, a second local RECEIVE/ADMIT, Daily-Slice-shaped slow developmental witness, content-addressed compositional question, R10 Cultural Uptake, signed owner-local adaptation, fresh signed cultural descendant, another sovereign world's RECEIVE, signed return crossing, and origin-world RECEIVE of the return;
+- field, witness, and question all remain explicitly non-authoritative;
+- the descendant must share the adaptation actor's local signing key while still remaining a fresh crossing with no inherited admission;
+- a third sovereign world may REFUSE the same descendant while the main pulse still closes, proving global agreement is unnecessary;
+- the returned crossing arrives back at the origin world as RECEIVED with no automatic disposition;
+- a final content-addressed pulse trace binds every stage ID and rejects tampering or unsigned sidecars.
+
+This earns the stated R13 composition-pulse semantics at the current envelope level. The independent release rule still stands and is not automatically satisfied by R13 completion.
+
 ## Release rule
 
 > **Do not call reLATTE a general substrate until two materially different organ families can cross it without reLATTE-specific semantic hacks.**
