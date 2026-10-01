@@ -20,6 +20,7 @@ import {
   sealOwnerLocalAdaptation,
   sealSlowDevelopmentalWitness,
   verifyCompositionPulseTrace,
+  verifyCompositionalQuestion,
   verifyCrossingEnvelope,
   verifyReceipt,
 } from '../src/index.ts';
@@ -549,9 +550,7 @@ test('pulse trace is content-addressed and tamper evident', async () => {
       unsigned_interpretation: 'question sidecar',
     };
     assert.equal(
-      (await import('../src/index.ts')).verifyCompositionalQuestion(
-        questionSidecar,
-      ),
+      verifyCompositionalQuestion(questionSidecar),
       false,
     );
   } finally {
