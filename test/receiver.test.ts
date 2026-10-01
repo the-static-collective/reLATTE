@@ -180,7 +180,7 @@ test('receiver reconstructs the same local state and identity after restart', as
     assert.equal(duplicateDisposition.receipt_id, refuseReceipt.receipt_id);
     assert.equal(reopened.journalLength(), beforeLength);
 
-    assert.throws(
+    await assert.rejects(
       () => reopened.dispose(refused.crossing_id, 'ADMIT', '2026-10-01T23:09:00.000Z'),
       /CROSSING_ALREADY_DISPOSED/,
     );
