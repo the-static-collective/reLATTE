@@ -1,13 +1,10 @@
 import { canonicalizeDomainValue, sha256Hex, validateTimestamp } from './canonical.ts';
 import {
-  Com5ReceiverPolicy,
   evaluateCom5Capsule,
   sealCom5Capsule,
 } from './com5.ts';
-import {
-  evaluateCreativeCustoms,
-  sealPorch,
-} from './porch.ts';
+import type { Com5ReceiverPolicy } from './com5.ts';
+import { evaluateCreativeCustoms } from './porch.ts';
 import { verifyCrossingEnvelope } from './protocol.ts';
 
 export const GRAMMAR_CANDIDATE_ID_DOMAIN = 'reLATTE-GrammarCandidate-v0|';
@@ -18,6 +15,7 @@ export const CAPACITY_PROPOSAL_ID_DOMAIN = 'reLATTE-CapacityProposal-v0|';
 export type FrontDoorState = 'CUSTOMS_STOP' | 'LOCAL_DECISION';
 export type FogStatus = 'UNRESOLVED';
 export type ReleaseMode = 'REST' | 'RELEASE' | 'MORTALITY';
+const RELEASE_MODES = new Set<ReleaseMode>(['REST', 'RELEASE', 'MORTALITY']);
 export type CarrierKind = 'git-artifact' | 'file-bundle' | 'http-relay' | 'removable-media';
 
 export interface GrammarCandidate {
@@ -332,6 +330,7 @@ export function declareRelease(args: {
   created_at: string;
 }): ReleaseDeclaration {
   validateTimestamp(args.created_at);
+  if (!RELEASE_MODES.has(args.mode)) throw new Error('INVALID_RELEASE_MODE');
   const offered = requireStringArray(args.offered_refs ?? [], 'INVALID_RELEASE_OFFERED_REFS');
   const licenses = requireStringArray(args.license_refs ?? [], 'INVALID_RELEASE_LICENSE_REFS');
   if (offered.length > 0 && licenses.length === 0) throw new Error('RELEASE_REQUIRES_LICENSE_REF');
