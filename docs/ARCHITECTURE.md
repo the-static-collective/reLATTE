@@ -371,3 +371,27 @@ FIELD != AUTHORITY
 VARIATION != RETCON
 REPRODUCTION != ADMISSION
 ```
+
+
+## External checkpoint witness
+
+[External Checkpoint 001](EXTERNAL-CHECKPOINT-001.md) gives LX a bounded Git witness over a deterministic local receipt-set commitment.
+
+```text
+local history
+    ↓
+receipt-set commitment
+    ↓
+replaceable witness adapter
+    ↓
+Git commit
+```
+
+The local commitment remains useful without Git. Git proves only that the exact commitment object existed in the declared foreign commit.
+
+```text
+CHECKPOINT != HISTORY
+FOREIGN WITNESS != LOCAL AUTHORITY
+GIT COMMIT != GLOBAL CANON
+CHECKPOINT AVAILABILITY != LOCAL LIVENESS
+```
