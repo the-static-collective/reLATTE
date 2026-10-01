@@ -326,13 +326,14 @@ test('donor semantics are signed opaque data and cannot be changed after crossin
   descriptorSidecar.extensions.organ_adapter.special_daily_slice_rule = true;
   assert.equal(await verifyOpaqueOrganCrossing(descriptorSidecar), false);
 
+  const freshKeys = await generateP256KeyPair();
   await assert.rejects(
     () => sealOpaqueOrganCrossing(
       {
         ...dailySliceSpec(),
         special_family_hint: 'please branch on me',
       },
-      await generateP256KeyPair(),
+      freshKeys,
     ),
     /UNEXPECTED_ORGAN_SPEC_FIELD/,
   );
