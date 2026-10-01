@@ -94,6 +94,34 @@ npm run browse:genesis
 
 See [Slice 005 — Browse the Metabolism](slices/005-browse-the-metabolism.md).
 
+### Walk the provenance
+
+The next seam makes verified neighborhoods traversable without allowing arbitrary graph jumps.
+
+```text
+OPEN A
+→ inspect verified one-hop neighbors
+→ choose B
+→ retain why B was reachable
+→ RE-CENTER ON B
+```
+
+```text
+RE-CENTER != TELEPORT
+PATH MEMORY != DESTINATION OWNERSHIP
+SPARSE DESTINATION != BROKEN ROAD
+```
+
+Try the signed genesis walk:
+
+```bash
+npm run walk:genesis
+```
+
+There is also a non-authoritative clickable UI specimen at [Walkable Provenance Room](demo/walkable-room.html).
+
+See [Slice 006 — Re-center Without Forgetting the Road](slices/006-recenter-without-forgetting-the-road.md).
+
 ## Core inversion
 
 Ethereum's durable contribution was not merely cryptocurrency. It provided a general substrate in which independently authored programs could share common addressing, execution, receipts, and composability.
