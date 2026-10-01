@@ -21,12 +21,14 @@ import {
   generateP256KeyPair,
   makeTransportFrame,
   postHttpTransport,
-  readCrossingFromDwn,
   readFileBundle,
   sealCrossingEnvelope,
-  writeCrossingToDwn,
   writeFileBundle,
 } from '../src/index.ts';
+import {
+  readCrossingFromDwn,
+  writeCrossingToDwn,
+} from '../src/dwn-road.ts';
 
 async function crossing(): Promise<any> {
   const keys = await generateP256KeyPair();
@@ -116,7 +118,7 @@ test('actual in-process DWN RecordsWrite/RecordsRead preserves the signed reLATT
 test('file, HTTP, and DWN roads converge on one receiver history while DWN acceptance grants no admission', async () => {
   const base = await mkdtemp(join(tmpdir(), 'relatte-dwn-three-road-'));
   const dwn = await openDwn(join(base, 'dwn'));
-  const server = createHttpRelayServer(async () => {});
+  let server: ReturnType<typeof createHttpRelayServer> | null = null;
 
   try {
     const receiver = await LocalReceiver.create(join(base, 'receiver'), {
@@ -141,15 +143,12 @@ test('file, HTTP, and DWN roads converge on one receiver history while DWN accep
     );
     assert.equal(receiver.journalLength(), 1);
 
-    server.removeAllListeners('request');
-    const relay = createHttpRelayServer(async (incoming) => {
+    server = createHttpRelayServer(async (incoming) => {
       await receiver.receive(incoming, '2026-10-01T22:44:00.000Z');
     });
-    server.on('request', relay.listeners('request')[0] as any);
-
     await new Promise<void>((resolve, reject) => {
-      server.once('error', reject);
-      server.listen(0, '127.0.0.1', () => resolve());
+      server!.once('error', reject);
+      server!.listen(0, '127.0.0.1', () => resolve());
     });
     const address = server.address() as AddressInfo;
 
@@ -205,7 +204,7 @@ test('file, HTTP, and DWN roads converge on one receiver history while DWN accep
     assert.equal(receiver.journalLength(), 2);
   } finally {
     await new Promise<void>((resolve) => {
-      if (!server.listening) return resolve();
+      if (!server?.listening) return resolve();
       server.close(() => resolve());
     });
     await dwn.close();
