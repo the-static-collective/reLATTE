@@ -1,0 +1,13 @@
+{
+  "contract_ref": "synthetic:com5-archive-receiver/v0",
+  "world_id": "world:com5-archive-lab",
+  "receiver_particular": "particular:archive-lab",
+  "accepted_grammar_ids": ["grammar:source-preservation-only/v0"],
+  "required_non_authorities": [
+    "SOURCE_PERSON != GRAMMAR",
+    "INFLUENCE != ENDORSEMENT"
+  ],
+  "admit_effect": "artifact-created",
+  "miss_disposition": "REFUSE",
+  "miss_reason": "this synthetic archive receiver accepts preservation grammar, not structural adaptation"
+}
