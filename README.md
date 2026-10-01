@@ -67,6 +67,33 @@ Each door shows explicit observations about the focal subject. Empty doors prese
 
 See [Web 5.0 / COM⁵ — The Five-Door Web](docs/WEB5-COM5.md) and the zero-dependency [Five-Door Room browser demo](demo/com5-room.html).
 
+### Browse the metabolism
+
+The next executable seam opens a room from real reLATTE history rather than hand-entered COM⁵ labels.
+
+A supplied history cut is checked against the existing crossing/receipt signature profile. Receipt-derived COMPUTE and COMMUTE observations are only admitted when the referenced crossing is also present and verified in the same cut.
+
+```text
+VERIFIED CROSSING
++
+VERIFIED RECEIVER RECEIPT
+→ attributable metabolic neighborhood
+
+VALID RECEIPT
++
+MISSING VERIFIED CROSSING
+→ ORPHAN_RECEIPT
+→ no invented road
+```
+
+Try the genesis specimen:
+
+```bash
+npm run browse:genesis
+```
+
+See [Slice 005 — Browse the Metabolism](slices/005-browse-the-metabolism.md).
+
 ## Core inversion
 
 Ethereum's durable contribution was not merely cryptocurrency. It provided a general substrate in which independently authored programs could share common addressing, execution, receipts, and composability.
