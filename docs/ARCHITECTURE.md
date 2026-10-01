@@ -78,6 +78,14 @@ POUR != AUTHORIZE
 
 Local owner law determines consequence.
 
+[Local Receiver 001](LOCAL-RECEIVER-001.md) is the first durable bounded witness at this layer. It verifies signed crossings, records RECEIVE separately from disposition, emits signed owner-local receipts, preserves HOLD / ADMIT / REFUSE / RETURN, makes duplicate delivery idempotent, and reconstructs derived state by replaying a hash-chained local journal after restart.
+
+```text
+LOCAL JOURNAL != GLOBAL STATE
+RESTART != NEW HISTORY
+DUPLICATE DELIVERY != NEW EVENT
+```
+
 ### L6 — Moment / perspective membrane
 
 Donor: Trust.
