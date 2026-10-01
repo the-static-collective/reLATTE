@@ -136,3 +136,18 @@ It should provide a common composition surface while preserving:
 - reconstructible ancestry.
 
 > **The substrate may compose the organs. It may not become their sovereign.**
+
+
+## COM⁵ cultural crossing specimen
+
+[COM⁵ Capsule 001](docs/COM5-CAPSULE-001.md) is a bounded executable experiment for carrying an attributed creative grammar through:
+
+```text
+COMPOST → COMPOSE → COMPUTE → COMMUTE → COMMUNE
+```
+
+It tests one content-addressed grammar crossing against divergent sovereign receiver policies while preserving the core refusal:
+
+> **A PERSON MAY REVEAL A GRAMMAR. THEY MUST NOT BECOME THE GRAMMAR.**
+
+The specimen does not complete R3–R5; it pressure-tests the desired receiver semantics without claiming persistence or generality.
