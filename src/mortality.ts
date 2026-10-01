@@ -132,7 +132,8 @@ export async function createSuccessionCapsule(args: {
   if (
     mortality.checkpoint_commitment_id !== commitment.commitment_id ||
     mortality.checkpoint_receipt_set_root !== commitment.receipt_set_root ||
-    commitment.world_id !== seed.world_id
+    commitment.world_id !== seed.world_id ||
+    commitment.local_history_head !== mortality.predecessor_history_head
   ) {
     throw new Error('MORTALITY_CHECKPOINT_MISMATCH');
   }
@@ -149,12 +150,16 @@ export async function createSuccessionCapsule(args: {
   const historicalReceipts = args.historical_receipts.map((value) =>
     asRecord(value, 'INVALID_MORTALITY_HISTORICAL_RECEIPT')
   );
+  const predecessorKey = publicKeyIdentity(seed.signing.public_key);
   for (const receipt of historicalReceipts) {
     if (
       receipt.world_id !== seed.world_id ||
       receipt.receiver_particular !== seed.receiver_particular
     ) {
       throw new Error('MORTALITY_HISTORY_PREDECESSOR_MISMATCH');
+    }
+    if (publicKeyIdentity(receipt.signing.public_key) !== predecessorKey) {
+      throw new Error('MORTALITY_HISTORY_KEY_MISMATCH');
     }
   }
 
@@ -164,6 +169,12 @@ export async function createSuccessionCapsule(args: {
   ).sort();
   if (recoverable.length === 0 || new Set(recoverable).size !== recoverable.length) {
     throw new Error('INVALID_MORTALITY_RECOVERABLE_CROSSINGS');
+  }
+  for (const crossingId of recoverable) {
+    const hasReceive = historicalReceipts.some(
+      (receipt) => receipt.kind === 'RECEIVED' && receipt.crossing_id === crossingId,
+    );
+    if (!hasReceive) throw new Error('MORTALITY_RECOVERABLE_CROSSING_NOT_RECEIVED');
   }
 
   const body: Omit<SuccessionCapsule, 'capsule_id'> = {
