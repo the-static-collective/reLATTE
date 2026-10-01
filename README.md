@@ -280,3 +280,21 @@ SOURCE
 The surviving crossing still names the original source. The mirror never inherits source authority.
 
 > **SOURCE DEATH != ARTIFACT DEATH**
+
+
+## Moment / Perspective 001
+
+[Moment / Perspective 001](docs/MOMENT-PERSPECTIVE-001.md) gives one stable crossing multiple independently signed accounts without collaborative overwrite:
+
+```text
+Moment M
+ ├─ Perspective A
+ └─ Perspective B
+
+sync = set union
+replay = preserve both
+```
+
+Neither perspective can mutate the carrier it witnesses.
+
+> **DIVERGENCE != OVERWRITE**

@@ -212,6 +212,19 @@ Required proof:
 - no last-write-wins semantic collapse;
 - neither account mutates source carrier identity.
 
+Current bounded proof:
+
+- [Moment / Perspective 001](MOMENT-PERSPECTIVE-001.md) derives one content-addressed Moment from the exact canonical signed crossing;
+- two independent observers sign divergent R8_PERSPECTIVE accounts against the same Moment and carrier hash;
+- two replicas begin with different accounts and synchronize by immutable set union;
+- both accounts survive synchronization, duplicate sync, and restart replay;
+- no winner/current-truth field exists in the replica state;
+- mutating a signed account fails Perspective verification;
+- mutating the anchored carrier fails Moment verification;
+- a Perspective bound to Moment A cannot attach to Moment B.
+
+This earns the stated R8 plural-witness semantics at the current envelope level. It does not adjudicate truth, consensus, reputation, or moderation.
+
 ## R9 — Field Consequence
 
 Feed admitted local receipts into a Groove/Band-style field projection.
