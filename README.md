@@ -499,3 +499,27 @@ DELIVERED != ADMITTED
 ```
 
 > **A map may reveal a road. It may not move the traveler.**
+
+
+## Live DHT Gateway 001
+
+[Live DHT Gateway 001](docs/LIVE-DHT-GATEWAY-001.md) crosses the actual HTTP boundary of the open-source DID DHT reference gateway.
+
+```text
+local did:dht
+    ↓ publish
+live gateway
+    ↓ fresh resolve
+decoded DID document
+    ↓
+same DID binding + same DWN road candidates
+```
+
+The dedicated network witness is separate from the deterministic core suite. It proves gateway acceptance and fresh resolution, not arbitrary Mainline DHT propagation.
+
+```text
+GATEWAY ACCEPTED != PUBLIC DHT PROPAGATED
+NETWORK WITNESS != CORE TEST SUITE
+```
+
+> **The gateway may carry the map. It does not own the territory.**
