@@ -258,3 +258,86 @@ export function evaluateCom5Capsule(
     },
   };
 }
+
+
+/**
+ * COM⁵ observational projection layer.
+ *
+ * Super Relatte keeps this distinct from the portable grammar-capsule layer
+ * above. A capsule can travel; a projection is a receiver-local view over
+ * explicitly supplied observations.
+ */
+export const COM5_ROLES = COM5_STAGES;
+export type Com5Role = Com5StageName;
+
+export interface Com5Observation {
+  role: Com5Role;
+  subject: string;
+  relation?: string;
+  evidence_refs?: readonly string[];
+  note?: string;
+}
+
+export type Com5Projection = Readonly<Record<Com5Role, readonly Com5Observation[]>>;
+
+function assertObservationText(value: string, field: string): void {
+  if (value.trim().length === 0) throw new Error(`INVALID_COM5_${field.toUpperCase()}`);
+}
+
+function validateObservation(observation: Com5Observation): void {
+  if (!COM5_ROLES.includes(observation.role)) throw new Error('INVALID_COM5_ROLE');
+  assertObservationText(observation.subject, 'subject');
+  if (observation.relation !== undefined) assertObservationText(observation.relation, 'relation');
+  if (observation.note !== undefined) assertObservationText(observation.note, 'note');
+  for (const ref of observation.evidence_refs ?? []) assertObservationText(ref, 'evidence_ref');
+}
+
+export function projectCom5(
+  observations: readonly Com5Observation[],
+): Com5Projection {
+  const grouped: Record<Com5Role, Com5Observation[]> = {
+    COMPOST: [],
+    COMPOSE: [],
+    COMPUTE: [],
+    COMMUTE: [],
+    COMMUNE: [],
+  };
+
+  for (const observation of observations) {
+    validateObservation(observation);
+    grouped[observation.role].push({
+      ...observation,
+      evidence_refs: observation.evidence_refs === undefined
+        ? undefined
+        : [...observation.evidence_refs],
+    });
+  }
+
+  return grouped;
+}
+
+export function renderCom5Trace(
+  observations: readonly Com5Observation[],
+): string {
+  const projection = projectCom5(observations);
+  const lines = ['COM⁵ metabolic projection'];
+
+  for (const role of COM5_ROLES) {
+    lines.push('', role);
+    const entries = projection[role];
+    if (entries.length === 0) {
+      lines.push('  (none observed)');
+      continue;
+    }
+    for (const observation of entries) {
+      const relation = observation.relation === undefined ? '' : ` --${observation.relation}-->`;
+      const refs = observation.evidence_refs?.length
+        ? ` [evidence: ${observation.evidence_refs.join(', ')}]`
+        : '';
+      const note = observation.note === undefined ? '' : ` — ${observation.note}`;
+      lines.push(`  ${observation.subject}${relation}${refs}${note}`);
+    }
+  }
+
+  return lines.join('\n');
+}
