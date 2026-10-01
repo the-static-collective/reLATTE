@@ -286,6 +286,17 @@ Required proof:
 - checkpoint verifies only its declared commitment;
 - absence of foreign service does not halt local operation.
 
+Current bounded proof:
+
+- [External Checkpoint 001](EXTERNAL-CHECKPOINT-001.md) verifies a declared set of signed local receipts and derives a deterministic receipt-set root bound to the local history head;
+- the commitment format contains no Git-specific fields, preserving a replaceable witness boundary;
+- a separate Git repository stores the exact canonical commitment in a real Git commit;
+- Git witness verification checks only the declared commit/path/object/commitment linkage and does not accept receipt bodies;
+- mutating a local receipt copy makes local receipt-set verification fail while the Git witness still truthfully verifies that it witnessed the original commitment;
+- deleting the foreign Git repository does not affect local journal replay, local receipt verification, local receipt-set verification, or subsequent RECEIVE/ADMIT operation.
+
+This earns the stated R11 checkpoint semantics at the current local Git witness boundary. It does not claim history completeness, Git authority, timestamp-oracle authority, multi-witness consensus, or R12 succession.
+
 ## R12 — Mortality Test
 
 Kill a node.
