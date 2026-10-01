@@ -259,3 +259,34 @@ ACK != RECEIVE RECEIPT
 DELIVERY != ADMISSION
 ROAD CHANGE != IDENTITY CHANGE
 ```
+
+
+## Mirror / Store / Serve witness
+
+[Mirror / Store / Serve 001](MIRROR-STORE-SERVE-001.md) extends the transport/storage boundary with independently signed retention claims.
+
+```text
+source crossing
+    |
+ PUBLISHED
+    |
+ +--+--+
+ |     |
+ B     C
+STORED STORED
+       |
+     source dies
+       |
+     C SERVES
+       |
+   D RECEIVES
+```
+
+The artifact address is derived from the canonical signed crossing, so independent mirrors converge on object identity without converging on local history or authority.
+
+```text
+OBJECT IDENTITY != CLAIM IDENTITY
+MIRROR != SOURCE
+RETENTION != OWNERSHIP
+RECONSTRUCTION != SUCCESSION
+```
