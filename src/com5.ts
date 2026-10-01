@@ -38,6 +38,22 @@ export interface Com5Capsule {
   extensions?: Record<string, unknown>;
 }
 
+const CAPSULE_KEYS = [
+  'schema',
+  'capsule_id',
+  'title',
+  'origin',
+  'grammar',
+  'stages',
+  'requested_relation',
+  'return_address',
+  'created_at',
+  'extensions',
+] as const;
+const ORIGIN_KEYS = ['source_kind', 'source_refs', 'attribution', 'non_authorities'] as const;
+const GRAMMAR_KEYS = ['grammar_id', 'name', 'proposition', 'portable_operators'] as const;
+const STAGE_KEYS = ['stage', 'input', 'output', 'receipt'] as const;
+
 export interface Com5ReceiverPolicy {
   contract_ref: string;
   world_id: string;
@@ -54,6 +70,13 @@ function asRecord(value: unknown, code = 'INVALID_COM5_TYPE'): Record<string, un
   return value as Record<string, unknown>;
 }
 
+function assertOnlyKeys(object: Record<string, unknown>, allowed: readonly string[], code: string): void {
+  const allowedSet = new Set(allowed);
+  for (const key of Object.keys(object)) {
+    if (!allowedSet.has(key)) throw new Error(code);
+  }
+}
+
 function nonEmptyString(value: unknown, code: string): string {
   if (typeof value !== 'string' || value.trim() === '') throw new Error(code);
   return value;
@@ -68,6 +91,7 @@ function stringArray(value: unknown, code: string, min = 0): string[] {
 
 function normalizeStage(value: unknown, expected: Com5StageName): Com5Stage {
   const stage = asRecord(value, 'INVALID_COM5_STAGE');
+  assertOnlyKeys(stage, STAGE_KEYS, 'UNEXPECTED_COM5_STAGE_FIELD');
   if (stage.stage !== expected) throw new Error('INVALID_COM5_STAGE_ORDER');
   return {
     stage: expected,
@@ -80,10 +104,13 @@ function normalizeStage(value: unknown, expected: Com5StageName): Com5Stage {
 export function constructCom5CapsuleIdentityBody(value: unknown): Omit<Com5Capsule, 'capsule_id'> {
   validateForCanonicalization(value);
   const capsule = asRecord(value);
+  assertOnlyKeys(capsule, CAPSULE_KEYS, 'UNEXPECTED_COM5_FIELD');
   if (capsule.schema !== COM5_SCHEMA) throw new Error('INVALID_COM5_SCHEMA');
 
   const origin = asRecord(capsule.origin, 'INVALID_COM5_ORIGIN');
   const grammar = asRecord(capsule.grammar, 'INVALID_COM5_GRAMMAR');
+  assertOnlyKeys(origin, ORIGIN_KEYS, 'UNEXPECTED_COM5_ORIGIN_FIELD');
+  assertOnlyKeys(grammar, GRAMMAR_KEYS, 'UNEXPECTED_COM5_GRAMMAR_FIELD');
   if (!Array.isArray(capsule.stages) || capsule.stages.length !== COM5_STAGES.length) {
     throw new Error('INVALID_COM5_STAGE_COUNT');
   }
