@@ -11,3 +11,4 @@ export * from './moment.ts';
 export * from './field.ts';
 export * from './descendant.ts';
 export * from './checkpoint.ts';
+export * from './mortality.ts';
