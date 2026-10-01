@@ -284,7 +284,8 @@ export class MirrorStore {
       stored.semantic_effect !== 'none' ||
       stored.crossing_id !== crossingId ||
       stored.world_id !== this.config.world_id ||
-      stored.receiver_particular !== this.config.mirror_particular
+      stored.receiver_particular !== this.config.mirror_particular ||
+      publicKeyIdentity(stored.signing.public_key) !== publicKeyIdentity(this.keys.publicKeyJwk)
     ) {
       throw new Error('INVALID_MIRROR_STORED_RECEIPT');
     }
@@ -469,7 +470,9 @@ export async function verifyMirrorServeBundle(
     if (stored.crossing_id !== crossing.crossing_id || served.crossing_id !== crossing.crossing_id) return false;
     if (
       stored.world_id !== served.world_id ||
-      stored.receiver_particular !== served.receiver_particular
+      stored.receiver_particular !== served.receiver_particular ||
+      publicKeyIdentity(stored.signing.public_key) !==
+        publicKeyIdentity(served.signing.public_key)
     ) {
       return false;
     }
