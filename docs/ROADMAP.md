@@ -86,6 +86,20 @@ Required proof:
 - duplicate delivery is idempotent;
 - local state reconstructs after restart.
 
+Current bounded proof:
+
+- [Local Receiver 001](LOCAL-RECEIVER-001.md) verifies a signed crossing before recording it;
+- RECEIVE emits a signed receipt with no semantic effect;
+- HOLD / ADMIT / REFUSE / RETURN remain distinct local dispositions;
+- REFUSE has no protected payload effect;
+- duplicate RECEIVE returns the original receipt without appending history;
+- repeating the same disposition is idempotent while conflicting redisposition fails;
+- local history is an append-only hash-chained journal;
+- restart replay reconstructs the same derived state and verifies the journal;
+- local signing-key continuity survives restart.
+
+This earns the stated R3 receiver behavior at the current envelope level. It does not close R1 payload-resolution or ancestry-validation gaps and is not yet a production storage/key-custody design.
+
 ## R4 — Two Sovereign Nodes
 
 Run two independent nodes with distinct local histories and policies.
