@@ -339,3 +339,24 @@ ancestor
 The descendant preserves ancestry without inheriting the ancestor's authority or the producing world's admission.
 
 > **ANCESTRY != AUTHORITY**
+
+
+## External Checkpoint 001
+
+[External Checkpoint 001](docs/EXTERNAL-CHECKPOINT-001.md) commits a deterministic local receipt-set root to a separate Git witness without making Git part of local authority or liveness:
+
+```text
+local signed receipts
+      ↓
+receipt-set root H
+      ↓
+witness-neutral commitment
+      ↓
+foreign Git commit
+
+delete Git
+      ↓
+local receiver keeps operating
+```
+
+> **CHECKPOINT AVAILABILITY != LOCAL LIVENESS**
