@@ -24,3 +24,5 @@ export * from './super.ts';
 
 export * from './runtime-manifest.ts';
 export * from './runtime.ts';
+
+export * from './capability-kernel.ts';
