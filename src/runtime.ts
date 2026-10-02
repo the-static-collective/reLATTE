@@ -18,6 +18,7 @@ import {
 import {
   LocalRoadMemory,
 } from './road-memory.ts';
+import { CapabilityKernel } from './capability-kernel.ts';
 import {
   LocalReceiver,
 } from './receiver.ts';
@@ -111,6 +112,7 @@ interface RuntimePaths {
   inboxPending: string;
   inboxProcessed: string;
   outboxPending: string;
+  capabilityKernel: string;
 }
 
 function fileExists(path: string): Promise<boolean> {
@@ -131,6 +133,7 @@ function paths(root: string): RuntimePaths {
     inboxPending: join(root, 'inbox', 'pending'),
     inboxProcessed: join(root, 'inbox', 'processed'),
     outboxPending: join(root, 'outbox', 'pending'),
+    capabilityKernel: join(root, 'capabilities'),
   };
 }
 
@@ -228,6 +231,7 @@ export class ReLatteRuntime {
   readonly manifest: WorldManifest;
   readonly receiver: LocalReceiver;
   readonly roadMemory: LocalRoadMemory;
+  readonly capabilityKernel: CapabilityKernel;
 
   private readonly runtimePaths: RuntimePaths;
   private runtimeHistoryHead: string | null = null;
@@ -239,11 +243,13 @@ export class ReLatteRuntime {
     manifest: WorldManifest;
     receiver: LocalReceiver;
     roadMemory: LocalRoadMemory;
+    capabilityKernel: CapabilityKernel;
   }) {
     this.root = args.root;
     this.manifest = args.manifest;
     this.receiver = args.receiver;
     this.roadMemory = args.roadMemory;
+    this.capabilityKernel = args.capabilityKernel;
     this.runtimePaths = paths(args.root);
   }
 
@@ -273,12 +279,17 @@ export class ReLatteRuntime {
       failure_threshold: manifest.road_memory.failure_threshold,
       cooldown_ms: manifest.road_memory.cooldown_ms,
     });
+    const capabilityKernel = await CapabilityKernel.create({
+      root: runtimePaths.capabilityKernel,
+      world_id: manifest.world_id,
+    });
 
     const runtime = new ReLatteRuntime({
       root: args.root,
       manifest,
       receiver,
       roadMemory,
+      capabilityKernel,
     });
     await runtime.appendEvent({
       event_type: 'BOOT',
@@ -303,12 +314,14 @@ export class ReLatteRuntime {
     const manifest = await readWorldManifest(runtimePaths.manifest);
     const receiver = await LocalReceiver.open(runtimePaths.receiver);
     const roadMemory = await LocalRoadMemory.open(runtimePaths.roadMemory);
+    const capabilityKernel = await CapabilityKernel.open(runtimePaths.capabilityKernel);
 
     const runtime = new ReLatteRuntime({
       root: args.root,
       manifest,
       receiver,
       roadMemory,
+      capabilityKernel,
     });
     await runtime.replayBus();
     await runtime.appendEvent({
@@ -438,6 +451,24 @@ export class ReLatteRuntime {
     }
 
     return item;
+  }
+
+  async enqueueForeignCrossing(args: {
+    crossing: unknown;
+    enqueued_at: string;
+    source: string;
+  }): Promise<InboxItem> {
+    validateTimestamp(args.enqueued_at);
+    await this.capabilityKernel.authorizeForeignCrossing({
+      crossing: args.crossing,
+      action: 'runtime.receive.crossing',
+      observed_at: args.enqueued_at,
+    });
+    return this.enqueueCrossing({
+      crossing: args.crossing,
+      enqueued_at: args.enqueued_at,
+      source: args.source,
+    });
   }
 
   private async pendingFiles(): Promise<string[]> {
