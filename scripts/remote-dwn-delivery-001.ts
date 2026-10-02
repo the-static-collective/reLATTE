@@ -132,7 +132,8 @@ assert.equal(remoteRead.crossing_id, crossing.crossing_id);
 assert.deepEqual(remoteRead.crossing, crossing);
 assert.equal(remoteRead.semantic_effect, 'none');
 
-const receiverRoot = await mkdtemp(join(tmpdir(), 'relatte-remote-dwn-receiver-'));
+const receiverWorkspace = await mkdtemp(join(tmpdir(), 'relatte-remote-dwn-receiver-'));
+const receiverRoot = join(receiverWorkspace, 'receiver');
 try {
   const receiver = await LocalReceiver.create(receiverRoot, {
     world_id: 'world:remote-dwn-receiver',
@@ -192,5 +193,5 @@ try {
     ],
   }, null, 2));
 } finally {
-  await rm(receiverRoot, { recursive: true, force: true });
+  await rm(receiverWorkspace, { recursive: true, force: true });
 }
