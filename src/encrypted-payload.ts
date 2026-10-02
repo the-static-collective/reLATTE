@@ -110,6 +110,12 @@ function randomBytes(length: number): Uint8Array {
   return bytes;
 }
 
+function ownedArrayBuffer(value: Uint8Array): ArrayBuffer {
+  const copy = new Uint8Array(value.byteLength);
+  copy.set(value);
+  return copy.buffer;
+}
+
 export function encryptionKeyId(publicKey: unknown): string {
   const jwk = normalizeP256PublicJwk(publicKey, 'INVALID_ENCRYPTION_PUBLIC_KEY');
   return `relatte-encryption-key-v0:${sha256Hex(
@@ -264,11 +270,11 @@ async function deriveAesKey(args: {
     {
       name: 'HKDF',
       hash: 'SHA-256',
-      salt: args.salt,
-      info: canonicalizeDomainValue(
+      salt: ownedArrayBuffer(args.salt),
+      info: ownedArrayBuffer(new Uint8Array(canonicalizeDomainValue(
         ENCRYPTED_PAYLOAD_KEY_INFO_DOMAIN,
         args.context,
-      ),
+      ))),
     },
     hkdfKey,
     {
@@ -312,12 +318,12 @@ export async function encryptPayloadForRecipient(args: {
   const ciphertext = await crypto.subtle.encrypt(
     {
       name: 'AES-GCM',
-      iv,
-      additionalData: new TextEncoder().encode(aad),
+      iv: ownedArrayBuffer(iv),
+      additionalData: ownedArrayBuffer(new TextEncoder().encode(aad)),
       tagLength: 128,
     },
     aesKey,
-    args.plaintext,
+    ownedArrayBuffer(args.plaintext),
   );
 
   const body: Omit<EncryptedPayloadEnvelope, 'envelope_id'> = {
@@ -468,14 +474,14 @@ export class EncryptionOrgan {
     const plaintext = await crypto.subtle.decrypt(
       {
         name: 'AES-GCM',
-        iv,
-        additionalData: new TextEncoder().encode(
+        iv: ownedArrayBuffer(iv),
+        additionalData: ownedArrayBuffer(new TextEncoder().encode(
           canonicalize(envelope.context),
-        ),
+        )),
         tagLength: 128,
       },
       aesKey,
-      ciphertext,
+      ownedArrayBuffer(ciphertext),
     );
     return {
       plaintext: new Uint8Array(plaintext),
