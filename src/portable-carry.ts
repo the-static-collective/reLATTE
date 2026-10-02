@@ -76,7 +76,7 @@ export async function createPortableCarry(args: {
     throw new Error('INVALID_PORTABLE_CARRY_CROSSING');
   }
 
-  const value: Omit<PortableCarryArtifact, 'portable_id'> = {
+  const normalized: Omit<PortableCarryArtifact, 'portable_id'> = {
     schema: 'relatte.portable-carry/v0',
     media_type: PORTABLE_CARRY_MEDIA_TYPE,
     created_at: args.created_at,
@@ -134,13 +134,13 @@ export async function parsePortableCarry(
         : artifact.return_envelope as ReturnEnvelope,
     laws: Array.isArray(artifact.laws) ? [...artifact.laws] : [],
   };
-  const expected = portableId(value);
+  const expected = portableId(normalized);
   if (artifact.portable_id !== expected) {
     throw new Error('PORTABLE_CARRY_ID_MISMATCH');
   }
 
   return {
-    ...value,
+    ...normalized,
     portable_id: expected,
   };
 }
