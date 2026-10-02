@@ -91,8 +91,8 @@ export async function createPortableCarry(args: {
     ],
   };
   return {
-    ...value,
-    portable_id: portableId(value),
+    ...normalized,
+    portable_id: portableId(normalized),
   };
 }
 
@@ -123,7 +123,7 @@ export async function parsePortableCarry(
     throw new Error('INVALID_PORTABLE_CARRY_CROSSING');
   }
 
-  const value: Omit<PortableCarryArtifact, 'portable_id'> = {
+  const normalized: Omit<PortableCarryArtifact, 'portable_id'> = {
     schema: 'relatte.portable-carry/v0',
     media_type: PORTABLE_CARRY_MEDIA_TYPE,
     created_at: createdAt,
