@@ -635,3 +635,41 @@ ROAD HEALTH != RECEIVER AUTHORITY
 ```
 
 > **Remember the broken road locally. Leave the map alone. Try again when the time is right.**
+
+
+## Runtime Boot 001 + Black Flag 001
+
+[Runtime Boot 001](docs/RUNTIME-BOOT-001.md) composes the local receiver, durable road memory, inbox/outbox queues, a world manifest, and a receipt-reference bus into one restartable node shell.
+
+[Black Flag 001](docs/BLACK-FLAG-001.md) kills that runtime after RECEIVE is durable but before queue commit, then proves restart completes the orphaned work without duplicating the receiver consequence.
+
+```text
+world.rel.json
+      ↓
+runtime boot
+      ↓
+durable inbox
+      ↓
+LocalReceiver RECEIVE
+      ↓
+      X SIGKILL
+      ↓
+runtime replay
+      ↓
+same receipt
+      ↓
+queue commit
+      ↓
+fresh local REFUSE
+```
+
+```text
+MANIFEST != WORLD
+RUNTIME != RECEIVER AUTHORITY
+REPLAY != DUPLICATE CONSEQUENCE
+PROCESS DEATH != WORLD DEATH
+RESTART != NEW HISTORY
+HAPPY PATH != RELEASE
+```
+
+> **A release must return from sea with its receipts.**
