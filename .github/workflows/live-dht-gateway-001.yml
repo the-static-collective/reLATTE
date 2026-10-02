@@ -56,6 +56,7 @@ jobs:
         env:
           DID_DHT_GATEWAY_URL: http://127.0.0.1:8305/
         run: |
+          set -o pipefail
           node --experimental-strip-types scripts/live-dht-gateway-001.ts | tee live-dht-gateway-001.json
 
       - name: Upload witness
