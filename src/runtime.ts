@@ -19,6 +19,7 @@ import {
   LocalRoadMemory,
 } from './road-memory.ts';
 import { CapabilityKernel } from './capability-kernel.ts';
+import { EncryptionOrgan } from './encrypted-payload.ts';
 import {
   LocalReceiver,
 } from './receiver.ts';
@@ -78,6 +79,7 @@ export interface RuntimeSnapshot {
   published_receipt_ids: string[];
   receiver: ReturnType<LocalReceiver['snapshot']>;
   road_memory: ReturnType<LocalRoadMemory['snapshot']>;
+  encryption_key_id: string;
 }
 
 export interface RuntimePulseResult {
@@ -113,6 +115,7 @@ interface RuntimePaths {
   inboxProcessed: string;
   outboxPending: string;
   capabilityKernel: string;
+  encryption: string;
 }
 
 function fileExists(path: string): Promise<boolean> {
@@ -134,6 +137,7 @@ function paths(root: string): RuntimePaths {
     inboxProcessed: join(root, 'inbox', 'processed'),
     outboxPending: join(root, 'outbox', 'pending'),
     capabilityKernel: join(root, 'capabilities'),
+    encryption: join(root, 'encryption'),
   };
 }
 
@@ -232,6 +236,7 @@ export class ReLatteRuntime {
   readonly receiver: LocalReceiver;
   readonly roadMemory: LocalRoadMemory;
   readonly capabilityKernel: CapabilityKernel;
+  readonly encryption: EncryptionOrgan;
 
   private readonly runtimePaths: RuntimePaths;
   private runtimeHistoryHead: string | null = null;
@@ -244,12 +249,14 @@ export class ReLatteRuntime {
     receiver: LocalReceiver;
     roadMemory: LocalRoadMemory;
     capabilityKernel: CapabilityKernel;
+    encryption: EncryptionOrgan;
   }) {
     this.root = args.root;
     this.manifest = args.manifest;
     this.receiver = args.receiver;
     this.roadMemory = args.roadMemory;
     this.capabilityKernel = args.capabilityKernel;
+    this.encryption = args.encryption;
     this.runtimePaths = paths(args.root);
   }
 
@@ -283,6 +290,10 @@ export class ReLatteRuntime {
       root: runtimePaths.capabilityKernel,
       world_id: manifest.world_id,
     });
+    const encryption = await EncryptionOrgan.create({
+      root: runtimePaths.encryption,
+      world_id: manifest.world_id,
+    });
 
     const runtime = new ReLatteRuntime({
       root: args.root,
@@ -290,6 +301,7 @@ export class ReLatteRuntime {
       receiver,
       roadMemory,
       capabilityKernel,
+      encryption,
     });
     await runtime.appendEvent({
       event_type: 'BOOT',
@@ -315,6 +327,7 @@ export class ReLatteRuntime {
     const receiver = await LocalReceiver.open(runtimePaths.receiver);
     const roadMemory = await LocalRoadMemory.open(runtimePaths.roadMemory);
     const capabilityKernel = await CapabilityKernel.open(runtimePaths.capabilityKernel);
+    const encryption = await EncryptionOrgan.open(runtimePaths.encryption);
 
     const runtime = new ReLatteRuntime({
       root: args.root,
@@ -322,6 +335,7 @@ export class ReLatteRuntime {
       receiver,
       roadMemory,
       capabilityKernel,
+      encryption,
     });
     await runtime.replayBus();
     await runtime.appendEvent({
@@ -605,6 +619,7 @@ export class ReLatteRuntime {
       published_receipt_ids: [...this.publishedReceiptIds].sort(),
       receiver: this.receiver.snapshot(),
       road_memory: this.roadMemory.snapshot(),
+      encryption_key_id: this.encryption.key_id,
     };
   }
 
