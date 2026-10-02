@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Static Post — Three World Office 001</title>
+  <style>
+    :root{
+      color-scheme:dark;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      --bg:#10110e;--panel:#171914;--ink:#eee8d6;--muted:#8e9185;
+      --line:#44483c;--stamp:#d6c99e;--paper:#1d201a;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);line-height:1.45}
+    header,main,footer{max-width:1280px;margin:auto}
+    header{padding:2.2rem 1.2rem 1.3rem;border-bottom:1px solid var(--line)}
+    h1{font-size:clamp(2rem,5vw,4.5rem);letter-spacing:-.075em;margin:0}
+    p{color:var(--muted);max-width:800px}
+    .eyebrow{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    main{padding:1.2rem;display:grid;gap:1rem}
+    .letter,.postbag,.compositor,.descendant{border:1px solid var(--line);background:var(--panel);padding:1rem}
+    .letter{display:grid;grid-template-columns:1.2fr 1fr;gap:1rem}
+    .paper{border:1px solid var(--line);background:var(--paper);padding:1rem}
+    .covers{display:grid;gap:.65rem}
+    .cover,.return-card{border:1px solid var(--line);padding:.75rem;background:#11130f}
+    .stamp{display:inline-block;border:2px solid var(--stamp);color:var(--stamp);padding:.3rem .5rem;font-weight:700;letter-spacing:.07em;transform:rotate(-1deg)}
+    .postbag-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}
+    .return-card label{display:grid;grid-template-columns:auto 1fr;gap:.55rem;margin:.55rem 0;color:var(--ink)}
+    .return-card input{margin-top:.25rem}
+    .meta{font-size:.8rem;color:var(--muted);overflow-wrap:anywhere}
+    .law{color:var(--stamp)}
+    textarea{width:100%;min-height:80px;background:#0d0e0b;color:var(--ink);border:1px solid var(--line);padding:.7rem;font:inherit}
+    button{font:inherit;padding:.65rem .9rem;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+    button:hover{background:var(--ink);color:var(--bg)}
+    .chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.7rem 0}
+    .chip{border:1px solid var(--line);padding:.35rem .5rem;font-size:.82rem}
+    .descendant{display:none}
+    .descendant.show{display:block}
+    .arrow{text-align:center;color:var(--muted);font-size:1.5rem}
+    @media(max-width:850px){.letter{grid-template-columns:1fr}.postbag-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">THE STATIC POST / THREE-WORLD POST OFFICE 001</div>
+  <h1>One letter. Three sealed covers.</h1>
+  <p>
+    The inner letter body is identical. Each destination gets its own capability,
+    encryption, crossing, and return envelope. Returned letters remain separate until
+    a human compositor chooses what crosses the next border.
+  </p>
+</header>
+
+<main>
+  <section class="letter">
+    <div class="paper">
+      <div class="eyebrow">common letter body</div>
+      <div class="stamp">SAME PARCEL</div>
+      <h2>Invent one reproducible visual limitation</h2>
+      <div class="chips">
+        <span class="chip">handmade rather than synthetic</span>
+        <span class="chip">simple enough to reproduce</span>
+        <span class="chip">repetition may become visual language</span>
+        <span class="chip">preserve divergence</span>
+      </div>
+      <p class="law">LETTER BODY != COVER</p>
+    </div>
+
+    <div class="covers">
+      <div class="cover">
+        <div class="stamp">CEDAR</div>
+        <div class="meta">road: .carry file</div>
+        <div class="meta">cover A: recipient capability + encryption</div>
+      </div>
+      <div class="cover">
+        <div class="stamp">RIVER</div>
+        <div class="meta">road: CARRY TEXT</div>
+        <div class="meta">cover B: recipient capability + encryption</div>
+      </div>
+      <div class="cover">
+        <div class="stamp">EMBER</div>
+        <div class="meta">road: dumb JSON copy</div>
+        <div class="meta">cover C: recipient capability + encryption</div>
+      </div>
+      <p class="law">SAME PARCEL != SAME CIPHERTEXT</p>
+    </div>
+  </section>
+
+  <div class="arrow">↓ three sovereign return letters ↓</div>
+
+  <section class="postbag">
+    <div class="eyebrow">source arrivals / postbag</div>
+    <h2>Hold all. Rank none.</h2>
+    <div class="postbag-grid" id="returns"></div>
+    <p class="law">POSTBAG != MERGER · RETURN ORDER != RANKING · THREE RETURNS != AGREEMENT</p>
+  </section>
+
+  <section class="compositor">
+    <div class="eyebrow">human compositor desk</div>
+    <h2>Choose the descendant carriers</h2>
+    <p>Selection is explicit. Unselected material remains present in the postbag.</p>
+    <label class="eyebrow" for="tensions">Open tensions — one per line</label>
+    <textarea id="tensions">Can frame repetition and palette restriction coexist without becoming decorative?
+How much contradiction should remain visible in the descendant?</textarea>
+    <button id="compose">COMPOSE DESCENDANT PARCEL</button>
+    <p class="law">SELECTION != RANKING · OMISSION != NONEXISTENCE · DESCENDANT != SUMMARY</p>
+  </section>
+
+  <div class="arrow">↓ fourth border ↓</div>
+
+  <section class="descendant" id="descendant">
+    <div class="eyebrow">world horizon / arrivals</div>
+    <div class="stamp">DESCENDANT — HOLD</div>
+    <h2>Three parents. One fresh candidate.</h2>
+    <div id="carried" class="chips"></div>
+    <div class="meta" id="parent-count"></div>
+    <p class="law">ANCESTRY != AUTHORITY · COMPOSITION != CONSENSUS</p>
+  </section>
+</main>
+
+<footer>
+  <strong>Interaction specimen.</strong>
+  The executable witness is <code>scripts/three-world-post-office-001.ts</code>.
+  The UI does not mint protocol authority.
+</footer>
+
+<script>
+const worlds = [
+  {
+    name:'CEDAR',
+    values:[
+      'Let repetition become the visible frame rule.',
+      'Change content inside the frame, not the frame itself.'
+    ]
+  },
+  {
+    name:'RIVER',
+    values:[
+      'Use a restricted palette so movement carries complexity.',
+      'Let the limitation be obvious enough to feel intentional.'
+    ]
+  },
+  {
+    name:'EMBER',
+    values:[
+      'Fix the shot count and mutate density inside each shot.',
+      'Preserve one unresolved contradiction instead of smoothing it.'
+    ]
+  }
+];
+
+const returns=document.getElementById('returns');
+worlds.forEach((world,index)=>{
+  const card=document.createElement('div');
+  card.className='return-card';
+  card.innerHTML=
+    '<div class="stamp">'+world.name+' — HELD</div>'+
+    '<div class="meta">bounded return letter / no ranking implied</div>'+
+    world.values.map((value,i)=>
+      '<label><input type="checkbox" data-text="'+encodeURIComponent(value)+'" '+((i===0 && index<2)||(i===1 && index===2)?'checked':'')+'><span>'+value+'</span></label>'
+    ).join('');
+  returns.append(card);
+});
+
+document.getElementById('compose').onclick=()=>{
+  const selected=[...document.querySelectorAll('input[type=checkbox]:checked')]
+    .map(x=>decodeURIComponent(x.dataset.text));
+  const carried=document.getElementById('carried');
+  carried.innerHTML=selected.map(x=>'<span class="chip">'+x+'</span>').join('');
+  document.getElementById('parent-count').textContent=
+    'parent crossings: 3 · selected carriers: '+selected.length+
+    ' · unselected returns remain in the postbag';
+  document.getElementById('descendant').classList.add('show');
+};
+</script>
+</body>
+</html>

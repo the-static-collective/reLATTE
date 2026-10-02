@@ -822,3 +822,52 @@ npm run carry -- dearmor parcel.txt restored.carry
 > **The internet already knows how to move files. We only needed to teach the parcel how to remember its boundaries.**
 
 > **Letters, not shared memory.**
+
+
+## Three World Post Office 001
+
+[Three World Post Office 001](docs/THREE-WORLD-POST-OFFICE-001.md) sends one stable Carry Parcel body under three recipient-specific covers, collects three bounded return letters without ranking them, and composes a fresh three-parent descendant for a fourth sovereign world.
+
+```text
+                 ONE PARCEL
+                     |
+       +-------------+-------------+
+       |             |             |
+    CEDAR          RIVER         EMBER
+    .carry       CARRY TEXT     dumb copy
+       |             |             |
+      HOLD          HOLD          HOLD
+       |             |             |
+    reply A        reply B       reply C
+       +-------------+-------------+
+                     |
+                  POSTBAG
+                     |
+              human compositor
+                     |
+           fresh 3-parent descendant
+                     |
+                  HORIZON
+                     |
+                    HOLD
+```
+
+```text
+LETTER BODY != COVER
+SAME PARCEL != SAME CIPHERTEXT
+POSTBAG != MERGER
+THREE RETURNS != AGREEMENT
+SELECTION != RANKING
+DESCENDANT != SUMMARY
+STAMP != AUTHORITY
+```
+
+Interactive specimen:
+
+```text
+demo/three-world-post-office.html
+```
+
+> **One letter can cross three borders without becoming one shared room.**
+
+> **Hold all. Rank none. Compose the descendant deliberately.**
