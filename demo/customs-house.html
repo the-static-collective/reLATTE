@@ -377,6 +377,8 @@ async function release(){
   arrivalDecision='UNDECIDED';
 
   els['departure-stamp'].textContent='RELEASED — SOURCE CUT';
+  els.cancel.disabled=true;
+  els.cancel.textContent='CANCEL CLOSED';
   els['departure-receipt'].innerHTML=
     '<strong>RELEASE</strong><br>'+esc(parcelId)+
     '<br><span class="fog">Source decision only. Destination authority unchanged.</span>';
@@ -448,11 +450,18 @@ els['add-context'].onclick=()=>{
 };
 els.release.onclick=release;
 els.amend.onclick=()=>{
-  els['departure-stamp'].textContent='DRAFT — LOCAL ONLY';
-  els['departure-receipt'].textContent='Amending local card. No new parcel released.';
+  if(released){
+    els['departure-stamp'].textContent='AMENDING NEW DRAFT — PRIOR RELEASE UNCHANGED';
+    els['departure-receipt'].innerHTML=
+      '<strong>AMEND</strong><br>'+
+      'Local edits may prepare a future parcel. The released parcel remains on the road.';
+  } else {
+    els['departure-stamp'].textContent='DRAFT — LOCAL ONLY';
+    els['departure-receipt'].textContent='Amending local card. No parcel has been released.';
+  }
 };
 els.cancel.onclick=()=>{
-  released=null;
+  if(released) return;
   arrivalDecision='UNDECIDED';
   els['departure-stamp'].textContent='CANCELLED — NOTHING LEFT';
   els['departure-receipt'].textContent='CANCEL created no parcel.';
