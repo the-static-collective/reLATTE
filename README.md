@@ -779,3 +779,46 @@ PROJECTION != AUTHORITY
 There is an interactive specimen at [demo/customs-house.html](demo/customs-house.html).
 
 > **A context window should have customs.**
+
+
+## Mail Slot 001 + Static Post 001
+
+[Mail Slot 001 + Carry Text 001 + Static Post 001](docs/MAIL-SLOT-STATIC-POST-001.md) makes released Carry Cards portable through ordinary dumb transport.
+
+```text
+Customs House
+    ↓ RELEASE
+portable .carry
+    ↓
+file / email / chat / USB / whatever
+    ↓
+CARRY TEXT when only text fits
+    ↓
+same portable ID
+same crossing ID
+    ↓
+Customs House
+```
+
+An optional Return Envelope carries one encrypted delegated reply key and one source-issued receive capability. The destination may use that door for one child reply; the source burns the capability after accepting it.
+
+```text
+ROAD != PARCEL
+FILE != AUTHORITY
+ARMOR != AUTHORITY
+COPY != NEW CROSSING
+ONE REPLY DOOR != SHARED SESSION
+RETURN INVITATION != ADMISSION
+```
+
+Portable parcel utility:
+
+```bash
+npm run carry -- inspect parcel.carry
+npm run carry -- armor parcel.carry parcel.txt
+npm run carry -- dearmor parcel.txt restored.carry
+```
+
+> **The internet already knows how to move files. We only needed to teach the parcel how to remember its boundaries.**
+
+> **Letters, not shared memory.**
