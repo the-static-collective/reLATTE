@@ -708,3 +708,40 @@ SHARED CROSSING != SHARED WORLD STATE
 ```
 
 > **Two worlds may share a traveler without sharing a throne.**
+
+
+## Live Private Peer 001
+
+[Live Private Peer 001](docs/LIVE-PRIVATE-PEER-001.md) composes fresh DID-based peer discovery, a live runtime HTTP endpoint, recipient-bound encrypted payloads, and durable capability revocation.
+
+```text
+publish B peer DID
+      ↓
+fresh resolve
+      ↓
+discover live descriptor
+      ↓
+B-issued capability
+      ↓
+encrypt payload to B
+      ↓
+HTTP crossing
+      ↓
+B RECEIVE → decrypt → HOLD
+      ↓
+B revokes capability
+      ↓
+second HTTP crossing
+      X
+CAPABILITY_REVOKED
+```
+
+```text
+DISCOVERY != TRUST
+CIPHERTEXT != AUTHORITY
+DECRYPTABLE != ADMITTED
+REVOCATION != HISTORY ERASURE
+REVOKED NOW != NEVER VALID
+```
+
+> **Find the door. Seal the parcel. Cross only with permission.**
