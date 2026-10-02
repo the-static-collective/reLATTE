@@ -578,3 +578,29 @@ RECOVERY != ADMISSION
 ```
 
 > **The road can die. The traveler can still arrive from somewhere else. The next house still owns its door.**
+
+
+## Automatic Failover 001
+
+[Automatic Failover 001](docs/AUTOMATIC-FAILOVER-001.md) turns two-road mortality into explicit local recovery policy.
+
+```text
+try A → failure observation
+           ↓
+        try B
+           ↓
+     same crossing
+           ↓
+     LocalReceiver
+```
+
+Availability failure may change the road. Integrity failure stops the policy.
+
+```text
+FAILURE OBSERVED != ROAD ERASED
+ROAD CHANGE != CROSSING CHANGE
+AVAILABILITY FAILURE != INTEGRITY FAILURE
+FAILOVER != AUTHORITY TRANSFER
+```
+
+> **When a road closes, choose another road. Do not rename the traveler. Do not move the door.**
