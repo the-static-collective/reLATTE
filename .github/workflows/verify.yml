@@ -435,3 +435,23 @@ jobs:
           docker rm -f relatte-dwn-a-road-memory-001 || true
           docker rm -f relatte-dwn-b-road-memory-001 || true
 
+  black-flag-001:
+    if: github.ref_name == 'feat/runtime-boot-black-flag-001' || github.head_ref == 'feat/runtime-boot-black-flag-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - name: Kill runtime and prove lawful replay
+        run: |
+          set -o pipefail
+          npm run witness:black-flag | tee black-flag-001.json
+      - name: Upload witness
+        uses: actions/upload-artifact@v4
+        with:
+          name: black-flag-001
+          path: black-flag-001.json
+
