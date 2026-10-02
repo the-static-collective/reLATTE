@@ -436,7 +436,7 @@ jobs:
           docker rm -f relatte-dwn-b-road-memory-001 || true
 
   black-flag-001:
-    if: github.ref_name == 'feat/runtime-boot-black-flag-001' || github.head_ref == 'feat/runtime-boot-black-flag-001'
+    if: github.ref_name == 'feat/runtime-boot-black-flag-001' || github.head_ref == 'feat/runtime-boot-black-flag-001' || github.ref_name == 'feat/capability-kernel-two-worlds-001' || github.head_ref == 'feat/capability-kernel-two-worlds-001'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -455,3 +455,24 @@ jobs:
           name: black-flag-001
           path: black-flag-001.json
 
+
+
+  two-worlds-in-a-box-001:
+    if: github.ref_name == 'feat/capability-kernel-two-worlds-001' || github.head_ref == 'feat/capability-kernel-two-worlds-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - name: Cross two sovereign runtimes under typed capabilities
+        run: |
+          set -o pipefail
+          npm run witness:two-worlds-in-a-box | tee two-worlds-in-a-box-001.json
+      - name: Upload witness
+        uses: actions/upload-artifact@v4
+        with:
+          name: two-worlds-in-a-box-001
+          path: two-worlds-in-a-box-001.json
