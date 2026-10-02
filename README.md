@@ -604,3 +604,34 @@ FAILOVER != AUTHORITY TRANSFER
 ```
 
 > **When a road closes, choose another road. Do not rename the traveler. Do not move the door.**
+
+
+## Road Memory / Circuit Breaker 001
+
+[Road Memory / Circuit Breaker 001](docs/ROAD-MEMORY-CIRCUIT-BREAKER-001.md) gives automatic failover durable owner-local transport memory.
+
+```text
+A fails → OPEN
+          ↓
+      SKIP_OPEN
+          ↓
+     cooldown
+          ↓
+    HALF_OPEN probe
+          ↓
+       success
+          ↓
+       CLOSED
+```
+
+Road health is a local observation, not a mutation of the DID document or a global reputation claim.
+
+```text
+LOCAL ROAD MEMORY != GLOBAL REPUTATION
+CIRCUIT STATE != DID STATE
+SKIP != ERASURE
+AVAILABILITY FAILURE != INTEGRITY FAILURE
+ROAD HEALTH != RECEIVER AUTHORITY
+```
+
+> **Remember the broken road locally. Leave the map alone. Try again when the time is right.**
