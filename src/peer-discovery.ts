@@ -75,7 +75,7 @@ function endpointCandidate(args: {
   if (url.protocol !== 'http:' && url.protocol !== 'https:') {
     throw new Error('UNSUPPORTED_PEER_ENDPOINT_PROTOCOL');
   }
-  const identity = {
+  const identity: Omit<RelattePeerCandidate, 'candidate_id'> = {
     schema: 'relatte.peer-candidate/v0',
     discovered_from_did: args.did_uri,
     service_id: args.service_id,
