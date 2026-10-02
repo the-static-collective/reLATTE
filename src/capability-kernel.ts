@@ -1,4 +1,5 @@
 import {
+  appendFile,
   mkdir,
   readFile,
   readdir,
@@ -22,12 +23,31 @@ export const CAPABILITY_GRANT_ID_DOMAIN = 'reLATTE-CapabilityGrant-v0|';
 export const CAPABILITY_GRANT_SIGNATURE_DOMAIN = 'reLATTE-CapabilityGrantSignature-v0|';
 export const CAPABILITY_GRANT_SIGNING_DOMAIN = 'relatte.capability-grant-signature/v0';
 export const CAPABILITY_GRANT_ALGORITHM = 'ECDSA-P256-SHA256';
+export const CAPABILITY_REVOCATION_ID_DOMAIN = 'reLATTE-CapabilityRevocation-v0|';
+export const CAPABILITY_REVOCATION_SIGNATURE_DOMAIN = 'reLATTE-CapabilityRevocationSignature-v0|';
+export const CAPABILITY_REVOCATION_SIGNING_DOMAIN = 'relatte.capability-revocation-signature/v0';
 
 export type CapabilityAction = 'runtime.receive.crossing';
 
 export interface CapabilityScope {
   target_world: string;
   declared_kind: string | null;
+}
+
+export interface CapabilityRevocation {
+  schema: 'relatte.capability-revocation/v0';
+  revocation_id: string;
+  capability_id: string;
+  issuer_ref: string;
+  issuer_public_key: JsonWebKey;
+  revoked_at: string;
+  reason: string | null;
+  signing: {
+    algorithm: typeof CAPABILITY_GRANT_ALGORITHM;
+    domain: typeof CAPABILITY_REVOCATION_SIGNING_DOMAIN;
+    signature: string;
+  };
+  laws: string[];
 }
 
 export interface CapabilityGrant {
@@ -240,6 +260,98 @@ function normalizeGrant(value: unknown): CapabilityGrant {
   };
 }
 
+function revocationIdentityBody(
+  value: Omit<CapabilityRevocation, 'revocation_id' | 'signing'>,
+): Record<string, unknown> {
+  return {
+    schema: value.schema,
+    capability_id: value.capability_id,
+    issuer_ref: value.issuer_ref,
+    issuer_public_key: normalizePublicJwk(
+      value.issuer_public_key,
+      'INVALID_CAPABILITY_REVOCATION_ISSUER_KEY',
+    ),
+    revoked_at: value.revoked_at,
+    reason: value.reason,
+    laws: [...value.laws],
+  };
+}
+
+function revocationId(
+  body: Omit<CapabilityRevocation, 'revocation_id' | 'signing'>,
+): string {
+  return `relatte-capability-revocation-v0:${sha256Hex(
+    canonicalizeDomainValue(
+      CAPABILITY_REVOCATION_ID_DOMAIN,
+      revocationIdentityBody(body),
+    )
+  )}`;
+}
+
+function revocationSignatureBytes(
+  id: string,
+  body: Omit<CapabilityRevocation, 'revocation_id' | 'signing'>,
+): Buffer {
+  return canonicalizeDomainValue(CAPABILITY_REVOCATION_SIGNATURE_DOMAIN, {
+    revocation_id: id,
+    ...revocationIdentityBody(body),
+  });
+}
+
+function normalizeRevocation(value: unknown): CapabilityRevocation {
+  const revocation = asRecord(value, 'INVALID_CAPABILITY_REVOCATION');
+  if (revocation.schema !== 'relatte.capability-revocation/v0') {
+    throw new Error('INVALID_CAPABILITY_REVOCATION_SCHEMA');
+  }
+  const revokedAt = nonEmpty(
+    revocation.revoked_at,
+    'INVALID_CAPABILITY_REVOCATION_TIME',
+  );
+  validateTimestamp(revokedAt);
+  const signing = asRecord(
+    revocation.signing,
+    'INVALID_CAPABILITY_REVOCATION_SIGNING',
+  );
+  if (
+    signing.algorithm !== CAPABILITY_GRANT_ALGORITHM ||
+    signing.domain !== CAPABILITY_REVOCATION_SIGNING_DOMAIN ||
+    typeof signing.signature !== 'string'
+  ) {
+    throw new Error('INVALID_CAPABILITY_REVOCATION_SIGNING');
+  }
+
+  return {
+    schema: 'relatte.capability-revocation/v0',
+    revocation_id: nonEmpty(
+      revocation.revocation_id,
+      'INVALID_CAPABILITY_REVOCATION_ID',
+    ),
+    capability_id: nonEmpty(
+      revocation.capability_id,
+      'INVALID_CAPABILITY_ID',
+    ),
+    issuer_ref: nonEmpty(
+      revocation.issuer_ref,
+      'INVALID_CAPABILITY_ISSUER_REF',
+    ),
+    issuer_public_key: normalizePublicJwk(
+      revocation.issuer_public_key,
+      'INVALID_CAPABILITY_REVOCATION_ISSUER_KEY',
+    ),
+    revoked_at: revokedAt,
+    reason:
+      revocation.reason == null
+        ? null
+        : nonEmpty(revocation.reason, 'INVALID_CAPABILITY_REVOCATION_REASON'),
+    signing: {
+      algorithm: CAPABILITY_GRANT_ALGORITHM,
+      domain: CAPABILITY_REVOCATION_SIGNING_DOMAIN,
+      signature: signing.signature,
+    },
+    laws: Array.isArray(revocation.laws) ? [...revocation.laws] : [],
+  };
+}
+
 function grantFilename(id: string): string {
   return `${sha256Hex(Buffer.from(id, 'utf8'))}.json`;
 }
@@ -316,6 +428,7 @@ export class CapabilityKernel {
       `${worldId}#capability-kernel`;
 
     await mkdir(join(args.root, 'grants'), { recursive: true });
+    await writeFile(join(args.root, 'revocations.jsonl'), '', 'utf8');
     const keys = await generateP256KeyPair();
     const config: CapabilityKernelConfig = {
       schema: 'relatte.capability-kernel-config/v0',
@@ -443,6 +556,124 @@ export class CapabilityKernel {
     return ids.sort();
   }
 
+  private async readRevocations(): Promise<CapabilityRevocation[]> {
+    const path = join(this.root, 'revocations.jsonl');
+    const text = await readFile(path, 'utf8');
+    const entries = text
+      .split('\n')
+      .filter((line) => line.trim().length > 0)
+      .map((line) => normalizeRevocation(JSON.parse(line)));
+
+    for (const entry of entries) {
+      if (!(await this.verifyRevocation(entry))) {
+        throw new Error('CAPABILITY_REVOCATION_JOURNAL_INVALID');
+      }
+    }
+    return entries;
+  }
+
+  async verifyRevocation(value: unknown): Promise<boolean> {
+    try {
+      const revocation = normalizeRevocation(value);
+      if (revocation.issuer_ref !== this.issuer_ref) return false;
+      if (!samePublicJwk(revocation.issuer_public_key, this.public_key_jwk)) {
+        return false;
+      }
+      const body: Omit<CapabilityRevocation, 'revocation_id' | 'signing'> = {
+        schema: revocation.schema,
+        capability_id: revocation.capability_id,
+        issuer_ref: revocation.issuer_ref,
+        issuer_public_key: revocation.issuer_public_key,
+        revoked_at: revocation.revoked_at,
+        reason: revocation.reason,
+        laws: revocation.laws,
+      };
+      if (revocation.revocation_id !== revocationId(body)) return false;
+      return verifySignature(
+        revocation.issuer_public_key,
+        revocation.signing.signature,
+        revocationSignatureBytes(revocation.revocation_id, body),
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  async getRevocation(
+    capabilityIdValue: string,
+  ): Promise<CapabilityRevocation | null> {
+    const capabilityId = nonEmpty(
+      capabilityIdValue,
+      'INVALID_CAPABILITY_ID',
+    );
+    const matches = (await this.readRevocations()).filter(
+      (entry) => entry.capability_id === capabilityId,
+    );
+    if (matches.length > 1) throw new Error('CAPABILITY_MULTIPLE_REVOCATIONS');
+    return matches[0] ?? null;
+  }
+
+  async revokeCapability(args: {
+    capability_id: string;
+    revoked_at: string;
+    reason?: string | null;
+  }): Promise<CapabilityRevocation> {
+    validateTimestamp(args.revoked_at);
+    const grant = await this.getGrant(args.capability_id);
+    if (!grant) throw new Error('CAPABILITY_UNKNOWN');
+    if (!(await this.verifyGrant(grant))) throw new Error('CAPABILITY_INVALID');
+
+    const existing = await this.getRevocation(grant.capability_id);
+    if (existing) return existing;
+
+    const body: Omit<CapabilityRevocation, 'revocation_id' | 'signing'> = {
+      schema: 'relatte.capability-revocation/v0',
+      capability_id: grant.capability_id,
+      issuer_ref: this.issuer_ref,
+      issuer_public_key: this.public_key_jwk,
+      revoked_at: args.revoked_at,
+      reason:
+        args.reason == null
+          ? null
+          : nonEmpty(args.reason, 'INVALID_CAPABILITY_REVOCATION_REASON'),
+      laws: [
+        'REVOCATION != HISTORY ERASURE',
+        'REVOKED NOW != NEVER VALID',
+        'REVOCATION != ADMISSION',
+        'CAPABILITY STATUS != CROSSING HISTORY',
+      ],
+    };
+    const id = revocationId(body);
+    const revocation: CapabilityRevocation = {
+      ...body,
+      revocation_id: id,
+      signing: {
+        algorithm: CAPABILITY_GRANT_ALGORITHM,
+        domain: CAPABILITY_REVOCATION_SIGNING_DOMAIN,
+        signature: await sign(
+          this.keys.privateKey,
+          revocationSignatureBytes(id, body),
+        ),
+      },
+    };
+
+    await appendFile(
+      join(this.root, 'revocations.jsonl'),
+      JSON.stringify(revocation) + '\n',
+      'utf8',
+    );
+    return revocation;
+  }
+
+  async isRevoked(
+    capabilityIdValue: string,
+    observedAt: string,
+  ): Promise<boolean> {
+    validateTimestamp(observedAt);
+    const revocation = await this.getRevocation(capabilityIdValue);
+    return revocation !== null && compareTime(observedAt, revocation.revoked_at) >= 0;
+  }
+
   async verifyGrant(value: unknown): Promise<boolean> {
     try {
       const grant = normalizeGrant(value);
@@ -491,6 +722,9 @@ export class CapabilityKernel {
     if (!grant) throw new Error('CAPABILITY_UNKNOWN');
     if (!(await this.verifyGrant(grant))) throw new Error('CAPABILITY_INVALID');
     if (grant.action !== args.action) throw new Error('CAPABILITY_ACTION_DENIED');
+    if (await this.isRevoked(grant.capability_id, args.observed_at)) {
+      throw new Error('CAPABILITY_REVOKED');
+    }
 
     if (
       compareTime(args.observed_at, grant.not_before) < 0 ||
