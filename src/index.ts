@@ -30,3 +30,5 @@ export * from './capability-kernel.ts';
 export * from './encrypted-payload.ts';
 
 export * from './peer-discovery.ts';
+
+export * from './carry-card.ts';
