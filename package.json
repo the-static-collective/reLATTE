@@ -16,7 +16,8 @@
     "runtime:node": "node --experimental-strip-types scripts/runtime-node-001.ts",
     "witness:black-flag": "node --experimental-strip-types scripts/black-flag-001.ts",
     "witness:two-worlds-in-a-box": "node --experimental-strip-types scripts/two-worlds-in-a-box-001.ts",
-    "witness:live-private-peer": "node --experimental-strip-types scripts/live-private-peer-001.ts"
+    "witness:live-private-peer": "node --experimental-strip-types scripts/live-private-peer-001.ts",
+    "witness:carry-card-hostile": "node --experimental-strip-types scripts/carry-card-hostile-001.ts"
   },
   "dependencies": {
     "json-canonicalize": "3.0.1"
