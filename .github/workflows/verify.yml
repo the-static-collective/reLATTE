@@ -556,3 +556,23 @@ jobs:
           name: customs-house-001
           path: customs-house-001.json
 
+  mail-slot-static-post-001:
+    if: github.ref_name == 'feat/mail-slot-static-post-001' || github.head_ref == 'feat/mail-slot-static-post-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - name: Carry parcel through file, text armor, and one-reply return envelope
+        run: |
+          set -o pipefail
+          npm run witness:mail-slot-static-post | tee mail-slot-static-post-001.json
+      - name: Upload witness
+        uses: actions/upload-artifact@v4
+        with:
+          name: mail-slot-static-post-001
+          path: mail-slot-static-post-001.json
+

@@ -34,3 +34,7 @@ export * from './peer-discovery.ts';
 export * from './carry-card.ts';
 
 export * from './customs-house.ts';
+
+export * from './portable-carry.ts';
+
+export * from './return-envelope.ts';

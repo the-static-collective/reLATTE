@@ -218,6 +218,7 @@ export async function sealCarryCardForRecipient(args: {
   capability_id: string;
   recipient_public_key: JsonWebKey;
   return_address?: string | null;
+  parents?: string[];
 }): Promise<SealedCarryRelease> {
   const parcel = releaseCarryCard({
     card: args.card,
@@ -249,7 +250,7 @@ export async function sealCarryCardForRecipient(args: {
     ),
     source_world: nonEmpty(args.source_world, 'INVALID_CARRY_SOURCE_WORLD'),
     source_history_head: null,
-    parents: [],
+    parents: args.parents == null ? [] : [...args.parents],
     declared_kind: CARRY_DECLARED_KIND,
     payload_refs: [{
       address: encryptedPayload.envelope_id,
