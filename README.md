@@ -523,3 +523,32 @@ NETWORK WITNESS != CORE TEST SUITE
 ```
 
 > **The gateway may carry the map. It does not own the territory.**
+
+
+## Remote DWN Delivery 001
+
+[Remote DWN Delivery 001](docs/REMOTE-DWN-DELIVERY-001.md) closes the first executable **discover → commute → receive** circuit across a real HTTP DWN boundary.
+
+```text
+did:dht locator
+    ↓ resolve
+DWN road candidate
+    ↓ explicit select
+remote HTTP JSON-RPC
+    ↓ RecordsWrite / RecordsRead
+same signed crossing
+    ↓
+LocalReceiver
+    ↓
+RECEIVE → REFUSE
+```
+
+The remote node is multi-tenant, so the locator DID and stored tenant DID remain distinct.
+
+```text
+ROAD LOCATOR != DWN TENANT
+REMOTE STORED != RELATTE ADMITTED
+REMOTE READ != RELATTE RECEIVE
+```
+
+> **The road may carry the traveler all the way to the door. The house still decides whether the traveler enters.**
