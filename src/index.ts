@@ -21,3 +21,6 @@ export * from './reentry.ts';
 export * from './enterable.ts';
 export * from './room-return.ts';
 export * from './super.ts';
+
+export * from './runtime-manifest.ts';
+export * from './runtime.ts';
