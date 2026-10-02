@@ -14,7 +14,8 @@
     "witness:automatic-failover": "node --experimental-strip-types scripts/automatic-failover-001.ts",
     "witness:road-memory-circuit-breaker": "node --experimental-strip-types scripts/road-memory-circuit-breaker-001.ts",
     "runtime:node": "node --experimental-strip-types scripts/runtime-node-001.ts",
-    "witness:black-flag": "node --experimental-strip-types scripts/black-flag-001.ts"
+    "witness:black-flag": "node --experimental-strip-types scripts/black-flag-001.ts",
+    "witness:two-worlds-in-a-box": "node --experimental-strip-types scripts/two-worlds-in-a-box-001.ts"
   },
   "dependencies": {
     "json-canonicalize": "3.0.1"
