@@ -19,6 +19,7 @@ export interface WorldManifest {
     receipt_bus: true;
     inbox: true;
     outbox: true;
+    capability_kernel: true;
   };
   road_memory: {
     failure_threshold: number;
@@ -79,6 +80,7 @@ export function createWorldManifest(args: {
       receipt_bus: true,
       inbox: true,
       outbox: true,
+      capability_kernel: true,
     },
     road_memory: {
       failure_threshold: positiveInteger(
