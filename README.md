@@ -552,3 +552,29 @@ REMOTE READ != RELATTE RECEIVE
 ```
 
 > **The road may carry the traveler all the way to the door. The house still decides whether the traveler enters.**
+
+
+## Mortal Road 001
+
+[Mortal Road 001](docs/MORTAL-ROAD-001.md) proves two-node transport mortality without inventing shared authority.
+
+```text
+crossing → DWN A → replicate → DWN B
+             X kill A
+                        ↓
+                 recover from B
+                        ↓
+                fresh LocalReceiver
+                        ↓
+                     REFUSE
+```
+
+The nodes may carry copies of one attributable crossing without becoming one world or one consensus system.
+
+```text
+REPLICATION != CONSENSUS
+NODE DEATH != CROSSING DEATH
+RECOVERY != ADMISSION
+```
+
+> **The road can die. The traveler can still arrive from somewhere else. The next house still owns its door.**
