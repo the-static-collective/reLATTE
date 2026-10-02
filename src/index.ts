@@ -32,3 +32,5 @@ export * from './encrypted-payload.ts';
 export * from './peer-discovery.ts';
 
 export * from './carry-card.ts';
+
+export * from './customs-house.ts';

@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>reLATTE Customs House 001</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --paper:#11120f;
+      --ink:#f2eedf;
+      --fog:#97998c;
+      --line:#45483d;
+      --stamp:#d8cfad;
+      --panel:#171914;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      background:var(--paper);
+      color:var(--ink);
+      line-height:1.45;
+    }
+    header {
+      padding:2.3rem max(1.2rem,calc((100vw - 1280px)/2));
+      border-bottom:1px solid var(--line);
+    }
+    h1 { margin:0; font-size:clamp(1.8rem,4vw,3.7rem); letter-spacing:-.07em; }
+    header p { max-width:760px; color:var(--fog); }
+    .law { color:var(--stamp); }
+    main {
+      max-width:1280px;
+      margin:0 auto;
+      padding:1.2rem;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 280px minmax(0,1fr);
+      gap:1rem;
+    }
+    .desk,.road {
+      border:1px solid var(--line);
+      background:var(--panel);
+      min-height:680px;
+    }
+    .desk-head,.road-head {
+      padding:1rem;
+      border-bottom:1px solid var(--line);
+    }
+    .eyebrow {
+      color:var(--fog);
+      font-size:.78rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    h2 { margin:.25rem 0 0; font-size:1.35rem; }
+    .content { padding:1rem; }
+    label { display:block; margin:.8rem 0 .35rem; color:var(--fog); font-size:.88rem; }
+    input[type="text"],textarea {
+      width:100%;
+      border:1px solid var(--line);
+      background:#0d0e0b;
+      color:var(--ink);
+      padding:.75rem;
+      font:inherit;
+    }
+    textarea { min-height:90px; resize:vertical; }
+    .context-list { display:grid; gap:.55rem; margin-top:.8rem; }
+    .context-item {
+      border:1px solid var(--line);
+      padding:.7rem;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:.65rem;
+      align-items:start;
+    }
+    .context-item.off { opacity:.58; }
+    .context-item input { margin-top:.25rem; }
+    .count-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:.55rem;
+      margin:1rem 0;
+    }
+    .count {
+      border:1px solid var(--line);
+      padding:.7rem;
+    }
+    .count strong { display:block; font-size:1.6rem; }
+    button {
+      font:inherit;
+      border:1px solid var(--ink);
+      color:var(--ink);
+      background:transparent;
+      padding:.65rem .9rem;
+      cursor:pointer;
+    }
+    button:hover { background:var(--ink); color:var(--paper); }
+    button.secondary { border-color:var(--line); color:var(--fog); }
+    button.danger { border-style:dashed; }
+    button:disabled { opacity:.35; cursor:not-allowed; }
+    .actions { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1rem; }
+    .stamp {
+      border:2px solid var(--stamp);
+      color:var(--stamp);
+      display:inline-block;
+      padding:.35rem .55rem;
+      transform:rotate(-1.5deg);
+      font-weight:700;
+      letter-spacing:.08em;
+      margin:.4rem 0 .8rem;
+    }
+    .fog { color:var(--fog); }
+    .receipt {
+      border-top:1px dotted var(--line);
+      padding:.7rem 0;
+      overflow-wrap:anywhere;
+    }
+    .road {
+      background:#0d0e0b;
+    }
+    .road .content { padding:.8rem; }
+    .road-line {
+      width:1px;
+      height:70px;
+      background:var(--line);
+      margin:.5rem auto;
+    }
+    .parcel {
+      border:1px dashed var(--stamp);
+      padding:.75rem;
+      overflow-wrap:anywhere;
+    }
+    pre {
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-size:.78rem;
+      color:#c8c5b6;
+      max-height:250px;
+      overflow:auto;
+    }
+    .arrival-card {
+      border:1px solid var(--line);
+      padding:.75rem;
+      margin:.65rem 0;
+    }
+    .hidden { display:none; }
+    .danger-note {
+      border-left:3px solid var(--stamp);
+      padding-left:.75rem;
+      color:var(--fog);
+      margin-top:1rem;
+    }
+    footer {
+      max-width:1280px;
+      margin:0 auto;
+      padding:1rem 1.2rem 2.5rem;
+      color:var(--fog);
+    }
+    @media(max-width:900px){
+      main { grid-template-columns:1fr; }
+      .road { min-height:auto; }
+      .road-line { height:30px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">reLATTE / CUSTOMS HOUSE 001 / interaction specimen</div>
+  <h1>A context window should have customs.</h1>
+  <p>
+    The sender decides what may leave. The destination decides what may enter.
+    This browser specimen visualizes the two cuts; the executable cryptographic
+    witness lives in <span class="law">scripts/customs-house-001.ts</span>.
+  </p>
+</header>
+
+<main>
+  <section class="desk" id="departures">
+    <div class="desk-head">
+      <div class="eyebrow">source-local desk</div>
+      <h2>DEPARTURES</h2>
+    </div>
+    <div class="content">
+      <label for="intent">Purpose of this parcel</label>
+      <input id="intent" type="text" value="Help storyboard a bounded creative project">
+
+      <label>Offered local context</label>
+      <div id="context-list" class="context-list"></div>
+
+      <div class="actions">
+        <button class="secondary" id="add-context">+ ADD LOCAL CONTEXT</button>
+      </div>
+
+      <label for="questions">Open questions — one per line</label>
+      <textarea id="questions">Which limitation should become part of the visual language?</textarea>
+
+      <div class="count-grid">
+        <div class="count">
+          <span class="eyebrow">I'm carrying</span>
+          <strong id="carrying-count">0</strong>
+        </div>
+        <div class="count">
+          <span class="eyebrow">staying home</span>
+          <strong id="withheld-count">0</strong>
+        </div>
+      </div>
+
+      <div id="departure-stamp" class="stamp">DRAFT — LOCAL ONLY</div>
+      <p class="fog">
+        This desk may display source-only material because
+        <strong>DEPARTURE VIEW != TRANSPORT BUNDLE</strong>.
+      </p>
+
+      <div class="actions">
+        <button id="release">RELEASE</button>
+        <button class="secondary" id="amend">AMEND</button>
+        <button class="danger" id="cancel">CANCEL</button>
+      </div>
+      <div id="departure-receipt" class="receipt fog">No parcel released.</div>
+    </div>
+  </section>
+
+  <section class="road">
+    <div class="road-head">
+      <div class="eyebrow">the road</div>
+      <h2>SEALED PARCEL</h2>
+    </div>
+    <div class="content">
+      <div class="road-line"></div>
+      <div id="road-empty" class="fog">Nothing has left the source world.</div>
+      <div id="road-parcel" class="parcel hidden">
+        <div class="stamp">RELEASED</div>
+        <div><span class="eyebrow">parcel ref</span></div>
+        <div id="parcel-id"></div>
+        <br>
+        <div><span class="eyebrow">carrying</span> <strong id="road-carry-count"></strong></div>
+        <div><span class="eyebrow">withheld locally</span> <strong id="road-withheld-count"></strong></div>
+        <div><span class="eyebrow">plaintext on road</span> <strong>NO</strong></div>
+        <div class="actions">
+          <button class="secondary" id="inspect-wire">INSPECT SAFE WIRE SHAPE</button>
+        </div>
+        <pre id="wire" class="hidden"></pre>
+      </div>
+      <div class="road-line"></div>
+      <div class="danger-note">
+        WITHHELD COUNT != WITHHELD CONTENT<br>
+        RELEASE != RECEIVE<br>
+        TRANSPORT != AUTHORITY
+      </div>
+    </div>
+  </section>
+
+  <section class="desk" id="arrivals">
+    <div class="desk-head">
+      <div class="eyebrow">destination-local desk</div>
+      <h2>ARRIVALS</h2>
+    </div>
+    <div class="content">
+      <div id="arrival-empty" class="fog">
+        No parcel received. The destination cannot inspect source-local context.
+      </div>
+
+      <div id="arrival-content" class="hidden">
+        <div id="arrival-stamp" class="stamp">RECEIVED — UNDECIDED</div>
+
+        <label>Purpose declared by sender</label>
+        <div id="arrival-intent" class="arrival-card"></div>
+
+        <label>Decrypted carrying list</label>
+        <div id="arrival-items"></div>
+
+        <label>Open questions</label>
+        <div id="arrival-questions"></div>
+
+        <div class="count">
+          <span class="eyebrow">additional source items withheld</span>
+          <strong id="arrival-withheld-count"></strong>
+          <span class="fog">text unavailable by construction</span>
+        </div>
+
+        <div class="actions">
+          <button id="admit">ADMIT</button>
+          <button id="hold">HOLD</button>
+          <button id="refuse">REFUSE</button>
+        </div>
+
+        <div id="arrival-receipt" class="receipt fog">
+          RECEIVE exists. No destination disposition yet.
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <strong>PROJECTION != AUTHORITY.</strong>
+  This demo does not perform the production cryptographic operations. It mirrors
+  the bounded objects exercised by the executable Carry Card + Customs House witness.
+</footer>
+
+<script>
+const initial = [
+  { text:'The video should feel handmade rather than synthetic.', carry:true },
+  { text:'Keep the visual grammar simple enough to reproduce.', carry:true },
+  { text:'The destination may ask one follow-up question.', carry:true },
+  { text:'Source-only private development note.', carry:false }
+];
+
+let items = initial.map(x => ({...x}));
+let released = null;
+let arrivalDecision = 'UNDECIDED';
+
+const els = Object.fromEntries(
+  [...document.querySelectorAll('[id]')].map(el => [el.id, el])
+);
+
+function esc(value){
+  return String(value)
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;');
+}
+
+async function digest(value){
+  const bytes = new TextEncoder().encode(value);
+  const hash = await crypto.subtle.digest('SHA-256', bytes);
+  return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function questions(){
+  return els.questions.value
+    .split('\n')
+    .map(x=>x.trim())
+    .filter(Boolean);
+}
+
+function renderDeparture(){
+  els['context-list'].innerHTML='';
+  items.forEach((item,index)=>{
+    const row=document.createElement('label');
+    row.className='context-item'+(item.carry?'':' off');
+    row.innerHTML=
+      '<input type="checkbox" '+(item.carry?'checked':'')+'>'+
+      '<span contenteditable="true">'+esc(item.text)+'</span>';
+    const checkbox=row.querySelector('input');
+    const text=row.querySelector('span');
+    checkbox.onchange=()=>{
+      items[index].carry=checkbox.checked;
+      renderDeparture();
+    };
+    text.onblur=()=>{
+      items[index].text=text.textContent.trim() || '(empty local item)';
+      renderDeparture();
+    };
+    els['context-list'].append(row);
+  });
+  els['carrying-count'].textContent=items.filter(x=>x.carry).length;
+  els['withheld-count'].textContent=items.filter(x=>!x.carry).length;
+}
+
+function safeParcel(){
+  return {
+    schema:'relatte.carry-parcel/v0',
+    human_intent:els.intent.value.trim(),
+    admitted_context:items.filter(x=>x.carry).map(x=>x.text),
+    open_questions:questions(),
+    withheld_count:items.filter(x=>!x.carry).length
+  };
+}
+
+async function release(){
+  const parcel=safeParcel();
+  if(!parcel.human_intent) return;
+  const parcelId='relatte-carry-parcel-demo:'+await digest(JSON.stringify(parcel));
+  released={...parcel,parcel_id:parcelId};
+  arrivalDecision='UNDECIDED';
+
+  els['departure-stamp'].textContent='RELEASED — SOURCE CUT';
+  els.cancel.disabled=true;
+  els.cancel.textContent='CANCEL CLOSED';
+  els['departure-receipt'].innerHTML=
+    '<strong>RELEASE</strong><br>'+esc(parcelId)+
+    '<br><span class="fog">Source decision only. Destination authority unchanged.</span>';
+
+  els['road-empty'].classList.add('hidden');
+  els['road-parcel'].classList.remove('hidden');
+  els['parcel-id'].textContent=parcelId;
+  els['road-carry-count'].textContent=parcel.admitted_context.length;
+  els['road-withheld-count'].textContent=parcel.withheld_count;
+
+  const wire={
+    schema:'relatte.carry-transport-bundle/v0',
+    crossing:{
+      declared_kind:'CARRY_PARCEL',
+      requested_effect:{requested:'consider-carry-parcel',automatic_admission:false},
+      extensions:{carry_card:{parcel_id:parcelId,plaintext_embedded:false}}
+    },
+    encrypted_payload:{
+      profile:'relatte.ecdh-p256-hkdf-sha256-aes-256-gcm/v0',
+      ciphertext:'<recipient-bound ciphertext>',
+      context:{declared_kind:'CARRY_PARCEL'}
+    }
+  };
+  els.wire.textContent=JSON.stringify(wire,null,2);
+
+  renderArrival();
+}
+
+function renderArrival(){
+  if(!released){
+    els['arrival-empty'].classList.remove('hidden');
+    els['arrival-content'].classList.add('hidden');
+    return;
+  }
+
+  els['arrival-empty'].classList.add('hidden');
+  els['arrival-content'].classList.remove('hidden');
+  els['arrival-intent'].textContent=released.human_intent;
+  els['arrival-items'].innerHTML=released.admitted_context
+    .map(x=>'<div class="arrival-card">'+esc(x)+'</div>').join('');
+  els['arrival-questions'].innerHTML=released.open_questions.length
+    ? released.open_questions.map(x=>'<div class="arrival-card">'+esc(x)+'</div>').join('')
+    : '<div class="arrival-card fog">(none)</div>';
+  els['arrival-withheld-count'].textContent=released.withheld_count;
+
+  if(arrivalDecision==='UNDECIDED'){
+    els['arrival-stamp'].textContent='RECEIVED — UNDECIDED';
+    els['arrival-receipt'].innerHTML=
+      '<strong>RECEIVE</strong><br>'+
+      '<span class="fog">Decrypted does not mean admitted.</span>';
+  } else {
+    els['arrival-stamp'].textContent=arrivalDecision+' — DESTINATION CUT';
+    els['arrival-receipt'].innerHTML=
+      '<strong>'+arrivalDecision+'</strong><br>'+
+      'Destination-local disposition.<br>'+
+      '<span class="fog">SOURCE RELEASE != DESTINATION DECISION</span>';
+  }
+}
+
+function decide(value){
+  if(!released) return;
+  arrivalDecision=value;
+  renderArrival();
+}
+
+els['add-context'].onclick=()=>{
+  items.push({text:'New source-local context',carry:false});
+  renderDeparture();
+};
+els.release.onclick=release;
+els.amend.onclick=()=>{
+  if(released){
+    els['departure-stamp'].textContent='AMENDING NEW DRAFT — PRIOR RELEASE UNCHANGED';
+    els['departure-receipt'].innerHTML=
+      '<strong>AMEND</strong><br>'+
+      'Local edits may prepare a future parcel. The released parcel remains on the road.';
+  } else {
+    els['departure-stamp'].textContent='DRAFT — LOCAL ONLY';
+    els['departure-receipt'].textContent='Amending local card. No parcel has been released.';
+  }
+};
+els.cancel.onclick=()=>{
+  if(released) return;
+  arrivalDecision='UNDECIDED';
+  els['departure-stamp'].textContent='CANCELLED — NOTHING LEFT';
+  els['departure-receipt'].textContent='CANCEL created no parcel.';
+  els['road-empty'].classList.remove('hidden');
+  els['road-parcel'].classList.add('hidden');
+  els.wire.classList.add('hidden');
+  renderArrival();
+};
+els['inspect-wire'].onclick=()=>els.wire.classList.toggle('hidden');
+els.admit.onclick=()=>decide('ADMIT');
+els.hold.onclick=()=>decide('HOLD');
+els.refuse.onclick=()=>decide('REFUSE');
+
+renderDeparture();
+renderArrival();
+</script>
+</body>
+</html>

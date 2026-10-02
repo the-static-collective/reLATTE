@@ -536,3 +536,23 @@ jobs:
         if: always()
         run: docker stop relatte-did-dht-gateway-private-peer-001 || true
 
+  customs-house-001:
+    if: github.ref_name == 'feat/customs-house-001' || github.head_ref == 'feat/customs-house-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - name: Exercise departures, road privacy, arrivals, and destination HOLD
+        run: |
+          set -o pipefail
+          npm run witness:customs-house | tee customs-house-001.json
+      - name: Upload witness
+        uses: actions/upload-artifact@v4
+        with:
+          name: customs-house-001
+          path: customs-house-001.json
+
