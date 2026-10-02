@@ -39,7 +39,9 @@ while (!stopping) {
             }, null, 2) + '\n',
             'utf8',
           );
-          await new Promise<void>(() => {});
+          await new Promise<void>((resolve) => {
+            setTimeout(resolve, 24 * 60 * 60 * 1000);
+          });
         }
       : undefined,
   });
