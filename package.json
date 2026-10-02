@@ -18,7 +18,9 @@
     "witness:two-worlds-in-a-box": "node --experimental-strip-types scripts/two-worlds-in-a-box-001.ts",
     "witness:live-private-peer": "node --experimental-strip-types scripts/live-private-peer-001.ts",
     "witness:carry-card-hostile": "node --experimental-strip-types scripts/carry-card-hostile-001.ts",
-    "witness:customs-house": "node --experimental-strip-types scripts/customs-house-001.ts"
+    "witness:customs-house": "node --experimental-strip-types scripts/customs-house-001.ts",
+    "witness:mail-slot-static-post": "node --experimental-strip-types scripts/mail-slot-static-post-001.ts",
+    "carry": "node --experimental-strip-types scripts/carry-tool-001.ts"
   },
   "dependencies": {
     "json-canonicalize": "3.0.1"
