@@ -745,3 +745,37 @@ REVOKED NOW != NEVER VALID
 ```
 
 > **Find the door. Seal the parcel. Cross only with permission.**
+
+
+## Customs House 001
+
+[Customs House 001](docs/CUSTOMS-HOUSE-001.md) turns Carry Card's two consent cuts into a human-facing departures / arrivals room.
+
+```text
+DEPARTURES
+  choose what may leave
+      ↓
+   RELEASE
+      ↓
+sealed road
+      ↓
+   RECEIVE
+      ↓
+ARRIVALS
+  ADMIT / HOLD / REFUSE
+```
+
+The source-local departure view may display withheld material because it is explicitly non-transmittable. The released preview, road, and arrival view may expose only the carrying set plus a withheld count.
+
+```text
+DEPARTURE VIEW != TRANSPORT BUNDLE
+RELEASE != RECEIVE
+RECEIVE != ADMIT
+SOURCE RELEASE != DESTINATION DECISION
+WITHHELD COUNT != WITHHELD CONTENT
+PROJECTION != AUTHORITY
+```
+
+There is an interactive specimen at [demo/customs-house.html](demo/customs-house.html).
+
+> **A context window should have customs.**
