@@ -20,6 +20,7 @@ export interface WorldManifest {
     inbox: true;
     outbox: true;
     capability_kernel: true;
+    encryption: true;
   };
   road_memory: {
     failure_threshold: number;
@@ -81,6 +82,7 @@ export function createWorldManifest(args: {
       inbox: true,
       outbox: true,
       capability_kernel: true,
+      encryption: true,
     },
     road_memory: {
       failure_threshold: positiveInteger(
