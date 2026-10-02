@@ -137,8 +137,9 @@ function verifyCarryParcel(value: unknown): CarryParcel {
       : nonEmpty(parcel.expires_at, 'INVALID_CARRY_PARCEL_EXPIRES_AT');
   if (expiresAt !== null) validateTimestamp(expiresAt);
   if (
+    typeof parcel.withheld_count !== 'number' ||
     !Number.isSafeInteger(parcel.withheld_count) ||
-    (parcel.withheld_count as number) < 0
+    parcel.withheld_count < 0
   ) {
     throw new Error('INVALID_CARRY_WITHHELD_COUNT');
   }
@@ -154,7 +155,7 @@ function verifyCarryParcel(value: unknown): CarryParcel {
       parcel.open_questions,
       'INVALID_CARRY_OPEN_QUESTIONS',
     ),
-    withheld_count: parcel.withheld_count as number,
+    withheld_count: parcel.withheld_count,
     expires_at: expiresAt,
     created_at: createdAt,
     laws: stringArray(parcel.laws, 'INVALID_CARRY_LAWS'),
