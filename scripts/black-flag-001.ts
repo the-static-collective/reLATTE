@@ -128,8 +128,9 @@ try {
   assert.equal(marker.queue_item_id, queued.queue_item_id);
   assert.equal(typeof marker.receive_receipt_id, 'string');
 
+  const exitPromise = waitForExit(child);
   child.kill('SIGKILL');
-  const killed = await waitForExit(child);
+  const killed = await exitPromise;
   assert.equal(killed.signal, 'SIGKILL');
 
   const afterKill = await ReLatteRuntime.open({
