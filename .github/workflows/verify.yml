@@ -53,6 +53,7 @@ jobs:
         env:
           DID_DHT_GATEWAY_URL: http://127.0.0.1:8305/
         run: |
+          set -o pipefail
           npm run witness:live-dht-gateway | tee live-dht-gateway-001.json
       - name: Upload witness
         uses: actions/upload-artifact@v4
@@ -128,6 +129,7 @@ jobs:
           DID_DHT_GATEWAY_URL: http://127.0.0.1:8305/
           REMOTE_DWN_URL: http://127.0.0.1:3000/
         run: |
+          set -o pipefail
           npm run witness:remote-dwn-delivery | tee remote-dwn-delivery-001.json
 
       - name: Upload witness
