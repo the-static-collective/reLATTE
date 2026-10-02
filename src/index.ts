@@ -38,3 +38,5 @@ export * from './customs-house.ts';
 export * from './portable-carry.ts';
 
 export * from './return-envelope.ts';
+
+export * from './static-post-office.ts';
