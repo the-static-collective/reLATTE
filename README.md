@@ -673,3 +673,75 @@ HAPPY PATH != RELEASE
 ```
 
 > **A release must return from sea with its receipts.**
+
+
+## Capability Kernel 001 + Two Worlds in a Box 001
+
+[Capability Kernel 001](docs/CAPABILITY-KERNEL-001.md) makes destination-issued receive permission executable without collapsing permission into admission.
+
+[Two Worlds in a Box 001](docs/TWO-WORLDS-IN-A-BOX-001.md) boots two complete sovereign runtimes, gives each world an independent capability issuer, crosses A → B, Black-Flag kills B after RECEIVE but before queue commit, reboots B, lets B REFUSE, then returns a signed sovereign response B → A under a separately issued reverse capability. A independently HOLDs that response.
+
+```text
+WORLD A                     WORLD B
+   |                           |
+   |---- capability-gated ---->|
+   |       proposal            |
+   |                           X SIGKILL
+   |                           |
+   |                         REBOOT
+   |                           |
+   |                         REFUSE
+   |                           |
+   |<--- separately gated -----|
+   |   sovereign response      |
+   |
+  HOLD
+```
+
+```text
+IDENTITY != CAPABILITY
+CAPABILITY != ADMISSION
+CAPABILITY A→B != CAPABILITY B→A
+PROCESS DEATH != WORLD DEATH
+RESPONSE != AGREEMENT
+SHARED CROSSING != SHARED WORLD STATE
+```
+
+> **Two worlds may share a traveler without sharing a throne.**
+
+
+## Live Private Peer 001
+
+[Live Private Peer 001](docs/LIVE-PRIVATE-PEER-001.md) composes fresh DID-based peer discovery, a live runtime HTTP endpoint, recipient-bound encrypted payloads, and durable capability revocation.
+
+```text
+publish B peer DID
+      ↓
+fresh resolve
+      ↓
+discover live descriptor
+      ↓
+B-issued capability
+      ↓
+encrypt payload to B
+      ↓
+HTTP crossing
+      ↓
+B RECEIVE → decrypt → HOLD
+      ↓
+B revokes capability
+      ↓
+second HTTP crossing
+      X
+CAPABILITY_REVOKED
+```
+
+```text
+DISCOVERY != TRUST
+CIPHERTEXT != AUTHORITY
+DECRYPTABLE != ADMITTED
+REVOCATION != HISTORY ERASURE
+REVOKED NOW != NEVER VALID
+```
+
+> **Find the door. Seal the parcel. Cross only with permission.**

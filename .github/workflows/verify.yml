@@ -436,7 +436,7 @@ jobs:
           docker rm -f relatte-dwn-b-road-memory-001 || true
 
   black-flag-001:
-    if: github.ref_name == 'feat/runtime-boot-black-flag-001' || github.head_ref == 'feat/runtime-boot-black-flag-001'
+    if: github.ref_name == 'feat/runtime-boot-black-flag-001' || github.head_ref == 'feat/runtime-boot-black-flag-001' || github.ref_name == 'feat/capability-kernel-two-worlds-001' || github.head_ref == 'feat/capability-kernel-two-worlds-001'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -454,4 +454,85 @@ jobs:
         with:
           name: black-flag-001
           path: black-flag-001.json
+
+
+
+  two-worlds-in-a-box-001:
+    if: github.ref_name == 'feat/capability-kernel-two-worlds-001' || github.head_ref == 'feat/capability-kernel-two-worlds-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - name: Cross two sovereign runtimes under typed capabilities
+        run: |
+          set -o pipefail
+          npm run witness:two-worlds-in-a-box | tee two-worlds-in-a-box-001.json
+      - name: Upload witness
+        uses: actions/upload-artifact@v4
+        with:
+          name: two-worlds-in-a-box-001
+          path: two-worlds-in-a-box-001.json
+
+  live-private-peer-001:
+    if: github.ref_name == 'feat/capability-kernel-two-worlds-001' || github.head_ref == 'feat/capability-kernel-two-worlds-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+
+      - name: Build pinned DID DHT gateway
+        run: |
+          git clone https://github.com/decentralized-identity/did-dht.git /tmp/did-dht
+          git -C /tmp/did-dht checkout 3fa953603a80ae269a1f83e4f75ff86082bcd30b
+          docker build \
+            --build-arg VERSION=3fa953603a80ae269a1f83e4f75ff86082bcd30b \
+            --tag relatte-did-dht-gateway:private-peer-001 \
+            --file /tmp/did-dht/impl/build/Dockerfile \
+            /tmp/did-dht/impl
+
+      - name: Start DID DHT gateway
+        run: |
+          docker run --detach --rm \
+            --name relatte-did-dht-gateway-private-peer-001 \
+            --publish 8305:8305 \
+            --publish 6881:6881/udp \
+            relatte-did-dht-gateway:private-peer-001
+
+          for i in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:8305/health >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          docker logs relatte-did-dht-gateway-private-peer-001
+          exit 1
+
+      - name: Discover, encrypt, cross, revoke, reject
+        env:
+          DID_DHT_GATEWAY_URL: http://127.0.0.1:8305/
+        run: |
+          set -o pipefail
+          npm run witness:live-private-peer | tee live-private-peer-001.json
+
+      - name: Upload witness
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-private-peer-001
+          path: live-private-peer-001.json
+
+      - name: Gateway logs
+        if: always()
+        run: docker logs relatte-did-dht-gateway-private-peer-001 || true
+
+      - name: Stop gateway
+        if: always()
+        run: docker stop relatte-did-dht-gateway-private-peer-001 || true
 

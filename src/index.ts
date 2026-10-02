@@ -24,3 +24,9 @@ export * from './super.ts';
 
 export * from './runtime-manifest.ts';
 export * from './runtime.ts';
+
+export * from './capability-kernel.ts';
+
+export * from './encrypted-payload.ts';
+
+export * from './peer-discovery.ts';
