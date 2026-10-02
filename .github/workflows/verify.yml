@@ -53,6 +53,7 @@ jobs:
         env:
           DID_DHT_GATEWAY_URL: http://127.0.0.1:8305/
         run: |
+          set -o pipefail
           npm run witness:live-dht-gateway | tee live-dht-gateway-001.json
       - name: Upload witness
         uses: actions/upload-artifact@v4
@@ -65,4 +66,87 @@ jobs:
       - name: Stop gateway
         if: always()
         run: docker stop relatte-did-dht-gateway-001 || true
+
+  remote-dwn-delivery-001:
+    if: github.ref_name == 'feat/remote-dwn-delivery-001' || github.head_ref == 'feat/remote-dwn-delivery-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+
+      - name: Build pinned DID DHT gateway
+        run: |
+          git clone https://github.com/decentralized-identity/did-dht.git /tmp/did-dht
+          git -C /tmp/did-dht checkout 3fa953603a80ae269a1f83e4f75ff86082bcd30b
+          docker build \
+            --build-arg VERSION=3fa953603a80ae269a1f83e4f75ff86082bcd30b \
+            --tag relatte-did-dht-gateway:remote-001 \
+            --file /tmp/did-dht/impl/build/Dockerfile \
+            /tmp/did-dht/impl
+
+      - name: Build pinned DWN server
+        run: |
+          git clone https://github.com/decentralized-identity/dwn-server.git /tmp/dwn-server
+          git -C /tmp/dwn-server checkout e090477a7ac6ddb9e6d096522fa5f967f2b730fc
+          docker build \
+            --tag relatte-dwn-server:remote-001 \
+            /tmp/dwn-server
+
+      - name: Start foreign servers
+        run: |
+          docker run --detach --rm \
+            --name relatte-did-dht-gateway-remote-001 \
+            --publish 8305:8305 \
+            --publish 6881:6881/udp \
+            relatte-did-dht-gateway:remote-001
+
+          docker run --detach --rm \
+            --name relatte-dwn-server-remote-001 \
+            --publish 3000:3000 \
+            relatte-dwn-server:remote-001
+
+          for i in $(seq 1 90); do
+            dht_ok=0
+            dwn_ok=0
+            curl --fail --silent http://127.0.0.1:8305/health >/dev/null && dht_ok=1 || true
+            curl --fail --silent http://127.0.0.1:3000/health >/dev/null && dwn_ok=1 || true
+            if [ "$dht_ok" = "1" ] && [ "$dwn_ok" = "1" ]; then
+              exit 0
+            fi
+            sleep 1
+          done
+
+          docker logs relatte-did-dht-gateway-remote-001 || true
+          docker logs relatte-dwn-server-remote-001 || true
+          exit 1
+
+      - name: Discover, remotely commute, receive, refuse
+        env:
+          DID_DHT_GATEWAY_URL: http://127.0.0.1:8305/
+          REMOTE_DWN_URL: http://127.0.0.1:3000/
+        run: |
+          set -o pipefail
+          npm run witness:remote-dwn-delivery | tee remote-dwn-delivery-001.json
+
+      - name: Upload witness
+        uses: actions/upload-artifact@v4
+        with:
+          name: remote-dwn-delivery-001
+          path: remote-dwn-delivery-001.json
+
+      - name: Foreign server logs
+        if: always()
+        run: |
+          docker logs relatte-did-dht-gateway-remote-001 || true
+          docker logs relatte-dwn-server-remote-001 || true
+
+      - name: Stop foreign servers
+        if: always()
+        run: |
+          docker stop relatte-did-dht-gateway-remote-001 || true
+          docker stop relatte-dwn-server-remote-001 || true
 

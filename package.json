@@ -8,7 +8,8 @@
     "build": "tsc",
     "test": "node --test --experimental-strip-types test/*.test.ts",
     "verify": "npm run check && npm test && npm run build",
-    "witness:live-dht-gateway": "node --experimental-strip-types scripts/live-dht-gateway-001.ts"
+    "witness:live-dht-gateway": "node --experimental-strip-types scripts/live-dht-gateway-001.ts",
+    "witness:remote-dwn-delivery": "node --experimental-strip-types scripts/remote-dwn-delivery-001.ts"
   },
   "dependencies": {
     "json-canonicalize": "3.0.1"
