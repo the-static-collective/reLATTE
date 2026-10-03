@@ -1,4 +1,4 @@
-import { mkdir, readFile, rename, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 
 import { canonicalizeDomainValue, sha256Hex } from './canonical.ts';
@@ -16,6 +16,7 @@ import {
 import {
   makeTransportFrame,
   readFileBundle,
+  verifyAndExtractTransportFrame,
   writeFileBundle,
 } from './transport.ts';
 
@@ -40,6 +41,13 @@ export interface OpaqueRoundTripRequest {
   received_at: string;
   disposed_at: string;
   route_note: string;
+}
+
+export interface OpaqueRoundTripPrepared {
+  schema: 'relatte.opaque-roundtrip-prepared/v0';
+  request_id: string;
+  crossing: Record<string, any>;
+  transport_frame: Record<string, any>;
 }
 
 export interface OpaqueRoundTripResult {
@@ -165,6 +173,27 @@ async function exists(path: string): Promise<boolean> {
   }
 }
 
+async function verifyStoredPrepared(
+  value: unknown,
+  expectedRequestId: string,
+): Promise<OpaqueRoundTripPrepared> {
+  const prepared = asRecord(value, 'INVALID_STORED_ROUNDTRIP_PREPARED');
+  if (prepared.schema !== 'relatte.opaque-roundtrip-prepared/v0') {
+    throw new Error('INVALID_STORED_ROUNDTRIP_PREPARED_SCHEMA');
+  }
+  if (prepared.request_id !== expectedRequestId) {
+    throw new Error('ROUNDTRIP_PREPARED_REQUEST_MISMATCH');
+  }
+  if (!(await verifyOpaqueOrganCrossing(prepared.crossing))) {
+    throw new Error('INVALID_STORED_ROUNDTRIP_PREPARED_CROSSING');
+  }
+  const extracted = await verifyAndExtractTransportFrame(prepared.transport_frame);
+  if (extracted.crossing_id !== prepared.crossing.crossing_id) {
+    throw new Error('ROUNDTRIP_PREPARED_TRANSPORT_MISMATCH');
+  }
+  return prepared as OpaqueRoundTripPrepared;
+}
+
 async function verifyStoredResult(
   value: unknown,
   expectedRequestId: string,
@@ -206,9 +235,9 @@ async function receiverFor(
   return receiver;
 }
 
-async function durableResult(
+async function durableJson(
   path: string,
-  result: OpaqueRoundTripResult,
+  result: unknown,
 ): Promise<void> {
   await mkdir(dirname(path), { recursive: true });
   const temporary = `${path}.tmp`;
@@ -229,20 +258,39 @@ export async function runOpaqueOrganRoundTrip(
     );
   }
 
-  const crossing = await sealOpaqueOrganCrossing(
-    request.spec,
-    await generateP256KeyPair(),
-  );
-  if (!(await verifyCrossingEnvelope(crossing))) {
-    throw new Error('ROUNDTRIP_CROSSING_DID_NOT_VERIFY');
-  }
+  const preparedPath = `${request.result_path}.pending`;
+  let crossing: Record<string, any>;
+  let frame: Record<string, any>;
 
-  const frame = await makeTransportFrame(
-    crossing,
-    'file-bundle',
-    request.transport_created_at,
-    request.route_note,
-  );
+  if (await exists(preparedPath)) {
+    const prepared = await verifyStoredPrepared(
+      JSON.parse(await readFile(preparedPath, 'utf8')),
+      requestId,
+    );
+    crossing = prepared.crossing;
+    frame = prepared.transport_frame;
+  } else {
+    crossing = await sealOpaqueOrganCrossing(
+      request.spec,
+      await generateP256KeyPair(),
+    );
+    if (!(await verifyCrossingEnvelope(crossing))) {
+      throw new Error('ROUNDTRIP_CROSSING_DID_NOT_VERIFY');
+    }
+
+    frame = await makeTransportFrame(
+      crossing,
+      'file-bundle',
+      request.transport_created_at,
+      request.route_note,
+    );
+    await durableJson(preparedPath, {
+      schema: 'relatte.opaque-roundtrip-prepared/v0',
+      request_id: requestId,
+      crossing,
+      transport_frame: frame,
+    } satisfies OpaqueRoundTripPrepared);
+  }
   await mkdir(dirname(request.bundle_path), { recursive: true });
   await writeFileBundle(request.bundle_path, frame);
   const delivered = await readFileBundle(request.bundle_path);
@@ -275,6 +323,7 @@ export async function runOpaqueOrganRoundTrip(
     ],
   };
 
-  await durableResult(request.result_path, result);
+  await durableJson(request.result_path, result);
+  await rm(preparedPath, { force: true });
   return result;
 }
