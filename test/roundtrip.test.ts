@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawn } from 'node:child_process';
@@ -7,7 +7,10 @@ import test from 'node:test';
 
 import {
   computeOpaqueRoundTripRequestId,
+  generateP256KeyPair,
+  makeTransportFrame,
   runOpaqueOrganRoundTrip,
+  sealOpaqueOrganCrossing,
   verifyOpaqueOrganCrossing,
   verifyReceipt,
 } from '../src/index.ts';
@@ -173,6 +176,60 @@ test('stdin/stdout bridge executes the same real round-trip surface', async () =
     assert.equal(await verifyOpaqueOrganCrossing(result.crossing), true);
     assert.equal(await verifyReceipt(result.receive_receipt), true);
     assert.equal(await verifyReceipt(result.disposition_receipt), true);
+  } finally {
+    await rm(base, { recursive: true, force: true });
+  }
+});
+
+
+test('prepared crossing checkpoint resumes the same crossing after interruption', async () => {
+  const base = await mkdtemp(join(tmpdir(), 'relatte-opaque-roundtrip-resume-'));
+  try {
+    const request: any = {
+      schema: 'relatte.opaque-roundtrip-request/v0',
+      spec: spec('2026-10-03T03:30:00.000Z'),
+      receiver_root: join(base, 'receiver'),
+      receiver: {
+        world_id: 'world:roundtrip-resume-receiver',
+        receiver_particular: 'particular:roundtrip-resume-receiver',
+        contract_ref: 'contract:roundtrip-resume-local/v0',
+      },
+      bundle_path: join(base, 'bundle.json'),
+      result_path: join(base, 'result.json'),
+      disposition: 'HOLD',
+      transport_created_at: '2026-10-03T03:30:01.000Z',
+      received_at: '2026-10-03T03:30:02.000Z',
+      disposed_at: '2026-10-03T03:30:03.000Z',
+      route_note: 'resume route',
+    };
+
+    const crossing = await sealOpaqueOrganCrossing(
+      request.spec,
+      await generateP256KeyPair(),
+    );
+    const frame = await makeTransportFrame(
+      crossing,
+      'file-bundle',
+      request.transport_created_at,
+      request.route_note,
+    );
+    const requestId = computeOpaqueRoundTripRequestId(request);
+    await writeFile(
+      request.result_path + '.pending',
+      JSON.stringify({
+        schema: 'relatte.opaque-roundtrip-prepared/v0',
+        request_id: requestId,
+        crossing,
+        transport_frame: frame,
+      }, null, 2) + '\n',
+      'utf8',
+    );
+
+    const result = await runOpaqueOrganRoundTrip(request);
+    assert.equal(result.crossing.crossing_id, crossing.crossing_id);
+    assert.equal(result.transport_frame.transport_id, frame.transport_id);
+    assert.equal(result.receive_receipt.kind, 'RECEIVED');
+    assert.equal(result.disposition_receipt.kind, 'R3_HOLD');
   } finally {
     await rm(base, { recursive: true, force: true });
   }
