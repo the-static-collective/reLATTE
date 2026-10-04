@@ -4,6 +4,11 @@
 
 reLATTE is an experimental Static Collective protocol/runtime project.
 
+[Useful Work Kernel 001](examples/useful-work-001/README.md) demonstrates a
+deterministic Julia job → artifact → opaque crossing → sovereign HOLD →
+independent recomputation → signed verification receipt. Run
+`npm run useful-work -- run examples/useful-work-001/julia-001.json` after `npm ci`.
+
 It asks what survives if the useful parts of blockchain, Ethereum, event sourcing, local-first systems, provenance graphs, cultural inheritance, and executable worlds are separated from global-state sovereignty, token economics, and universal consensus.
 
 The working answer:

@@ -1,0 +1,42 @@
+{
+  "job": {
+    "schema": "useful-work.render-job/v1",
+    "algorithm": "julia-q24/v1",
+    "seed": 1,
+    "width": 4,
+    "height": 3,
+    "iterations": 16,
+    "bounds": {
+      "min_real_q": -25165824,
+      "max_real_q": 25165824,
+      "min_imag_q": -18874368,
+      "max_imag_q": 18874368
+    },
+    "parameters": {
+      "c_real_q": -13421773,
+      "c_imag_q": 2600468
+    }
+  },
+  "result": {
+    "schema": "useful-work.result/v1",
+    "job_spec_hash": "bac1d0284593ca4d5a40ebdc48f046e16776ea6849be2fdac685fbbffb193725",
+    "width": 4,
+    "height": 3,
+    "escape_counts": [
+      2,
+      3,
+      3,
+      2,
+      16,
+      16,
+      16,
+      16,
+      2,
+      3,
+      3,
+      2
+    ]
+  },
+  "job_spec_hash": "bac1d0284593ca4d5a40ebdc48f046e16776ea6849be2fdac685fbbffb193725",
+  "result_hash": "77359f36fb33fe3d30e2b12e06349401172573a776e50e39705f8d561a734162"
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "useful-work.render-job/v1",
+  "algorithm": "julia-q24/v1",
+  "seed": 1,
+  "width": 64,
+  "height": 48,
+  "iterations": 96,
+  "bounds": {
+    "min_real_q": -25165824,
+    "max_real_q": 25165824,
+    "min_imag_q": -18874368,
+    "max_imag_q": 18874368
+  },
+  "parameters": { "c_real_q": -13421773, "c_imag_q": 2600468 }
+}
