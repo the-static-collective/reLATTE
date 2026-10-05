@@ -1,0 +1,338 @@
+{
+  "provenance": "Pinned from the independent Python implementation of the prose Merkle-native contract; no worker algorithm imports.",
+  "cases": [
+    {
+      "label": "small-padded",
+      "job": {
+        "schema": "useful-work.render-job/v1",
+        "algorithm": "julia-q24/v1",
+        "seed": 1,
+        "width": 4,
+        "height": 3,
+        "iterations": 16,
+        "bounds": {
+          "min_real_q": -25165824,
+          "max_real_q": 25165824,
+          "min_imag_q": -18874368,
+          "max_imag_q": 18874368
+        },
+        "parameters": {
+          "c_real_q": -13421773,
+          "c_imag_q": 2600468
+        }
+      },
+      "result_id": "useful-work-merkle-result-v1:ec16f527c1dc41168f4f4c339519b1e620e641f11be41fb098cea78f48274563",
+      "result_header": {
+        "schema": "useful-work.merkle-result/v1",
+        "algorithm": "sha256-jcs-pixel-tree/v1",
+        "job_spec_hash": "bac1d0284593ca4d5a40ebdc48f046e16776ea6849be2fdac685fbbffb193725",
+        "width": 4,
+        "height": 3,
+        "counts_root": "1f161984f159eaecddc73e9b62b4aab0d4a706ce027c8efb5f2d571f171d5a51"
+      },
+      "samples": [
+        {
+          "index": 0,
+          "count": 2,
+          "final_real_q": "-69406558",
+          "final_imag_q": "-3225153",
+          "committed_count": 2,
+          "proof": [
+            "ae065ffeb2f746dcf098b77f500246404ea8d5f804377f2f85640a81937c5009",
+            "a9ba2b705738388cc6f3ac71d05db58dab50a21ca70247962108334b68859c33",
+            "3e5ff77cf373da1e75e34a6520b6dfc344fc57c0c9c478ce8af43ae4b9de00b6",
+            "54f7424fb2808179b8691907c542db6d4a0238f1947d58a2e3dc325f493bb36d"
+          ]
+        },
+        {
+          "index": 4,
+          "count": 16,
+          "final_real_q": "3746351",
+          "final_imag_q": "3033505",
+          "committed_count": 16,
+          "proof": [
+            "5160327fc0533a0f272109ded7f83829541f082b6098c2d57f4910ff4c0ac059",
+            "76004c3eefd194aeb8c0b74ccfc5fd93d863b6b9ee8368e9047d4ac71e9fab87",
+            "1a5824149c17a5323694628f5f7db5d13afe89d509711925784f3502317c8aee",
+            "54f7424fb2808179b8691907c542db6d4a0238f1947d58a2e3dc325f493bb36d"
+          ]
+        },
+        {
+          "index": 11,
+          "count": 2,
+          "final_real_q": "-69406558",
+          "final_imag_q": "-3225153",
+          "committed_count": 2,
+          "proof": [
+            "6842eb78251e5af6dd92f5ec6dfc9d8297a806c87e4a464179a85dda4086296b",
+            "561dd445c7b30662f86206e5194f1319b572bac19ed31ff76b958ecc8e830e70",
+            "a3dd5bae0baaf4dc1fbf5ba2d529540655b82a82adb3682fe7ce233c0059cdb6",
+            "3d1d3c525dadfaa0b42f881e71580d7f35f6743259bad341e5635408cb970e8c"
+          ]
+        }
+      ],
+      "artifact": {
+        "schema": "useful-work.merkle-artifact/v1",
+        "result": {
+          "schema": "useful-work.merkle-result/v1",
+          "algorithm": "sha256-jcs-pixel-tree/v1",
+          "job_spec_hash": "bac1d0284593ca4d5a40ebdc48f046e16776ea6849be2fdac685fbbffb193725",
+          "width": 4,
+          "height": 3,
+          "counts_root": "1f161984f159eaecddc73e9b62b4aab0d4a706ce027c8efb5f2d571f171d5a51"
+        },
+        "escape_counts": [
+          2,
+          3,
+          3,
+          2,
+          16,
+          16,
+          16,
+          16,
+          2,
+          3,
+          3,
+          2
+        ]
+      }
+    },
+    {
+      "label": "singleton",
+      "job": {
+        "schema": "useful-work.render-job/v1",
+        "algorithm": "julia-q24/v1",
+        "seed": 1,
+        "width": 1,
+        "height": 1,
+        "iterations": 16,
+        "bounds": {
+          "min_real_q": -25165824,
+          "max_real_q": 25165824,
+          "min_imag_q": -18874368,
+          "max_imag_q": 18874368
+        },
+        "parameters": {
+          "c_real_q": -13421773,
+          "c_imag_q": 2600468
+        }
+      },
+      "result_id": "useful-work-merkle-result-v1:885a09976a945ed5b4a092ecaa52aec66c4b81621a9740deb640e0f15d6850bc",
+      "result_header": {
+        "schema": "useful-work.merkle-result/v1",
+        "algorithm": "sha256-jcs-pixel-tree/v1",
+        "job_spec_hash": "d576dc1fe91aa0b530b2396870534d904d4813b3a991fcffeb866be1391f5edf",
+        "width": 1,
+        "height": 1,
+        "counts_root": "9c66344cfd5ccd55d27e1411e0045e2134800760960e1afd8a208c0c2b0f512b"
+      },
+      "samples": [
+        {
+          "index": 0,
+          "count": 16,
+          "final_real_q": "-2689637",
+          "final_imag_q": "-6862928",
+          "committed_count": 16,
+          "proof": []
+        }
+      ],
+      "artifact": {
+        "schema": "useful-work.merkle-artifact/v1",
+        "result": {
+          "schema": "useful-work.merkle-result/v1",
+          "algorithm": "sha256-jcs-pixel-tree/v1",
+          "job_spec_hash": "d576dc1fe91aa0b530b2396870534d904d4813b3a991fcffeb866be1391f5edf",
+          "width": 1,
+          "height": 1,
+          "counts_root": "9c66344cfd5ccd55d27e1411e0045e2134800760960e1afd8a208c0c2b0f512b"
+        },
+        "escape_counts": [
+          16
+        ]
+      }
+    },
+    {
+      "label": "seven-leaves",
+      "job": {
+        "schema": "useful-work.render-job/v1",
+        "algorithm": "julia-q24/v1",
+        "seed": 1,
+        "width": 7,
+        "height": 1,
+        "iterations": 16,
+        "bounds": {
+          "min_real_q": -25165824,
+          "max_real_q": 25165824,
+          "min_imag_q": -18874368,
+          "max_imag_q": 18874368
+        },
+        "parameters": {
+          "c_real_q": -13421773,
+          "c_imag_q": 2600468
+        }
+      },
+      "result_id": "useful-work-merkle-result-v1:3d5fa94de0200220996476569c7f9f85902e3d423b8d98a31654b37c9f1d6fd4",
+      "result_header": {
+        "schema": "useful-work.merkle-result/v1",
+        "algorithm": "sha256-jcs-pixel-tree/v1",
+        "job_spec_hash": "2ade120f385bc1a11daac34633b261de55a5cc64af9d8a3ea5a7d10557d0188b",
+        "width": 7,
+        "height": 1,
+        "counts_root": "b68790e0ac0ef1b87b77ef5df459db96010ddd1b83088fb1811eb6a1c2b8eca0"
+      },
+      "samples": [
+        {
+          "index": 0,
+          "count": 16,
+          "final_real_q": "-4876662",
+          "final_imag_q": "-5059007",
+          "committed_count": 16,
+          "proof": [
+            "611ec68db166848e9b7938ff1b9b457d73edb9192d06f75b26287e13f7fc6503",
+            "facd318e59d114289d57cc958f1b44125a09601b1e61cca1cc04685d6f9ce93a",
+            "fc73422d0f5a992cca620cdba08c9498087223426a16284c156de4f58ecd56fa"
+          ]
+        },
+        {
+          "index": 3,
+          "count": 16,
+          "final_real_q": "-2689637",
+          "final_imag_q": "-6862928",
+          "committed_count": 16,
+          "proof": [
+            "b4374e362ad3bf0419e250854e93b54abe2d3f8f48723870a6c6bc0d779392c0",
+            "5a8772c4bb5c4ef26a3e1a6d49a3d6c0173c0ccd3d3e41a796d303106b109720",
+            "fc73422d0f5a992cca620cdba08c9498087223426a16284c156de4f58ecd56fa"
+          ]
+        },
+        {
+          "index": 6,
+          "count": 16,
+          "final_real_q": "-4876657",
+          "final_imag_q": "-5059007",
+          "committed_count": 16,
+          "proof": [
+            "2db8e2f417f9721273da7572568634e27885fa80ff2e6e3bae281e5a9da6cea1",
+            "9aa35bdc7340389abd6abe20e9dc67c19bfa3e82ff4a770123c6a75c7e51bb42",
+            "19c2306352a57d7762b857bbe6b5da829a07247d55328731ea4c8daf784283f5"
+          ]
+        }
+      ],
+      "artifact": {
+        "schema": "useful-work.merkle-artifact/v1",
+        "result": {
+          "schema": "useful-work.merkle-result/v1",
+          "algorithm": "sha256-jcs-pixel-tree/v1",
+          "job_spec_hash": "2ade120f385bc1a11daac34633b261de55a5cc64af9d8a3ea5a7d10557d0188b",
+          "width": 7,
+          "height": 1,
+          "counts_root": "b68790e0ac0ef1b87b77ef5df459db96010ddd1b83088fb1811eb6a1c2b8eca0"
+        },
+        "escape_counts": [
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16
+        ]
+      }
+    },
+    {
+      "label": "pixel-1928",
+      "job": {
+        "schema": "useful-work.render-job/v1",
+        "algorithm": "julia-q24/v1",
+        "seed": 1,
+        "width": 64,
+        "height": 48,
+        "iterations": 96,
+        "bounds": {
+          "min_real_q": -25165824,
+          "max_real_q": 25165824,
+          "min_imag_q": -18874368,
+          "max_imag_q": 18874368
+        },
+        "parameters": {
+          "c_real_q": -13421773,
+          "c_imag_q": 2600468
+        }
+      },
+      "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+      "result_header": {
+        "schema": "useful-work.merkle-result/v1",
+        "algorithm": "sha256-jcs-pixel-tree/v1",
+        "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+        "width": 64,
+        "height": 48,
+        "counts_root": "567efcf8623812be39155f259b7363859f277910a902fa07577c927f53c75270"
+      },
+      "samples": [
+        {
+          "index": 0,
+          "count": 1,
+          "final_real_q": "2887491",
+          "final_imag_q": "56975918",
+          "committed_count": 1,
+          "proof": [
+            "09f4bc9b89d0ab122567ad5a7e549cbc20d765e2ff642372d35b49eb401dc720",
+            "9b7d99a6d20aefde5325affd575574b543d808d88e570ab9e67c1ee6fe2804b8",
+            "fe0c003e0fcd2cd19cd43cf7de3acf346243a282f58927465f2c847a990d1424",
+            "296b77953a3b19ac8643d47659ac0a624e83d8b406eaf41534357ef29f1c29c9",
+            "e99c1a817ec35df2b720acb51b31cae0e9489810658a1e5593a91f8303451ca4",
+            "ba8ce979dd0375c013b0c9290a43e18f846fba415e30a47cda30f065927705f2",
+            "ed6c396482757df6c8892f3cd9565f71e9fd15aaa13e24e317f08581d6affdae",
+            "07a889bab7850eb1979473e9442dffcb47a8bb6f15e6af962a966be36267f756",
+            "11b56ff636e3d68d16e91c41a906a2365166c483ceb0d3d2304f97d73149c179",
+            "cd9c41451c54070739b215edb218144a92b6512f314db6fb7094bc039831736e",
+            "b6d7621e48e93dc12f118fef19c79516f41ed65678a1a0fa2a11d1a0b8032939",
+            "b53739560c8714ebf5d01cfbaf20f100cd569d2b8e6667ce90b0cebb4172f8a5"
+          ]
+        },
+        {
+          "index": 1928,
+          "count": 96,
+          "final_real_q": "-12723339",
+          "final_imag_q": "3285239",
+          "committed_count": 96,
+          "proof": [
+            "1c7741095435d4104406f3ebebefa1611b7bc485b117fcbe446079dd730d6942",
+            "bf8509aad9a1a27fb617dbbfb93a4b109be174de73e08b25445f38208d03b01a",
+            "574ccbd856ec2f593077950f2365f20e78f3db2bd1d495170f643dac09fe4f61",
+            "f217e8d2309bd05a1484a6b8f628d1d385e46eeb611e74429bc4fadb6c7256e1",
+            "4dd41c98466e459c2d82d858b455daed90b783aeae8e3a87f8235a8c54ff42dd",
+            "677f0cda801109926e6a2ebf9bfe3431b59bdfcbf8bc3a2b72407033b9e6ae83",
+            "a5c9bbbed278401bda3f9c0113cbd51c31c383bce7e01ff678347e889784bdeb",
+            "0ecd8755d429fb1da2951637950846f7c537a18977c64f3fa4167e2c3541fb18",
+            "77c8d49256605c27b4a73db796f93fef6b0f0c47c9223f9274726e6aecd073eb",
+            "5c130065901c7d0c4559d4ed2ac9fd1618fd1251040969f98b34edb107a55d1a",
+            "0fea331d40d94d76d3bd7b7672b47fa7899cc0186a335ea1421ea6d8f79f2057",
+            "b53739560c8714ebf5d01cfbaf20f100cd569d2b8e6667ce90b0cebb4172f8a5"
+          ]
+        },
+        {
+          "index": 3071,
+          "count": 1,
+          "final_real_q": "2887491",
+          "final_imag_q": "56975918",
+          "committed_count": 1,
+          "proof": [
+            "0d67a6cfeaaf19a16280163ab39c4ae99991ea156d0253764d6c38161d5740ed",
+            "e8fc47bc31d5dc7a28aa6f446a2825a50b85b808ac0a59b25784a3c72245a3b2",
+            "ac1a776d14f0e136ae5f2e94ba0249513b2be7c849ea22b052efd296fe796e7c",
+            "0052703632d4d27ba9c7aa740e164a085d9166599ae799e1d6aa6f2484ba7885",
+            "42be5fd25daf395bc28d908b110fef043ae650a02df7ed56488c559e6111c899",
+            "bffd67085d1b00a25621f6c0b524578150177b8689ab9f1f44cefc1439dd63de",
+            "5798bacbf854ffc28fe1aae54c523606793ea286fe6e6725485f24d5571cafb8",
+            "268eff7ef7c524c991efceaef334183979b3b92ae4b98b468396e18451e994c7",
+            "c7fecefcd1b28c5e273c603116687ad6ba5535fca35604b7477aa0c6dcae835e",
+            "08ca22c2f6f87ff1782921be4cc60d10c2d45a9d8b244197315eb9d02c4bd840",
+            "283dc1a9acb79a5311701ee79dc8470597430a11f61c8ab4f0229dbec63a5de5",
+            "0eb4686752eeec7c345805ed404f92da1df56068c276b656c4b1c3d1abe0951f"
+          ]
+        }
+      ]
+    }
+  ]
+}

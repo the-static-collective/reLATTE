@@ -5,71 +5,72 @@ import { fileURLToPath } from 'node:url';
 import { generateP256KeyPair } from '../protocol.ts';
 import { sealOpaqueOrganCrossing } from '../organ.ts';
 import { sha256Hex } from '../canonical.ts';
-import { buildCommitment } from './challenge/commitment.ts';
-import { createChallenge, inspectSampleWork, claims } from './challenge/exchange.ts';
-import { verifyChallenge } from './challenge/verifier.ts';
-import { pythonChecker } from './challenge/python_checker.ts';
-import { challengeReceipt, compareChallengeReceipts } from './challenge/receipt.ts';
+import { RESULT_ID_PREFIX } from './merkle_native/result.ts';
+import { createNativeChallenge, inspectNativeWork } from './merkle_native/exchange.ts';
+import { claims } from './challenge/exchange.ts';
+import { CHALLENGE_CONTRACT } from './merkle_native/contract.ts';
+import { verifyNativeChallenge } from './merkle_native/verifier.ts';
+import { nativePythonChecker } from './merkle_native/python_checker.ts';
+import { nativeReceipt, compareNativeReceipts } from './merkle_native/receipt.ts';
 
 import { now, json, fresh, bundle, held, boundedRead, loadBundle, readWorkerKeys } from './cli_io.ts';
 
 async function contextAt(path: string) {
   const crossing = await loadBundle(path);
-  const hash = claims(crossing).useful_work?.job_spec_hash;
+  const hash = claims(crossing).useful_work_native?.job_spec_hash;
   if (typeof hash !== 'string' || !/^[a-f0-9]{64}$/.test(hash)) throw new Error('INVALID_JOB_ADDRESS');
-  return inspectSampleWork(crossing, await boundedRead(join(dirname(path), 'artifacts', hash), 4096));
+  return inspectNativeWork(crossing, await boundedRead(join(dirname(path), 'artifacts', hash), 4096));
 }
 async function prepare(input: string, out: string) {
-  const { executeJob, organSpec } = await import('./worker.ts');
-  const work = executeJob(JSON.parse((await boundedRead(input, 4096)).toString('utf8')));
-  const tree = buildCommitment(work.manifest.job_spec_hash, work.manifest.result_hash, work.result.escape_counts);
-  const spec = organSpec(work.manifest, now());
-  spec.donor_claims = { ...spec.donor_claims, sample_commitment: tree.commitment };
+  const { executeNativeJob, nativeOrganSpec } = await import('./merkle_native/worker.ts');
+  const work = executeNativeJob(JSON.parse((await boundedRead(input, 4096)).toString('utf8')));
   const keys = await generateP256KeyPair();
-  const crossing = await sealOpaqueOrganCrossing(spec, keys);
-  await fresh(out);
-  await mkdir(join(out, 'delivery', 'artifacts'), { recursive: true });
-  for (const bytes of Object.values(work.artifacts)) await writeFile(join(out, 'delivery', 'artifacts', sha256Hex(bytes)), bytes, { flag: 'wx' });
-  await bundle(join(out, 'delivery', 'work.json'), crossing);
-  await json(join(out, 'job.json'), work.job);
-  await json(join(out, 'commitment.json'), tree.commitment);
+  const crossing = await sealOpaqueOrganCrossing(nativeOrganSpec(work.manifest, work.tree.header, now()), keys);
+  await fresh(out); await mkdir(join(out, 'delivery', 'artifacts'), { recursive: true });
+  for (const [role, bytes] of Object.entries(work.artifacts)) {
+    const name = role === 'merkle-result' ? work.manifest.result_id.slice(RESULT_ID_PREFIX.length) : sha256Hex(bytes);
+    await writeFile(join(out, 'delivery', 'artifacts', name), bytes, { flag: 'wx' });
+  }
+  await bundle(join(out, 'delivery', 'work.json'), crossing, 'Useful Work Kernel 004');
+  await json(join(out, 'job.json'), work.job); await json(join(out, 'result-header.json'), work.tree.header);
+  await json(join(out, 'manifest.json'), work.manifest);
   await mkdir(join(out, 'worker-state'), { mode: 0o700 });
   await json(join(out, 'worker-state', 'private-key.json'), await crypto.subtle.exportKey('jwk', keys.privateKey), true);
-  await json(join(out, 'worker-state', 'counts.json'), work.result.escape_counts, true);
-  await held(join(out, 'receiver'), crossing, 'world:useful-work-work-holder');
-  console.log(JSON.stringify({ step: 'committed-work', work_id: crossing.crossing_id, root: tree.commitment.root_hash, output: out }));
+  await writeFile(join(out, 'worker-state', 'result.json'), work.tree.bytes, { flag: 'wx', mode: 0o600 });
+  await held(join(out, 'receiver'), crossing, 'world:useful-work-native-holder', CHALLENGE_CONTRACT);
+  console.log(JSON.stringify({ step: 'merkle-native-result', work_id: crossing.crossing_id, result_id: work.manifest.result_id, output: out }));
 }
 async function issueChallenge(workPath: string, out: string, samples: number) {
   const context = await contextAt(workPath);
-  const challenge = await createChallenge(context, samples, await generateP256KeyPair(), now());
+  const challenge = await createNativeChallenge(context, samples, await generateP256KeyPair(), now());
   await fresh(out);
-  await bundle(join(out, 'challenge.json'), challenge);
+  await bundle(join(out, 'challenge.json'), challenge, 'Useful Work Kernel 004');
   console.log(JSON.stringify({ step: 'signed-challenge', challenge_id: challenge.crossing_id, samples, output: out }));
 }
 async function answer(workPath: string, challengePath: string, state: string, out: string) {
-  const { answerChallenge } = await import('./challenge/worker.ts');
+  const { answerNativeChallenge } = await import('./merkle_native/worker.ts');
   const context = await contextAt(workPath);
   const challenge = await loadBundle(challengePath);
-  const counts = JSON.parse((await boundedRead(join(state, 'counts.json'), 16 * 1024 * 1024)).toString('utf8'));
-  const response = await answerChallenge(context, challenge, counts, await readWorkerKeys(join(state, 'private-key.json')), now());
+  const artifact = await boundedRead(join(state, 'result.json'), 16 * 1024 * 1024);
+  const response = await answerNativeChallenge(context, challenge, artifact, await readWorkerKeys(join(state, 'private-key.json')), now());
   await fresh(out);
-  await held(join(out, 'challenge-receiver'), challenge, 'world:useful-work-worker');
-  await bundle(join(out, 'response.json'), response);
+  await held(join(out, 'challenge-receiver'), challenge, 'world:useful-work-native-worker', CHALLENGE_CONTRACT);
+  await bundle(join(out, 'response.json'), response, 'Useful Work Kernel 004');
   console.log(JSON.stringify({ step: 'signed-response', response_id: response.crossing_id, output: out }));
 }
 async function verify(workPath: string, challengePath: string, responsePath: string, out: string, world: string) {
   const context = await contextAt(workPath), challenge = await loadBundle(challengePath), response = await loadBundle(responsePath);
-  const checkers = world === 'python' ? [['python', pythonChecker()] as const] :
-    [['typescript', (await import('./challenge/typescript_checker.ts')).typescriptChecker] as const, ['python', pythonChecker()] as const];
+  const checkers = world === 'python' ? [['python', nativePythonChecker()] as const] :
+    [['typescript', (await import('./merkle_native/typescript_checker.ts')).nativeTypescriptChecker] as const, ['python', nativePythonChecker()] as const];
   await fresh(out);
   const receipts = [];
   let failed = false;
   for (const [label, checker] of checkers) {
-    const report = await verifyChallenge(context, challenge, response, checker);
-    const identity = { world_id: `world:useful-work-samples:${label}`, receiver_particular: `particular:useful-work-samples:${label}` };
-    const receipt = await challengeReceipt(report, await generateP256KeyPair(), now(), identity);
+    const report = await verifyNativeChallenge(context, challenge, response, checker);
+    const identity = { world_id: `world:useful-work-native-samples:${label}`, receiver_particular: `particular:useful-work-native-samples:${label}` };
+    const receipt = await nativeReceipt(report, await generateP256KeyPair(), now(), identity);
     const path = join(out, label); await mkdir(path);
-    await held(join(path, 'receiver'), response, identity.world_id);
+    await held(join(path, 'receiver'), response, identity.world_id, CHALLENGE_CONTRACT);
     await json(join(path, 'verifier-result.json'), report);
     await json(join(path, 'verification-receipt.json'), receipt);
     receipts.push(receipt);
@@ -77,7 +78,7 @@ async function verify(workPath: string, challengePath: string, responsePath: str
     console.log(JSON.stringify({ step: 'scoped-receipt', world: label, checked: report.checked_count, claims: report.claims, errors: report.errors, receipt_id: receipt.receipt_id }));
   }
   if (receipts.length > 1) {
-    const comparison = await compareChallengeReceipts(receipts);
+    const comparison = await compareNativeReceipts(receipts);
     await json(join(out, 'comparison.json'), comparison);
     console.log(JSON.stringify({ relation: comparison.relation, semantic_effect: 'none', output: out }));
   }
@@ -101,10 +102,10 @@ async function main(args: string[]) {
     flags[flag] = value;
   }
   const arity: Record<string, number> = { demo: 1, prepare: 1, challenge: 1, answer: 2, verify: 3, compare: 2 };
-  if (!command || arity[command] !== inputs.length) throw new Error('Usage: useful-work-003 demo|prepare <job> | challenge <work> | answer <work> <challenge> --state <worker-state> | verify <work> <challenge> <response> | compare <receipt-a> <receipt-b> [--out <new-directory>] [--samples <1..64>] [--world both|python]');
+  if (!command || arity[command] !== inputs.length) throw new Error('Usage: useful-work-004 demo|prepare <job> | challenge <work> | answer <work> <challenge> --state <worker-state> | verify <work> <challenge> <response> | compare <receipt-a> <receipt-b> [--out <new-directory>] [--samples <1..64>] [--world both|python]');
   const allowed = ['--out', ...(['demo', 'challenge'].includes(command) ? ['--samples'] : []), ...(command === 'answer' ? ['--state'] : []), ...(command === 'verify' ? ['--world'] : [])];
   if (Object.keys(flags).some(flag => !allowed.includes(flag))) throw new Error('INVALID_CLI_OPTIONS');
-  const out = resolve(flags['--out'] ?? `output/useful-work-003${command === 'demo' ? '' : '-' + command}`);
+  const out = resolve(flags['--out'] ?? `output/useful-work-004${command === 'demo' ? '' : '-' + command}`);
   const samples = Number(flags['--samples'] ?? '16');
   if (!Number.isSafeInteger(samples) || samples < 1 || samples > 64) throw new Error('INVALID_SAMPLE_COUNT');
   const world = flags['--world'] ?? 'both';
@@ -117,7 +118,7 @@ async function main(args: string[]) {
   }
   if (command === 'verify') return verify(inputs[0], inputs[1], inputs[2], out, world);
   if (command === 'compare') {
-    const comparison = await compareChallengeReceipts(await Promise.all(inputs.map(async p => JSON.parse((await boundedRead(p, 1_000_000)).toString('utf8')))));
+    const comparison = await compareNativeReceipts(await Promise.all(inputs.map(async p => JSON.parse((await boundedRead(p, 1_000_000)).toString('utf8')))));
     await fresh(out); await json(join(out, 'comparison.json'), comparison); console.log(JSON.stringify(comparison, null, 2)); return;
   }
   // Distinct processes and durable commitment before the challenger creates fresh entropy.

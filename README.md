@@ -19,6 +19,11 @@ challenges, Merkle proofs and sampled recomputation in independent worlds.
 Receipts name exactly the checked entries; full artifact verification remains
 unclaimed. Run `npm run useful-work-003 -- demo examples/useful-work-001/julia-001.json`.
 
+[Useful Work Kernel 004](examples/useful-work-004/README.md) makes the Merkle
+result root the artifact identity, binding job, dimensions and ordered counts.
+Sampled proofs now verify membership in that exact artifact. Run
+`npm run useful-work-004 -- demo examples/useful-work-001/julia-001.json`.
+
 It asks what survives if the useful parts of blockchain, Ethereum, event sourcing, local-first systems, provenance graphs, cultural inheritance, and executable worlds are separated from global-state sovereignty, token economics, and universal consensus.
 
 The working answer:
