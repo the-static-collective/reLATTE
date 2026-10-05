@@ -182,6 +182,19 @@ test('missing, malformed, noncanonical and unsupported payloads never claim comp
   }
 });
 
+test('hash-consistent malformed execution metadata still fails structural verification', async () => {
+  const a = work();
+  a.artifacts['execution-metadata'] = canonicalBytes({ ...a.metadata, samples: a.metadata.samples - 1 });
+  const manifest = { ...a.manifest, metadata_hash: sha256Hex(a.artifacts['execution-metadata']) };
+  const envelope = await crossing(manifest);
+  const report = await verifyWork(envelope, sourceFor(a.artifacts));
+  assert.equal(report.claims.artifact_received, true);
+  assert.equal(report.claims.artifact_hash_matches, true);
+  assert.equal(report.claims.artifact_structurally_valid, false);
+  assert.equal(report.claims.computation_independently_verified, false);
+  assert.deepEqual(report.errors, ['METADATA_SAMPLE_MISMATCH']);
+});
+
 test('signed crossing tampering and payload/manifest confusion fail explicitly', async () => {
   const a = work();
   const envelope = await crossing(a.manifest);
