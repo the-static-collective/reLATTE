@@ -86,15 +86,40 @@ def coordinate(low, high, index, size):
     return low + truncate((2 * index + 1) * (high - low), 2 * size)
 
 
-def escape_steps(real, imaginary, constant, limit):
+def orbit_evidence(real, imaginary, constant, limit):
     for completed in range(limit):
         if real * real + imaginary * imaginary > 4 * Q * Q:
-            return completed
+            return {"count": completed, "final_real_q": str(real), "final_imag_q": str(imaginary)}
         real, imaginary = (
             truncate(real * real - imaginary * imaginary, Q) + constant[0],
             truncate(2 * real * imaginary, Q) + constant[1],
         )
-    return limit
+    return {"count": limit, "final_real_q": str(real), "final_imag_q": str(imaginary)}
+
+
+def escape_steps(real, imaginary, constant, limit):
+    return orbit_evidence(real, imaginary, constant, limit)["count"]
+
+
+def sample_job(job_bytes, indices):
+    job = load_json(job_bytes)
+    validate_job(job)
+    require(canonical_bytes(job) == job_bytes, "NON_CANONICAL_JOB")
+    require(type(indices) is list and 1 <= len(indices) <= 64, "INVALID_SAMPLE_SET")
+    for index in indices:
+        integer(index, 0, job["width"] * job["height"] - 1, "INVALID_SAMPLE_INDEX")
+    require(len(set(indices)) == len(indices), "DUPLICATE_SAMPLE_INDEX")
+    seed = hashlib.sha256(("UsefulWork-JuliaSeed-v1|" + str(job["seed"])).encode()).digest()
+    constant = tuple(job["parameters"][name] + int.from_bytes(seed[i:i + 4], "big") % 524289 - 262144
+                     for name, i in (("c_real_q", 0), ("c_imag_q", 4)))
+    bounds = job["bounds"]
+    samples = []
+    for index in indices:
+        y, x = divmod(index, job["width"])
+        real = coordinate(bounds["min_real_q"], bounds["max_real_q"], x, job["width"])
+        imaginary = coordinate(bounds["min_imag_q"], bounds["max_imag_q"], y, job["height"])
+        samples.append({"index": index, **orbit_evidence(real, imaginary, constant, job["iterations"])})
+    return {"schema": "useful-work.python-samples/v1", "job_spec_hash": sha(job_bytes), "samples": samples}
 
 
 def render(job):
@@ -168,8 +193,8 @@ def verify(job_bytes, result_bytes):
 
 
 def main():
-    require(len(sys.argv) == 2 and sys.argv[1] in ("render", "verify"),
-            "Usage: julia_q24.py render|verify < request.json")
+    require(len(sys.argv) == 2 and sys.argv[1] in ("render", "verify", "sample"),
+            "Usage: julia_q24.py render|verify|sample < request.json")
     request = load_json(sys.stdin.buffer.read(16 * 1024 * 1024 + 1))
     if sys.argv[1] == "render":
         keys(request, ["jobs"], "INVALID_RENDER_REQUEST")
@@ -177,10 +202,14 @@ def main():
                 "INVALID_JOB_BATCH")
         output = [{"result": result, "result_hash": sha(canonical_bytes(result))}
                   for result in (render(job) for job in request["jobs"])]
-    else:
+    elif sys.argv[1] == "verify":
         keys(request, ["job_base64", "result_base64"], "INVALID_VERIFY_REQUEST")
         output = verify(base64.b64decode(request["job_base64"], validate=True),
                         base64.b64decode(request["result_base64"], validate=True))
+    else:
+        keys(request, ["job_base64", "indices"], "INVALID_SAMPLE_REQUEST")
+        output = sample_job(base64.b64decode(request["job_base64"], validate=True), request["indices"])
+    if sys.argv[1] != "render":
         output["implementation"] = {
             "id": "useful-work/python-q24/v1", "runtime": "Python " + platform.python_version(),
             "source_sha256": sha(Path(__file__).read_bytes()),

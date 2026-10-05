@@ -1,0 +1,237 @@
+{
+  "provenance": "Generated with a standalone Python hashlib/list implementation of the prose commitment and sampling rules; orbits from the independent Python implementation.",
+  "work_id": "relatte-crossing-v0:1111111111111111111111111111111111111111111111111111111111111111",
+  "challenge_id": "relatte-crossing-v0:2222222222222222222222222222222222222222222222222222222222222222",
+  "job": {
+    "schema": "useful-work.render-job/v1",
+    "algorithm": "julia-q24/v1",
+    "seed": 1,
+    "width": 4,
+    "height": 3,
+    "iterations": 16,
+    "bounds": {
+      "min_real_q": -25165824,
+      "max_real_q": 25165824,
+      "min_imag_q": -18874368,
+      "max_imag_q": 18874368
+    },
+    "parameters": {
+      "c_real_q": -13421773,
+      "c_imag_q": 2600468
+    }
+  },
+  "commitment": {
+    "schema": "useful-work.sample-commitment/v1",
+    "algorithm": "sha256-jcs-padded-binary/v1",
+    "job_spec_hash": "bac1d0284593ca4d5a40ebdc48f046e16776ea6849be2fdac685fbbffb193725",
+    "result_hash": "77359f36fb33fe3d30e2b12e06349401172573a776e50e39705f8d561a734162",
+    "population": 12,
+    "root_hash": "5bedd49c9435beb3fd3573fe3168d6b0eae9fd86088dfb8074d798ee4b5701b6"
+  },
+  "counts": [
+    2,
+    3,
+    3,
+    2,
+    16,
+    16,
+    16,
+    16,
+    2,
+    3,
+    3,
+    2
+  ],
+  "coordinate_vectors": [
+    {
+      "population": 12,
+      "sample_count": 4,
+      "indices": [
+        1,
+        2,
+        4,
+        7
+      ]
+    },
+    {
+      "population": 3072,
+      "sample_count": 16,
+      "indices": [
+        34,
+        1052,
+        1100,
+        1159,
+        1188,
+        1475,
+        1553,
+        1621,
+        1867,
+        2246,
+        2318,
+        2341,
+        2717,
+        2857,
+        2955,
+        3001
+      ]
+    },
+    {
+      "population": 1,
+      "sample_count": 1,
+      "indices": [
+        0
+      ]
+    },
+    {
+      "population": 7,
+      "sample_count": 7,
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "population": 262144,
+      "sample_count": 64,
+      "indices": [
+        90,
+        3600,
+        4133,
+        10572,
+        14152,
+        14313,
+        14844,
+        16610,
+        17742,
+        35921,
+        40025,
+        40651,
+        46913,
+        47737,
+        48120,
+        49314,
+        55206,
+        66926,
+        74404,
+        78121,
+        93511,
+        112009,
+        112261,
+        113126,
+        125776,
+        127975,
+        129186,
+        129258,
+        132018,
+        132796,
+        134991,
+        136683,
+        147992,
+        152221,
+        156110,
+        159529,
+        159793,
+        168707,
+        184594,
+        191100,
+        192808,
+        199462,
+        203064,
+        203386,
+        205049,
+        210851,
+        211427,
+        217043,
+        217301,
+        218171,
+        218346,
+        220750,
+        228557,
+        234485,
+        234572,
+        236673,
+        238957,
+        241900,
+        242222,
+        245704,
+        248128,
+        251785,
+        255219,
+        256521
+      ]
+    }
+  ],
+  "proofs": [
+    {
+      "index": 1,
+      "count": 3,
+      "proof": [
+        "7a12048c294036569708326f2dcc3d6b8d630c5de4dfb7fe149fd51e49f2eadd",
+        "a520ef3900972f4e4f38499413f78bf9d2fc1a87bebbd817bd10ee70dd1833bb",
+        "a429f6692e6a93de2954d3c6b45d82e45eb19730ce3d362e288cfebdd0ca4b68",
+        "53fd6dcfa16434985b8765a9e9f15acfac104ec4c6b3399f55ce70bf1314d8a6"
+      ]
+    },
+    {
+      "index": 2,
+      "count": 3,
+      "proof": [
+        "07e1d305b7803fd8282706028f5e4dcbcf230c137edb79e378e389d59a47d5de",
+        "fe9e7abaa815f0bf44eff776887bde74e33ac567b226e61bb36be6c240f943e2",
+        "a429f6692e6a93de2954d3c6b45d82e45eb19730ce3d362e288cfebdd0ca4b68",
+        "53fd6dcfa16434985b8765a9e9f15acfac104ec4c6b3399f55ce70bf1314d8a6"
+      ]
+    },
+    {
+      "index": 4,
+      "count": 16,
+      "proof": [
+        "7aa75e2d0200772f8b74961c179c04790067a350dfaced940fcd54e6b86e60d0",
+        "6f78c3e8b54f02a5d2c3af44d19e2d3d46bbb5cf6efcefc0c83946123366a1d5",
+        "29948cf64e57e9f4849c965ea03e79125925daeee222824ada6170ff7c7be74d",
+        "53fd6dcfa16434985b8765a9e9f15acfac104ec4c6b3399f55ce70bf1314d8a6"
+      ]
+    },
+    {
+      "index": 7,
+      "count": 16,
+      "proof": [
+        "91f1aba211b96b829b42a9f8291e586c8e9d5139146f332b6473aa12de833238",
+        "d2a0bbaf88ee02847e58e1e27c60e51404ac86afad68d2c7f070bdd282100ab1",
+        "29948cf64e57e9f4849c965ea03e79125925daeee222824ada6170ff7c7be74d",
+        "53fd6dcfa16434985b8765a9e9f15acfac104ec4c6b3399f55ce70bf1314d8a6"
+      ]
+    }
+  ],
+  "orbits": [
+    {
+      "index": 1,
+      "count": 3,
+      "final_real_q": "-54282803",
+      "final_imag_q": "-7508497"
+    },
+    {
+      "index": 2,
+      "count": 3,
+      "final_real_q": "-31701013",
+      "final_imag_q": "22287608"
+    },
+    {
+      "index": 4,
+      "count": 16,
+      "final_real_q": "3746351",
+      "final_imag_q": "3033505"
+    },
+    {
+      "index": 7,
+      "count": 16,
+      "final_real_q": "3746351",
+      "final_imag_q": "3033505"
+    }
+  ]
+}

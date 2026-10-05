@@ -10,7 +10,7 @@ export const PYTHON_SCRIPT = fileURLToPath(new URL(
 ));
 
 /** Isolated standard-library process; stdin/stdout are data, never executable source. */
-export function runPython(action: 'verify' | 'render', request: unknown, options: { script?: string; executable?: string } = {}): Promise<any> {
+export function runPython(action: 'verify' | 'render' | 'sample', request: unknown, options: { script?: string; executable?: string } = {}): Promise<any> {
   return new Promise((resolve, reject) => {
     const child = spawn(options.executable ?? 'python3', ['-I', '-B', options.script ?? PYTHON_SCRIPT, action], {
       stdio: ['pipe', 'pipe', 'pipe'],
