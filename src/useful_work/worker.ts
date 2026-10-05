@@ -4,7 +4,7 @@ import type { OpaqueOrganSpec } from '../organ.ts';
 import { canonicalBytes, hashValue, parseJob } from './job.ts';
 import { renderCounts } from './algorithm.ts';
 import { renderPpm } from './artifact.ts';
-import type { MathematicalResult } from './artifact.ts';
+import type { ExecutionMetadata, MathematicalResult } from './artifact.ts';
 
 export const FAMILY = 'organ:useful-work/kernel-001';
 export const CONTRACT = 'contract:useful-work/julia-q24-v1';
@@ -25,7 +25,7 @@ export function executeJob(value: unknown) {
     schema: 'useful-work.result/v1', job_spec_hash: jobSpecHash,
     width: job.width, height: job.height, escape_counts: renderCounts(job),
   };
-  const metadata = {
+  const metadata: ExecutionMetadata = {
     schema: 'useful-work.execution/v1', algorithm: job.algorithm,
     started_at: startedAt, finished_at: new Date().toISOString(),
     elapsed_ms: Math.max(0, Math.round(performance.now() - start)),
