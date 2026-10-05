@@ -24,6 +24,12 @@ result root the artifact identity, binding job, dimensions and ordered counts.
 Sampled proofs now verify membership in that exact artifact. Run
 `npm run useful-work-004 -- demo examples/useful-work-001/julia-001.json`.
 
+[Useful Work Kernel 005](examples/useful-work-005/README.md) accumulates fresh
+native audits with authenticated replay/recheck accounting, exact pixel coverage,
+overlap, diversity and localized contradictions. Optional sampling probabilities
+carry explicit unverified assumptions; repetition selects no truth or consensus.
+Run `npm run useful-work-005 -- demo examples/useful-work-001/julia-001.json --with-mutant`.
+
 It asks what survives if the useful parts of blockchain, Ethereum, event sourcing, local-first systems, provenance graphs, cultural inheritance, and executable worlds are separated from global-state sovereignty, token economics, and universal consensus.
 
 The working answer:

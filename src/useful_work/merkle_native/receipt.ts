@@ -66,20 +66,23 @@ export async function nativeReceipt(report: NativeReport, keys: P256KeyMaterial,
   }, keys);
 }
 
+/** Single-receipt boundary, also used when aggregating repeated observations. */
+export async function inspectNativeReceipt(value: unknown) {
+  if (!await verifyReceipt(value)) throw new Error('INVALID_RECEIPT_SIGNATURE');
+  const r = structuredClone(value) as Record<string, any>, report = validateReport(r.extensions?.useful_work_native);
+  if (r.contract_ref !== CHALLENGE_CONTRACT || r.semantic_effect !== 'none' ||
+      report?.schema !== 'useful-work.native-verification/v1' || r.crossing_id !== report.scope?.response_id ||
+      report.claims?.complete_artifact_received !== false || report.claims?.full_artifact_structure_verified !== false || report.claims?.full_computation_verified !== false ||
+      !Array.isArray(report.evidence) || !Array.isArray(report.scope.indices) || !Array.isArray(report.errors) ||
+      report.checked_count !== report.evidence.length || (r.kind !== (report.errors.length ? 'FAILED' : 'VERIFIED'))) throw new Error('INVALID_CHALLENGE_RECEIPT');
+  return { receipt: r, report };
+}
+
 /** Compare attributed observations, with no winner and no receiver state change. */
 export async function compareNativeReceipts(values: unknown[]) {
   if (values.length < 2 || values.length > 16) throw new Error('INVALID_RECEIPT_COUNT');
   const receipts: Record<string, any>[] = [];
-  for (const value of values) {
-    if (!await verifyReceipt(value)) throw new Error('INVALID_RECEIPT_SIGNATURE');
-    const r = value as Record<string, any>, report = validateReport(r.extensions?.useful_work_native);
-    if (r.contract_ref !== CHALLENGE_CONTRACT || r.semantic_effect !== 'none' ||
-        report?.schema !== 'useful-work.native-verification/v1' || r.crossing_id !== report.scope?.response_id ||
-        report.claims?.complete_artifact_received !== false || report.claims?.full_artifact_structure_verified !== false || report.claims?.full_computation_verified !== false ||
-        !Array.isArray(report.evidence) || !Array.isArray(report.scope.indices) || !Array.isArray(report.errors) ||
-        report.checked_count !== report.evidence.length || (r.kind !== (report.errors.length ? 'FAILED' : 'VERIFIED'))) throw new Error('INVALID_CHALLENGE_RECEIPT');
-    receipts.push(r);
-  }
+  for (const value of values) receipts.push((await inspectNativeReceipt(value)).receipt);
   if (new Set(receipts.map(r => r.world_id)).size !== receipts.length || new Set(receipts.map(r => canonicalBytes(r.signing.public_key).toString())).size !== receipts.length) throw new Error('DISTINCT_WORLDS_REQUIRED');
   receipts.sort((a, b) => a.receipt_id < b.receipt_id ? -1 : a.receipt_id > b.receipt_id ? 1 : 0);
   const subject = receipts[0].extensions.useful_work_native.scope;
