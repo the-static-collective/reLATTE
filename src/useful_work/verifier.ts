@@ -1,7 +1,7 @@
 import { canonicalize, sha256Hex } from '../canonical.ts';
 import { verifyOpaqueOrganCrossing } from '../organ.ts';
 import { canonicalBytes, exactKeys, hashValue, parseJob, record } from './job.ts';
-import { parseResult } from './artifact.ts';
+import { parseExecutionMetadata, parseResult } from './artifact.ts';
 import { renderCounts } from './algorithm.ts';
 import { CONTRACT, FAMILY, ROLES } from './worker.ts';
 import type { WorkManifest } from './worker.ts';
@@ -71,8 +71,7 @@ export async function verifyWork(
     report.claims.artifact_hash_matches = ROLES.every((role, i) => report.observed_hashes[role] === hashes[i]);
     const job = parseJob(parseCanonicalJson(artifacts['job-spec']));
     const result = parseResult(parseCanonicalJson(artifacts['canonical-result']), job);
-    const metadata = record(parseCanonicalJson(artifacts['execution-metadata']), 'INVALID_METADATA');
-    if (metadata.schema !== 'useful-work.execution/v1') throw new Error('UNSUPPORTED_METADATA_SCHEMA');
+    parseExecutionMetadata(parseCanonicalJson(artifacts['execution-metadata']), job);
     const ppm = Buffer.from(artifacts.presentation);
     const header = Buffer.from(`P6\n${job.width} ${job.height}\n255\n`);
     if (!ppm.subarray(0, header.length).equals(header) || ppm.length !== header.length + job.width * job.height * 3) throw new Error('INVALID_PRESENTATION');
