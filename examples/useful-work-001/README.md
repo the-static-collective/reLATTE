@@ -115,9 +115,10 @@ JS
 Demo verifier keys are fresh per invocation; only their public half is retained.
 A valid signature establishes integrity and attribution to that key, not a trusted
 real-world identity or honesty. Compare expected keys and job hashes through your
-own trust policy. Independent recomputation shares the versioned reference
-algorithm with the worker, so common implementation defects remain possible;
-an independently implemented verifier is a concrete next seam. Metadata timing,
+own trust policy. Kernel 001 recomputation shares the versioned reference
+algorithm with the worker, so common implementation defects remain possible.
+[Kernel 002](../useful-work-002/README.md) adds an independent Python mathematical
+implementation and scoped disagreement receipts. Metadata timing,
 hardware, energy use and PPM color correspondence are not computationally attested.
 
 The authority boundaries remain:

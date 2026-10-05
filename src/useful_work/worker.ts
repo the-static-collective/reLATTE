@@ -6,16 +6,10 @@ import { renderCounts } from './algorithm.ts';
 import { renderPpm } from './artifact.ts';
 import type { MathematicalResult } from './artifact.ts';
 
-export const FAMILY = 'organ:useful-work/kernel-001';
-export const CONTRACT = 'contract:useful-work/julia-q24-v1';
-export const ROLES = ['job-spec', 'canonical-result', 'presentation', 'execution-metadata'] as const;
-export interface WorkManifest {
-  schema: 'useful-work.manifest/v1';
-  job_spec_hash: string;
-  result_hash: string;
-  presentation_hash: string;
-  metadata_hash: string;
-}
+export { FAMILY, CONTRACT, ROLES } from './contract.ts';
+export type { WorkManifest } from './contract.ts';
+import { FAMILY, CONTRACT, ROLES } from './contract.ts';
+import type { WorkManifest } from './contract.ts';
 export function executeJob(value: unknown) {
   const job = parseJob(value);
   const jobSpecHash = hashValue(job);

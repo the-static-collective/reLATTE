@@ -9,6 +9,11 @@ deterministic Julia job → artifact → opaque crossing → sovereign HOLD →
 independent recomputation → signed verification receipt. Run
 `npm run useful-work -- run examples/useful-work-001/julia-001.json` after `npm ci`.
 
+[Useful Work Kernel 002](examples/useful-work-002/README.md) adds an independent
+Python verifier, generated-vector cross-checks, and actual source mutations whose
+contradictory receipts remain scoped world claims. Run
+`npm run useful-work-002:disagreement` to retain the disagreement experiment.
+
 It asks what survives if the useful parts of blockchain, Ethereum, event sourcing, local-first systems, provenance graphs, cultural inheritance, and executable worlds are separated from global-state sovereignty, token economics, and universal consensus.
 
 The working answer:

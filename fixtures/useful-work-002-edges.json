@@ -1,0 +1,66 @@
+[
+  {
+    "name": "radius-equality",
+    "job": {
+      "schema": "useful-work.render-job/v1",
+      "algorithm": "julia-q24/v1",
+      "seed": 1,
+      "width": 1,
+      "height": 1,
+      "iterations": 16,
+      "bounds": {
+        "min_real_q": 16777216,
+        "max_real_q": 50331648,
+        "min_imag_q": -1,
+        "max_imag_q": 1
+      },
+      "parameters": {
+        "c_real_q": 0,
+        "c_imag_q": 0
+      }
+    },
+    "result": {
+      "schema": "useful-work.result/v1",
+      "job_spec_hash": "7bd5e489ce700979e33ce0d9aa98b370635e9297db498534cc5681e6202f4c19",
+      "width": 1,
+      "height": 1,
+      "escape_counts": [
+        1
+      ]
+    },
+    "job_spec_hash": "7bd5e489ce700979e33ce0d9aa98b370635e9297db498534cc5681e6202f4c19",
+    "result_hash": "d79c9f31c935b7e9ffc289235f253fcaeecb45d38475568c4310bfc8930d2546"
+  },
+  {
+    "name": "negative-rounding",
+    "job": {
+      "schema": "useful-work.render-job/v1",
+      "algorithm": "julia-q24/v1",
+      "seed": 1,
+      "width": 1,
+      "height": 1,
+      "iterations": 16,
+      "bounds": {
+        "min_real_q": -1,
+        "max_real_q": 1,
+        "min_imag_q": 0,
+        "max_imag_q": 2
+      },
+      "parameters": {
+        "c_real_q": 33465328,
+        "c_imag_q": 201703
+      }
+    },
+    "result": {
+      "schema": "useful-work.result/v1",
+      "job_spec_hash": "6fc31f4da4fb58a3a6f2f41ea332e5766ceb6a7e8a57b2c86ad51cf213bd8d68",
+      "width": 1,
+      "height": 1,
+      "escape_counts": [
+        1
+      ]
+    },
+    "job_spec_hash": "6fc31f4da4fb58a3a6f2f41ea332e5766ceb6a7e8a57b2c86ad51cf213bd8d68",
+    "result_hash": "ce54154a5e7b63bf33fd29cade4d97d45eb4ce4e8558162af3f678045977180c"
+  }
+]

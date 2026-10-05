@@ -1,12 +1,15 @@
 import { sealReceipt } from '../protocol.ts';
 import type { P256KeyMaterial } from '../protocol.ts';
-import type { VerificationResult } from './verifier.ts';
+import type { VerificationResult } from './verification_types.ts';
 
 /** Domain attestation in an existing signed Receipt; never admission or economic authority. */
-export async function verificationReceipt(report: VerificationResult, keys: P256KeyMaterial, createdAt: string) {
+export async function verificationReceipt(
+  report: VerificationResult, keys: P256KeyMaterial, createdAt: string,
+  identity = { world_id: 'world:useful-work-verifier', receiver_particular: 'particular:useful-work-verifier' },
+) {
   return sealReceipt({
     schema: 'relatte.receipt/v0', crossing_id: report.crossing_id,
-    world_id: 'world:useful-work-verifier', receiver_particular: 'particular:useful-work-verifier',
+    world_id: identity.world_id, receiver_particular: identity.receiver_particular,
     kind: report.errors.length ? 'FAILED' : 'VERIFIED', semantic_effect: 'none',
     contract_ref: 'contract:useful-work/julia-q24-v1', pre_state_ref: null, post_state_ref: null,
     descendant_refs: [], residual_refs: Object.values(report.observed_hashes).map(hash => `sha256:${hash}`),
