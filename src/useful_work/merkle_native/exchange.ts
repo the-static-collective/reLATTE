@@ -1,6 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import { sealOpaqueOrganCrossing } from '../../organ.ts';
 import type { P256KeyMaterial } from '../../protocol.ts';
+import type { OpaqueOrganSpec } from '../../organ.ts';
 import { sha256Hex } from '../../canonical.ts';
 import { canonicalBytes, exactKeys, integer, parseJob, record } from '../job.ts';
 import type { RenderJob } from '../job.ts';
@@ -49,13 +50,16 @@ export async function inspectNativeWork(value: unknown, bytes: Buffer): Promise<
   });
   return { crossing, manifest: structuredClone(manifest) as NativeManifest, header, result_id: manifest.result_id, job, jobBytes: Buffer.from(bytes) };
 }
-export async function sealNativeMessage(kind: 'challenge' | 'response', payload: NativeChallenge | NativeResponse, keys: P256KeyMaterial, createdAt: string, world: string) {
-  return sealOpaqueOrganCrossing({ schema: 'relatte.opaque-organ-spec/v0', family_ref: `organ:useful-work/merkle-${kind}-v1`,
+export function nativeMessageSpec(kind: 'challenge' | 'response', payload: NativeChallenge | NativeResponse, createdAt: string, world: string): OpaqueOrganSpec {
+  return { schema: 'relatte.opaque-organ-spec/v0', family_ref: `organ:useful-work/merkle-${kind}-v1`,
     donor_contract_ref: CHALLENGE_CONTRACT, artifact_kind: `useful-work-merkle-${kind}`, source_world: world,
     source_particular: `particular:useful-work:merkle-${kind}`, source_history_head: null,
     payload_refs: [{ address: `sha256:${sha256Hex(canonicalBytes(payload))}`, role: `merkle-${kind}`, media_type: 'application/json' }],
     donor_claims: { [`merkle_${kind}`]: payload, ownership_asserted: false, economic_value_asserted: false },
-    requested_effect: { kind: 'candidate-ingress', authority: 'receiver-local' }, return_address: null, created_at: createdAt }, keys);
+    requested_effect: { kind: 'candidate-ingress', authority: 'receiver-local' }, return_address: null, created_at: createdAt };
+}
+export async function sealNativeMessage(kind: 'challenge' | 'response', payload: NativeChallenge | NativeResponse, keys: P256KeyMaterial, createdAt: string, world: string) {
+  return sealOpaqueOrganCrossing(nativeMessageSpec(kind, payload, createdAt, world), keys);
 }
 export async function createNativeChallenge(context: NativeContext, sampleCount: number, keys: P256KeyMaterial, createdAt: string) {
   context = await inspectNativeWork(context.crossing, context.jobBytes);

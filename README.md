@@ -30,6 +30,12 @@ overlap, diversity and localized contradictions. Optional sampling probabilities
 carry explicit unverified assumptions; repetition selects no truth or consensus.
 Run `npm run useful-work-005 -- demo examples/useful-work-001/julia-001.json --with-mutant`.
 
+[Useful Work Kernel 006](examples/useful-work-006/README.md) publishes signed audit
+plans, binds deterministic native challenges to attributable source events and
+scheduled slots, and retains signed clock inventories with missing/expired slots.
+Observed history asserts neither completeness nor computational guilt. Run
+`npm run useful-work-006 -- demo examples/useful-work-001/julia-001.json`.
+
 It asks what survives if the useful parts of blockchain, Ethereum, event sourcing, local-first systems, provenance graphs, cultural inheritance, and executable worlds are separated from global-state sovereignty, token economics, and universal consensus.
 
 The working answer:
