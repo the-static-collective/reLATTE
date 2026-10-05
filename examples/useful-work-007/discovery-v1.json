@@ -1,0 +1,38 @@
+{
+  "schema": "useful-work.valuation-policy/v1",
+  "algorithm": "rational-linear-discount/v1",
+  "policy_name": "local-disagreement-discovery",
+  "policy_version": 1,
+  "unit": "local-points",
+  "allow_self_reported_resources": false,
+  "terms": [
+    {
+      "metric": "contradictory_sample_entries",
+      "weight": {
+        "numerator": "10",
+        "denominator": "1"
+      },
+      "cap": null,
+      "missing": "reject"
+    },
+    {
+      "metric": "observed_challenge_ids",
+      "weight": {
+        "numerator": "1",
+        "denominator": "1"
+      },
+      "cap": null,
+      "missing": "reject"
+    },
+    {
+      "metric": "mathematical_implementation_fingerprints",
+      "weight": {
+        "numerator": "2",
+        "denominator": "1"
+      },
+      "cap": null,
+      "missing": "reject"
+    }
+  ],
+  "uncertainty_discounts": []
+}

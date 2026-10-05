@@ -36,6 +36,11 @@ scheduled slots, and retains signed clock inventories with missing/expired slots
 Observed history asserts neither completeness nor computational guilt. Run
 `npm run useful-work-006 -- demo examples/useful-work-001/julia-001.json`.
 
+[Useful Work Kernel 007](examples/useful-work-007/README.md) binds native result,
+audit/history and attributed resource claims to reproducible local policy valuations.
+Signed opinions can disagree or be revised locally; replay verifies the declared
+calculation without establishing a universal price, entitlement, payment or ownership.
+
 It asks what survives if the useful parts of blockchain, Ethereum, event sourcing, local-first systems, provenance graphs, cultural inheritance, and executable worlds are separated from global-state sovereignty, token economics, and universal consensus.
 
 The working answer:

@@ -16,3 +16,4 @@ export * from './challenge/python_checker.ts';
 export * as merkleNative from './merkle_native/index.ts';
 export * as audit from './audit/index.ts';
 export * as auditClock from './audit_clock/index.ts';
+export * as valuation from './valuation/index.ts';
