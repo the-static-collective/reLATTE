@@ -164,6 +164,10 @@ test('missing, malformed, noncanonical and unsupported payloads never claim comp
     ['canonical-result', Buffer.from(JSON.stringify(a.result, null, 2)), 'NON_CANONICAL_JSON'],
     ['canonical-result', canonicalBytes({ ...a.result, escape_counts: [1] }), 'INVALID_SAMPLE_COUNT'],
     ['job-spec', canonicalBytes({ ...a.job, algorithm: 'unknown' }), 'UNSUPPORTED_ALGORITHM'],
+    ['execution-metadata', canonicalBytes({ ...a.metadata, extra: true }), 'INVALID_METADATA_FIELDS'],
+    ['execution-metadata', canonicalBytes({ ...a.metadata, started_at: 'not-a-timestamp' }), 'INVALID_METADATA_STARTED_AT'],
+    ['execution-metadata', canonicalBytes({ ...a.metadata, elapsed_ms: -1 }), 'INVALID_METADATA_ELAPSED'],
+    ['execution-metadata', canonicalBytes({ ...a.metadata, samples: a.metadata.samples - 1 }), 'METADATA_SAMPLE_MISMATCH'],
     ['presentation', Buffer.from('invalid'), 'INVALID_PRESENTATION'],
   ] as const;
   for (const [role, bytes, code] of cases) {
