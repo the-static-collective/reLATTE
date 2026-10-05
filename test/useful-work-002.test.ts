@@ -167,6 +167,29 @@ test('both runtimes sign matched recomputation evidence; hash-only is incomparab
   assert.equal((await compareWorkReceipts([a, unavailable])).relation, 'incomparable');
 });
 
+test('both verifier worlds reject hash-consistent malformed metadata before any computation claim', async () => {
+  for (const [change, error] of [
+    [{ samples: golden.job.width * golden.job.height - 1 }, 'METADATA_SAMPLE_MISMATCH'],
+    [{ started_at: 'not-a-timestamp' }, 'INVALID_METADATA_STARTED_AT'],
+    [{ extra: true }, 'INVALID_METADATA_FIELDS'],
+  ] as const) {
+    const work = executeJob(golden.job);
+    work.artifacts['execution-metadata'] = canonicalBytes({ ...work.metadata, ...change });
+    work.manifest.metadata_hash = sha256Hex(work.artifacts['execution-metadata']);
+    const envelope = await crossing(work), source = sourceFor(work);
+    const reports = await Promise.all([verifyWork(envelope, source), verifyWorkPython(envelope, source)]);
+    for (const report of reports) {
+      assert.deepEqual(report.claims, { artifact_received: true, artifact_structurally_valid: false,
+        artifact_hash_matches: true, computation_independently_verified: false });
+      assert.deepEqual(report.errors, [error]);
+      assert.equal(report.computation, undefined);
+    }
+    const receipts = await Promise.all(reports.map((report, i) => attest(report, `metadata-world-${i}`)));
+    for (const receipt of receipts) assert.equal(await verifyReceipt(receipt), true);
+    assert.equal((await compareWorkReceipts(receipts)).relation, 'incomparable');
+  }
+});
+
 test('scope comparison rejects tampering, cross-wiring, one-key impersonation and signed unsupported claims', async () => {
   const work = executeJob(golden.job), envelope = await crossing(work), source = sourceFor(work);
   const report = await verifyWork(envelope, source);

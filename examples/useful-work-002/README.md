@@ -72,6 +72,11 @@ local script digest before signing. Python independently rechecks mathematical
 schemas, canonical bytes, job binding and every sample. TypeScript intentionally
 retains its shared worker implementation for the common-bug experiment.
 
+Both worlds apply Kernel 001's strict execution-metadata validation in the shared
+inspection layer. Even hash-consistent malformed metadata prevents computational
+attestation. Valid metadata structure does not attest to worker-reported timings,
+runtime or resource use.
+
 This supplies mathematical/runtime diversity, not independent reLATTE
 cryptography or transport. Shared boundary defects and common misreadings of
 the prose remain possible. Signatures attribute claims to keys; identities and

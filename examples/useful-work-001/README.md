@@ -85,7 +85,7 @@ keys and times, so they are not deterministic work identities.
 | Receipt claim | What the verifier demonstrates |
 | --- | --- |
 | `artifact_received` | All four signed content references resolved to bounded bytes. Receiving an envelope alone is insufficient. |
-| `artifact_structurally_valid` | Canonical JSON; supported job; result dimensions/count ranges; metadata schema; PPM header and byte length. |
+| `artifact_structurally_valid` | Canonical JSON; supported job; result dimensions/count ranges; exact metadata fields, timestamps and numeric ranges; PPM header and byte length. |
 | `artifact_hash_matches` | Every observed byte hash matches the signed manifest and payload references. This can be true for a false calculation. |
 | `computation_independently_verified` | Full local recomputation matches every escape count, with valid structure, hashes and result-to-job binding. |
 

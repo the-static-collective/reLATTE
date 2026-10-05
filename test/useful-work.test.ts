@@ -164,6 +164,10 @@ test('missing, malformed, noncanonical and unsupported payloads never claim comp
     ['canonical-result', Buffer.from(JSON.stringify(a.result, null, 2)), 'NON_CANONICAL_JSON'],
     ['canonical-result', canonicalBytes({ ...a.result, escape_counts: [1] }), 'INVALID_SAMPLE_COUNT'],
     ['job-spec', canonicalBytes({ ...a.job, algorithm: 'unknown' }), 'UNSUPPORTED_ALGORITHM'],
+    ['execution-metadata', canonicalBytes({ ...a.metadata, extra: true }), 'INVALID_METADATA_FIELDS'],
+    ['execution-metadata', canonicalBytes({ ...a.metadata, started_at: 'not-a-timestamp' }), 'INVALID_METADATA_STARTED_AT'],
+    ['execution-metadata', canonicalBytes({ ...a.metadata, elapsed_ms: -1 }), 'INVALID_METADATA_ELAPSED'],
+    ['execution-metadata', canonicalBytes({ ...a.metadata, samples: a.metadata.samples - 1 }), 'METADATA_SAMPLE_MISMATCH'],
     ['presentation', Buffer.from('invalid'), 'INVALID_PRESENTATION'],
   ] as const;
   for (const [role, bytes, code] of cases) {
@@ -176,6 +180,19 @@ test('missing, malformed, noncanonical and unsupported payloads never claim comp
     assert.equal(report.claims.computation_independently_verified, false);
     assert.match(report.errors[0], new RegExp(code));
   }
+});
+
+test('hash-consistent malformed execution metadata still fails structural verification', async () => {
+  const a = work();
+  a.artifacts['execution-metadata'] = canonicalBytes({ ...a.metadata, samples: a.metadata.samples - 1 });
+  const manifest = { ...a.manifest, metadata_hash: sha256Hex(a.artifacts['execution-metadata']) };
+  const envelope = await crossing(manifest);
+  const report = await verifyWork(envelope, sourceFor(a.artifacts));
+  assert.equal(report.claims.artifact_received, true);
+  assert.equal(report.claims.artifact_hash_matches, true);
+  assert.equal(report.claims.artifact_structurally_valid, false);
+  assert.equal(report.claims.computation_independently_verified, false);
+  assert.deepEqual(report.errors, ['METADATA_SAMPLE_MISMATCH']);
 });
 
 test('signed crossing tampering and payload/manifest confusion fail explicitly', async () => {
