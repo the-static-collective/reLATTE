@@ -55,8 +55,11 @@ def bootstrap():
         match = re.search(r"https://[a-z0-9-]+\.trycloudflare\.com", text)
         if match:
             json_write(PUBLIC / "endpoint.json", dict(role=ROLE, endpoint=match.group(0)))
-            json_write(PUBLIC / "surface.json", dict(surface_id=os.uname().nodename, description="One separately scheduled GitHub-hosted runner VM for this role.",
-                       role=ROLE, runner_name=os.environ["RUNNER_NAME"], workflow_run=RUN, run_attempt=ATTEMPT, physical_machine_attested=False))
+            boot_id=Path('/proc/sys/kernel/random/boot_id').read_text().strip()
+            assert re.fullmatch(r'[a-f0-9-]{36}',boot_id)
+            json_write(PUBLIC / "surface.json", dict(surface_id=os.environ["RUNNER_NAME"], description="One separately scheduled GitHub-hosted runner VM for this role.",
+                       role=ROLE, runner_name=os.environ["RUNNER_NAME"], hostname=os.uname().nodename, kernel_boot_id=boot_id,
+                       workflow_run=RUN, run_attempt=ATTEMPT, physical_machine_attested=False))
             print("Public rendezvous ready for", ROLE, flush=True)
             return
         if child.poll() is not None:
@@ -84,7 +87,8 @@ def rendezvous():
             endpoint = json.loads(archive.read("endpoint.json")); assert endpoint["role"] == role
             upstreams[role] = endpoint["endpoint"]
             surfaces[role] = json.loads(archive.read("surface.json"))
-    assert len({s["surface_id"] for s in surfaces.values()}) == 5
+    assert len({s["runner_name"] for s in surfaces.values()}) == 5
+    assert len({s["kernel_boot_id"] for s in surfaces.values()}) == 5
     interfaces = [p.name for p in Path("/sys/class/net").iterdir() if p.name != "lo"]
     run_id = "wire002-" + RUN + "-" + ATTEMPT
     proxy = dict(root=str(ROOT / "network-exerciser"), run_id=run_id, port=8081, upstreams=upstreams, bind_host="127.0.0.1",
@@ -98,6 +102,7 @@ def rendezvous():
                   job_spec=json.loads((REPO / "examples/useful-work-001/julia-001.json").read_text()))
     json_write(ROOT / "config.json", config); json_write(ROOT / "public-surfaces.json", surfaces)
     print("Five distinct runner surfaces registered. This runner will advance only", ROLE, flush=True)
+    print(json.dumps(dict(execution_surfaces=surfaces)),flush=True)
 
 
 def serve():
@@ -108,6 +113,25 @@ def serve():
         result = subprocess.run(CLI + ["serve", str(ROOT / "config.json")], env=env, timeout=430)
         result.check_returncode()
         subprocess.run(CLI + ["verify", str(ROOT / "public-local-view.json")], env=env, check=True, stdout=subprocess.DEVNULL)
+        view=json.loads((ROOT / 'public-local-view.json').read_text())['view'];summary=view['summary'];domain=summary['domain']
+        assert domain['acceptance']['choice']=='ACCEPT' and domain['acceptance']['B_value']==dict(numerator='12',denominator='1')
+        assert domain['acceptance']['contradiction_count']==1 and domain['acceptance']['expired_service_slots']==[1]
+        assert not summary['application_failures'] and not summary['pending_message_ids']
+        if ROLE!='adapter':
+            assert domain['dissent']['amount']==dict(numerator='5',denominator='1') and domain['settlement']['credit_ledger_changed']
+        if ROLE in ['A','B','C']: assert domain['late_evidence']['choice']=='HOLD'
+        if ROLE=='B':
+            assert any(e['kind']=='PENDING' for e in view['events'])
+            assert any(f['recipient']=='adapter' for f in summary['transport_failures'])
+        if ROLE in ['C','adapter']: assert summary['duplicate_deliveries_observed']>=1
+        if ROLE=='adapter':
+            ledger=json.loads((ROOT/'ledger/state.json').read_text());assert ledger['balances']==dict(A='12',B='88') and len(ledger['entries'])==1
+            assert any(f['recipient']=='C' for f in summary['transport_failures'])
+        if ROLE=='D': assert sum(e['kind']=='START' for e in view['events'])==2 and len(list((ROOT/'cuts').glob('*.json')))==2
+        report=dict(role=ROLE,view_id=view['view_id'],local_events=len(view['events']),duplicate_deliveries=summary['duplicate_deliveries_observed'],
+                    failed_attempts=len(summary['transport_failures']),acceptance=domain['acceptance'],dissent=domain.get('dissent'),
+                    settlement=domain.get('settlement'),late_evidence=domain.get('late_evidence'),global_reconstruction_required=False)
+        print('FIELD_WIRE_002_LOCAL_RESULT '+json.dumps(report),flush=True)
         print("Local history replay passed for", ROLE, flush=True)
     finally:
         proxy.terminate()

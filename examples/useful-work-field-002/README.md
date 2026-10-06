@@ -38,8 +38,9 @@ endpoints and surface descriptions use GitHub artifact rendezvous; artifact stor
 does not relay the trade or collect world state. After rendezvous, signed world
 messages and native service proofs travel over HTTP/HTTPS. Each job uploads only
 its own public local view and network diagnostics. Private keys/state are excluded.
-The workflow fails if distinct runner hostnames cannot be registered or a tunnel
-cannot start. It never downgrades to the local driver while reporting cross-machine
+The workflow records hostnames but requires distinct runner identities and kernel
+boot IDs: hosted VM images may reuse a hostname. It fails if these checks or a tunnel
+startup fail. It never downgrades to the local driver while reporting cross-machine
 success. Runner/container metadata are execution observations, not hardware or
 geographical attestations. The protocol continues to claim no verified physical
 geography, objective clock, organizational independence, or network path.
