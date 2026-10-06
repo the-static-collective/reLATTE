@@ -485,3 +485,20 @@ and host uptime remain explicitly unverified.
 ```sh
 npm run useful-work-008 -- demo examples/useful-work-001/julia-001.json
 ```
+
+## Useful Work Kernel 009 — Measured Resource Adapters
+
+[Kernel 009](examples/useful-work-009/README.md) adds separate signed CPU, energy-meter,
+storage and network-interface observations with source provenance and independent
+arithmetic replay. Real Linux collectors read process ticks, file metadata/native
+bytes and interface counters; the external meter adapter ingests signed readings.
+The demo's energy readings are explicitly simulated.
+
+Each observation preserves its own limits: process time is not exclusive work,
+meter deltas establish no job causation, file snapshots prove no continuous storage,
+and interface bytes are not physical bandwidth or serving bytes. No generic resource
+proof or economic value is inferred.
+
+```sh
+npm run useful-work-009 -- demo examples/useful-work-001/julia-001.json
+```
