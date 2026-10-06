@@ -8,9 +8,27 @@ import {
   sealCrossingEnvelope,
   sealReceipt,
 } from '../src/index.ts';
-import { SB001_PAYLOAD_SHA256, verifySb001Bundle } from '../scripts/sb001-verify.ts';
+import {
+  SB001_PAYLOAD_SHA256,
+  SB001_PINNED_EVIDENCE_SET_ID,
+  computeSb001EvidenceSetId,
+  verifyPinnedSb001EvidenceSet,
+  verifySb001Bundle,
+} from '../scripts/sb001-verify.ts';
 
 const PARTICULAR = join(process.cwd(), 'fixtures', 'sb001-static-os-particular.json');
+const EVIDENCE_MANIFEST = join(process.cwd(), 'fixtures', 'sb001-evidence-manifest.json');
+
+async function pinnedBundle() {
+  return {
+    particular_bytes: await readFile(PARTICULAR),
+    crossing: JSON.parse(await readFile(join(process.cwd(), 'fixtures', 'sb001-signed-crossing.json'), 'utf8')),
+    release: JSON.parse(await readFile(join(process.cwd(), 'fixtures', 'sb001-release-receipt.json'), 'utf8')),
+    unresolved: JSON.parse(await readFile(join(process.cwd(), 'fixtures', 'sb001-unresolved-receipt.json'), 'utf8')),
+    disposition: JSON.parse(await readFile(join(process.cwd(), 'fixtures', 'sb001-admit-receipt.json'), 'utf8')),
+    exit: JSON.parse(await readFile(join(process.cwd(), 'fixtures', 'sb001-exit-receipt.json'), 'utf8')),
+  };
+}
 
 function receiptDraft(receipt: any): any {
   const { receipt_id: _receiptId, signing: _signing, ...draft } = receipt;
@@ -289,33 +307,103 @@ test('BAT refuses EXIT pointing at a different validly shaped destination receip
   await expectRefusal(b, /SB001_EXIT_LOST_DESTINATION|SB001_EXIT_WRONG_DESTINATION_RECEIPT/);
 });
 
-test('BAT refuses causal inversion: destination disposition before unresolved WAIT', async () => {
+test('BAT does not trust clock order: backdated destination remains valid when hash-linked to WAIT', async () => {
   const b = await freshBundle();
   const draft = receiptDraft(b.disposition);
-  draft.created_at = '2026-10-06T23:33:30.000Z';
+  draft.created_at = '2026-10-06T23:01:00.000Z';
   b.disposition = await sealReceipt(draft, b.destinationKeys);
 
-  // Preserve the receipt chain so the BAT reaches the causal-order gate
-  // instead of correctly failing earlier on a stale EXIT reference.
   const exitDraft = receiptDraft(b.exit);
   exitDraft.post_state_ref = b.disposition.receipt_id;
   exitDraft.extensions.supabardo.destination_disposition_receipt_id =
     b.disposition.receipt_id;
   b.exit = await sealReceipt(exitDraft, b.bardoKeys);
 
-  await expectRefusal(b, /SB001_CAUSAL_ORDER_VIOLATION/);
+  assert.equal(await verifySb001Bundle({
+    particular_bytes: b.particularBytes,
+    crossing: b.crossing,
+    release: b.release,
+    unresolved: b.unresolved,
+    disposition: b.disposition,
+    exit: b.exit,
+  }), true);
 });
 
-test('BAT refuses causal inversion: EXIT before destination disposition', async () => {
+test('BAT does not trust clock order: backdated EXIT remains valid when it references the exact disposition', async () => {
   const b = await freshBundle();
   const draft = receiptDraft(b.exit);
-  draft.created_at = '2026-10-06T23:34:30.000Z';
+  draft.created_at = '2026-10-06T23:02:00.000Z';
   b.exit = await sealReceipt(draft, b.bardoKeys);
-  await expectRefusal(b, /SB001_CAUSAL_ORDER_VIOLATION/);
+
+  assert.equal(await verifySb001Bundle({
+    particular_bytes: b.particularBytes,
+    crossing: b.crossing,
+    release: b.release,
+    unresolved: b.unresolved,
+    disposition: b.disposition,
+    exit: b.exit,
+  }), true);
 });
 
 test('BAT refuses a different particular wearing the original payload address', async () => {
   const b = await freshBundle();
   b.particularBytes = Buffer.from('not the STATIC-OS particular\n', 'utf8');
   await expectRefusal(b, /SB001_PARTICULAR_HASH_MISMATCH/);
+});
+
+
+test('BAT pinned evidence manifest validates the exact surviving historical bundle', async () => {
+  const bundle = await pinnedBundle();
+  const manifest = JSON.parse(await readFile(EVIDENCE_MANIFEST, 'utf8'));
+  assert.equal(await verifyPinnedSb001EvidenceSet(bundle, manifest), true);
+  assert.equal(computeSb001EvidenceSetId(bundle), SB001_PINNED_EVIDENCE_SET_ID);
+});
+
+test('BAT evidence-set commitment changes when a role key changes even if the new bundle is lawful', async () => {
+  const pinned = await pinnedBundle();
+  const fresh = await freshBundle();
+  assert.notEqual(
+    computeSb001EvidenceSetId({
+      particular_bytes: fresh.particularBytes,
+      crossing: fresh.crossing,
+      release: fresh.release,
+      unresolved: fresh.unresolved,
+      disposition: fresh.disposition,
+      exit: fresh.exit,
+    }),
+    computeSb001EvidenceSetId(pinned),
+  );
+});
+
+test('BAT pinned manifest rejects a fresh lawful ceremony replayed as SB-001 history', async () => {
+  const fresh = await freshBundle();
+  const manifest = JSON.parse(await readFile(EVIDENCE_MANIFEST, 'utf8'));
+  await assert.rejects(
+    () => verifyPinnedSb001EvidenceSet({
+      particular_bytes: fresh.particularBytes,
+      crossing: fresh.crossing,
+      release: fresh.release,
+      unresolved: fresh.unresolved,
+      disposition: fresh.disposition,
+      exit: fresh.exit,
+    }, manifest),
+    /SB001_EVIDENCE_BODY_MISMATCH|SB001_EVIDENCE_SET_ID_MISMATCH|SB001_PINNED_EVIDENCE_SET_MISMATCH/,
+  );
+});
+
+test('BAT rejects mix-and-match receipts from two independently lawful ceremonies', async () => {
+  const a = await freshBundle();
+  const b = await freshBundle();
+
+  await assert.rejects(
+    () => verifySb001Bundle({
+      particular_bytes: a.particularBytes,
+      crossing: a.crossing,
+      release: a.release,
+      unresolved: a.unresolved,
+      disposition: b.disposition,
+      exit: b.exit,
+    }),
+    /SB001_CROSSING_ID_SPLIT|SB001_DESTINATION_LOST_UNRESOLVED_ANCESTRY|SB001_EXIT_LOST_WAIT|SB001_EXIT_LOST_DESTINATION/,
+  );
 });
