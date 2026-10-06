@@ -137,6 +137,40 @@ The live database is therefore not required to reconstruct the ceremony.
 9. reconstruction still succeeds from durable artifacts alone.
 10. changing WAIT into ADMIT or rewriting destination authority invalidates the relevant signature.
 
+## BAT — bounded adversarial test
+
+SB-001 was then attacked with freshly generated signing identities so the hostile cases were **cryptographically valid** rather than simple signature corruption.
+
+Positive control plus fifteen hostile cases exercised:
+
+- source attempts to preselect `ADMIT` instead of leaving disposition local;
+- source requests permanent Bardo retention;
+- RELEASE is rewritten as erasure;
+- WAIT claims destination `ADMIT` before B acts;
+- Bardo manufactures semantic consequence;
+- `EXIT` is smuggled into the unresolved interval;
+- destination `HOLD` is substituted for the admitted specimen;
+- Bardo identity impersonates destination authority;
+- source identity is inherited as destination authority;
+- destination pretends to be the Bardo world;
+- EXIT manufactures destination meaning;
+- EXIT points at another validly signed destination receipt;
+- destination disposition is causally placed before WAIT;
+- EXIT is causally placed before destination disposition;
+- a different payload wears P's original content address.
+
+The first BAT CI run failed one test because the causal-inversion attack changed the destination receipt identity without updating EXIT. The verifier correctly refused the stale ancestry first. The BAT was repaired to preserve the new receipt chain so it could reach the intended causal-order gate.
+
+Final repository verification:
+
+```text
+tests 130
+pass 130
+fail 0
+```
+
+The bounded semantic verifier lives at `scripts/sb001-verify.ts`. It is intentionally **not exported from the reusable reLATTE API**: reLATTE verifies portable crossing/receipt structure and signatures; the SB-001 specimen owns its local SupaBardo laws.
+
 ## Hard invariants
 
 ```text
