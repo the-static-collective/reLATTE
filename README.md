@@ -502,3 +502,20 @@ proof or economic value is inferred.
 ```sh
 npm run useful-work-009 -- demo examples/useful-work-001/julia-001.json
 ```
+
+## Useful Work Kernel 010 — Offer / Acceptance / Settlement Receipt
+
+[Kernel 010](examples/useful-work-010/README.md) adds signed conditional offers,
+specific evidence presentations and offerer-local ACCEPT/HOLD/REJECT receipts.
+Typed policies admit named audit, service, resource or valuation sources under
+an offerer-observed deadline. Separate external payment, credit-ledger and resource
+adapters attest individual records; another key replays their scope and arithmetic.
+
+Acceptance performs no transfer. Observed records can match, partially match or
+differ from offered terms without creating obligation, ownership, universal value
+or finality. The demo changes a local demonstration ledger in a separate process;
+ordinary observation and verification never execute a transfer.
+
+```sh
+npm run useful-work-010 -- demo
+```

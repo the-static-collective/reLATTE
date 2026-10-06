@@ -1,0 +1,3083 @@
+{
+  "schema": "useful-work.settlement-golden/v1",
+  "provenance": "Public demo exchange; separate local demo ledger changed, no financial payment; no private keys.",
+  "bundle": {
+    "schema": "useful-work.settlement-bundle/v1",
+    "exchange": {
+      "schema": "useful-work.offer-exchange/v1",
+      "offer": {
+        "schema": "relatte.crossing-envelope/v0",
+        "protocol_version": "0",
+        "source_particular": "particular:useful-work:settlement-offer",
+        "source_world": "world:offer-demo-offerer",
+        "source_history_head": null,
+        "parents": [],
+        "declared_kind": "OPAQUE_ORGAN_ARTIFACT",
+        "payload_refs": [
+          {
+            "address": "sha256:5ecabf8fbf81f34bdffda8c19f687e08e2453f8a528e2281a8bb3b899e1190d1",
+            "role": "settlement-offer",
+            "media_type": "application/json"
+          }
+        ],
+        "requested_effect": {
+          "kind": "candidate-ingress",
+          "authority": "receiver-local"
+        },
+        "capability_ref": null,
+        "privacy_policy": null,
+        "audience_policy": null,
+        "return_address": null,
+        "created_at": "2026-10-06T01:18:39.995Z",
+        "extensions": {
+          "organ_adapter": {
+            "schema": "relatte.organ-adapter-descriptor/v0",
+            "family_ref": "organ:useful-work/settlement-offer-v1",
+            "donor_contract_ref": "contract:useful-work/offer-settlement-v1",
+            "artifact_kind": "settlement-offer",
+            "donor_claims": {
+              "settlement_offer": {
+                "schema": "useful-work.offer/v1",
+                "description": "I will provide 12 local demonstration credits for evidence admitted by this policy.",
+                "transfer": {
+                  "kind": "credit-ledger",
+                  "system_ref": "external:demo-credit-ledger",
+                  "asset_ref": "asset:demonstration-credit",
+                  "unit": "demo-credit",
+                  "amount": {
+                    "numerator": "12",
+                    "denominator": "1"
+                  },
+                  "from_ref": "demo-account:offerer",
+                  "to_ref": "demo-account:presenter"
+                },
+                "policy": {
+                  "schema": "useful-work.acceptance-policy/v1",
+                  "algorithm": "typed-evidence-all/v1",
+                  "name": "demo-admit-cpu-observation-and-local-valuation",
+                  "clauses": [
+                    {
+                      "kind": "resource",
+                      "collector": {
+                        "world_id": "world:resource-demo-collector",
+                        "public_key": {
+                          "kty": "EC",
+                          "crv": "P-256",
+                          "x": "EB18KoLzCFAzRRTIyMKhjethegeeDkyf_zwVGvzicjE",
+                          "y": "LeJDmjSD2zUf-QjS1fA6s1bpcp81iQ_b72G1ld9eVZ8"
+                        }
+                      },
+                      "replayer": {
+                        "world_id": "world:resource-demo-verifier",
+                        "public_key": {
+                          "kty": "EC",
+                          "crv": "P-256",
+                          "x": "FGaGfXPwkrIvpkbvDUaK9IsCQZLvwjFEREx0DRByh4Y",
+                          "y": "UQQ5lISIAj2sDtM_OabP7QGWAEAsC2szfISUCggcRsE"
+                        }
+                      },
+                      "metric": "cpu_time_observed",
+                      "minimum": {
+                        "numerator": "1",
+                        "denominator": "1"
+                      },
+                      "maximum": null,
+                      "allowed_capture_modes": [
+                        "live-local/v1"
+                      ],
+                      "allowed_reading_origins": []
+                    },
+                    {
+                      "kind": "valuation",
+                      "evaluator": {
+                        "world_id": "world:offer-demo-valuer",
+                        "public_key": {
+                          "kty": "EC",
+                          "crv": "P-256",
+                          "x": "cmEkzG8t-JqpKNllgvHx3aQZV-GjhwQLiPwBDuzhGmg",
+                          "y": "j7uHkcJJPQOR0vtx_d45E2F4WHAQ1nb2fAkVYt2HmrA"
+                        }
+                      },
+                      "policy_id": "useful-work-valuation-policy-v1:32a037911313406c43a00d298d313311b0fdbab377a351fd2716cfea7bd4da95",
+                      "unit": "demo-credit",
+                      "minimum_amount": {
+                        "numerator": "12",
+                        "denominator": "1"
+                      }
+                    }
+                  ]
+                },
+                "present_before": "2026-10-06T01:20:39.995Z",
+                "eligible_presenter": {
+                  "world_id": "world:offer-demo-presenter",
+                  "public_key": {
+                    "kty": "EC",
+                    "crv": "P-256",
+                    "x": "66Gcwz5x8zfLP4E54GEshqeOd1LomRP8_MvAnIyqLVg",
+                    "y": "vRI7wC_hprBh1wrkGeNj60cp2J86HZyTlaOjWr1n1rI"
+                  }
+                },
+                "target": {
+                  "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                  "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db",
+                  "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c"
+                },
+                "settlement_adapter": {
+                  "identity": {
+                    "world_id": "world:offer-demo-ledger-adapter",
+                    "public_key": {
+                      "kty": "EC",
+                      "crv": "P-256",
+                      "x": "xag8z3iBI-mbpEGUcs8VW4dLYffF1sYy505KukJJOc4",
+                      "y": "JkCmVBu76YrvV_SZuS37N3D5VaWw7bIpzfHS3QEDBgg"
+                    }
+                  },
+                  "allowed_record_origins": [
+                    "operator-import/v1"
+                  ]
+                },
+                "acceptance_policy_id": "useful-work-acceptance-policy-v1:92b61cfd23f8227c65a4ed62fdd87c546edea206e4283e3aa219633c1846ba09",
+                "condition_basis": "offerer-observed-presentation-before-exclusive-cutoff/v1",
+                "claims": {
+                  "local_conditional_offer": true,
+                  "obligation_created": false,
+                  "transfer_performed_by_relatte": false,
+                  "transfer_guaranteed": false,
+                  "ownership_transferred": false,
+                  "economic_entitlement_asserted": false,
+                  "universal_finality_asserted": false,
+                  "objective_time_verified": false,
+                  "organizational_independence_verified": false,
+                  "authority_asserted": false,
+                  "consensus_asserted": false
+                },
+                "laws": [
+                  "VALUATION ≠ OFFER",
+                  "OFFER ≠ OBLIGATION",
+                  "ACCEPTANCE ≠ PAYMENT",
+                  "PAYMENT OBSERVATION ≠ OWNERSHIP",
+                  "SETTLEMENT RECEIPT ≠ UNIVERSAL FINALITY"
+                ]
+              },
+              "ownership_asserted": false,
+              "authority_asserted": false,
+              "economic_value_asserted": false
+            },
+            "laws": [
+              "DONOR SEMANTICS != SUBSTRATE SEMANTICS",
+              "ADAPTER != DONOR AUTHORITY",
+              "CROSSING != DONOR INTERPRETATION",
+              "PAYLOAD TYPE != ADMISSION LAW"
+            ],
+            "adapter_id": "relatte-organ-adapter-v0:0991639c41b47a1d733d2636f712ab26186e49198622c674a05cf6ac07d5d632"
+          }
+        },
+        "crossing_id": "relatte-crossing-v0:a6d7c05796a89f9c2596e6de8ba36f8ce8e7f6f39d8124f0b30bd72142a63fe5",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "js-2zwIwMDpvv6FcWphDblC6Wc-Ra7PED2Dgn3CYaNg",
+            "y": "7A0yHl4byn6LlsmBGjgtxxp486Y4xjPc33xugT3xiBk"
+          },
+          "signature": "eFLB8G5ltX8TGeaarUP-c-k0THamSlqIEAd97SBj4ZZ5SAalHYgQeXEBJtPrtK_b9tBA3Vx8klu6FTWgPf_Q1A",
+          "domain": "relatte.crossing-signature/v0"
+        }
+      },
+      "evidence": {
+        "schema": "useful-work.offer-evidence/v1",
+        "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+        "job_spec": {
+          "algorithm": "julia-q24/v1",
+          "bounds": {
+            "max_imag_q": 18874368,
+            "max_real_q": 25165824,
+            "min_imag_q": -18874368,
+            "min_real_q": -25165824
+          },
+          "height": 48,
+          "iterations": 96,
+          "parameters": {
+            "c_imag_q": 2600468,
+            "c_real_q": -13421773
+          },
+          "schema": "useful-work.render-job/v1",
+          "seed": 1,
+          "width": 64
+        },
+        "work": {
+          "audience_policy": null,
+          "capability_ref": null,
+          "created_at": "2026-10-06T00:50:29.282Z",
+          "crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db",
+          "declared_kind": "OPAQUE_ORGAN_ARTIFACT",
+          "extensions": {
+            "organ_adapter": {
+              "adapter_id": "relatte-organ-adapter-v0:ce37258942ea03b86d7f5c4a5a7a63e173897b3928c4c44df3033bec0595dc83",
+              "artifact_kind": "merkle-native-mathematical-render",
+              "donor_claims": {
+                "economic_value_asserted": false,
+                "ownership_asserted": false,
+                "result_header": {
+                  "algorithm": "sha256-jcs-pixel-tree/v1",
+                  "counts_root": "567efcf8623812be39155f259b7363859f277910a902fa07577c927f53c75270",
+                  "height": 48,
+                  "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                  "schema": "useful-work.merkle-result/v1",
+                  "width": 64
+                },
+                "useful_work_native": {
+                  "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                  "metadata_hash": "6605e9a8db54d180cd8fe0eda53774ea6f9787f7074b1a4715c8cbaa693d15b5",
+                  "presentation_hash": "a1ecc2201f55e466bf486140fa359e653d7067aae2e65414b1755648aa0f0780",
+                  "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                  "schema": "useful-work.merkle-manifest/v1"
+                }
+              },
+              "donor_contract_ref": "contract:useful-work/julia-q24-merkle-v1",
+              "family_ref": "organ:useful-work/kernel-004",
+              "laws": [
+                "DONOR SEMANTICS != SUBSTRATE SEMANTICS",
+                "ADAPTER != DONOR AUTHORITY",
+                "CROSSING != DONOR INTERPRETATION",
+                "PAYLOAD TYPE != ADMISSION LAW"
+              ],
+              "schema": "relatte.organ-adapter-descriptor/v0"
+            }
+          },
+          "parents": [],
+          "payload_refs": [
+            {
+              "address": "sha256:cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+              "media_type": "application/json",
+              "role": "job-spec"
+            },
+            {
+              "address": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+              "media_type": "application/json",
+              "role": "merkle-result"
+            },
+            {
+              "address": "sha256:a1ecc2201f55e466bf486140fa359e653d7067aae2e65414b1755648aa0f0780",
+              "media_type": "image/x-portable-pixmap",
+              "role": "presentation"
+            },
+            {
+              "address": "sha256:6605e9a8db54d180cd8fe0eda53774ea6f9787f7074b1a4715c8cbaa693d15b5",
+              "media_type": "application/json",
+              "role": "execution-metadata"
+            }
+          ],
+          "privacy_policy": null,
+          "protocol_version": "0",
+          "requested_effect": {
+            "authority": "receiver-local",
+            "kind": "candidate-ingress"
+          },
+          "return_address": null,
+          "schema": "relatte.crossing-envelope/v0",
+          "signing": {
+            "algorithm": "ECDSA-P256-SHA256",
+            "domain": "relatte.crossing-signature/v0",
+            "public_key": {
+              "crv": "P-256",
+              "kty": "EC",
+              "x": "OU96elHcnoTKo4Pe0hWmVopKyo31rSbS65YeVq7UoYU",
+              "y": "JT9HwP2Ijs7k3w6rqGWVLbWmt5Phm-Jhs1xGsfXu1IU"
+            },
+            "signature": "myPL3PeDql25CV2gKkYFmV7LKfv5iLfPKk13fzvlRMMXlBn9jn-bsBMh1GHjtuvo8vaTYYpfcYffQOXfDDuDEg"
+          },
+          "source_history_head": null,
+          "source_particular": "particular:useful-work:useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+          "source_world": "world:useful-work-native-worker"
+        },
+        "audit": null,
+        "audit_history": null,
+        "service_history": null,
+        "resources": {
+          "bundle_id": "useful-work-resource-bundle-v1:938164a9ab019e8dbe35278e1ca1f841c949c13347ed9f821fcb2496ba532143",
+          "job_spec": {
+            "algorithm": "julia-q24/v1",
+            "bounds": {
+              "max_imag_q": 18874368,
+              "max_real_q": 25165824,
+              "min_imag_q": -18874368,
+              "min_real_q": -25165824
+            },
+            "height": 48,
+            "iterations": 96,
+            "parameters": {
+              "c_imag_q": 2600468,
+              "c_real_q": -13421773
+            },
+            "schema": "useful-work.render-job/v1",
+            "seed": 1,
+            "width": 64
+          },
+          "observations": [
+            {
+              "measurement": {
+                "audience_policy": null,
+                "capability_ref": null,
+                "created_at": "2026-10-06T00:50:29.321Z",
+                "crossing_id": "relatte-crossing-v0:d42bc029c2cd760af894594346146e348ebc95b4501e55154004f743eb4a945a",
+                "declared_kind": "OPAQUE_ORGAN_ARTIFACT",
+                "extensions": {
+                  "organ_adapter": {
+                    "adapter_id": "relatte-organ-adapter-v0:f1d8f297031740332f940a02319b181fe2e5ba043e85ba5a95d21e552d8e9907",
+                    "artifact_kind": "resource-cpu",
+                    "donor_claims": {
+                      "authority_asserted": false,
+                      "economic_value_asserted": false,
+                      "ownership_asserted": false,
+                      "resource_cpu": {
+                        "claims": {
+                          "authority_asserted": false,
+                          "consensus_asserted": false,
+                          "cpu_counter_delta_replayed": true,
+                          "cpu_energy_inferred": false,
+                          "descendant_process_time_included": false,
+                          "economic_value_asserted": false,
+                          "exclusive_job_resource_use_verified": false,
+                          "full_computation_verified": false,
+                          "hardware_attestation_verified": false,
+                          "job_association_independently_verified": false,
+                          "objective_time_verified": false,
+                          "os_counter_authenticity_verified": false,
+                          "ownership_asserted": false,
+                          "process_exclusive_work_verified": false,
+                          "process_instance_fields_matched": true
+                        },
+                        "evidence": {
+                          "end": {
+                            "boot_id": "9463214b-37ba-41b7-9d9b-4cfca2549b9a",
+                            "clock_ticks_per_second": "100",
+                            "observed_at": "2026-10-06T00:50:29.276Z",
+                            "pid": 4437,
+                            "proc_stat": "4437 (MainThread) R 4425 4385 4385 0 -1 4194560 20751 0 0 0 16 3 0 0 20 0 7 0 394714 10056753152 17039 18446744073709551615 7606272 52430497 140733594157920 0 0 0 0 16781312 17922 0 0 0 17 0 0 0 0 0 0 111965664 112154912 630583296 140733594160732 140733594160891 140733594160891 140733594165171 0\n"
+                          },
+                          "start": {
+                            "boot_id": "9463214b-37ba-41b7-9d9b-4cfca2549b9a",
+                            "clock_ticks_per_second": "100",
+                            "observed_at": "2026-10-06T00:50:29.219Z",
+                            "pid": 4437,
+                            "proc_stat": "4437 (MainThread) S 4425 4385 4385 0 -1 4194560 19464 0 0 0 9 3 0 0 20 0 7 0 394714 10051510272 15759 18446744073709551615 7606272 52430497 140733594157920 0 0 0 0 16781312 17922 0 0 0 17 0 0 0 0 0 0 111965664 112154912 630583296 140733594160732 140733594160891 140733594160891 140733594165171 0\n"
+                          }
+                        },
+                        "measurement_source": "linux/proc/v1",
+                        "observed": {
+                          "clock_ticks_per_second": "100",
+                          "cpu_time_observed": {
+                            "denominator": "1",
+                            "numerator": "70"
+                          },
+                          "system_ticks_observed": "0",
+                          "unit": "milliseconds",
+                          "user_ticks_observed": "7"
+                        },
+                        "provenance": {
+                          "capture_mode": "live-local/v1",
+                          "collector_source_sha256": "a6286aa0092cac01ffc3ff823c0a2c336692dcce20696d723bd6ab3a80e16773",
+                          "host_ref": "host:local-resource-demo",
+                          "runtime": "v24.19.0"
+                        },
+                        "schema": "useful-work.cpu-observation/v1",
+                        "scope": {
+                          "association_basis": "collector-declared/v1",
+                          "execution_ref": "execution:resource-demo-worker",
+                          "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                          "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                          "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                        }
+                      }
+                    },
+                    "donor_contract_ref": "contract:useful-work/resource-cpu-v1",
+                    "family_ref": "organ:useful-work/resource-cpu-v1",
+                    "laws": [
+                      "DONOR SEMANTICS != SUBSTRATE SEMANTICS",
+                      "ADAPTER != DONOR AUTHORITY",
+                      "CROSSING != DONOR INTERPRETATION",
+                      "PAYLOAD TYPE != ADMISSION LAW"
+                    ],
+                    "schema": "relatte.organ-adapter-descriptor/v0"
+                  }
+                },
+                "parents": [],
+                "payload_refs": [
+                  {
+                    "address": "sha256:53b9e38a1296414a4eaf5defd8c63477924fcb7551546959420dc0bfc2930bcc",
+                    "media_type": "application/json",
+                    "role": "resource-cpu"
+                  }
+                ],
+                "privacy_policy": null,
+                "protocol_version": "0",
+                "requested_effect": {
+                  "authority": "receiver-local",
+                  "kind": "candidate-ingress"
+                },
+                "return_address": null,
+                "schema": "relatte.crossing-envelope/v0",
+                "signing": {
+                  "algorithm": "ECDSA-P256-SHA256",
+                  "domain": "relatte.crossing-signature/v0",
+                  "public_key": {
+                    "crv": "P-256",
+                    "kty": "EC",
+                    "x": "EB18KoLzCFAzRRTIyMKhjethegeeDkyf_zwVGvzicjE",
+                    "y": "LeJDmjSD2zUf-QjS1fA6s1bpcp81iQ_b72G1ld9eVZ8"
+                  },
+                  "signature": "EYHjrsygZvtd9-vY-kI5U87KjgCgT7vhR_rHYs1IJOH7J4UVJrQx2mGkCanxk3iuPipgEMoeT-M57rhe7ih0tg"
+                },
+                "source_history_head": null,
+                "source_particular": "particular:useful-work:resource-cpu",
+                "source_world": "world:resource-demo-collector"
+              },
+              "receipt": {
+                "contract_ref": "contract:useful-work/resource-cpu-v1",
+                "created_at": "2026-10-06T00:50:29.334Z",
+                "crossing_id": "relatte-crossing-v0:d42bc029c2cd760af894594346146e348ebc95b4501e55154004f743eb4a945a",
+                "descendant_refs": [],
+                "extensions": {
+                  "useful_work_resource": {
+                    "adapter": "cpu",
+                    "claims": {
+                      "authority_asserted": false,
+                      "collector_source_execution_verified": false,
+                      "consensus_asserted": false,
+                      "cpu_counter_delta_replayed": true,
+                      "cpu_energy_inferred": false,
+                      "descendant_process_time_included": false,
+                      "economic_value_asserted": false,
+                      "exclusive_job_resource_use_verified": false,
+                      "full_computation_verified": false,
+                      "hardware_attestation_verified": false,
+                      "job_association_independently_verified": false,
+                      "measurement_signature_verified": true,
+                      "objective_time_verified": false,
+                      "os_counter_authenticity_verified": false,
+                      "ownership_asserted": false,
+                      "process_exclusive_work_verified": false,
+                      "process_instance_fields_matched": true
+                    },
+                    "collector": {
+                      "public_key": {
+                        "crv": "P-256",
+                        "kty": "EC",
+                        "x": "EB18KoLzCFAzRRTIyMKhjethegeeDkyf_zwVGvzicjE",
+                        "y": "LeJDmjSD2zUf-QjS1fA6s1bpcp81iQ_b72G1ld9eVZ8"
+                      },
+                      "world_id": "world:resource-demo-collector"
+                    },
+                    "finished_at": "2026-10-06T00:50:29.276Z",
+                    "laws": [
+                      "CPU TIME ≠ ENERGY",
+                      "PROCESS TIME ≠ EXCLUSIVE WORK",
+                      "METER READING ≠ CAUSATION",
+                      "MEASUREMENT ≠ ECONOMIC VALUE"
+                    ],
+                    "measurement_id": "relatte-crossing-v0:d42bc029c2cd760af894594346146e348ebc95b4501e55154004f743eb4a945a",
+                    "measurement_source": "linux/proc/v1",
+                    "observed": {
+                      "clock_ticks_per_second": "100",
+                      "cpu_time_observed": {
+                        "denominator": "1",
+                        "numerator": "70"
+                      },
+                      "system_ticks_observed": "0",
+                      "unit": "milliseconds",
+                      "user_ticks_observed": "7"
+                    },
+                    "provenance": {
+                      "capture_mode": "live-local/v1",
+                      "collector_source_sha256": "a6286aa0092cac01ffc3ff823c0a2c336692dcce20696d723bd6ab3a80e16773",
+                      "host_ref": "host:local-resource-demo",
+                      "runtime": "v24.19.0"
+                    },
+                    "schema": "useful-work.resource-replay/v1",
+                    "scope": {
+                      "association_basis": "collector-declared/v1",
+                      "execution_ref": "execution:resource-demo-worker",
+                      "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                      "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                      "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                    },
+                    "started_at": "2026-10-06T00:50:29.219Z"
+                  }
+                },
+                "kind": "VERIFIED",
+                "note": "Signature, adapter provenance structure and counter/content arithmetic replayed. Physical collection, exclusive work, causation and economic value are unverified.",
+                "post_state_ref": null,
+                "pre_state_ref": null,
+                "receipt_id": "relatte-receipt-v0:b6ea40d64c102a65461d14ac95b1739e8264ee68ec543606356ff59a5ad3f895",
+                "receiver_particular": "particular:useful-work:resource-replayer",
+                "residual_refs": [],
+                "schema": "relatte.receipt/v0",
+                "semantic_effect": "none",
+                "signing": {
+                  "algorithm": "ECDSA-P256-SHA256",
+                  "domain": "relatte.receipt-signature/v0",
+                  "public_key": {
+                    "crv": "P-256",
+                    "kty": "EC",
+                    "x": "FGaGfXPwkrIvpkbvDUaK9IsCQZLvwjFEREx0DRByh4Y",
+                    "y": "UQQ5lISIAj2sDtM_OabP7QGWAEAsC2szfISUCggcRsE"
+                  },
+                  "signature": "OFSuZ5nB4Trcpv2UFY-Hm4PYR3LMPvN5z9XDLn7zm5DN994jxfQzGcmh3mwFRZblxE5C7-76skYgeFa5ChH9lw"
+                },
+                "world_id": "world:resource-demo-verifier"
+              }
+            },
+            {
+              "measurement": {
+                "audience_policy": null,
+                "capability_ref": null,
+                "created_at": "2026-10-06T00:50:29.345Z",
+                "crossing_id": "relatte-crossing-v0:96033047817e97347536d89afe114daa558fafbb7eef06db111c7cf5c315e930",
+                "declared_kind": "OPAQUE_ORGAN_ARTIFACT",
+                "extensions": {
+                  "organ_adapter": {
+                    "adapter_id": "relatte-organ-adapter-v0:f58f3f07e444a72c342bddd5a589b9176901d858f3b624fa5a33256c6a3bfac1",
+                    "artifact_kind": "resource-energy",
+                    "donor_claims": {
+                      "authority_asserted": false,
+                      "economic_value_asserted": false,
+                      "ownership_asserted": false,
+                      "resource_energy": {
+                        "claims": {
+                          "authority_asserted": false,
+                          "consensus_asserted": false,
+                          "economic_value_asserted": false,
+                          "energy_cpu_time_inferred": false,
+                          "exclusive_job_energy_verified": false,
+                          "exclusive_job_resource_use_verified": false,
+                          "full_computation_verified": false,
+                          "hardware_attestation_verified": false,
+                          "job_association_independently_verified": false,
+                          "job_energy_causation_verified": false,
+                          "meter_calibration_verified": false,
+                          "meter_counter_delta_replayed": true,
+                          "objective_time_verified": false,
+                          "ownership_asserted": false,
+                          "physical_meter_verified": false,
+                          "provider_honesty_verified": false,
+                          "signed_meter_readings_verified": true
+                        },
+                        "evidence": {
+                          "end": {
+                            "audience_policy": null,
+                            "capability_ref": null,
+                            "created_at": "2026-10-06T00:50:29.276Z",
+                            "crossing_id": "relatte-crossing-v0:4eb61a5649afb8f832cc6e27fdfdfccf2fd6129f4241f0e2ed9ea72519bcf953",
+                            "declared_kind": "OPAQUE_ORGAN_ARTIFACT",
+                            "extensions": {
+                              "organ_adapter": {
+                                "adapter_id": "relatte-organ-adapter-v0:b13f533e0350f9593835f9d10a4718d7ed6b3224c4bf9ac3a451cf729f8dff92",
+                                "artifact_kind": "resource-energy-meter-reading",
+                                "donor_claims": {
+                                  "authority_asserted": false,
+                                  "economic_value_asserted": false,
+                                  "ownership_asserted": false,
+                                  "resource_energy-meter-reading": {
+                                    "channel_id": "shared-outlet",
+                                    "counter_epoch": "demo-epoch-1",
+                                    "cumulative_reading": "100500",
+                                    "measurement_source": "external/power-meter/v1",
+                                    "meter_id": "demo-simulated-meter",
+                                    "observed_at": "2026-10-06T00:50:29.276Z",
+                                    "provenance": {
+                                      "calibration_ref": null,
+                                      "device_ref": "simulation:resource-demo-meter",
+                                      "reading_origin": "simulation/v1",
+                                      "telemetry_ref": null
+                                    },
+                                    "schema": "useful-work.energy-meter-reading/v1",
+                                    "sequence": "1",
+                                    "unit": "milliwatt-hours"
+                                  }
+                                },
+                                "donor_contract_ref": "contract:useful-work/resource-energy-meter-reading-v1",
+                                "family_ref": "organ:useful-work/resource-energy-meter-reading-v1",
+                                "laws": [
+                                  "DONOR SEMANTICS != SUBSTRATE SEMANTICS",
+                                  "ADAPTER != DONOR AUTHORITY",
+                                  "CROSSING != DONOR INTERPRETATION",
+                                  "PAYLOAD TYPE != ADMISSION LAW"
+                                ],
+                                "schema": "relatte.organ-adapter-descriptor/v0"
+                              }
+                            },
+                            "parents": [],
+                            "payload_refs": [
+                              {
+                                "address": "sha256:fe8db0f92ef3df34a0d4da6eb81123bb4236c22ef6c8ca3bc60eb9ee61e9fb92",
+                                "media_type": "application/json",
+                                "role": "resource-energy-meter-reading"
+                              }
+                            ],
+                            "privacy_policy": null,
+                            "protocol_version": "0",
+                            "requested_effect": {
+                              "authority": "receiver-local",
+                              "kind": "candidate-ingress"
+                            },
+                            "return_address": null,
+                            "schema": "relatte.crossing-envelope/v0",
+                            "signing": {
+                              "algorithm": "ECDSA-P256-SHA256",
+                              "domain": "relatte.crossing-signature/v0",
+                              "public_key": {
+                                "crv": "P-256",
+                                "kty": "EC",
+                                "x": "TZ7h7dG_Q4IjQEM_NiaCocA5dO2LmiAZS_LSPVi6EsQ",
+                                "y": "B9gm7kBli4qYe3GaTd_QUo-piAOuKijmer2Z3TO0pOg"
+                              },
+                              "signature": "VDrxrOgdS9RzR87bjNiHxwl3Gi4K84igwbIz6CI5uZbusSnXvCx8GhoXITzDinQi6K1FNgyx7aIuD1fxC6UwsQ"
+                            },
+                            "source_history_head": null,
+                            "source_particular": "particular:useful-work:resource-energy-meter-reading",
+                            "source_world": "world:resource-demo-meter"
+                          },
+                          "meter": {
+                            "channel_id": "shared-outlet",
+                            "counter_epoch": "demo-epoch-1",
+                            "meter_id": "demo-simulated-meter",
+                            "public_key": {
+                              "crv": "P-256",
+                              "kty": "EC",
+                              "x": "TZ7h7dG_Q4IjQEM_NiaCocA5dO2LmiAZS_LSPVi6EsQ",
+                              "y": "B9gm7kBli4qYe3GaTd_QUo-piAOuKijmer2Z3TO0pOg"
+                            },
+                            "world_id": "world:resource-demo-meter"
+                          },
+                          "start": {
+                            "audience_policy": null,
+                            "capability_ref": null,
+                            "created_at": "2026-10-06T00:50:29.219Z",
+                            "crossing_id": "relatte-crossing-v0:cfa77411216b80226449f7ac8eff33569406574882ba5ff21c40dc62680e15b6",
+                            "declared_kind": "OPAQUE_ORGAN_ARTIFACT",
+                            "extensions": {
+                              "organ_adapter": {
+                                "adapter_id": "relatte-organ-adapter-v0:a3ae9a325f6c8df6b9e8c51fac1878bf2aa1200ef8710fcbcd77d87e925dc5d5",
+                                "artifact_kind": "resource-energy-meter-reading",
+                                "donor_claims": {
+                                  "authority_asserted": false,
+                                  "economic_value_asserted": false,
+                                  "ownership_asserted": false,
+                                  "resource_energy-meter-reading": {
+                                    "channel_id": "shared-outlet",
+                                    "counter_epoch": "demo-epoch-1",
+                                    "cumulative_reading": "100000",
+                                    "measurement_source": "external/power-meter/v1",
+                                    "meter_id": "demo-simulated-meter",
+                                    "observed_at": "2026-10-06T00:50:29.219Z",
+                                    "provenance": {
+                                      "calibration_ref": null,
+                                      "device_ref": "simulation:resource-demo-meter",
+                                      "reading_origin": "simulation/v1",
+                                      "telemetry_ref": null
+                                    },
+                                    "schema": "useful-work.energy-meter-reading/v1",
+                                    "sequence": "0",
+                                    "unit": "milliwatt-hours"
+                                  }
+                                },
+                                "donor_contract_ref": "contract:useful-work/resource-energy-meter-reading-v1",
+                                "family_ref": "organ:useful-work/resource-energy-meter-reading-v1",
+                                "laws": [
+                                  "DONOR SEMANTICS != SUBSTRATE SEMANTICS",
+                                  "ADAPTER != DONOR AUTHORITY",
+                                  "CROSSING != DONOR INTERPRETATION",
+                                  "PAYLOAD TYPE != ADMISSION LAW"
+                                ],
+                                "schema": "relatte.organ-adapter-descriptor/v0"
+                              }
+                            },
+                            "parents": [],
+                            "payload_refs": [
+                              {
+                                "address": "sha256:1ad742f5a5c01df1e84a7d41972203c86837be54f79f49ee9cd1238f7f05e2aa",
+                                "media_type": "application/json",
+                                "role": "resource-energy-meter-reading"
+                              }
+                            ],
+                            "privacy_policy": null,
+                            "protocol_version": "0",
+                            "requested_effect": {
+                              "authority": "receiver-local",
+                              "kind": "candidate-ingress"
+                            },
+                            "return_address": null,
+                            "schema": "relatte.crossing-envelope/v0",
+                            "signing": {
+                              "algorithm": "ECDSA-P256-SHA256",
+                              "domain": "relatte.crossing-signature/v0",
+                              "public_key": {
+                                "crv": "P-256",
+                                "kty": "EC",
+                                "x": "TZ7h7dG_Q4IjQEM_NiaCocA5dO2LmiAZS_LSPVi6EsQ",
+                                "y": "B9gm7kBli4qYe3GaTd_QUo-piAOuKijmer2Z3TO0pOg"
+                              },
+                              "signature": "Fgvryjbx1TuzdHQcT2bdZnmUUPGO7oAy9MxASqZG1IsnfZ1ExpQIau7PKvZnTA7k43tW__yZKYsl8yV5OPEJ5g"
+                            },
+                            "source_history_head": null,
+                            "source_particular": "particular:useful-work:resource-energy-meter-reading",
+                            "source_world": "world:resource-demo-meter"
+                          }
+                        },
+                        "measurement_source": "external/power-meter/v1",
+                        "observed": {
+                          "energy_watt_hours_observed": {
+                            "denominator": "2",
+                            "numerator": "1"
+                          },
+                          "meter_counter_delta": "500",
+                          "meter_counter_unit": "milliwatt-hours",
+                          "reading_origin": "simulation/v1",
+                          "unit": "watt-hours"
+                        },
+                        "provenance": {
+                          "capture_mode": "signed-meter-ingest/v1",
+                          "collector_source_sha256": "a6286aa0092cac01ffc3ff823c0a2c336692dcce20696d723bd6ab3a80e16773",
+                          "host_ref": "host:local-resource-demo",
+                          "runtime": "v24.19.0"
+                        },
+                        "schema": "useful-work.energy-observation/v1",
+                        "scope": {
+                          "association_basis": "collector-declared/v1",
+                          "execution_ref": "execution:resource-demo-worker",
+                          "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                          "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                          "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                        }
+                      }
+                    },
+                    "donor_contract_ref": "contract:useful-work/resource-energy-v1",
+                    "family_ref": "organ:useful-work/resource-energy-v1",
+                    "laws": [
+                      "DONOR SEMANTICS != SUBSTRATE SEMANTICS",
+                      "ADAPTER != DONOR AUTHORITY",
+                      "CROSSING != DONOR INTERPRETATION",
+                      "PAYLOAD TYPE != ADMISSION LAW"
+                    ],
+                    "schema": "relatte.organ-adapter-descriptor/v0"
+                  }
+                },
+                "parents": [],
+                "payload_refs": [
+                  {
+                    "address": "sha256:95425b2d61998ff36cc46ae7adae46c1568796c42cd0ea7b4cd00ff2183d45db",
+                    "media_type": "application/json",
+                    "role": "resource-energy"
+                  }
+                ],
+                "privacy_policy": null,
+                "protocol_version": "0",
+                "requested_effect": {
+                  "authority": "receiver-local",
+                  "kind": "candidate-ingress"
+                },
+                "return_address": null,
+                "schema": "relatte.crossing-envelope/v0",
+                "signing": {
+                  "algorithm": "ECDSA-P256-SHA256",
+                  "domain": "relatte.crossing-signature/v0",
+                  "public_key": {
+                    "crv": "P-256",
+                    "kty": "EC",
+                    "x": "EB18KoLzCFAzRRTIyMKhjethegeeDkyf_zwVGvzicjE",
+                    "y": "LeJDmjSD2zUf-QjS1fA6s1bpcp81iQ_b72G1ld9eVZ8"
+                  },
+                  "signature": "I0oadAH0__Ec8z0SZIYRPQ8CBT1sCWgGDrY6Qdpnii0QDdAhUmINWdiw4Xcn0CxWv3JIA_U31HU-xBynzTmHRQ"
+                },
+                "source_history_head": null,
+                "source_particular": "particular:useful-work:resource-energy",
+                "source_world": "world:resource-demo-collector"
+              },
+              "receipt": {
+                "contract_ref": "contract:useful-work/resource-energy-v1",
+                "created_at": "2026-10-06T00:50:29.357Z",
+                "crossing_id": "relatte-crossing-v0:96033047817e97347536d89afe114daa558fafbb7eef06db111c7cf5c315e930",
+                "descendant_refs": [],
+                "extensions": {
+                  "useful_work_resource": {
+                    "adapter": "energy",
+                    "claims": {
+                      "authority_asserted": false,
+                      "collector_source_execution_verified": false,
+                      "consensus_asserted": false,
+                      "economic_value_asserted": false,
+                      "energy_cpu_time_inferred": false,
+                      "exclusive_job_energy_verified": false,
+                      "exclusive_job_resource_use_verified": false,
+                      "full_computation_verified": false,
+                      "hardware_attestation_verified": false,
+                      "job_association_independently_verified": false,
+                      "job_energy_causation_verified": false,
+                      "measurement_signature_verified": true,
+                      "meter_calibration_verified": false,
+                      "meter_counter_delta_replayed": true,
+                      "objective_time_verified": false,
+                      "ownership_asserted": false,
+                      "physical_meter_verified": false,
+                      "provider_honesty_verified": false,
+                      "signed_meter_readings_verified": true
+                    },
+                    "collector": {
+                      "public_key": {
+                        "crv": "P-256",
+                        "kty": "EC",
+                        "x": "EB18KoLzCFAzRRTIyMKhjethegeeDkyf_zwVGvzicjE",
+                        "y": "LeJDmjSD2zUf-QjS1fA6s1bpcp81iQ_b72G1ld9eVZ8"
+                      },
+                      "world_id": "world:resource-demo-collector"
+                    },
+                    "finished_at": "2026-10-06T00:50:29.276Z",
+                    "laws": [
+                      "CPU TIME ≠ ENERGY",
+                      "PROCESS TIME ≠ EXCLUSIVE WORK",
+                      "METER READING ≠ CAUSATION",
+                      "MEASUREMENT ≠ ECONOMIC VALUE"
+                    ],
+                    "measurement_id": "relatte-crossing-v0:96033047817e97347536d89afe114daa558fafbb7eef06db111c7cf5c315e930",
+                    "measurement_source": "external/power-meter/v1",
+                    "observed": {
+                      "energy_watt_hours_observed": {
+                        "denominator": "2",
+                        "numerator": "1"
+                      },
+                      "meter_counter_delta": "500",
+                      "meter_counter_unit": "milliwatt-hours",
+                      "reading_origin": "simulation/v1",
+                      "unit": "watt-hours"
+                    },
+                    "provenance": {
+                      "capture_mode": "signed-meter-ingest/v1",
+                      "collector_source_sha256": "a6286aa0092cac01ffc3ff823c0a2c336692dcce20696d723bd6ab3a80e16773",
+                      "host_ref": "host:local-resource-demo",
+                      "runtime": "v24.19.0"
+                    },
+                    "schema": "useful-work.resource-replay/v1",
+                    "scope": {
+                      "association_basis": "collector-declared/v1",
+                      "execution_ref": "execution:resource-demo-worker",
+                      "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                      "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                      "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                    },
+                    "started_at": "2026-10-06T00:50:29.219Z"
+                  }
+                },
+                "kind": "VERIFIED",
+                "note": "Signature, adapter provenance structure and counter/content arithmetic replayed. Physical collection, exclusive work, causation and economic value are unverified.",
+                "post_state_ref": null,
+                "pre_state_ref": null,
+                "receipt_id": "relatte-receipt-v0:f7c946111aa3fcc443d695b3c3bb755dfaeecff662480385c2411f3a8b4d5af2",
+                "receiver_particular": "particular:useful-work:resource-replayer",
+                "residual_refs": [],
+                "schema": "relatte.receipt/v0",
+                "semantic_effect": "none",
+                "signing": {
+                  "algorithm": "ECDSA-P256-SHA256",
+                  "domain": "relatte.receipt-signature/v0",
+                  "public_key": {
+                    "crv": "P-256",
+                    "kty": "EC",
+                    "x": "FGaGfXPwkrIvpkbvDUaK9IsCQZLvwjFEREx0DRByh4Y",
+                    "y": "UQQ5lISIAj2sDtM_OabP7QGWAEAsC2szfISUCggcRsE"
+                  },
+                  "signature": "qft8Bfu878_F6qZI5Ant1z9Xcy-69XdGGtbQRIuQ-QoIR2Ja6Lu7AAV_gpWl76xfNPFK4bChWg13391KGWs6pg"
+                },
+                "world_id": "world:resource-demo-verifier"
+              }
+            },
+            {
+              "measurement": {
+                "audience_policy": null,
+                "capability_ref": null,
+                "created_at": "2026-10-06T00:50:29.368Z",
+                "crossing_id": "relatte-crossing-v0:0e6e9327bbace133d2403483f194d9415975eceab90ffdf8ff5e0ddf529a8148",
+                "declared_kind": "OPAQUE_ORGAN_ARTIFACT",
+                "extensions": {
+                  "organ_adapter": {
+                    "adapter_id": "relatte-organ-adapter-v0:c58b88844833a8e1777d79e553f93a33300c3a7edb2f1369071d5020802904a0",
+                    "artifact_kind": "resource-storage",
+                    "donor_claims": {
+                      "authority_asserted": false,
+                      "economic_value_asserted": false,
+                      "ownership_asserted": false,
+                      "resource_storage": {
+                        "claims": {
+                          "authority_asserted": false,
+                          "consensus_asserted": false,
+                          "continuous_storage_verified": false,
+                          "durable_persistence_verified": false,
+                          "economic_value_asserted": false,
+                          "exclusive_job_resource_use_verified": false,
+                          "exclusive_physical_storage_verified": false,
+                          "file_metadata_fields_matched": true,
+                          "filesystem_allocation_is_physical_cost": false,
+                          "full_computation_verified": false,
+                          "hardware_attestation_verified": false,
+                          "job_association_independently_verified": false,
+                          "native_artifact_bytes_identity_verified": true,
+                          "objective_time_verified": false,
+                          "os_metadata_authenticity_verified": false,
+                          "ownership_asserted": false
+                        },
+                        "evidence": {
+                          "artifact_base64": "eyJlc2NhcGVfY291bnRzIjpbMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwyLDIsMiwyLDIsMiwyLDIsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMywzLDMsMywzLDMsMywzLDMsMywyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwzLDMsMywzLDMsNCw0LDQsNCwzLDMsMywzLDMsMywzLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDMsMywzLDMsMywzLDQsNCw1LDY2LDgsNSw0LDQsMywzLDMsMywzLDMsMywzLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDEsMSwxLDEsMSwxLDEsMSwxLDEsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMywzLDMsMywzLDMsMyw0LDQsNSw4LDMwLDExLDYsNCw0LDQsMywzLDMsMywzLDMsMywzLDMsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDEsMSwxLDEsMSwxLDEsMSwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMywzLDMsMywzLDMsMywzLDQsNCw1LDYsOTYsOTYsOTYsMjgsNyw1LDQsNCw0LDMsMywzLDMsMywzLDMsMywzLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMSwxLDEsMSwxLDEsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDMsMywzLDMsMywzLDMsMyw0LDQsNSw1LDcsMjgsOTYsOTYsOTYsOCw2LDUsNSw0LDQsMywzLDMsMywzLDMsMywzLDMsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwxLDEsMSwxLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMywzLDMsMywzLDMsMywzLDMsNCw1LDUsNSw3LDksMzAsOTYsMjcsOTYsOCw3LDYsNSw1LDUsNCw0LDMsMywzLDMsMywzLDMsMywzLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDEsMSwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDMsMywzLDMsMywzLDMsMyw0LDQsNSw2LDcsOCw5Niw5NiwzMSw5NiwzNiwzNCwxMCw5LDgsOCw3LDcsNyw1LDQsNCw0LDQsNCwzLDMsMywzLDMsMywzLDIsMiwyLDIsMiwyLDIsMiwyLDEsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMywzLDMsMywzLDMsMywzLDQsNCw0LDUsOCw5NiwzNyw5Niw5Niw2NiwyNywyNCwyMCwxNSw5Niw5Niw3NCw5Niw5Niw1OCwxNyw2LDUsNCw0LDQsNCw0LDQsNCw0LDQsMywzLDMsMywyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwzLDMsMywzLDMsMyw0LDQsNCw0LDQsNCw1LDYsOCw5Niw5Niw5Niw5Niw5Niw0MiwyMywyMSw0OSw5Niw5Niw5Niw5NiwyNiw5NiwxMCw3LDUsNSw1LDQsNCw0LDQsNCw1LDUsNSw0LDMsMywzLDMsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDMsMywzLDMsNCw0LDQsNCw0LDQsNCw0LDUsNSw1LDYsMTAsOTUsMjgsOTYsOTYsOTYsOTYsNDksOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsODEsOSw3LDYsNSw1LDUsNSw2LDYsNiw3LDI4LDYsNCw0LDMsMywzLDMsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDMsMywzLDQsNSw1LDQsNCw0LDQsNCw1LDUsNSw1LDYsOTYsMTcsOTYsOTYsOTYsOTYsOTYsOTYsOTYsODQsOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsMjksOTYsNyw2LDYsNiw3LDk2LDExLDk2LDk2LDI1LDksNSw0LDQsMywzLDMsMywyLDIsMiwyLDIsMiwyLDIsMywzLDMsNCw0LDcsOSw2LDUsNSw1LDUsNSw1LDUsNiw2LDcsOSw0Miw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5LDcsNyw4LDk2LDk2LDk2LDk2LDI1LDk2LDksNiw1LDQsNCwzLDMsMywzLDIsMiwyLDIsMiwzLDMsMywzLDQsNCw1LDk2LDk2LDMwLDcsNyw4LDIxLDcsNiw2LDYsNyw3LDM4LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDQ2LDk2LDc4LDk2LDk2LDEzLDksOCw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5NiwxNiw1LDQsNCwzLDMsMywzLDIsMiwzLDMsMywzLDMsNCw0LDUsNiwxMCwzOSw5NiwxMyw1MSw5Niw0OCwxMCw5LDgsNyw4LDgsMTEsOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsNjMsNDUsOTYsOTYsNDMsMjgsMzcsMzksOTYsMzYsMTEsMTAsMzEsOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsMjYsNiw1LDUsNSw0LDMsMywyLDMsMywzLDMsMyw0LDQsNSw3LDEwLDk2LDI1LDIwLDk2LDk2LDk2LDk2LDk2LDI3LDExLDksOSw5LDEyLDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDM4LDM0LDI1LDI0LDI1LDI2LDI4LDk2LDk2LDE1LDEzLDE5LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDg3LDk2LDksNyw5Niw5LDYsNCwzLDMsMywzLDMsNCw0LDQsNSw2LDEwLDI0LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDE1LDEwLDExLDEyLDM0LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDI5LDI0LDIyLDIyLDI0LDI2LDI4LDMxLDk2LDk2LDE1LDE3LDk2LDk2LDk2LDk2LDk2LDk2LDI2LDI2LDk2LDE3LDE3LDk2LDQzLDk2LDUsNCwzLDMsMyw0LDUsNSw1LDYsNyw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw0Niw5Niw5Niw5Niw5NiwxNiwxMiwxMywxNiw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw2MCw2OCwyNSwyMSwyMSwyMSwyNCw5Niw2OSw5NiwzNyw5NiwxOCwxOCw0NSw5Niw5Niw5Niw5NCwzMSwyMSwyNyw5Niw5NiwyMSw5Niw5NiwzMCwxMCw2NSwzLDQsNCw2LDEwLDcsOCw3LDgsMzAsOTYsOTYsOTYsOTYsOTYsNDYsOTYsMjksMjcsMjgsMzEsOTYsOTYsMTYsMTUsMTUsMjEsOTYsOTYsOTYsOTYsOTYsOTYsOTYsNDksNDMsOTYsMjAsMTksMjAsMzcsNTEsNzksNjYsNDMsOTYsMjAsMjAsMjUsOTYsOTYsOTYsOTYsMjUsMTgsOTYsOTYsMjksMjQsOTYsOTYsOTYsMjYsOTYsNCw0LDUsOTYsMjIsOTYsOTYsMTQsMTAsMjEsOTYsOTYsOTYsOTYsOTYsOTYsODgsMjQsMjUsMjcsMzAsMzMsOTYsOTYsMTYsMTcsMTksNDYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsMjMsMTksMTgsMTgsNjUsNDEsMzgsOTYsOTYsMjUsMjIsMjIsOTYsOTYsOTYsOTYsOTYsOTYsMTYsMjAsOTYsMjksOTYsOTYsOTYsOCw4LDUsNSw4LDgsOTYsOTYsOTYsMjksOTYsMjAsMTYsOTYsOTYsOTYsOTYsOTYsOTYsMjIsMjIsMjUsOTYsOTYsMzgsNDEsNjUsMTgsMTgsMTksMjMsOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsNDYsMTksMTcsMTYsOTYsOTYsMzMsMzAsMjcsMjUsMjQsODgsOTYsOTYsOTYsOTYsOTYsOTYsMjEsMTAsMTQsOTYsOTYsMjIsOTYsNSw0LDQsOTYsMjYsOTYsOTYsOTYsMjQsMjksOTYsOTYsMTgsMjUsOTYsOTYsOTYsOTYsMjUsMjAsMjAsOTYsNDMsNjYsNzksNTEsMzcsMjAsMTksMjAsOTYsNDMsNDksOTYsOTYsOTYsOTYsOTYsOTYsOTYsMjEsMTUsMTUsMTYsOTYsOTYsMzEsMjgsMjcsMjksOTYsNDYsOTYsOTYsOTYsOTYsOTYsMzAsOCw3LDgsNywxMCw2LDQsNCwzLDY1LDEwLDMwLDk2LDk2LDIxLDk2LDk2LDI3LDIxLDMxLDk0LDk2LDk2LDk2LDQ1LDE4LDE4LDk2LDM3LDk2LDY5LDk2LDI0LDIxLDIxLDIxLDI1LDY4LDYwLDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDE2LDEzLDEyLDE2LDk2LDk2LDk2LDk2LDQ2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDcsNiw1LDUsNSw0LDMsMywzLDQsNSw5Niw0Myw5NiwxNywxNyw5NiwyNiwyNiw5Niw5Niw5Niw5Niw5Niw5NiwxNywxNSw5Niw5NiwzMSwyOCwyNiwyNCwyMiwyMiwyNCwyOSw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5NiwzNCwxMiwxMSwxMCwxNSw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5NiwyNCwxMCw2LDUsNCw0LDQsMywzLDMsMywzLDQsNiw5LDk2LDcsOSw5Niw4Nyw5Niw5Niw5Niw5Niw5Niw5Niw5NiwxOSwxMywxNSw5Niw5NiwyOCwyNiwyNSwyNCwyNSwzNCwzOCw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5NiwxMiw5LDksOSwxMSwyNyw5Niw5Niw5Niw5Niw5NiwyMCwyNSw5NiwxMCw3LDUsNCw0LDMsMywzLDMsMywyLDMsMyw0LDUsNSw1LDYsMjYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsMzEsMTAsMTEsMzYsOTYsMzksMzcsMjgsNDMsOTYsOTYsNDUsNjMsOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsMTEsOCw4LDcsOCw5LDEwLDQ4LDk2LDUxLDEzLDk2LDM5LDEwLDYsNSw0LDQsMywzLDMsMywzLDIsMiwzLDMsMywzLDQsNCw1LDE2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDgsOSwxMyw5Niw5Niw3OCw5Niw0Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5Niw5NiwzOCw3LDcsNiw2LDYsNywyMSw4LDcsNywzMCw5Niw5Niw1LDQsNCwzLDMsMywzLDIsMiwyLDIsMiwzLDMsMywzLDQsNCw1LDYsOSw5NiwyNSw5Niw5Niw5Niw5Niw4LDcsNyw5LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDk2LDQyLDksNyw2LDYsNSw1LDUsNSw1LDUsNSw2LDksNyw0LDQsMywzLDMsMiwyLDIsMiwyLDIsMiwyLDMsMywzLDMsNCw0LDUsOSwyNSw5Niw5NiwxMSw5Niw3LDYsNiw2LDcsOTYsMjksOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsODQsOTYsOTYsOTYsOTYsOTYsOTYsOTYsMTcsOTYsNiw1LDUsNSw1LDQsNCw0LDQsNCw1LDUsNCwzLDMsMywyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMywzLDMsMyw0LDQsNiwyOCw3LDYsNiw2LDUsNSw1LDUsNiw3LDksODEsOTYsOTYsOTYsOTYsOTYsOTYsOTYsOTYsNDksOTYsOTYsOTYsOTYsMjgsOTUsMTAsNiw1LDUsNSw0LDQsNCw0LDQsNCw0LDQsMywzLDMsMywyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMywzLDMsMyw0LDUsNSw1LDQsNCw0LDQsNCw1LDUsNSw3LDEwLDk2LDI2LDk2LDk2LDk2LDk2LDQ5LDIxLDIzLDQyLDk2LDk2LDk2LDk2LDk2LDgsNiw1LDQsNCw0LDQsNCw0LDMsMywzLDMsMywzLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDMsMywzLDMsNCw0LDQsNCw0LDQsNCw0LDQsNSw2LDE3LDU4LDk2LDk2LDc0LDk2LDk2LDE1LDIwLDI0LDI3LDY2LDk2LDk2LDM3LDk2LDgsNSw0LDQsNCwzLDMsMywzLDMsMywzLDMsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMSwyLDIsMiwyLDIsMiwyLDIsMiwzLDMsMywzLDMsMywzLDQsNCw0LDQsNCw1LDcsNyw3LDgsOCw5LDEwLDM0LDM2LDk2LDMxLDk2LDk2LDgsNyw2LDUsNCw0LDMsMywzLDMsMywzLDMsMywyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDEsMSwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwzLDMsMywzLDMsMywzLDMsMyw0LDQsNSw1LDUsNiw3LDgsOTYsMjcsOTYsMzAsOSw3LDUsNSw1LDQsMywzLDMsMywzLDMsMywzLDMsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwxLDEsMSwxLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMywzLDMsMywzLDMsMywzLDMsNCw0LDUsNSw2LDgsOTYsOTYsOTYsMjgsNyw1LDUsNCw0LDMsMywzLDMsMywzLDMsMywyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMSwxLDEsMSwxLDEsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwzLDMsMywzLDMsMywzLDMsMyw0LDQsNCw1LDcsMjgsOTYsOTYsOTYsNiw1LDQsNCwzLDMsMywzLDMsMywzLDMsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDEsMSwxLDEsMSwxLDEsMSwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMywzLDMsMywzLDMsMywzLDMsNCw0LDQsNiwxMSwzMCw4LDUsNCw0LDMsMywzLDMsMywzLDMsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMSwxLDEsMSwxLDEsMSwxLDEsMSwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwzLDMsMywzLDMsMywzLDMsNCw0LDUsOCw2Niw1LDQsNCwzLDMsMywzLDMsMywyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwzLDMsMywzLDMsMywzLDQsNCw0LDQsMywzLDMsMywzLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDMsMywzLDMsMywzLDMsMywzLDMsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDIsMiwyLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMiwyLDIsMiwyLDIsMiwyLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDEsMSwxLDFdLCJyZXN1bHQiOnsiYWxnb3JpdGhtIjoic2hhMjU2LWpjcy1waXhlbC10cmVlL3YxIiwiY291bnRzX3Jvb3QiOiI1NjdlZmNmODYyMzgxMmJlMzkxNTVmMjU5YjczNjM4NTlmMjc3OTEwYTkwMmZhMDc1NzdjOTI3ZjUzYzc1MjcwIiwiaGVpZ2h0Ijo0OCwiam9iX3NwZWNfaGFzaCI6ImNlYzE2NTM1YjI5YjM5NzZjNDRlMWI5ZDRhODhhZTlhNmVmZWQyZjhkYTZjMTg5ZGVhMDJiYWU4ZjNmOTllOWMiLCJzY2hlbWEiOiJ1c2VmdWwtd29yay5tZXJrbGUtcmVzdWx0L3YxIiwid2lkdGgiOjY0fSwic2NoZW1hIjoidXNlZnVsLXdvcmsubWVya2xlLWFydGlmYWN0L3YxIn0=",
+                          "file_path": "/workspace/scratch/resources-009/artifact.json",
+                          "file_sha256": "4b4d5085223cda4cd33ee8e88cbe329d334254182c1fad9902c3dbfc549c8a3c",
+                          "finished_at": "2026-10-06T00:50:29.318Z",
+                          "started_at": "2026-10-06T00:50:29.318Z",
+                          "stat_after": {
+                            "blocks": "16",
+                            "ctime_ns": "1791247829285351752",
+                            "dev": "27",
+                            "ino": "1312128",
+                            "mode": "33152",
+                            "mtime_ns": "1791247829285351752",
+                            "size": "7412"
+                          },
+                          "stat_before": {
+                            "blocks": "16",
+                            "ctime_ns": "1791247829285351752",
+                            "dev": "27",
+                            "ino": "1312128",
+                            "mode": "33152",
+                            "mtime_ns": "1791247829285351752",
+                            "size": "7412"
+                          }
+                        },
+                        "measurement_source": "node/fs-stat/v1",
+                        "observed": {
+                          "filesystem_allocated_bytes_observed": "8192",
+                          "logical_file_bytes_observed": "7412",
+                          "unit": "bytes"
+                        },
+                        "provenance": {
+                          "capture_mode": "live-local/v1",
+                          "collector_source_sha256": "a6286aa0092cac01ffc3ff823c0a2c336692dcce20696d723bd6ab3a80e16773",
+                          "host_ref": "host:local-resource-demo",
+                          "runtime": "v24.19.0"
+                        },
+                        "schema": "useful-work.storage-observation/v1",
+                        "scope": {
+                          "association_basis": "collector-declared/v1",
+                          "execution_ref": "execution:resource-demo-worker",
+                          "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                          "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                          "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                        }
+                      }
+                    },
+                    "donor_contract_ref": "contract:useful-work/resource-storage-v1",
+                    "family_ref": "organ:useful-work/resource-storage-v1",
+                    "laws": [
+                      "DONOR SEMANTICS != SUBSTRATE SEMANTICS",
+                      "ADAPTER != DONOR AUTHORITY",
+                      "CROSSING != DONOR INTERPRETATION",
+                      "PAYLOAD TYPE != ADMISSION LAW"
+                    ],
+                    "schema": "relatte.organ-adapter-descriptor/v0"
+                  }
+                },
+                "parents": [],
+                "payload_refs": [
+                  {
+                    "address": "sha256:efaecc589fa94ba873d12960300dffc6f7a71bccf4d3315dcd02f84d83297886",
+                    "media_type": "application/json",
+                    "role": "resource-storage"
+                  }
+                ],
+                "privacy_policy": null,
+                "protocol_version": "0",
+                "requested_effect": {
+                  "authority": "receiver-local",
+                  "kind": "candidate-ingress"
+                },
+                "return_address": null,
+                "schema": "relatte.crossing-envelope/v0",
+                "signing": {
+                  "algorithm": "ECDSA-P256-SHA256",
+                  "domain": "relatte.crossing-signature/v0",
+                  "public_key": {
+                    "crv": "P-256",
+                    "kty": "EC",
+                    "x": "EB18KoLzCFAzRRTIyMKhjethegeeDkyf_zwVGvzicjE",
+                    "y": "LeJDmjSD2zUf-QjS1fA6s1bpcp81iQ_b72G1ld9eVZ8"
+                  },
+                  "signature": "Ifc3yl3IhktQQ3xzynw6449YZe2WrozRLLotlttLY2F6J1K2TkY3buyWadGgtR4xDSYbaeG0ENbSqBYuyQc-xA"
+                },
+                "source_history_head": null,
+                "source_particular": "particular:useful-work:resource-storage",
+                "source_world": "world:resource-demo-collector"
+              },
+              "receipt": {
+                "contract_ref": "contract:useful-work/resource-storage-v1",
+                "created_at": "2026-10-06T00:50:29.434Z",
+                "crossing_id": "relatte-crossing-v0:0e6e9327bbace133d2403483f194d9415975eceab90ffdf8ff5e0ddf529a8148",
+                "descendant_refs": [],
+                "extensions": {
+                  "useful_work_resource": {
+                    "adapter": "storage",
+                    "claims": {
+                      "authority_asserted": false,
+                      "collector_source_execution_verified": false,
+                      "consensus_asserted": false,
+                      "continuous_storage_verified": false,
+                      "durable_persistence_verified": false,
+                      "economic_value_asserted": false,
+                      "exclusive_job_resource_use_verified": false,
+                      "exclusive_physical_storage_verified": false,
+                      "file_metadata_fields_matched": true,
+                      "filesystem_allocation_is_physical_cost": false,
+                      "full_computation_verified": false,
+                      "hardware_attestation_verified": false,
+                      "job_association_independently_verified": false,
+                      "measurement_signature_verified": true,
+                      "native_artifact_bytes_identity_verified": true,
+                      "objective_time_verified": false,
+                      "os_metadata_authenticity_verified": false,
+                      "ownership_asserted": false
+                    },
+                    "collector": {
+                      "public_key": {
+                        "crv": "P-256",
+                        "kty": "EC",
+                        "x": "EB18KoLzCFAzRRTIyMKhjethegeeDkyf_zwVGvzicjE",
+                        "y": "LeJDmjSD2zUf-QjS1fA6s1bpcp81iQ_b72G1ld9eVZ8"
+                      },
+                      "world_id": "world:resource-demo-collector"
+                    },
+                    "finished_at": "2026-10-06T00:50:29.318Z",
+                    "laws": [
+                      "CPU TIME ≠ ENERGY",
+                      "PROCESS TIME ≠ EXCLUSIVE WORK",
+                      "METER READING ≠ CAUSATION",
+                      "MEASUREMENT ≠ ECONOMIC VALUE"
+                    ],
+                    "measurement_id": "relatte-crossing-v0:0e6e9327bbace133d2403483f194d9415975eceab90ffdf8ff5e0ddf529a8148",
+                    "measurement_source": "node/fs-stat/v1",
+                    "observed": {
+                      "filesystem_allocated_bytes_observed": "8192",
+                      "logical_file_bytes_observed": "7412",
+                      "unit": "bytes"
+                    },
+                    "provenance": {
+                      "capture_mode": "live-local/v1",
+                      "collector_source_sha256": "a6286aa0092cac01ffc3ff823c0a2c336692dcce20696d723bd6ab3a80e16773",
+                      "host_ref": "host:local-resource-demo",
+                      "runtime": "v24.19.0"
+                    },
+                    "schema": "useful-work.resource-replay/v1",
+                    "scope": {
+                      "association_basis": "collector-declared/v1",
+                      "execution_ref": "execution:resource-demo-worker",
+                      "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                      "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                      "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                    },
+                    "started_at": "2026-10-06T00:50:29.318Z"
+                  }
+                },
+                "kind": "VERIFIED",
+                "note": "Signature, adapter provenance structure and counter/content arithmetic replayed. Physical collection, exclusive work, causation and economic value are unverified.",
+                "post_state_ref": null,
+                "pre_state_ref": null,
+                "receipt_id": "relatte-receipt-v0:1a5252ec8ae486bb145a9622db767f82c564a364e0190fd08ba45917a928ec44",
+                "receiver_particular": "particular:useful-work:resource-replayer",
+                "residual_refs": [],
+                "schema": "relatte.receipt/v0",
+                "semantic_effect": "none",
+                "signing": {
+                  "algorithm": "ECDSA-P256-SHA256",
+                  "domain": "relatte.receipt-signature/v0",
+                  "public_key": {
+                    "crv": "P-256",
+                    "kty": "EC",
+                    "x": "FGaGfXPwkrIvpkbvDUaK9IsCQZLvwjFEREx0DRByh4Y",
+                    "y": "UQQ5lISIAj2sDtM_OabP7QGWAEAsC2szfISUCggcRsE"
+                  },
+                  "signature": "uTdV3Uo95-w-BInxId-M2GuZy1Xe1sxyp0i8MhS2KXZD0W50BwfFaRBTXmIGxalm3w4gAs3TS7ybILTPQv9J3g"
+                },
+                "world_id": "world:resource-demo-verifier"
+              }
+            },
+            {
+              "measurement": {
+                "audience_policy": null,
+                "capability_ref": null,
+                "created_at": "2026-10-06T00:50:29.468Z",
+                "crossing_id": "relatte-crossing-v0:affd0916b9049fc818e1b9ac4c5525527b6a1e9eccd946a3acefbb8fd4c429e5",
+                "declared_kind": "OPAQUE_ORGAN_ARTIFACT",
+                "extensions": {
+                  "organ_adapter": {
+                    "adapter_id": "relatte-organ-adapter-v0:bea4d8c3285e49fd293efce26bf769fd338e4b0e627af25e2733eebfe969be0b",
+                    "artifact_kind": "resource-network",
+                    "donor_claims": {
+                      "authority_asserted": false,
+                      "economic_value_asserted": false,
+                      "ownership_asserted": false,
+                      "resource_network": {
+                        "claims": {
+                          "authority_asserted": false,
+                          "consensus_asserted": false,
+                          "economic_value_asserted": false,
+                          "exclusive_job_resource_use_verified": false,
+                          "full_computation_verified": false,
+                          "hardware_attestation_verified": false,
+                          "host_uptime_verified": false,
+                          "interface_counter_delta_replayed": true,
+                          "interface_generation_verified": false,
+                          "interface_subject_fields_matched": true,
+                          "job_association_independently_verified": false,
+                          "job_bytes_causation_verified": false,
+                          "network_namespace_binding_verified": false,
+                          "network_path_verified": false,
+                          "objective_time_verified": false,
+                          "os_counter_authenticity_verified": false,
+                          "ownership_asserted": false,
+                          "physical_bandwidth_verified": false,
+                          "reads_are_atomic": false,
+                          "service_bytes_verified": false
+                        },
+                        "evidence": {
+                          "end": {
+                            "boot_id": "9463214b-37ba-41b7-9d9b-4cfca2549b9a",
+                            "ifindex_raw": "1\n",
+                            "interface_name": "lo",
+                            "network_namespace": "net:[4026531833]",
+                            "observed_at": "2026-10-06T00:50:29.318Z",
+                            "rx_bytes_raw": "150669\n",
+                            "tx_bytes_raw": "150669\n"
+                          },
+                          "start": {
+                            "boot_id": "9463214b-37ba-41b7-9d9b-4cfca2549b9a",
+                            "ifindex_raw": "1\n",
+                            "interface_name": "lo",
+                            "network_namespace": "net:[4026531833]",
+                            "observed_at": "2026-10-06T00:50:29.292Z",
+                            "rx_bytes_raw": "142367\n",
+                            "tx_bytes_raw": "142367\n"
+                          }
+                        },
+                        "measurement_source": "linux/sysfs-net/v1",
+                        "observed": {
+                          "interface_rx_bytes_observed": "8302",
+                          "interface_tx_bytes_observed": "8302",
+                          "unit": "bytes"
+                        },
+                        "provenance": {
+                          "capture_mode": "live-local/v1",
+                          "collector_source_sha256": "a6286aa0092cac01ffc3ff823c0a2c336692dcce20696d723bd6ab3a80e16773",
+                          "host_ref": "host:local-resource-demo",
+                          "runtime": "v24.19.0"
+                        },
+                        "schema": "useful-work.network-observation/v1",
+                        "scope": {
+                          "association_basis": "collector-declared/v1",
+                          "execution_ref": "execution:resource-demo-worker",
+                          "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                          "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                          "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                        }
+                      }
+                    },
+                    "donor_contract_ref": "contract:useful-work/resource-network-v1",
+                    "family_ref": "organ:useful-work/resource-network-v1",
+                    "laws": [
+                      "DONOR SEMANTICS != SUBSTRATE SEMANTICS",
+                      "ADAPTER != DONOR AUTHORITY",
+                      "CROSSING != DONOR INTERPRETATION",
+                      "PAYLOAD TYPE != ADMISSION LAW"
+                    ],
+                    "schema": "relatte.organ-adapter-descriptor/v0"
+                  }
+                },
+                "parents": [],
+                "payload_refs": [
+                  {
+                    "address": "sha256:6928f338358a475374afb76b10c647475aa708302e2f0f6eff61e5330a9a0bd8",
+                    "media_type": "application/json",
+                    "role": "resource-network"
+                  }
+                ],
+                "privacy_policy": null,
+                "protocol_version": "0",
+                "requested_effect": {
+                  "authority": "receiver-local",
+                  "kind": "candidate-ingress"
+                },
+                "return_address": null,
+                "schema": "relatte.crossing-envelope/v0",
+                "signing": {
+                  "algorithm": "ECDSA-P256-SHA256",
+                  "domain": "relatte.crossing-signature/v0",
+                  "public_key": {
+                    "crv": "P-256",
+                    "kty": "EC",
+                    "x": "EB18KoLzCFAzRRTIyMKhjethegeeDkyf_zwVGvzicjE",
+                    "y": "LeJDmjSD2zUf-QjS1fA6s1bpcp81iQ_b72G1ld9eVZ8"
+                  },
+                  "signature": "NmrmkcfpCc32SFj_ll78xrH9NAqtYwaPBC_iKM1GNTTZA0KTi2_d74XaazNoN4yXBpvcXNczwbV-nuRQl7C_9g"
+                },
+                "source_history_head": null,
+                "source_particular": "particular:useful-work:resource-network",
+                "source_world": "world:resource-demo-collector"
+              },
+              "receipt": {
+                "contract_ref": "contract:useful-work/resource-network-v1",
+                "created_at": "2026-10-06T00:50:29.472Z",
+                "crossing_id": "relatte-crossing-v0:affd0916b9049fc818e1b9ac4c5525527b6a1e9eccd946a3acefbb8fd4c429e5",
+                "descendant_refs": [],
+                "extensions": {
+                  "useful_work_resource": {
+                    "adapter": "network",
+                    "claims": {
+                      "authority_asserted": false,
+                      "collector_source_execution_verified": false,
+                      "consensus_asserted": false,
+                      "economic_value_asserted": false,
+                      "exclusive_job_resource_use_verified": false,
+                      "full_computation_verified": false,
+                      "hardware_attestation_verified": false,
+                      "host_uptime_verified": false,
+                      "interface_counter_delta_replayed": true,
+                      "interface_generation_verified": false,
+                      "interface_subject_fields_matched": true,
+                      "job_association_independently_verified": false,
+                      "job_bytes_causation_verified": false,
+                      "measurement_signature_verified": true,
+                      "network_namespace_binding_verified": false,
+                      "network_path_verified": false,
+                      "objective_time_verified": false,
+                      "os_counter_authenticity_verified": false,
+                      "ownership_asserted": false,
+                      "physical_bandwidth_verified": false,
+                      "reads_are_atomic": false,
+                      "service_bytes_verified": false
+                    },
+                    "collector": {
+                      "public_key": {
+                        "crv": "P-256",
+                        "kty": "EC",
+                        "x": "EB18KoLzCFAzRRTIyMKhjethegeeDkyf_zwVGvzicjE",
+                        "y": "LeJDmjSD2zUf-QjS1fA6s1bpcp81iQ_b72G1ld9eVZ8"
+                      },
+                      "world_id": "world:resource-demo-collector"
+                    },
+                    "finished_at": "2026-10-06T00:50:29.318Z",
+                    "laws": [
+                      "CPU TIME ≠ ENERGY",
+                      "PROCESS TIME ≠ EXCLUSIVE WORK",
+                      "METER READING ≠ CAUSATION",
+                      "MEASUREMENT ≠ ECONOMIC VALUE"
+                    ],
+                    "measurement_id": "relatte-crossing-v0:affd0916b9049fc818e1b9ac4c5525527b6a1e9eccd946a3acefbb8fd4c429e5",
+                    "measurement_source": "linux/sysfs-net/v1",
+                    "observed": {
+                      "interface_rx_bytes_observed": "8302",
+                      "interface_tx_bytes_observed": "8302",
+                      "unit": "bytes"
+                    },
+                    "provenance": {
+                      "capture_mode": "live-local/v1",
+                      "collector_source_sha256": "a6286aa0092cac01ffc3ff823c0a2c336692dcce20696d723bd6ab3a80e16773",
+                      "host_ref": "host:local-resource-demo",
+                      "runtime": "v24.19.0"
+                    },
+                    "schema": "useful-work.resource-replay/v1",
+                    "scope": {
+                      "association_basis": "collector-declared/v1",
+                      "execution_ref": "execution:resource-demo-worker",
+                      "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                      "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                      "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                    },
+                    "started_at": "2026-10-06T00:50:29.292Z"
+                  }
+                },
+                "kind": "VERIFIED",
+                "note": "Signature, adapter provenance structure and counter/content arithmetic replayed. Physical collection, exclusive work, causation and economic value are unverified.",
+                "post_state_ref": null,
+                "pre_state_ref": null,
+                "receipt_id": "relatte-receipt-v0:86d7999ba4f89f25d917695e2425bb890fba74bf37a2f66f026e39ba71853029",
+                "receiver_particular": "particular:useful-work:resource-replayer",
+                "residual_refs": [],
+                "schema": "relatte.receipt/v0",
+                "semantic_effect": "none",
+                "signing": {
+                  "algorithm": "ECDSA-P256-SHA256",
+                  "domain": "relatte.receipt-signature/v0",
+                  "public_key": {
+                    "crv": "P-256",
+                    "kty": "EC",
+                    "x": "FGaGfXPwkrIvpkbvDUaK9IsCQZLvwjFEREx0DRByh4Y",
+                    "y": "UQQ5lISIAj2sDtM_OabP7QGWAEAsC2szfISUCggcRsE"
+                  },
+                  "signature": "5MVwfctmO8oPCS6SYehe6CFBZRD75c0U43J3Git3ojW4TuAclcydJtLFKh16h7z2hkv0i_k0eydT9fWNU_wiNg"
+                },
+                "world_id": "world:resource-demo-verifier"
+              }
+            }
+          ],
+          "schema": "useful-work.resource-bundle/v1",
+          "summary": {
+            "by_adapter": {
+              "cpu": [
+                {
+                  "claims": {
+                    "authority_asserted": false,
+                    "collector_source_execution_verified": false,
+                    "consensus_asserted": false,
+                    "cpu_counter_delta_replayed": true,
+                    "cpu_energy_inferred": false,
+                    "descendant_process_time_included": false,
+                    "economic_value_asserted": false,
+                    "exclusive_job_resource_use_verified": false,
+                    "full_computation_verified": false,
+                    "hardware_attestation_verified": false,
+                    "job_association_independently_verified": false,
+                    "measurement_signature_verified": true,
+                    "objective_time_verified": false,
+                    "os_counter_authenticity_verified": false,
+                    "ownership_asserted": false,
+                    "process_exclusive_work_verified": false,
+                    "process_instance_fields_matched": true
+                  },
+                  "collector": {
+                    "public_key": {
+                      "crv": "P-256",
+                      "kty": "EC",
+                      "x": "EB18KoLzCFAzRRTIyMKhjethegeeDkyf_zwVGvzicjE",
+                      "y": "LeJDmjSD2zUf-QjS1fA6s1bpcp81iQ_b72G1ld9eVZ8"
+                    },
+                    "world_id": "world:resource-demo-collector"
+                  },
+                  "finished_at": "2026-10-06T00:50:29.276Z",
+                  "measurement_id": "relatte-crossing-v0:d42bc029c2cd760af894594346146e348ebc95b4501e55154004f743eb4a945a",
+                  "measurement_source": "linux/proc/v1",
+                  "observed": {
+                    "clock_ticks_per_second": "100",
+                    "cpu_time_observed": {
+                      "denominator": "1",
+                      "numerator": "70"
+                    },
+                    "system_ticks_observed": "0",
+                    "unit": "milliseconds",
+                    "user_ticks_observed": "7"
+                  },
+                  "provenance": {
+                    "capture_mode": "live-local/v1",
+                    "collector_source_sha256": "a6286aa0092cac01ffc3ff823c0a2c336692dcce20696d723bd6ab3a80e16773",
+                    "host_ref": "host:local-resource-demo",
+                    "runtime": "v24.19.0"
+                  },
+                  "scope": {
+                    "association_basis": "collector-declared/v1",
+                    "execution_ref": "execution:resource-demo-worker",
+                    "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                    "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                    "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                  },
+                  "started_at": "2026-10-06T00:50:29.219Z"
+                }
+              ],
+              "energy": [
+                {
+                  "claims": {
+                    "authority_asserted": false,
+                    "collector_source_execution_verified": false,
+                    "consensus_asserted": false,
+                    "economic_value_asserted": false,
+                    "energy_cpu_time_inferred": false,
+                    "exclusive_job_energy_verified": false,
+                    "exclusive_job_resource_use_verified": false,
+                    "full_computation_verified": false,
+                    "hardware_attestation_verified": false,
+                    "job_association_independently_verified": false,
+                    "job_energy_causation_verified": false,
+                    "measurement_signature_verified": true,
+                    "meter_calibration_verified": false,
+                    "meter_counter_delta_replayed": true,
+                    "objective_time_verified": false,
+                    "ownership_asserted": false,
+                    "physical_meter_verified": false,
+                    "provider_honesty_verified": false,
+                    "signed_meter_readings_verified": true
+                  },
+                  "collector": {
+                    "public_key": {
+                      "crv": "P-256",
+                      "kty": "EC",
+                      "x": "EB18KoLzCFAzRRTIyMKhjethegeeDkyf_zwVGvzicjE",
+                      "y": "LeJDmjSD2zUf-QjS1fA6s1bpcp81iQ_b72G1ld9eVZ8"
+                    },
+                    "world_id": "world:resource-demo-collector"
+                  },
+                  "finished_at": "2026-10-06T00:50:29.276Z",
+                  "measurement_id": "relatte-crossing-v0:96033047817e97347536d89afe114daa558fafbb7eef06db111c7cf5c315e930",
+                  "measurement_source": "external/power-meter/v1",
+                  "observed": {
+                    "energy_watt_hours_observed": {
+                      "denominator": "2",
+                      "numerator": "1"
+                    },
+                    "meter_counter_delta": "500",
+                    "meter_counter_unit": "milliwatt-hours",
+                    "reading_origin": "simulation/v1",
+                    "unit": "watt-hours"
+                  },
+                  "provenance": {
+                    "capture_mode": "signed-meter-ingest/v1",
+                    "collector_source_sha256": "a6286aa0092cac01ffc3ff823c0a2c336692dcce20696d723bd6ab3a80e16773",
+                    "host_ref": "host:local-resource-demo",
+                    "runtime": "v24.19.0"
+                  },
+                  "scope": {
+                    "association_basis": "collector-declared/v1",
+                    "execution_ref": "execution:resource-demo-worker",
+                    "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                    "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                    "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                  },
+                  "started_at": "2026-10-06T00:50:29.219Z"
+                }
+              ],
+              "network": [
+                {
+                  "claims": {
+                    "authority_asserted": false,
+                    "collector_source_execution_verified": false,
+                    "consensus_asserted": false,
+                    "economic_value_asserted": false,
+                    "exclusive_job_resource_use_verified": false,
+                    "full_computation_verified": false,
+                    "hardware_attestation_verified": false,
+                    "host_uptime_verified": false,
+                    "interface_counter_delta_replayed": true,
+                    "interface_generation_verified": false,
+                    "interface_subject_fields_matched": true,
+                    "job_association_independently_verified": false,
+                    "job_bytes_causation_verified": false,
+                    "measurement_signature_verified": true,
+                    "network_namespace_binding_verified": false,
+                    "network_path_verified": false,
+                    "objective_time_verified": false,
+                    "os_counter_authenticity_verified": false,
+                    "ownership_asserted": false,
+                    "physical_bandwidth_verified": false,
+                    "reads_are_atomic": false,
+                    "service_bytes_verified": false
+                  },
+                  "collector": {
+                    "public_key": {
+                      "crv": "P-256",
+                      "kty": "EC",
+                      "x": "EB18KoLzCFAzRRTIyMKhjethegeeDkyf_zwVGvzicjE",
+                      "y": "LeJDmjSD2zUf-QjS1fA6s1bpcp81iQ_b72G1ld9eVZ8"
+                    },
+                    "world_id": "world:resource-demo-collector"
+                  },
+                  "finished_at": "2026-10-06T00:50:29.318Z",
+                  "measurement_id": "relatte-crossing-v0:affd0916b9049fc818e1b9ac4c5525527b6a1e9eccd946a3acefbb8fd4c429e5",
+                  "measurement_source": "linux/sysfs-net/v1",
+                  "observed": {
+                    "interface_rx_bytes_observed": "8302",
+                    "interface_tx_bytes_observed": "8302",
+                    "unit": "bytes"
+                  },
+                  "provenance": {
+                    "capture_mode": "live-local/v1",
+                    "collector_source_sha256": "a6286aa0092cac01ffc3ff823c0a2c336692dcce20696d723bd6ab3a80e16773",
+                    "host_ref": "host:local-resource-demo",
+                    "runtime": "v24.19.0"
+                  },
+                  "scope": {
+                    "association_basis": "collector-declared/v1",
+                    "execution_ref": "execution:resource-demo-worker",
+                    "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                    "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                    "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                  },
+                  "started_at": "2026-10-06T00:50:29.292Z"
+                }
+              ],
+              "storage": [
+                {
+                  "claims": {
+                    "authority_asserted": false,
+                    "collector_source_execution_verified": false,
+                    "consensus_asserted": false,
+                    "continuous_storage_verified": false,
+                    "durable_persistence_verified": false,
+                    "economic_value_asserted": false,
+                    "exclusive_job_resource_use_verified": false,
+                    "exclusive_physical_storage_verified": false,
+                    "file_metadata_fields_matched": true,
+                    "filesystem_allocation_is_physical_cost": false,
+                    "full_computation_verified": false,
+                    "hardware_attestation_verified": false,
+                    "job_association_independently_verified": false,
+                    "measurement_signature_verified": true,
+                    "native_artifact_bytes_identity_verified": true,
+                    "objective_time_verified": false,
+                    "os_metadata_authenticity_verified": false,
+                    "ownership_asserted": false
+                  },
+                  "collector": {
+                    "public_key": {
+                      "crv": "P-256",
+                      "kty": "EC",
+                      "x": "EB18KoLzCFAzRRTIyMKhjethegeeDkyf_zwVGvzicjE",
+                      "y": "LeJDmjSD2zUf-QjS1fA6s1bpcp81iQ_b72G1ld9eVZ8"
+                    },
+                    "world_id": "world:resource-demo-collector"
+                  },
+                  "finished_at": "2026-10-06T00:50:29.318Z",
+                  "measurement_id": "relatte-crossing-v0:0e6e9327bbace133d2403483f194d9415975eceab90ffdf8ff5e0ddf529a8148",
+                  "measurement_source": "node/fs-stat/v1",
+                  "observed": {
+                    "filesystem_allocated_bytes_observed": "8192",
+                    "logical_file_bytes_observed": "7412",
+                    "unit": "bytes"
+                  },
+                  "provenance": {
+                    "capture_mode": "live-local/v1",
+                    "collector_source_sha256": "a6286aa0092cac01ffc3ff823c0a2c336692dcce20696d723bd6ab3a80e16773",
+                    "host_ref": "host:local-resource-demo",
+                    "runtime": "v24.19.0"
+                  },
+                  "scope": {
+                    "association_basis": "collector-declared/v1",
+                    "execution_ref": "execution:resource-demo-worker",
+                    "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                    "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                    "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                  },
+                  "started_at": "2026-10-06T00:50:29.318Z"
+                }
+              ]
+            },
+            "claims": {
+              "aggregate_job_resource_cost_computed": false,
+              "arithmetic_and_signatures_replayed": true,
+              "authority_asserted": false,
+              "economic_value_asserted": false,
+              "observed_history_complete": false,
+              "source_observations_are_attributed": true
+            },
+            "interpretation": "Scoped source observations; overlapping intervals, shared meters and repeated snapshots are retained without summing or selecting an exclusive job cost.",
+            "laws": [
+              "CPU TIME ≠ ENERGY",
+              "PROCESS TIME ≠ EXCLUSIVE WORK",
+              "METER READING ≠ CAUSATION",
+              "MEASUREMENT ≠ ECONOMIC VALUE"
+            ],
+            "replayed_measurement_submissions": 0,
+            "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+            "submitted_observations": 4,
+            "unique_measurements": 4,
+            "unique_replay_receipts": 4,
+            "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+          },
+          "work": {
+            "audience_policy": null,
+            "capability_ref": null,
+            "created_at": "2026-10-06T00:50:29.282Z",
+            "crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db",
+            "declared_kind": "OPAQUE_ORGAN_ARTIFACT",
+            "extensions": {
+              "organ_adapter": {
+                "adapter_id": "relatte-organ-adapter-v0:ce37258942ea03b86d7f5c4a5a7a63e173897b3928c4c44df3033bec0595dc83",
+                "artifact_kind": "merkle-native-mathematical-render",
+                "donor_claims": {
+                  "economic_value_asserted": false,
+                  "ownership_asserted": false,
+                  "result_header": {
+                    "algorithm": "sha256-jcs-pixel-tree/v1",
+                    "counts_root": "567efcf8623812be39155f259b7363859f277910a902fa07577c927f53c75270",
+                    "height": 48,
+                    "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                    "schema": "useful-work.merkle-result/v1",
+                    "width": 64
+                  },
+                  "useful_work_native": {
+                    "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                    "metadata_hash": "6605e9a8db54d180cd8fe0eda53774ea6f9787f7074b1a4715c8cbaa693d15b5",
+                    "presentation_hash": "a1ecc2201f55e466bf486140fa359e653d7067aae2e65414b1755648aa0f0780",
+                    "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                    "schema": "useful-work.merkle-manifest/v1"
+                  }
+                },
+                "donor_contract_ref": "contract:useful-work/julia-q24-merkle-v1",
+                "family_ref": "organ:useful-work/kernel-004",
+                "laws": [
+                  "DONOR SEMANTICS != SUBSTRATE SEMANTICS",
+                  "ADAPTER != DONOR AUTHORITY",
+                  "CROSSING != DONOR INTERPRETATION",
+                  "PAYLOAD TYPE != ADMISSION LAW"
+                ],
+                "schema": "relatte.organ-adapter-descriptor/v0"
+              }
+            },
+            "parents": [],
+            "payload_refs": [
+              {
+                "address": "sha256:cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                "media_type": "application/json",
+                "role": "job-spec"
+              },
+              {
+                "address": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                "media_type": "application/json",
+                "role": "merkle-result"
+              },
+              {
+                "address": "sha256:a1ecc2201f55e466bf486140fa359e653d7067aae2e65414b1755648aa0f0780",
+                "media_type": "image/x-portable-pixmap",
+                "role": "presentation"
+              },
+              {
+                "address": "sha256:6605e9a8db54d180cd8fe0eda53774ea6f9787f7074b1a4715c8cbaa693d15b5",
+                "media_type": "application/json",
+                "role": "execution-metadata"
+              }
+            ],
+            "privacy_policy": null,
+            "protocol_version": "0",
+            "requested_effect": {
+              "authority": "receiver-local",
+              "kind": "candidate-ingress"
+            },
+            "return_address": null,
+            "schema": "relatte.crossing-envelope/v0",
+            "signing": {
+              "algorithm": "ECDSA-P256-SHA256",
+              "domain": "relatte.crossing-signature/v0",
+              "public_key": {
+                "crv": "P-256",
+                "kty": "EC",
+                "x": "OU96elHcnoTKo4Pe0hWmVopKyo31rSbS65YeVq7UoYU",
+                "y": "JT9HwP2Ijs7k3w6rqGWVLbWmt5Phm-Jhs1xGsfXu1IU"
+              },
+              "signature": "myPL3PeDql25CV2gKkYFmV7LKfv5iLfPKk13fzvlRMMXlBn9jn-bsBMh1GHjtuvo8vaTYYpfcYffQOXfDDuDEg"
+            },
+            "source_history_head": null,
+            "source_particular": "particular:useful-work:useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+            "source_world": "world:useful-work-native-worker"
+          }
+        },
+        "valuations": [
+          {
+            "schema": "useful-work.valuation/v1",
+            "context": {
+              "schema": "useful-work.valuation-context/v1",
+              "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+              "job_spec": {
+                "algorithm": "julia-q24/v1",
+                "bounds": {
+                  "max_imag_q": 18874368,
+                  "max_real_q": 25165824,
+                  "min_imag_q": -18874368,
+                  "min_real_q": -25165824
+                },
+                "height": 48,
+                "iterations": 96,
+                "parameters": {
+                  "c_imag_q": 2600468,
+                  "c_real_q": -13421773
+                },
+                "schema": "useful-work.render-job/v1",
+                "seed": 1,
+                "width": 64
+              },
+              "work": {
+                "audience_policy": null,
+                "capability_ref": null,
+                "created_at": "2026-10-06T00:50:29.282Z",
+                "crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db",
+                "declared_kind": "OPAQUE_ORGAN_ARTIFACT",
+                "extensions": {
+                  "organ_adapter": {
+                    "adapter_id": "relatte-organ-adapter-v0:ce37258942ea03b86d7f5c4a5a7a63e173897b3928c4c44df3033bec0595dc83",
+                    "artifact_kind": "merkle-native-mathematical-render",
+                    "donor_claims": {
+                      "economic_value_asserted": false,
+                      "ownership_asserted": false,
+                      "result_header": {
+                        "algorithm": "sha256-jcs-pixel-tree/v1",
+                        "counts_root": "567efcf8623812be39155f259b7363859f277910a902fa07577c927f53c75270",
+                        "height": 48,
+                        "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                        "schema": "useful-work.merkle-result/v1",
+                        "width": 64
+                      },
+                      "useful_work_native": {
+                        "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                        "metadata_hash": "6605e9a8db54d180cd8fe0eda53774ea6f9787f7074b1a4715c8cbaa693d15b5",
+                        "presentation_hash": "a1ecc2201f55e466bf486140fa359e653d7067aae2e65414b1755648aa0f0780",
+                        "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                        "schema": "useful-work.merkle-manifest/v1"
+                      }
+                    },
+                    "donor_contract_ref": "contract:useful-work/julia-q24-merkle-v1",
+                    "family_ref": "organ:useful-work/kernel-004",
+                    "laws": [
+                      "DONOR SEMANTICS != SUBSTRATE SEMANTICS",
+                      "ADAPTER != DONOR AUTHORITY",
+                      "CROSSING != DONOR INTERPRETATION",
+                      "PAYLOAD TYPE != ADMISSION LAW"
+                    ],
+                    "schema": "relatte.organ-adapter-descriptor/v0"
+                  }
+                },
+                "parents": [],
+                "payload_refs": [
+                  {
+                    "address": "sha256:cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                    "media_type": "application/json",
+                    "role": "job-spec"
+                  },
+                  {
+                    "address": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                    "media_type": "application/json",
+                    "role": "merkle-result"
+                  },
+                  {
+                    "address": "sha256:a1ecc2201f55e466bf486140fa359e653d7067aae2e65414b1755648aa0f0780",
+                    "media_type": "image/x-portable-pixmap",
+                    "role": "presentation"
+                  },
+                  {
+                    "address": "sha256:6605e9a8db54d180cd8fe0eda53774ea6f9787f7074b1a4715c8cbaa693d15b5",
+                    "media_type": "application/json",
+                    "role": "execution-metadata"
+                  }
+                ],
+                "privacy_policy": null,
+                "protocol_version": "0",
+                "requested_effect": {
+                  "authority": "receiver-local",
+                  "kind": "candidate-ingress"
+                },
+                "return_address": null,
+                "schema": "relatte.crossing-envelope/v0",
+                "signing": {
+                  "algorithm": "ECDSA-P256-SHA256",
+                  "domain": "relatte.crossing-signature/v0",
+                  "public_key": {
+                    "crv": "P-256",
+                    "kty": "EC",
+                    "x": "OU96elHcnoTKo4Pe0hWmVopKyo31rSbS65YeVq7UoYU",
+                    "y": "JT9HwP2Ijs7k3w6rqGWVLbWmt5Phm-Jhs1xGsfXu1IU"
+                  },
+                  "signature": "myPL3PeDql25CV2gKkYFmV7LKfv5iLfPKk13fzvlRMMXlBn9jn-bsBMh1GHjtuvo8vaTYYpfcYffQOXfDDuDEg"
+                },
+                "source_history_head": null,
+                "source_particular": "particular:useful-work:useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                "source_world": "world:useful-work-native-worker"
+              },
+              "audit": null,
+              "history": null,
+              "resource_claims": [],
+              "canonical_artifact": null,
+              "context_id": "useful-work-valuation-context-v1:20c0e7f4fd5f4baab8e7e7d7a76dae4277b682e6b9f01d8ab873dac017f0bf27"
+            },
+            "policy": {
+              "schema": "useful-work.valuation-policy/v1",
+              "algorithm": "rational-linear-discount/v1",
+              "policy_name": "demo-local-entry-value",
+              "policy_version": 1,
+              "unit": "demo-credit",
+              "allow_self_reported_resources": false,
+              "terms": [
+                {
+                  "metric": "result_entries",
+                  "weight": {
+                    "numerator": "1",
+                    "denominator": "256"
+                  },
+                  "cap": null,
+                  "missing": "reject"
+                }
+              ],
+              "uncertainty_discounts": []
+            },
+            "crossing": {
+              "schema": "relatte.crossing-envelope/v0",
+              "protocol_version": "0",
+              "source_particular": "particular:offer-demo-valuer",
+              "source_world": "world:offer-demo-valuer",
+              "source_history_head": null,
+              "parents": [],
+              "declared_kind": "OPAQUE_ORGAN_ARTIFACT",
+              "payload_refs": [
+                {
+                  "address": "sha256:8c79a0eadafc4bb3c9efda52c79518fc3278749fdbb4cf5dcbc528c7eeb228dc",
+                  "role": "valuation",
+                  "media_type": "application/json"
+                }
+              ],
+              "requested_effect": {
+                "kind": "candidate-ingress",
+                "authority": "receiver-local"
+              },
+              "capability_ref": null,
+              "privacy_policy": null,
+              "audience_policy": null,
+              "return_address": null,
+              "created_at": "2026-10-06T01:18:39.918Z",
+              "extensions": {
+                "organ_adapter": {
+                  "schema": "relatte.organ-adapter-descriptor/v0",
+                  "family_ref": "organ:useful-work/valuation-v1",
+                  "donor_contract_ref": "contract:useful-work/local-valuation-v1",
+                  "artifact_kind": "local-replaceable-valuation-opinion",
+                  "donor_claims": {
+                    "valuation": {
+                      "schema": "useful-work.local-valuation/v1",
+                      "scope": {
+                        "context_id": "useful-work-valuation-context-v1:20c0e7f4fd5f4baab8e7e7d7a76dae4277b682e6b9f01d8ab873dac017f0bf27",
+                        "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                        "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                        "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db",
+                        "audit_id": null,
+                        "history_id": null,
+                        "resource_claim_ids": [],
+                        "policy_id": "useful-work-valuation-policy-v1:32a037911313406c43a00d298d313311b0fdbab377a351fd2716cfea7bd4da95",
+                        "policy_name": "demo-local-entry-value",
+                        "policy_version": 1,
+                        "unit": "demo-credit"
+                      },
+                      "metrics": [
+                        {
+                          "metric": "result_entries",
+                          "value": {
+                            "numerator": "3072",
+                            "denominator": "1"
+                          },
+                          "basis": "canonical-job-bound-to-native-result",
+                          "source_ids": [
+                            "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                          ]
+                        },
+                        {
+                          "metric": "declared_iteration_budget",
+                          "value": {
+                            "numerator": "294912",
+                            "denominator": "1"
+                          },
+                          "basis": "declared-job-upper-bound-not-executed-resource-work",
+                          "source_ids": [
+                            "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                          ]
+                        },
+                        {
+                          "metric": "observed_sample_entries",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "matching_sample_entries",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "observed_sample_coverage",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "observed_challenge_ids",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "mathematical_verifier_keys",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "mathematical_implementation_fingerprints",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "contradictory_sample_entries",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "contradictory_observed_fraction",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "issued_scheduled_slots",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "completed_sample_observation_slots",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "observed_timely_answered_slot_fraction",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "incomplete_schedule_fraction",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "artifact_present_at_evaluation",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "artifact_bytes_present",
+                          "value": null,
+                          "basis": "not-observed",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "full_computation_verified_result",
+                          "value": null,
+                          "basis": "no-full-computation-proof-adapter-in-this-contract",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "proven_cpu_ms",
+                          "value": null,
+                          "basis": "no-resource-measurement-proof-adapter-in-this-contract",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "max_claimed_cpu_ms",
+                          "value": null,
+                          "basis": "maximum-of-signed-self-reported-claims-not-resource-proof",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "max_claimed_energy_millijoules",
+                          "value": null,
+                          "basis": "maximum-of-signed-self-reported-claims-not-resource-proof",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "max_claimed_stored_bytes",
+                          "value": null,
+                          "basis": "maximum-of-signed-self-reported-claims-not-resource-proof",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "max_claimed_served_bytes",
+                          "value": null,
+                          "basis": "maximum-of-signed-self-reported-claims-not-resource-proof",
+                          "source_ids": []
+                        },
+                        {
+                          "metric": "max_claimed_mirrored_bytes",
+                          "value": null,
+                          "basis": "maximum-of-signed-self-reported-claims-not-resource-proof",
+                          "source_ids": []
+                        }
+                      ],
+                      "resource_observations": {
+                        "submitted_claim_count": 0,
+                        "unique_claim_count": 0,
+                        "replayed_claim_submissions": 0,
+                        "conflicting_amounts": []
+                      },
+                      "calculation": {
+                        "terms": [
+                          {
+                            "metric": "result_entries",
+                            "observed_value": {
+                              "numerator": "3072",
+                              "denominator": "1"
+                            },
+                            "effective_value": {
+                              "numerator": "3072",
+                              "denominator": "1"
+                            },
+                            "missing_applied": false,
+                            "cap": null,
+                            "weight": {
+                              "numerator": "1",
+                              "denominator": "256"
+                            },
+                            "contribution": {
+                              "numerator": "12",
+                              "denominator": "1"
+                            }
+                          }
+                        ],
+                        "subtotal": {
+                          "numerator": "12",
+                          "denominator": "1"
+                        },
+                        "nonnegative_subtotal": {
+                          "numerator": "12",
+                          "denominator": "1"
+                        },
+                        "uncertainty_discounts": [],
+                        "combined_discount_factor": {
+                          "numerator": "1",
+                          "denominator": "1"
+                        },
+                        "amount": {
+                          "numerator": "12",
+                          "denominator": "1"
+                        }
+                      },
+                      "claims": {
+                        "local_opinion": true,
+                        "policy_calculation_reproducible": true,
+                        "evidence_signatures_and_bindings_verified": true,
+                        "artifact_structure_checked": false,
+                        "full_computation_verified": false,
+                        "resource_claim_signatures_verified": true,
+                        "resource_measurements_proven": false,
+                        "independent_verifier_execution_proven": false,
+                        "objective_time_verified": false,
+                        "observed_history_complete": false,
+                        "global_price_asserted": false,
+                        "payment_performed": false,
+                        "ownership_transferred": false,
+                        "economic_entitlement_asserted": false,
+                        "authority_asserted": false,
+                        "consensus_asserted": false,
+                        "uncertainty_is_fraud": false
+                      },
+                      "interpretation": "I value this identified evidence at the stated amount under my local policy. Verification replays that policy; it establishes no universal price, correctness, payment, ownership, or economic entitlement.",
+                      "laws": [
+                        "VALUE ≠ TRUTH",
+                        "PRICE ≠ AUTHORITY",
+                        "PAYMENT ≠ OWNERSHIP",
+                        "WORK CLAIM ≠ RESOURCE PROOF",
+                        "AUDIT SUCCESS ≠ ECONOMIC ENTITLEMENT",
+                        "ONE MARKET ≠ UNIVERSAL VALUE"
+                      ]
+                    },
+                    "ownership_asserted": false,
+                    "authority_asserted": false,
+                    "universal_value_asserted": false,
+                    "economic_entitlement_asserted": false
+                  },
+                  "laws": [
+                    "DONOR SEMANTICS != SUBSTRATE SEMANTICS",
+                    "ADAPTER != DONOR AUTHORITY",
+                    "CROSSING != DONOR INTERPRETATION",
+                    "PAYLOAD TYPE != ADMISSION LAW"
+                  ],
+                  "adapter_id": "relatte-organ-adapter-v0:e229c48ef4867da171c544b944fe5d1b7f7c0802b5dd69df3362d05171858353"
+                }
+              },
+              "crossing_id": "relatte-crossing-v0:7ef8ae0608a60d76d256ab18f7f1f7ed631e1766908064fecb08b4e542c76397",
+              "signing": {
+                "algorithm": "ECDSA-P256-SHA256",
+                "public_key": {
+                  "kty": "EC",
+                  "crv": "P-256",
+                  "x": "cmEkzG8t-JqpKNllgvHx3aQZV-GjhwQLiPwBDuzhGmg",
+                  "y": "j7uHkcJJPQOR0vtx_d45E2F4WHAQ1nb2fAkVYt2HmrA"
+                },
+                "signature": "WF6Mc8otdQmEx9agKoMnyO8N0-E3V-ms0ixuOpCz_dSsd8voy3q0Ky32yNVkWxc-499DkBtvyDIaOQzAC5u5Xg",
+                "domain": "relatte.crossing-signature/v0"
+              }
+            },
+            "receipt": {
+              "schema": "relatte.receipt/v0",
+              "crossing_id": "relatte-crossing-v0:7ef8ae0608a60d76d256ab18f7f1f7ed631e1766908064fecb08b4e542c76397",
+              "world_id": "world:offer-demo-valuer",
+              "receiver_particular": "particular:offer-demo-valuer",
+              "kind": "VALUED",
+              "semantic_effect": "none",
+              "contract_ref": "contract:useful-work/local-valuation-v1",
+              "pre_state_ref": null,
+              "post_state_ref": null,
+              "descendant_refs": [],
+              "residual_refs": [],
+              "note": "I value this identified evidence at the stated amount under my local policy. Verification replays that policy; it establishes no universal price, correctness, payment, ownership, or economic entitlement.",
+              "created_at": "2026-10-06T01:18:39.918Z",
+              "extensions": {
+                "useful_work_valuation": {
+                  "schema": "useful-work.local-valuation/v1",
+                  "scope": {
+                    "context_id": "useful-work-valuation-context-v1:20c0e7f4fd5f4baab8e7e7d7a76dae4277b682e6b9f01d8ab873dac017f0bf27",
+                    "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                    "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                    "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db",
+                    "audit_id": null,
+                    "history_id": null,
+                    "resource_claim_ids": [],
+                    "policy_id": "useful-work-valuation-policy-v1:32a037911313406c43a00d298d313311b0fdbab377a351fd2716cfea7bd4da95",
+                    "policy_name": "demo-local-entry-value",
+                    "policy_version": 1,
+                    "unit": "demo-credit"
+                  },
+                  "metrics": [
+                    {
+                      "metric": "result_entries",
+                      "value": {
+                        "numerator": "3072",
+                        "denominator": "1"
+                      },
+                      "basis": "canonical-job-bound-to-native-result",
+                      "source_ids": [
+                        "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                      ]
+                    },
+                    {
+                      "metric": "declared_iteration_budget",
+                      "value": {
+                        "numerator": "294912",
+                        "denominator": "1"
+                      },
+                      "basis": "declared-job-upper-bound-not-executed-resource-work",
+                      "source_ids": [
+                        "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                      ]
+                    },
+                    {
+                      "metric": "observed_sample_entries",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "matching_sample_entries",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "observed_sample_coverage",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "observed_challenge_ids",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "mathematical_verifier_keys",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "mathematical_implementation_fingerprints",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "contradictory_sample_entries",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "contradictory_observed_fraction",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "issued_scheduled_slots",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "completed_sample_observation_slots",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "observed_timely_answered_slot_fraction",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "incomplete_schedule_fraction",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "artifact_present_at_evaluation",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "artifact_bytes_present",
+                      "value": null,
+                      "basis": "not-observed",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "full_computation_verified_result",
+                      "value": null,
+                      "basis": "no-full-computation-proof-adapter-in-this-contract",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "proven_cpu_ms",
+                      "value": null,
+                      "basis": "no-resource-measurement-proof-adapter-in-this-contract",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "max_claimed_cpu_ms",
+                      "value": null,
+                      "basis": "maximum-of-signed-self-reported-claims-not-resource-proof",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "max_claimed_energy_millijoules",
+                      "value": null,
+                      "basis": "maximum-of-signed-self-reported-claims-not-resource-proof",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "max_claimed_stored_bytes",
+                      "value": null,
+                      "basis": "maximum-of-signed-self-reported-claims-not-resource-proof",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "max_claimed_served_bytes",
+                      "value": null,
+                      "basis": "maximum-of-signed-self-reported-claims-not-resource-proof",
+                      "source_ids": []
+                    },
+                    {
+                      "metric": "max_claimed_mirrored_bytes",
+                      "value": null,
+                      "basis": "maximum-of-signed-self-reported-claims-not-resource-proof",
+                      "source_ids": []
+                    }
+                  ],
+                  "resource_observations": {
+                    "submitted_claim_count": 0,
+                    "unique_claim_count": 0,
+                    "replayed_claim_submissions": 0,
+                    "conflicting_amounts": []
+                  },
+                  "calculation": {
+                    "terms": [
+                      {
+                        "metric": "result_entries",
+                        "observed_value": {
+                          "numerator": "3072",
+                          "denominator": "1"
+                        },
+                        "effective_value": {
+                          "numerator": "3072",
+                          "denominator": "1"
+                        },
+                        "missing_applied": false,
+                        "cap": null,
+                        "weight": {
+                          "numerator": "1",
+                          "denominator": "256"
+                        },
+                        "contribution": {
+                          "numerator": "12",
+                          "denominator": "1"
+                        }
+                      }
+                    ],
+                    "subtotal": {
+                      "numerator": "12",
+                      "denominator": "1"
+                    },
+                    "nonnegative_subtotal": {
+                      "numerator": "12",
+                      "denominator": "1"
+                    },
+                    "uncertainty_discounts": [],
+                    "combined_discount_factor": {
+                      "numerator": "1",
+                      "denominator": "1"
+                    },
+                    "amount": {
+                      "numerator": "12",
+                      "denominator": "1"
+                    }
+                  },
+                  "claims": {
+                    "local_opinion": true,
+                    "policy_calculation_reproducible": true,
+                    "evidence_signatures_and_bindings_verified": true,
+                    "artifact_structure_checked": false,
+                    "full_computation_verified": false,
+                    "resource_claim_signatures_verified": true,
+                    "resource_measurements_proven": false,
+                    "independent_verifier_execution_proven": false,
+                    "objective_time_verified": false,
+                    "observed_history_complete": false,
+                    "global_price_asserted": false,
+                    "payment_performed": false,
+                    "ownership_transferred": false,
+                    "economic_entitlement_asserted": false,
+                    "authority_asserted": false,
+                    "consensus_asserted": false,
+                    "uncertainty_is_fraud": false
+                  },
+                  "interpretation": "I value this identified evidence at the stated amount under my local policy. Verification replays that policy; it establishes no universal price, correctness, payment, ownership, or economic entitlement.",
+                  "laws": [
+                    "VALUE ≠ TRUTH",
+                    "PRICE ≠ AUTHORITY",
+                    "PAYMENT ≠ OWNERSHIP",
+                    "WORK CLAIM ≠ RESOURCE PROOF",
+                    "AUDIT SUCCESS ≠ ECONOMIC ENTITLEMENT",
+                    "ONE MARKET ≠ UNIVERSAL VALUE"
+                  ]
+                },
+                "laws": [
+                  "VALUE ≠ TRUTH",
+                  "PRICE ≠ AUTHORITY",
+                  "PAYMENT ≠ OWNERSHIP",
+                  "WORK CLAIM ≠ RESOURCE PROOF",
+                  "AUDIT SUCCESS ≠ ECONOMIC ENTITLEMENT",
+                  "ONE MARKET ≠ UNIVERSAL VALUE"
+                ]
+              },
+              "receipt_id": "relatte-receipt-v0:a3c6d220b06e7fb210a168322c8d45733c3154165c8c8f13264c68c328484024",
+              "signing": {
+                "algorithm": "ECDSA-P256-SHA256",
+                "public_key": {
+                  "kty": "EC",
+                  "crv": "P-256",
+                  "x": "cmEkzG8t-JqpKNllgvHx3aQZV-GjhwQLiPwBDuzhGmg",
+                  "y": "j7uHkcJJPQOR0vtx_d45E2F4WHAQ1nb2fAkVYt2HmrA"
+                },
+                "signature": "CwnUeCFNJtcBPTDDNsBTPiZiFl_giccwlD525FGsw2msUc5bxMPQsgFpuMJeilLGuRl8zG475j2S565f1zvhTw",
+                "domain": "relatte.receipt-signature/v0"
+              }
+            }
+          }
+        ],
+        "evidence_id": "useful-work-offer-evidence-v1:71418e98964a84ade2d6eb5003514bb3ff4ea4b2c6528270bc6e3c5f493cc3c4"
+      },
+      "presentation": {
+        "schema": "relatte.crossing-envelope/v0",
+        "protocol_version": "0",
+        "source_particular": "particular:useful-work:settlement-presentation",
+        "source_world": "world:offer-demo-presenter",
+        "source_history_head": null,
+        "parents": [],
+        "declared_kind": "OPAQUE_ORGAN_ARTIFACT",
+        "payload_refs": [
+          {
+            "address": "sha256:be609f337a05192b3747fbbcefcef879a695a404a01b5f0185f4ebcbe49f6563",
+            "role": "settlement-presentation",
+            "media_type": "application/json"
+          }
+        ],
+        "requested_effect": {
+          "kind": "candidate-ingress",
+          "authority": "receiver-local"
+        },
+        "capability_ref": null,
+        "privacy_policy": null,
+        "audience_policy": null,
+        "return_address": null,
+        "created_at": "2026-10-06T01:18:40.000Z",
+        "extensions": {
+          "organ_adapter": {
+            "schema": "relatte.organ-adapter-descriptor/v0",
+            "family_ref": "organ:useful-work/settlement-presentation-v1",
+            "donor_contract_ref": "contract:useful-work/offer-settlement-v1",
+            "artifact_kind": "settlement-presentation",
+            "donor_claims": {
+              "settlement_presentation": {
+                "schema": "useful-work.offer-presentation/v1",
+                "offer_id": "relatte-crossing-v0:a6d7c05796a89f9c2596e6de8ba36f8ce8e7f6f39d8124f0b30bd72142a63fe5",
+                "acceptance_policy_id": "useful-work-acceptance-policy-v1:92b61cfd23f8227c65a4ed62fdd87c546edea206e4283e3aa219633c1846ba09",
+                "evidence": {
+                  "evidence_id": "useful-work-offer-evidence-v1:71418e98964a84ade2d6eb5003514bb3ff4ea4b2c6528270bc6e3c5f493cc3c4",
+                  "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                  "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db",
+                  "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+                  "audit_id": null,
+                  "audit_history_id": null,
+                  "service_history_id": null,
+                  "resource_bundle_id": "useful-work-resource-bundle-v1:938164a9ab019e8dbe35278e1ca1f841c949c13347ed9f821fcb2496ba532143",
+                  "valuation_ids": [
+                    "relatte-crossing-v0:7ef8ae0608a60d76d256ab18f7f1f7ed631e1766908064fecb08b4e542c76397"
+                  ]
+                },
+                "claims": {
+                  "specific_evidence_presented": true,
+                  "offerer_received_presentation_verified": false,
+                  "obligation_created": false,
+                  "transfer_performed_by_relatte": false,
+                  "transfer_guaranteed": false,
+                  "ownership_transferred": false,
+                  "economic_entitlement_asserted": false,
+                  "universal_finality_asserted": false,
+                  "objective_time_verified": false,
+                  "organizational_independence_verified": false,
+                  "authority_asserted": false,
+                  "consensus_asserted": false
+                }
+              },
+              "ownership_asserted": false,
+              "authority_asserted": false,
+              "economic_value_asserted": false
+            },
+            "laws": [
+              "DONOR SEMANTICS != SUBSTRATE SEMANTICS",
+              "ADAPTER != DONOR AUTHORITY",
+              "CROSSING != DONOR INTERPRETATION",
+              "PAYLOAD TYPE != ADMISSION LAW"
+            ],
+            "adapter_id": "relatte-organ-adapter-v0:f81fb0cb56393f5cfac9ea35df7e0a7b20e12144d33abb3383747c5155a1d978"
+          }
+        },
+        "crossing_id": "relatte-crossing-v0:2ab7d6745dc1f36f173449e868ee915d09a32ea0db2ed52aea24f2dc9595b2ce",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "66Gcwz5x8zfLP4E54GEshqeOd1LomRP8_MvAnIyqLVg",
+            "y": "vRI7wC_hprBh1wrkGeNj60cp2J86HZyTlaOjWr1n1rI"
+          },
+          "signature": "2waPQe-WewW8X_hLDFkA-JgmnpgS3FLkJ-tnGd0mJ-VEngEu5yjALbnLCO9D43v-vsYtieggs6pl7zRDZ4zuOg",
+          "domain": "relatte.crossing-signature/v0"
+        }
+      },
+      "decision": {
+        "schema": "relatte.receipt/v0",
+        "crossing_id": "relatte-crossing-v0:2ab7d6745dc1f36f173449e868ee915d09a32ea0db2ed52aea24f2dc9595b2ce",
+        "world_id": "world:offer-demo-offerer",
+        "receiver_particular": "particular:useful-work:offerer",
+        "kind": "ACCEPT",
+        "semantic_effect": "none",
+        "contract_ref": "contract:useful-work/offer-settlement-v1",
+        "pre_state_ref": null,
+        "post_state_ref": null,
+        "descendant_refs": [],
+        "residual_refs": [],
+        "created_at": "2026-10-06T01:18:40.139Z",
+        "note": "A local offerer decision about this exact presentation. It creates no protocol obligation and performs or guarantees no external transfer.",
+        "extensions": {
+          "useful_work_offer_decision": {
+            "schema": "useful-work.offer-decision/v1",
+            "offer_id": "relatte-crossing-v0:a6d7c05796a89f9c2596e6de8ba36f8ce8e7f6f39d8124f0b30bd72142a63fe5",
+            "presentation_id": "relatte-crossing-v0:2ab7d6745dc1f36f173449e868ee915d09a32ea0db2ed52aea24f2dc9595b2ce",
+            "evidence": {
+              "evidence_id": "useful-work-offer-evidence-v1:71418e98964a84ade2d6eb5003514bb3ff4ea4b2c6528270bc6e3c5f493cc3c4",
+              "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+              "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db",
+              "job_spec_hash": "cec16535b29b3976c44e1b9d4a88ae9a6efed2f8da6c189dea02bae8f3f99e9c",
+              "audit_id": null,
+              "audit_history_id": null,
+              "service_history_id": null,
+              "resource_bundle_id": "useful-work-resource-bundle-v1:938164a9ab019e8dbe35278e1ca1f841c949c13347ed9f821fcb2496ba532143",
+              "valuation_ids": [
+                "relatte-crossing-v0:7ef8ae0608a60d76d256ab18f7f1f7ed631e1766908064fecb08b4e542c76397"
+              ]
+            },
+            "acceptance_policy_id": "useful-work-acceptance-policy-v1:92b61cfd23f8227c65a4ed62fdd87c546edea206e4283e3aa219633c1846ba09",
+            "offerer": {
+              "world_id": "world:offer-demo-offerer",
+              "public_key": {
+                "kty": "EC",
+                "crv": "P-256",
+                "x": "js-2zwIwMDpvv6FcWphDblC6Wc-Ra7PED2Dgn3CYaNg",
+                "y": "7A0yHl4byn6LlsmBGjgtxxp486Y4xjPc33xugT3xiBk"
+              }
+            },
+            "presenter": {
+              "world_id": "world:offer-demo-presenter",
+              "public_key": {
+                "kty": "EC",
+                "crv": "P-256",
+                "x": "66Gcwz5x8zfLP4E54GEshqeOd1LomRP8_MvAnIyqLVg",
+                "y": "vRI7wC_hprBh1wrkGeNj60cp2J86HZyTlaOjWr1n1rI"
+              }
+            },
+            "observed_at": "2026-10-06T01:18:40.139Z",
+            "observation_basis": "signed-offerer-local-claim/v1",
+            "conditions": {
+              "within_offerer_observed_window": true,
+              "eligible_presenter_matched": true,
+              "target_matched": true
+            },
+            "policy_evaluation": {
+              "algorithm": "typed-evidence-all/v1",
+              "checks": [
+                {
+                  "clause_index": 0,
+                  "kind": "resource",
+                  "status": "PASS",
+                  "observed": {
+                    "adapter": "cpu",
+                    "metric": "cpu_time_observed",
+                    "selection": "exists-single-observation/v1",
+                    "observations": [
+                      {
+                        "measurement_id": "relatte-crossing-v0:d42bc029c2cd760af894594346146e348ebc95b4501e55154004f743eb4a945a",
+                        "replay_receipt_ids": [
+                          "relatte-receipt-v0:b6ea40d64c102a65461d14ac95b1739e8264ee68ec543606356ff59a5ad3f895"
+                        ],
+                        "amount": {
+                          "numerator": "70",
+                          "denominator": "1"
+                        },
+                        "admitted_provenance": true,
+                        "matches": true
+                      }
+                    ]
+                  },
+                  "source_ids": [
+                    "relatte-crossing-v0:d42bc029c2cd760af894594346146e348ebc95b4501e55154004f743eb4a945a",
+                    "relatte-receipt-v0:b6ea40d64c102a65461d14ac95b1739e8264ee68ec543606356ff59a5ad3f895"
+                  ]
+                },
+                {
+                  "clause_index": 1,
+                  "kind": "valuation",
+                  "status": "PASS",
+                  "observed": {
+                    "selection": "exists-single-local-valuation/v1",
+                    "observations": [
+                      {
+                        "valuation_id": "relatte-crossing-v0:7ef8ae0608a60d76d256ab18f7f1f7ed631e1766908064fecb08b4e542c76397",
+                        "evaluator": {
+                          "world_id": "world:offer-demo-valuer",
+                          "public_key": {
+                            "kty": "EC",
+                            "crv": "P-256",
+                            "x": "cmEkzG8t-JqpKNllgvHx3aQZV-GjhwQLiPwBDuzhGmg",
+                            "y": "j7uHkcJJPQOR0vtx_d45E2F4WHAQ1nb2fAkVYt2HmrA"
+                          }
+                        },
+                        "policy_id": "useful-work-valuation-policy-v1:32a037911313406c43a00d298d313311b0fdbab377a351fd2716cfea7bd4da95",
+                        "unit": "demo-credit",
+                        "amount": {
+                          "numerator": "12",
+                          "denominator": "1"
+                        },
+                        "matches": true
+                      }
+                    ]
+                  },
+                  "source_ids": [
+                    "relatte-crossing-v0:7ef8ae0608a60d76d256ab18f7f1f7ed631e1766908064fecb08b4e542c76397"
+                  ]
+                }
+              ],
+              "status": "PASS",
+              "claims": {
+                "admitted_evidence_and_thresholds_replayed": true,
+                "observed_history_complete": false,
+                "full_computation_verified": false,
+                "physical_resource_causation_verified": false,
+                "universal_value_asserted": false
+              }
+            },
+            "eligible_for_local_acceptance": true,
+            "choice": "ACCEPT",
+            "reason": "Local policy and observation window passed.",
+            "claims": {
+              "local_decision_issued": true,
+              "policy_replayed": true,
+              "offerer_received_presentation_attributed": true,
+              "payment_observed": false,
+              "credit_ledger_changed": false,
+              "resource_transferred": false,
+              "irrevocable_acceptance_asserted": false,
+              "unique_acceptance_asserted": false,
+              "obligation_created": false,
+              "transfer_performed_by_relatte": false,
+              "transfer_guaranteed": false,
+              "ownership_transferred": false,
+              "economic_entitlement_asserted": false,
+              "universal_finality_asserted": false,
+              "objective_time_verified": false,
+              "organizational_independence_verified": false,
+              "authority_asserted": false,
+              "consensus_asserted": false
+            },
+            "laws": [
+              "VALUATION ≠ OFFER",
+              "OFFER ≠ OBLIGATION",
+              "ACCEPTANCE ≠ PAYMENT",
+              "PAYMENT OBSERVATION ≠ OWNERSHIP",
+              "SETTLEMENT RECEIPT ≠ UNIVERSAL FINALITY"
+            ]
+          }
+        },
+        "receipt_id": "relatte-receipt-v0:156272e5a1e64a1b75d08c1eeca1030c0c0bc19626e4a25000e838cddcda1d28",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "js-2zwIwMDpvv6FcWphDblC6Wc-Ra7PED2Dgn3CYaNg",
+            "y": "7A0yHl4byn6LlsmBGjgtxxp486Y4xjPc33xugT3xiBk"
+          },
+          "signature": "g1VgOqr-rRJ6v16JdWJsYL74LKjsShdlbeVFywxX7kNI-vj9uvS3M3QzO3etYeQ-Weqo6677_1cMBNsEKolDBQ",
+          "domain": "relatte.receipt-signature/v0"
+        }
+      }
+    },
+    "observations": [
+      {
+        "observation": {
+          "schema": "relatte.crossing-envelope/v0",
+          "protocol_version": "0",
+          "source_particular": "particular:useful-work:settlement-observation-credit-ledger",
+          "source_world": "world:offer-demo-ledger-adapter",
+          "source_history_head": null,
+          "parents": [],
+          "declared_kind": "OPAQUE_ORGAN_ARTIFACT",
+          "payload_refs": [
+            {
+              "address": "sha256:4dbf65a47bcffdf1be9daf598a5362565a24807c85b99a64cadf534c2473827a",
+              "role": "settlement-observation-credit-ledger",
+              "media_type": "application/json"
+            }
+          ],
+          "requested_effect": {
+            "kind": "candidate-ingress",
+            "authority": "receiver-local"
+          },
+          "capability_ref": null,
+          "privacy_policy": null,
+          "audience_policy": null,
+          "return_address": null,
+          "created_at": "2026-10-06T01:18:40.468Z",
+          "extensions": {
+            "organ_adapter": {
+              "schema": "relatte.organ-adapter-descriptor/v0",
+              "family_ref": "organ:useful-work/settlement-observation-credit-ledger-v1",
+              "donor_contract_ref": "contract:useful-work/offer-settlement-v1",
+              "artifact_kind": "settlement-observation-credit-ledger",
+              "donor_claims": {
+                "settlement_observation-credit-ledger": {
+                  "schema": "useful-work.credit-ledger-settlement-observation/v1",
+                  "scope": {
+                    "offer_id": "relatte-crossing-v0:a6d7c05796a89f9c2596e6de8ba36f8ce8e7f6f39d8124f0b30bd72142a63fe5",
+                    "presentation_id": "relatte-crossing-v0:2ab7d6745dc1f36f173449e868ee915d09a32ea0db2ed52aea24f2dc9595b2ce",
+                    "decision_id": "relatte-receipt-v0:156272e5a1e64a1b75d08c1eeca1030c0c0bc19626e4a25000e838cddcda1d28",
+                    "evidence_id": "useful-work-offer-evidence-v1:71418e98964a84ade2d6eb5003514bb3ff4ea4b2c6528270bc6e3c5f493cc3c4",
+                    "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                    "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+                  },
+                  "transfer": {
+                    "kind": "credit-ledger",
+                    "system_ref": "external:demo-credit-ledger",
+                    "asset_ref": "asset:demonstration-credit",
+                    "unit": "demo-credit",
+                    "amount": {
+                      "numerator": "12",
+                      "denominator": "1"
+                    },
+                    "from_ref": "demo-account:offerer",
+                    "to_ref": "demo-account:presenter"
+                  },
+                  "record_ref": "demo-entry-1",
+                  "observed_at": "2026-10-06T01:18:40.468Z",
+                  "provenance": {
+                    "record_origin": "operator-import/v1",
+                    "provider_ref": "external:demo-credit-ledger",
+                    "adapter_version": "demo-ledger-reader/v1",
+                    "record_sha256": "e2087f1cd76f8b0249cadbe520626180549933522c1827f5030345e0c484fb3f"
+                  },
+                  "evidence": {
+                    "entry_ref": "demo-entry-1",
+                    "debit": {
+                      "account_ref": "demo-account:offerer",
+                      "before": {
+                        "numerator": "100",
+                        "denominator": "1"
+                      },
+                      "after": {
+                        "numerator": "88",
+                        "denominator": "1"
+                      }
+                    },
+                    "credit": {
+                      "account_ref": "demo-account:presenter",
+                      "before": {
+                        "numerator": "0",
+                        "denominator": "1"
+                      },
+                      "after": {
+                        "numerator": "12",
+                        "denominator": "1"
+                      }
+                    }
+                  },
+                  "measurement_source": "external/credit-ledger-record/v1",
+                  "claims": {
+                    "payment_observed": false,
+                    "credit_ledger_changed": true,
+                    "resource_transferred": false,
+                    "observation_basis": "signed-adapter-record-claim/v1",
+                    "source_record_digest_verified": true,
+                    "ledger_arithmetic_replayed": true,
+                    "provider_authenticity_verified": false,
+                    "physical_delivery_verified": false,
+                    "bank_finality_verified": false,
+                    "legal_discharge_verified": false,
+                    "ledger_persistence_verified": false,
+                    "ownership_verified": false,
+                    "exclusive_job_causation_verified": false,
+                    "obligation_created": false,
+                    "transfer_performed_by_relatte": false,
+                    "transfer_guaranteed": false,
+                    "ownership_transferred": false,
+                    "economic_entitlement_asserted": false,
+                    "universal_finality_asserted": false,
+                    "objective_time_verified": false,
+                    "organizational_independence_verified": false,
+                    "authority_asserted": false,
+                    "consensus_asserted": false
+                  },
+                  "laws": [
+                    "VALUATION ≠ OFFER",
+                    "OFFER ≠ OBLIGATION",
+                    "ACCEPTANCE ≠ PAYMENT",
+                    "PAYMENT OBSERVATION ≠ OWNERSHIP",
+                    "SETTLEMENT RECEIPT ≠ UNIVERSAL FINALITY"
+                  ]
+                },
+                "ownership_asserted": false,
+                "authority_asserted": false,
+                "economic_value_asserted": false
+              },
+              "laws": [
+                "DONOR SEMANTICS != SUBSTRATE SEMANTICS",
+                "ADAPTER != DONOR AUTHORITY",
+                "CROSSING != DONOR INTERPRETATION",
+                "PAYLOAD TYPE != ADMISSION LAW"
+              ],
+              "adapter_id": "relatte-organ-adapter-v0:8a263aefae4006578a1e9323a4f79f7a568940b086f314ad6d25802b5a945917"
+            }
+          },
+          "crossing_id": "relatte-crossing-v0:5d2aca304259bf4bc240da419c8cbaf753b64ad28a3f3be3f24cc8bb19f37dc3",
+          "signing": {
+            "algorithm": "ECDSA-P256-SHA256",
+            "public_key": {
+              "kty": "EC",
+              "crv": "P-256",
+              "x": "xag8z3iBI-mbpEGUcs8VW4dLYffF1sYy505KukJJOc4",
+              "y": "JkCmVBu76YrvV_SZuS37N3D5VaWw7bIpzfHS3QEDBgg"
+            },
+            "signature": "Jru2ui4w7LoUuHKv_b6tuO8ja87a_8C7aa42A97Zy_B_t3ViBYjNH-IaDlqG5XYL7gHUD8ZIhyjayFkJyR_FBw",
+            "domain": "relatte.crossing-signature/v0"
+          }
+        },
+        "receipt": {
+          "schema": "relatte.receipt/v0",
+          "crossing_id": "relatte-crossing-v0:5d2aca304259bf4bc240da419c8cbaf753b64ad28a3f3be3f24cc8bb19f37dc3",
+          "world_id": "world:offer-demo-settlement-replayer",
+          "receiver_particular": "particular:useful-work:settlement-replayer",
+          "kind": "SETTLEMENT_OBSERVED",
+          "semantic_effect": "none",
+          "contract_ref": "contract:useful-work/offer-settlement-v1",
+          "pre_state_ref": null,
+          "post_state_ref": null,
+          "descendant_refs": [],
+          "residual_refs": [],
+          "created_at": "2026-10-06T01:18:40.537Z",
+          "note": "An external adapter observation attributed and replayed against one ACCEPT receipt. No transfer is performed, guaranteed, made exclusive or declared universally final.",
+          "extensions": {
+            "useful_work_settlement": {
+              "schema": "useful-work.settlement-replay/v1",
+              "scope": {
+                "offer_id": "relatte-crossing-v0:a6d7c05796a89f9c2596e6de8ba36f8ce8e7f6f39d8124f0b30bd72142a63fe5",
+                "presentation_id": "relatte-crossing-v0:2ab7d6745dc1f36f173449e868ee915d09a32ea0db2ed52aea24f2dc9595b2ce",
+                "decision_id": "relatte-receipt-v0:156272e5a1e64a1b75d08c1eeca1030c0c0bc19626e4a25000e838cddcda1d28",
+                "evidence_id": "useful-work-offer-evidence-v1:71418e98964a84ade2d6eb5003514bb3ff4ea4b2c6528270bc6e3c5f493cc3c4",
+                "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+                "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+              },
+              "observation_id": "relatte-crossing-v0:5d2aca304259bf4bc240da419c8cbaf753b64ad28a3f3be3f24cc8bb19f37dc3",
+              "adapter": "credit-ledger",
+              "adapter_identity": {
+                "world_id": "world:offer-demo-ledger-adapter",
+                "public_key": {
+                  "kty": "EC",
+                  "crv": "P-256",
+                  "x": "xag8z3iBI-mbpEGUcs8VW4dLYffF1sYy505KukJJOc4",
+                  "y": "JkCmVBu76YrvV_SZuS37N3D5VaWw7bIpzfHS3QEDBgg"
+                }
+              },
+              "measurement_source": "external/credit-ledger-record/v1",
+              "record_ref": "demo-entry-1",
+              "observed_at": "2026-10-06T01:18:40.468Z",
+              "provenance": {
+                "record_origin": "operator-import/v1",
+                "provider_ref": "external:demo-credit-ledger",
+                "adapter_version": "demo-ledger-reader/v1",
+                "record_sha256": "e2087f1cd76f8b0249cadbe520626180549933522c1827f5030345e0c484fb3f"
+              },
+              "observed_transfer": {
+                "kind": "credit-ledger",
+                "system_ref": "external:demo-credit-ledger",
+                "asset_ref": "asset:demonstration-credit",
+                "unit": "demo-credit",
+                "amount": {
+                  "numerator": "12",
+                  "denominator": "1"
+                },
+                "from_ref": "demo-account:offerer",
+                "to_ref": "demo-account:presenter"
+              },
+              "offered_transfer": {
+                "kind": "credit-ledger",
+                "system_ref": "external:demo-credit-ledger",
+                "asset_ref": "asset:demonstration-credit",
+                "unit": "demo-credit",
+                "amount": {
+                  "numerator": "12",
+                  "denominator": "1"
+                },
+                "from_ref": "demo-account:offerer",
+                "to_ref": "demo-account:presenter"
+              },
+              "terms_match": true,
+              "amount_relation": "equal",
+              "claims": {
+                "payment_observed": false,
+                "credit_ledger_changed": true,
+                "resource_transferred": false,
+                "observation_basis": "signed-adapter-record-claim/v1",
+                "source_record_digest_verified": true,
+                "ledger_arithmetic_replayed": true,
+                "provider_authenticity_verified": false,
+                "physical_delivery_verified": false,
+                "bank_finality_verified": false,
+                "legal_discharge_verified": false,
+                "ledger_persistence_verified": false,
+                "ownership_verified": false,
+                "exclusive_job_causation_verified": false,
+                "obligation_created": false,
+                "transfer_performed_by_relatte": false,
+                "transfer_guaranteed": false,
+                "ownership_transferred": false,
+                "economic_entitlement_asserted": false,
+                "universal_finality_asserted": false,
+                "objective_time_verified": false,
+                "organizational_independence_verified": false,
+                "authority_asserted": false,
+                "consensus_asserted": false,
+                "adapter_signature_verified": true,
+                "acceptance_binding_verified": true,
+                "source_execution_verified": false,
+                "exclusive_record_use_verified": false,
+                "offer_fulfilled_asserted": false
+              },
+              "laws": [
+                "VALUATION ≠ OFFER",
+                "OFFER ≠ OBLIGATION",
+                "ACCEPTANCE ≠ PAYMENT",
+                "PAYMENT OBSERVATION ≠ OWNERSHIP",
+                "SETTLEMENT RECEIPT ≠ UNIVERSAL FINALITY"
+              ]
+            }
+          },
+          "receipt_id": "relatte-receipt-v0:ca98a56f78fe57dfb2e4f67e562c56d132bd81bca8aafdbfa13b3ceecf58db75",
+          "signing": {
+            "algorithm": "ECDSA-P256-SHA256",
+            "public_key": {
+              "kty": "EC",
+              "crv": "P-256",
+              "x": "vi2_Yz4EmBAlweXkB_p_Ey9dsy-y7o7AVChC2seJFGQ",
+              "y": "VOe69xzcYV5SgS_suwLCQQhdY2U4MHJ8AkdxiyRlOaU"
+            },
+            "signature": "uZi-cxdLmQNWkfu39-jF0z4IIsiUA4OfVZc-MaXeLC9MKyhHM1-ZtAZ2xgtZ2dHAH3H8tPRQd3g-bIw2dJ-CKA",
+            "domain": "relatte.receipt-signature/v0"
+          }
+        }
+      }
+    ],
+    "summary": {
+      "offer_id": "relatte-crossing-v0:a6d7c05796a89f9c2596e6de8ba36f8ce8e7f6f39d8124f0b30bd72142a63fe5",
+      "presentation_id": "relatte-crossing-v0:2ab7d6745dc1f36f173449e868ee915d09a32ea0db2ed52aea24f2dc9595b2ce",
+      "decision_id": "relatte-receipt-v0:156272e5a1e64a1b75d08c1eeca1030c0c0bc19626e4a25000e838cddcda1d28",
+      "decision": "ACCEPT",
+      "evidence_id": "useful-work-offer-evidence-v1:71418e98964a84ade2d6eb5003514bb3ff4ea4b2c6528270bc6e3c5f493cc3c4",
+      "submitted_observations": 1,
+      "unique_observations": 1,
+      "unique_replay_receipts": 1,
+      "replayed_observation_submissions": 0,
+      "observations": [
+        {
+          "schema": "useful-work.settlement-replay/v1",
+          "scope": {
+            "offer_id": "relatte-crossing-v0:a6d7c05796a89f9c2596e6de8ba36f8ce8e7f6f39d8124f0b30bd72142a63fe5",
+            "presentation_id": "relatte-crossing-v0:2ab7d6745dc1f36f173449e868ee915d09a32ea0db2ed52aea24f2dc9595b2ce",
+            "decision_id": "relatte-receipt-v0:156272e5a1e64a1b75d08c1eeca1030c0c0bc19626e4a25000e838cddcda1d28",
+            "evidence_id": "useful-work-offer-evidence-v1:71418e98964a84ade2d6eb5003514bb3ff4ea4b2c6528270bc6e3c5f493cc3c4",
+            "result_id": "useful-work-merkle-result-v1:e54dc4fd591d2f64c6f6fc17e5d7d25d5c2cfbb25fe869a7c5f81002d5f9ac3c",
+            "work_crossing_id": "relatte-crossing-v0:30c5c212ecddd2c1bd4b832fe9ea3001221745f7fb96674aea406daddcbdd8db"
+          },
+          "observation_id": "relatte-crossing-v0:5d2aca304259bf4bc240da419c8cbaf753b64ad28a3f3be3f24cc8bb19f37dc3",
+          "adapter": "credit-ledger",
+          "adapter_identity": {
+            "world_id": "world:offer-demo-ledger-adapter",
+            "public_key": {
+              "kty": "EC",
+              "crv": "P-256",
+              "x": "xag8z3iBI-mbpEGUcs8VW4dLYffF1sYy505KukJJOc4",
+              "y": "JkCmVBu76YrvV_SZuS37N3D5VaWw7bIpzfHS3QEDBgg"
+            }
+          },
+          "measurement_source": "external/credit-ledger-record/v1",
+          "record_ref": "demo-entry-1",
+          "observed_at": "2026-10-06T01:18:40.468Z",
+          "provenance": {
+            "record_origin": "operator-import/v1",
+            "provider_ref": "external:demo-credit-ledger",
+            "adapter_version": "demo-ledger-reader/v1",
+            "record_sha256": "e2087f1cd76f8b0249cadbe520626180549933522c1827f5030345e0c484fb3f"
+          },
+          "observed_transfer": {
+            "kind": "credit-ledger",
+            "system_ref": "external:demo-credit-ledger",
+            "asset_ref": "asset:demonstration-credit",
+            "unit": "demo-credit",
+            "amount": {
+              "numerator": "12",
+              "denominator": "1"
+            },
+            "from_ref": "demo-account:offerer",
+            "to_ref": "demo-account:presenter"
+          },
+          "offered_transfer": {
+            "kind": "credit-ledger",
+            "system_ref": "external:demo-credit-ledger",
+            "asset_ref": "asset:demonstration-credit",
+            "unit": "demo-credit",
+            "amount": {
+              "numerator": "12",
+              "denominator": "1"
+            },
+            "from_ref": "demo-account:offerer",
+            "to_ref": "demo-account:presenter"
+          },
+          "terms_match": true,
+          "amount_relation": "equal",
+          "claims": {
+            "payment_observed": false,
+            "credit_ledger_changed": true,
+            "resource_transferred": false,
+            "observation_basis": "signed-adapter-record-claim/v1",
+            "source_record_digest_verified": true,
+            "ledger_arithmetic_replayed": true,
+            "provider_authenticity_verified": false,
+            "physical_delivery_verified": false,
+            "bank_finality_verified": false,
+            "legal_discharge_verified": false,
+            "ledger_persistence_verified": false,
+            "ownership_verified": false,
+            "exclusive_job_causation_verified": false,
+            "obligation_created": false,
+            "transfer_performed_by_relatte": false,
+            "transfer_guaranteed": false,
+            "ownership_transferred": false,
+            "economic_entitlement_asserted": false,
+            "universal_finality_asserted": false,
+            "objective_time_verified": false,
+            "organizational_independence_verified": false,
+            "authority_asserted": false,
+            "consensus_asserted": false,
+            "adapter_signature_verified": true,
+            "acceptance_binding_verified": true,
+            "source_execution_verified": false,
+            "exclusive_record_use_verified": false,
+            "offer_fulfilled_asserted": false
+          },
+          "laws": [
+            "VALUATION ≠ OFFER",
+            "OFFER ≠ OBLIGATION",
+            "ACCEPTANCE ≠ PAYMENT",
+            "PAYMENT OBSERVATION ≠ OWNERSHIP",
+            "SETTLEMENT RECEIPT ≠ UNIVERSAL FINALITY"
+          ]
+        }
+      ],
+      "repeated_external_record_labels": [],
+      "interpretation": "Individual externally attributed records. No sums, spend accounting, exclusive record allocation, automatic transfer, obligation discharge or universal settlement status.",
+      "claims": {
+        "signatures_and_local_policy_replayed": true,
+        "presented_inventory_complete": false,
+        "aggregate_paid_amount_computed": false,
+        "record_labels_globally_unique": false,
+        "replay_caused_transfer": false,
+        "offer_fulfilled_asserted": false,
+        "obligation_created": false,
+        "transfer_performed_by_relatte": false,
+        "transfer_guaranteed": false,
+        "ownership_transferred": false,
+        "economic_entitlement_asserted": false,
+        "universal_finality_asserted": false,
+        "objective_time_verified": false,
+        "organizational_independence_verified": false,
+        "authority_asserted": false,
+        "consensus_asserted": false
+      },
+      "laws": [
+        "VALUATION ≠ OFFER",
+        "OFFER ≠ OBLIGATION",
+        "ACCEPTANCE ≠ PAYMENT",
+        "PAYMENT OBSERVATION ≠ OWNERSHIP",
+        "SETTLEMENT RECEIPT ≠ UNIVERSAL FINALITY"
+      ]
+    },
+    "bundle_id": "useful-work-settlement-bundle-v1:ed130249c98ad6b2c21edf59c0d59e1a76a0d2002f80839a2abb1e678c892da9"
+  },
+  "expected": {
+    "bundle_id": "useful-work-settlement-bundle-v1:ed130249c98ad6b2c21edf59c0d59e1a76a0d2002f80839a2abb1e678c892da9",
+    "decision": "ACCEPT",
+    "policy_checks": [
+      "PASS",
+      "PASS"
+    ],
+    "external_observations": [
+      {
+        "adapter": "credit-ledger",
+        "terms_match": true,
+        "amount_relation": "equal"
+      }
+    ]
+  }
+}
