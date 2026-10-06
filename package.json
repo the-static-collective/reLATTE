@@ -16,7 +16,8 @@
     "useful-work-005": "node --experimental-strip-types src/useful_work/cli_005.ts",
     "useful-work-006": "node --experimental-strip-types src/useful_work/cli_006.ts",
     "useful-work-007": "node --experimental-strip-types src/useful_work/cli_007.ts",
-    "useful-work-008": "node --experimental-strip-types src/useful_work/cli_008.ts"
+    "useful-work-008": "node --experimental-strip-types src/useful_work/cli_008.ts",
+    "useful-work-009": "node --experimental-strip-types src/useful_work/cli_009.ts"
   },
   "dependencies": {
     "json-canonicalize": "3.0.1"
