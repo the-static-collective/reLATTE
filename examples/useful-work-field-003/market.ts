@@ -33,10 +33,11 @@ export async function awaitMarketCrossing(peer: Peer, offer: Wire, input: Wire) 
     }));
     const doors=sources.flatMap((s:Wire)=>s.listing?.doors??[]);
     discovery=await discover({run_id:config.run_id,descriptor,evidence,doors,expected_offerers:config.sources.map((s:Wire)=>s.identity),observed_at:now()});
-    await atomic(join(root,'sources.json'),sources);await atomic(join(root,'descriptor.json'),descriptor);await atomic(join(root,'discovery.json'),discovery);
+    await atomic(join(root,'sources.json'),sources);await atomic(join(root,'descriptor.json'),descriptor);
     // A second local query omits E; it neither invalidates E's signed offer nor repairs the first query.
     const narrower=await discover({...discovery.input,doors:doors.filter((d:Wire)=>!equal(signer(d.offer),config.sources.find((s:Wire)=>s.role==='E').identity))});
     await atomic(join(root,'narrow-discovery.json'),narrower);
+    await atomic(join(root,'discovery.json'),discovery);
   }
   await atomic(join(root,'status.json'),{stage:'DISCOVERED',discovery_id:discovery.discovery_id,automatic_selection:false,automatic_crossing:false});
   console.log('DOOR_MARKET_WAITING '+JSON.stringify({root,discovery_id:discovery.discovery_id,doors:discovery.rows.map((r:Wire)=>({door_id:r.door_id,world:r.offerer.world_id,compatibility:r.compatibility}))}));

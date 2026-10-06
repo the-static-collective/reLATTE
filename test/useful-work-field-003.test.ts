@@ -24,6 +24,7 @@ import type { Wire } from '../src/useful_work/settlement/wire.ts';
 import { chooseDoor, crossChosenDoor, discover, inspectChoice, inspectDescriptor, inspectDoor, inspectDoorCrossing, inspectListing,
   publishDescriptor, publishDoor, publishListing, verifyDiscovery } from '../src/useful_work/door_market/model.ts';
 import { marketViewId, verifyMarketView } from '../src/useful_work/door_market/archive.ts';
+import { atomicExclusive } from '../src/useful_work/wire_field/store.ts';
 
 const repo=fileURLToPath(new URL('../',import.meta.url)),base=Date.parse('2026-10-06T00:00:00Z'),at=(n:number)=>new Date(base+n).toISOString();
 async function setup() {
@@ -51,6 +52,19 @@ async function setup() {
 
 describe('Door discovery and sovereign choice',()=>{
   let s:Awaited<ReturnType<typeof setup>>;before(async()=>{s=await setup();});
+  test('concurrent local actions expose one complete immutable JSON value to polling readers',async()=>{
+    const dir=await mkdtemp(join(tmpdir(),'relatte-door-publication-')),path=join(dir,'crossing.json'),padding='evidence'.repeat(131072);
+    let finished=false,observations=0;
+    const reader=(async()=>{while(!finished){try{const v=JSON.parse(await readFile(path,'utf8'));assert.equal(v.padding,padding);assert.ok(Number.isInteger(v.writer)&&v.writer>=0&&v.writer<12);observations++;}catch(error:any){if(error.code!=='ENOENT')throw error;}await new Promise<void>(yes=>setImmediate(yes));}})();
+    try {
+      const results=await Promise.allSettled(Array.from({length:12},(_,writer)=>atomicExclusive(path,{writer,padding})));
+      const deadline=Date.now()+5000;while(observations===0&&Date.now()<deadline)await new Promise<void>(yes=>setImmediate(yes));assert.ok(observations>0);
+      finished=true;await reader;assert.equal(results.filter(r=>r.status==='fulfilled').length,1);
+      for(const r of results)if(r.status==='rejected')assert.equal(r.reason.code,'EEXIST');
+      const retained=await readFile(path,'utf8');assert.equal(JSON.parse(retained).padding,padding);
+      await assert.rejects(atomicExclusive(path,{replacement:true}),{code:'EEXIST'});assert.equal(await readFile(path,'utf8'),retained);
+    }finally{finished=true;await reader;await rm(dir,{recursive:true,force:true});}
+  });
   test('independent policies yield compatible credits/storage and missing compute evidence without ranking or automatic choice',async()=>{
     const d=await verifyDiscovery(s.discovery);assert.equal(d.rows.find(r=>r.offerer.world_id.endsWith(':B'))!.compatibility,'appears-compatible');
     assert.equal(d.rows.find(r=>r.offerer.world_id.endsWith(':E'))!.compatibility,'appears-compatible');assert.equal(d.rows.find(r=>r.offerer.world_id.endsWith(':F'))!.compatibility,'missing-evidence');

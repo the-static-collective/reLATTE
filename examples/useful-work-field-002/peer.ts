@@ -124,7 +124,7 @@ export class Peer {
         const missing = claims.dependencies.filter((d: string) => !seen.has(d));
         if (missing.length) { if (!this.journal.events.some(e => e.kind === 'PENDING' && e.message_id === id)) await this.journal.append('PENDING', id, { missing }); continue; }
         try { await this.handler(m); await this.journal.append('APPLIED', id); }
-        catch (error: any) { await this.journal.append('DOMAIN_FAILURE', id, { error: String(error.message).slice(0,160) }); this.lastError = String(error.message); }
+        catch (error: any) { const reason=String(error.message).slice(0,160);await this.journal.append('DOMAIN_FAILURE', id, { error: reason }); this.lastError = String(error.message);console.error(this.role,'DOMAIN_FAILURE',claims.topic,reason); }
       }
       await this.progress();
     } catch (error: any) { if (this.lastError !== error.message) { this.lastError = error.message; console.error(this.role, error.message); } }

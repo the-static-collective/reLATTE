@@ -1,15 +1,12 @@
-import { open } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { boundedRead, now, readWorkerKeys } from './cli_io.ts';
-import { canonicalBytes } from './job.ts';
 import { equal } from './audit_clock/wire.ts';
 import { signer } from './settlement/wire.ts';
-import { readJson } from './wire_field/store.ts';
+import { atomicExclusive, readJson } from './wire_field/store.ts';
 import { chooseDoor, crossChosenDoor, discover, inspectChoice, verifyDiscovery } from './door_market/model.ts';
 import { verifyMarketView } from './door_market/archive.ts';
 
-async function exclusive(path:string,value:unknown) {const fd=await open(path,'wx',0o600);try{await fd.writeFile(canonicalBytes(value));await fd.sync();}finally{await fd.close();}}
 const assert=(v:unknown,message:string)=>{if(!v)throw new Error(message);};
 async function main(args:string[]) {
   const command=args.shift();
@@ -23,14 +20,14 @@ async function main(args:string[]) {
     assert(config.role==='A'&&equal(keys.publicKeyJwk,signer(d.input.descriptor).public_key),'MARKET_OPERATOR_LOCAL_WORLD_MISMATCH');
     if(command==='choose') {
       assert(args.length===4,'Usage: choose <A-local-root> <exact-discovery-id> <exact-door-id> <local-reason>');
-      const choice=await chooseDoor(d,args[2],args[3],keys,config.peers.A.world_id,now());await exclusive(join(path,'choice.json'),choice);
+      const choice=await chooseDoor(d,args[2],args[3],keys,config.peers.A.world_id,now());await atomicExclusive(join(path,'choice.json'),choice);
       console.log(JSON.stringify({choice_id:choice.crossing_id,crossing_performed:false,acceptance_observed:false}));return;
     }
     assert(args.length===3,'Usage: cross <A-local-root> <exact-discovery-id> <exact-choice-id>');
     const c=await inspectChoice(await readJson(join(path,'choice.json')),d);assert(c.choice.crossing_id===args[2],'MARKET_OPERATOR_CHOICE_ID_MISMATCH');
     assert(equal(c.door.offer.offerer,config.peers.B.keys.primary),'FIELD_003_WIRE_ADAPTER_CONFIGURED_FOR_B_DOOR_ONLY');
     assert(c.door.crossing_endpoint===config.endpoints.B+'/wire','FIELD_003_DOOR_ROUTE_NOT_CONFIGURED');
-    const crossing=await crossChosenDoor(c.choice,d,keys,config.peers.A.world_id,now());await exclusive(join(path,'crossing.json'),crossing);
+    const crossing=await crossChosenDoor(c.choice,d,keys,config.peers.A.world_id,now());await atomicExclusive(join(path,'crossing.json'),crossing);
     console.log(JSON.stringify({intent_id:crossing.intent.crossing_id,presentation_id:crossing.presentation.crossing_id,acceptance_observed:false,transfer_performed:false}));return;
   }
   if(command==='verify') {assert(args.length===1,'Usage: verify <public-local-view.json>');const v=await verifyMarketView(JSON.parse((await boundedRead(args[0],64*1024*1024)).toString('utf8')));console.log(JSON.stringify({view_id:v.view.view_id,summary:v.view.summary},null,2));return;}

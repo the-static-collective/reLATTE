@@ -113,8 +113,9 @@ npm run useful-work-field-003 -- cross output/field-003/trade/A \
   'useful-work-door-discovery-v1:<hex>' 'relatte-crossing-v0:<choice-hex>'
 ```
 
-Choices and crossings use exclusive local files; accidental repeat commands do
-not replace them. IDs are mandatory and there is no first-door or best-price
+Choices and crossings are written and synced before an exclusive atomic link
+publishes them. A polling world can see a complete action or no action, and
+accidental repeat commands do not replace a prior action. IDs are mandatory and there is no first-door or best-price
 default. This driver supports the B crossing adapter; choosing E or F does not
 configure or execute an external resource transfer. The library can construct
 presentations for any observed door, including a negative hint.
