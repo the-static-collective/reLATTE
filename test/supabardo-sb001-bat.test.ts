@@ -294,6 +294,15 @@ test('BAT refuses causal inversion: destination disposition before unresolved WA
   const draft = receiptDraft(b.disposition);
   draft.created_at = '2026-10-06T23:33:30.000Z';
   b.disposition = await sealReceipt(draft, b.destinationKeys);
+
+  // Preserve the receipt chain so the BAT reaches the causal-order gate
+  // instead of correctly failing earlier on a stale EXIT reference.
+  const exitDraft = receiptDraft(b.exit);
+  exitDraft.post_state_ref = b.disposition.receipt_id;
+  exitDraft.extensions.supabardo.destination_disposition_receipt_id =
+    b.disposition.receipt_id;
+  b.exit = await sealReceipt(exitDraft, b.bardoKeys);
+
   await expectRefusal(b, /SB001_CAUSAL_ORDER_VIOLATION/);
 });
 
