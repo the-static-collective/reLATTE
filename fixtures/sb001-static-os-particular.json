@@ -1,0 +1,24 @@
+{
+  "schema": "static.world-receipt/v0",
+  "packet_id": "world-001",
+  "primary_source_sha256": "f89fb653b8122a99f92f7d61931dfb6617fec41ee1426927b2d75e281122c244",
+  "candidate_source_sha256": "41ee7d52a5c14ca41c8a58ee096cb14e35e76c3b78c87637944fa2ac7931da63",
+  "lineage_class": "independent_candidate",
+  "claim_relation": "contradicts",
+  "independence_status": "independent_candidate",
+  "independence_claim_accepted": true,
+  "establishes": [
+    "A WITNESS intake and an additional candidate source were compared.",
+    "Lineage classification: independent_candidate.",
+    "Claim relation was declared as: contradicts.",
+    "The declared source path is a candidate for independent contact because it is direct or measured and does not declare the primary source as an ancestor."
+  ],
+  "does_not_establish": [
+    "The candidate source is correct.",
+    "The primary source is correct.",
+    "Agreement proves truth.",
+    "Contradiction proves independence.",
+    "A candidate independent path has been externally audited."
+  ],
+  "next_door": "Preserve both sources and test the candidate's ancestry declaration or acquire another source without rewriting either record."
+}
