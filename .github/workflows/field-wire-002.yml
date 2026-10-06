@@ -1,0 +1,60 @@
+name: field-wire-002
+
+on:
+  push:
+    branches: [feat/useful-work-field-test-002]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  world:
+    name: World ${{ matrix.role }} on its own runner
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        role: [A, B, C, D, adapter]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - name: Start this world's authenticated wire surface
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 examples/useful-work-field-002/hosted.py bootstrap '${{ matrix.role }}'
+      - name: Publish only the public peer card and endpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: wire002-rendezvous-${{ github.run_attempt }}-${{ matrix.role }}
+          path: ${{ runner.temp }}/wire002-${{ matrix.role }}/rendezvous/
+          retention-days: 1
+      - name: Discover peers from this run's public rendezvous
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 examples/useful-work-field-002/hosted.py rendezvous '${{ matrix.role }}'
+      - name: Advance only this world and replay its local history
+        run: python3 examples/useful-work-field-002/hosted.py serve '${{ matrix.role }}'
+      - name: Preserve this world's public observations
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wire002-local-${{ github.run_attempt }}-${{ matrix.role }}
+          path: |
+            ${{ runner.temp }}/wire002-${{ matrix.role }}/public-local-view.json
+            ${{ runner.temp }}/wire002-${{ matrix.role }}/cuts/
+            ${{ runner.temp }}/wire002-${{ matrix.role }}/public-surfaces.json
+            ${{ runner.temp }}/wire002-${{ matrix.role }}/status.json
+            ${{ runner.temp }}/wire002-${{ matrix.role }}/network-exerciser/journal/
+            ${{ runner.temp }}/wire002-${{ matrix.role }}/proxy-process.log
+            ${{ runner.temp }}/wire002-${{ matrix.role }}/tunnel.log
+          retention-days: 7
+          if-no-files-found: warn

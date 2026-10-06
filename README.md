@@ -537,3 +537,19 @@ records and Node.
 ```sh
 npm run useful-work-field-001 -- run examples/useful-work-001/julia-001.json
 ```
+
+### Useful Work Field Test 002 — Crossing the Wire
+
+The ten-kernel trade can now run through autonomous world services with durable
+signed inbox/outbox histories. Actual HTTP faults exercise delay, disconnect,
+duplicate and out-of-order delivery, retry, a temporary partition, late evidence
+and an unavailable/restarted world. Each world replays its own observations;
+no merged history or trade controller is required.
+
+The [field guide](examples/useful-work-field-002/README.md) includes independent
+host commands, an isolated-container driver and a five-runner cross-machine workflow.
+
+```sh
+npm run useful-work-field-002 -- local examples/useful-work-001/julia-001.json output/field-002-local
+npm run useful-work-field-002 -- verify output/field-002-local/C/public-local-view.json
+```
