@@ -1,0 +1,40 @@
+{
+  "schema": "relatte.receipt/v0",
+  "crossing_id": "relatte-crossing-v0:337e3ecbe4810e88a517d40ba414cdebb7ee1e35a2aa3d028037af0a29b2db26",
+  "world_id": "world:sb001-b",
+  "receiver_particular": "particular:sb001-b",
+  "kind": "R3_ADMIT",
+  "semantic_effect": "sb001-local-constitution",
+  "contract_ref": "relatte:r3-local/v0",
+  "pre_state_ref": "local-state:sb001-b:before",
+  "post_state_ref": "local-state:sb001-b:after",
+  "descendant_refs": [
+    "particular:sb001-b:constituted-world-001"
+  ],
+  "residual_refs": [],
+  "note": "destination B independently admits X under local authority",
+  "created_at": "2026-10-06T23:35:00.000Z",
+  "extensions": {
+    "local_receiver": {
+      "disposition": "ADMIT",
+      "laws": [
+        "RECEIPT != ADMISSION",
+        "HOLD != ADMIT",
+        "AUTHORITY IS LOCAL"
+      ],
+      "supabardo_unresolved_receipt_id": "relatte-receipt-v0:43e847ecfa5b3f1f70d6867dccfc2739ae84eafb620b8b545bf9247c10532693"
+    }
+  },
+  "receipt_id": "relatte-receipt-v0:9ac46374aeec3516b06ec0560756066ce0349eac42c5e51bfb17203fbdf2fb20",
+  "signing": {
+    "algorithm": "ECDSA-P256-SHA256",
+    "public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "0J7Pu_sRe86nLCTPJT6N7QcRGpZRPChVNtlyJK_rv-g",
+      "y": "7iXl3LJ3yrqtXhTCq3QlZ5MWaEmuqyvrgyDOiLywFco"
+    },
+    "domain": "relatte.receipt-signature/v0",
+    "signature": "nJ1GcUNTm4EAHC3ISuD9td3AbuiNUXHM89CV0P_Y9wEZSaq6XK_kGUf7wxpRvnIVt6Azb0L6NUW8kRYORDGm1Q"
+  }
+}
