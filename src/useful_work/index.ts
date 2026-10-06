@@ -20,3 +20,4 @@ export * as valuation from './valuation/index.ts';
 export * as service from './service/index.ts';
 export * as resources from './resources/index.ts';
 export * as settlement from './settlement/index.ts';
+export * as fieldTest from './field_test/index.ts';
