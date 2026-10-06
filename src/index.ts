@@ -40,3 +40,5 @@ export * from './portable-carry.ts';
 export * from './return-envelope.ts';
 
 export * from './static-post-office.ts';
+
+export * from './door-post.ts';
