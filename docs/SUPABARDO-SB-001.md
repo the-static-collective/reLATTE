@@ -118,6 +118,8 @@ to_regclass('sb001_runtime.crossings') = null
 
 The Supabase security advisor reported zero security lints after destruction.
 
+The WITNESS Supabase project was then paused again, returning the host to its pre-experiment dormant posture.
+
 The live database is therefore not required to reconstruct the ceremony.
 
 ## Executable kill test
