@@ -1,0 +1,46 @@
+{
+  "schema": "relatte.receipt/v0",
+  "crossing_id": "relatte-crossing-v0:337e3ecbe4810e88a517d40ba414cdebb7ee1e35a2aa3d028037af0a29b2db26",
+  "world_id": "supabardo:sb001",
+  "receiver_particular": "crossing-field:sb001",
+  "kind": "SB001_UNRESOLVED_INTERVAL",
+  "semantic_effect": "none",
+  "contract_ref": "supabardo:sb001/v0",
+  "pre_state_ref": "relatte-receipt-v0:cc2f84e36cf7b46ac0d8bb4d942e24f34b2a94de7879aa7ac05a5c1b2cd800c7",
+  "post_state_ref": "relatte-crossing-v0:337e3ecbe4810e88a517d40ba414cdebb7ee1e35a2aa3d028037af0a29b2db26",
+  "descendant_refs": [],
+  "residual_refs": [
+    "sha256:56376cad6f1c5f9b3bc671876dddeaf8ad63c90b2f162a11383b68561f51a82f"
+  ],
+  "note": "crossing is present and attributable while destination meaning remains unresolved",
+  "created_at": "2026-10-06T23:34:00.000Z",
+  "extensions": {
+    "supabardo": {
+      "state": "OPEN",
+      "occurrence_classes": [
+        "ENTER",
+        "FORM",
+        "WITNESS",
+        "WAIT"
+      ],
+      "destination_disposition": null,
+      "laws": [
+        "OPEN != ADMITTED",
+        "WITNESS != AUTHORITY",
+        "PRESENCE != ASSENT"
+      ]
+    }
+  },
+  "receipt_id": "relatte-receipt-v0:43e847ecfa5b3f1f70d6867dccfc2739ae84eafb620b8b545bf9247c10532693",
+  "signing": {
+    "algorithm": "ECDSA-P256-SHA256",
+    "public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "eE_gm38eD8Dlcn0sNPL8m69UCH02KtS-8_reOZ-k5Zo",
+      "y": "6epNzzaE-jZSOVlp4w7JQsigpeH96XZoN63CPkcObtM"
+    },
+    "domain": "relatte.receipt-signature/v0",
+    "signature": "RknV-rZMy-2SzQyrQTcHc6jzbQtI9qrl-7BgfUVRiYubtW9wtxmIn2VwOefBZk9aLpq3TFp3WOAsWR3k7qwRuQ"
+  }
+}
