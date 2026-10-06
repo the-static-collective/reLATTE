@@ -519,3 +519,21 @@ ordinary observation and verification never execute a transfer.
 ```sh
 npm run useful-work-010 -- demo
 ```
+
+## Useful Work Field Test 001 — Two Worlds Trade
+
+[Field Test 001](examples/useful-work-field-001/README.md) composes all ten kernels
+through separate actor processes and local key stores. A creates artifacts; B
+offers and locally accepts 12 credits for named audit, serving, resource and
+valuation evidence; a separate Python ledger changes balances; C replays settlement;
+D values the same context at 5. One signed mathematical disagreement and one
+expired serving challenge remain inside the accepted and preserved evidence.
+
+A/B/C/D each verify, copy and HOLD the public archive. No winner, shared truth, universal price,
+global authority or common world state is selected. The live test runs on one Linux
+host with local demonstration credits; portable verification needs only public
+records and Node.
+
+```sh
+npm run useful-work-field-001 -- run examples/useful-work-001/julia-001.json
+```
