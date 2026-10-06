@@ -19,3 +19,4 @@ export * as auditClock from './audit_clock/index.ts';
 export * as valuation from './valuation/index.ts';
 export * as service from './service/index.ts';
 export * as resources from './resources/index.ts';
+export * as settlement from './settlement/index.ts';
