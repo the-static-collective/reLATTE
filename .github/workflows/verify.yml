@@ -596,3 +596,24 @@ jobs:
           name: three-world-post-office-001
           path: three-world-post-office-001.json
 
+
+
+  door-post-001:
+    if: github.ref_name == 'feat/door-post-001' || github.head_ref == 'feat/door-post-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - name: Send one Scripture door under three covers and hold divergent returns
+        run: |
+          set -o pipefail
+          npm run witness:door-post | tee door-post-001.json
+      - name: Upload witness
+        uses: actions/upload-artifact@v4
+        with:
+          name: door-post-001
+          path: door-post-001.json
