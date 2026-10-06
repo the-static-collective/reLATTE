@@ -89,7 +89,7 @@ async function main() {
     allow('B'); const { publishPlan, scheduleSlot } = await import('../../src/useful_work/audit_clock/policy.ts');
     const n = await native(input.packet), b = input.actors.B, c = input.actors.C;
     const policy = { schema: 'useful-work.audit-plan/v1' as const, result_id: n.result_id, work_crossing_id: n.crossing.crossing_id, job_spec_hash: n.header.job_spec_hash,
-      declared_at: now(), sample_count: 6, expires_at: '', schedule: { starts_at: new Date(Date.now() + 5000).toISOString(), cadence_ms: 200, rounds: 2, issue_window_ms: 12000, response_window_ms: 1000 },
+      declared_at: now(), sample_count: 6, expires_at: '', schedule: input.schedule ?? { starts_at: new Date(Date.now() + 5000).toISOString(), cadence_ms: 200, rounds: 2, issue_window_ms: 12000, response_window_ms: 1000 },
       randomness_rule: { schema: 'signed-external-event/v1' as const, source_world: c.keys.randomness.world_id, public_key: c.keys.randomness.public_key, stream_id: 'field-' + input.purpose, first_sequence: 1 },
       challenge_rule: 'kernel-004-fixed-envelope-sha256-plan-slot-event/v1' as const, challenger: b.keys.challenger, observer: b.keys.observer };
     policy.expires_at = scheduleSlot(policy, 1).response_deadline;
@@ -122,8 +122,8 @@ async function main() {
     allow('A'); let context: Awaited<ReturnType<typeof inspectCommitment>> | undefined;
     const server = (await import('../../src/useful_work/service/http.ts')).serviceHttpServer(async () => { if (!context) throw new Error('FIELD_HOST_NOT_COMMITTED'); return context; },
       Buffer.from(input.packet.native.artifact_base64, 'base64'), await key());
-    await new Promise<void>((yes, no) => { server.once('error', no); server.listen(0, '127.0.0.1', () => yes()); });
-    await save({ endpoint: `http://127.0.0.1:${(server.address() as { port: number }).port}/native` }); await ipc('listening');
+    await new Promise<void>((yes, no) => { server.once('error', no); server.listen(input.port ?? 0, input.bind_host ?? '127.0.0.1', () => yes()); });
+    await save({ endpoint: input.public_endpoint ?? `http://127.0.0.1:${(server.address() as { port: number }).port}/native` }); await ipc('listening');
     process.on('message', async (message: any) => {
       if (message?.kind === 'commit') {
         try { const i = await read(message.path); context = await service(i); await ipc('committed'); }
@@ -142,16 +142,17 @@ async function main() {
     const s = await service(input);
     if (command === 'service-publication') { await save(await (await import('../../src/useful_work/service/commitment.ts')).publishService(s, await key('observer'), now())); return; }
     if (command === 'service-issue') { await save(await (await import('../../src/useful_work/service/exchange.ts')).issueServiceChallenge(s, input.publication, input.event, await key('challenger'))); return; }
-    await save(await (await import('../../src/useful_work/service/http.ts')).requestService(s, input.publication, input.event, input.challenge, await key('observer'), 2000)); return;
+    await save(await (await import('../../src/useful_work/service/http.ts')).requestService(s, input.publication, input.event, input.challenge, await key('observer'), input.timeout_ms ?? 2000)); return;
   }
   if (command === 'network-start' || command === 'resource-observation') {
     allow('A'); const { captureNetwork, captureStorage, collectorProvenance } = await import('../../src/useful_work/resources/collectors.ts');
-    if (command === 'network-start') { await json(join(root, 'local/network-start.json'), await captureNetwork('lo')); await save({ captured: true }); return; }
+    if (command === 'network-start') { await json(join(root, 'local/network-start.json'), await captureNetwork(input.interface_name ?? 'lo')); await save({ captured: true }); return; }
     const n = await native(input.packet), cpu = await read(join(root, 'local/cpu.json'));
-    const network = { start: await read(join(root, 'local/network-start.json')), end: await captureNetwork('lo') }, storage = await captureStorage(join(root, 'local/artifact.json'));
+    const networkStart = await read(join(root, 'local/network-start.json'));
+    const network = { start: networkStart, end: await captureNetwork(networkStart.interface_name) }, storage = await captureStorage(join(root, 'local/artifact.json'));
     const { signObservation } = await import('../../src/useful_work/resources/observation.ts'), measurements = [];
     for (const [kind, evidence] of [['cpu', cpu], ['storage', storage], ['network', network]] as const) measurements.push(await signObservation(n, kind, evidence,
-      await collectorProvenance('host:field-same-linux-host'), await key(), world, now(), 'execution:field-A-native-render'));
+      await collectorProvenance(input.host_ref ?? 'host:field-same-linux-host'), await key(), world, now(), 'execution:field-A-native-render'));
     await save(measurements); return;
   }
   if (command === 'resource-replay') {
@@ -175,8 +176,8 @@ async function main() {
   }
   if (command === 'decide') {
     allow('B'); const { decide } = await import('../../src/useful_work/settlement/exchange.ts'), observedAt = now();
-    const decision = await decide(input.offer, input.evidence, input.presentation, 'ACCEPT', observedAt,
-      'Named matching verifiers, two audit slots, one timely service slot, three scoped resource observations and my local valuation pass. Disagreement and expired service remain retained.', await key(), world, now());
+    const decision = await decide(input.offer, input.evidence, input.presentation, input.choice ?? 'ACCEPT', input.observed_at ?? observedAt,
+      input.reason ?? 'Named matching verifiers, two audit slots, one timely service slot, three scoped resource observations and my local valuation pass. Disagreement and expired service remain retained.', await key(), world, now());
     await save({ schema: 'useful-work.offer-exchange/v1', offer: input.offer, evidence: input.evidence, presentation: input.presentation, decision }); return;
   }
   if (command === 'settlement-observe') {
