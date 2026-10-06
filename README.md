@@ -465,3 +465,23 @@ Daily Slice       Haunted Toaster
 The shared substrate is forbidden from learning either donor family's semantics.
 
 > **EDGE ADAPTER != CORE EXCEPTION**
+
+## Useful Work Kernel 008 — Proof of Availability / Serving
+
+[Kernel 008](examples/useful-work-008/README.md) adds host-signed service commitments,
+scheduled native chunk challenges, real HTTP serving and scoped observer receipts.
+Signed inventories retain every planned slot, late responses and earlier cuts.
+
+```text
+result_id + Merkle root + host + endpoint + service window
+  → signed commitment → fresh scheduled challenge
+  → native bytes + inclusion proofs → observer receipt → service history
+```
+
+Chunk proofs and decoded byte counts are replayable. Response observation and timing
+are attributed to the observer. Continuous storage, physical bandwidth, network path
+and host uptime remain explicitly unverified.
+
+```sh
+npm run useful-work-008 -- demo examples/useful-work-001/julia-001.json
+```
