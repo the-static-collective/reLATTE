@@ -553,3 +553,17 @@ host commands, an isolated-container driver and a five-runner cross-machine work
 npm run useful-work-field-002 -- local examples/useful-work-001/julia-001.json output/field-002-local
 npm run useful-work-field-002 -- verify output/field-002-local/C/public-local-view.json
 ```
+
+[Field Test 003 — The Door Market](examples/useful-work-field-003/README.md)
+adds independently published credit, storage, and compute offers, plus a world
+with an empty local listing. A's discovery view replays attributed evidence under
+each policy without ranking, selecting, or sending a presentation. Separate
+`choose` and `cross` commands bind an explicit sovereign choice before the chosen
+B door uses the wire trade and external demonstration ledger. Signed local views
+retain incomplete discovery, missing energy evidence, and dissenting value.
+
+```sh
+npm run useful-work-field-003 -- run examples/useful-work-001/julia-001.json output/field-003
+# Follow the field guide's explicit choose and cross commands in another terminal.
+npm run useful-work-field-003 -- verify output/field-003/trade/A/market/public-local-view.json
+```

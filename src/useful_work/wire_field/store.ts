@@ -1,4 +1,5 @@
-import { mkdir, open, readFile, readdir, rename } from 'node:fs/promises';
+import { mkdir, open, readFile, readdir, rename, link, unlink } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
 import { join, dirname } from 'node:path';
 import { canonicalBytes } from '../job.ts';
 import { now } from '../cli_io.ts';
@@ -11,6 +12,16 @@ export async function atomic(path: string, value: unknown) {
   const temporary = path + '.pending', fd = await open(temporary, 'w', 0o600);
   try { await fd.writeFile(canonicalBytes(value)); await fd.sync(); } finally { await fd.close(); }
   await rename(temporary, path); const dir = await open(dirname(path), 'r'); try { await dir.sync(); } finally { await dir.close(); }
+}
+/** Publish a complete durable local action atomically, without replacing a prior action. */
+export async function atomicExclusive(path: string, value: unknown) {
+  const temporary=path+'.pending-'+randomUUID(),fd=await open(temporary,'wx',0o600);
+  try {
+    try {await fd.writeFile(canonicalBytes(value));await fd.sync();}finally{await fd.close();}
+    // A hard link exposes the complete inode in one operation and rejects an existing target.
+    await link(temporary,path);
+  } finally {await unlink(temporary);}
+  const dir=await open(dirname(path),'r');try{await dir.sync();}finally{await dir.close();}
 }
 export async function readJson(path: string) { return JSON.parse(await readFile(path, 'utf8')); }
 export async function optional(path: string) { try { return await readJson(path); } catch (error: any) { if (error.code === 'ENOENT') return null; throw error; } }

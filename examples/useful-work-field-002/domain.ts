@@ -49,6 +49,12 @@ export class Trade {
   id(topic: string) { return this.peer.first(topic)!.crossing.crossing_id as string; }
   messages(topic: string) { return this.peer.list(topic); }
   async initialize() {
+    if (this.config.door_market && this.role === 'B') {
+      this.peer.marketHandler = async (_req,res) => {
+        const listing = await optional(join(this.config.root,'market/listing.json'));
+        res.writeHead(listing ? 200 : 503, {'content-type':'application/json'}).end(JSON.stringify(listing ?? {error:'No local door publication yet.'}));
+      };
+    }
     if (this.role === 'A') {
       const packet = await this.command('produce','produce',{ job_spec: this.config.job_spec });
       await this.command('network-start','network-start',{ interface_name: this.config.network_interface });
@@ -123,7 +129,8 @@ export class Trade {
       await this.send('resources','resource-bundle',['A','B'],{resources},[this.id('packet')]);
     } else if (m.claims.topic === 'evidence' && this.role==='A') {
       const offer=this.peer.first('offer')!.body;
-      const presentation=await this.command('presentation','present',{offer,evidence:b.evidence});
+      const presentation=this.config.door_market ? await (await import('../useful-work-field-003/market.ts')).awaitMarketCrossing(this.peer,offer,b.evidence) :
+        await this.command('presentation','present',{offer,evidence:b.evidence});
       await this.send('presentation','presentation',['B'],presentation,[this.id('offer'),m.id]);
     } else if (m.claims.topic === 'evidence' && this.role==='D') {
       const dissent=await this.command('dissent','valuate',{packet:this.packet,evidence:b.evidence});
@@ -183,6 +190,12 @@ export class Trade {
       const terms=offerTerms(this.packet,this.config.peers,new Date(Date.now()+this.config.run_timeout_ms).toISOString());
       const offer=await this.command('offer','offer',terms);
       await this.send('offer','offer',['A','C','D','adapter'],offer,[this.id('packet')]);
+    }
+    if(this.config.door_market && !(await optional(join(this.config.root,'market/listing.json')))) {
+      const {publishDoor,publishListing}=await import('../../src/useful_work/door_market/model.ts');
+      const door=await this.peer.once('market-door',()=>publishDoor(this.peer.first('offer')!.body,this.config.endpoints.B+'/wire',this.config.door_market!.run_id,this.peer.keys,this.config.peers.B.world_id,now()));
+      const listing=await publishListing([door],this.config.door_market.run_id,this.peer.keys,this.config.peers.B.world_id,now());
+      await atomic(join(this.config.root,'market/listing.json'),listing);
     }
     if(!this.peer.first('legacy-challenge')) {
       const challenge=await this.command('legacy-challenge','legacy-issue',{packet:this.packet});

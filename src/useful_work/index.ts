@@ -22,3 +22,4 @@ export * as resources from './resources/index.ts';
 export * as settlement from './settlement/index.ts';
 export * as fieldTest from './field_test/index.ts';
 export * as wireField from './wire_field/index.ts';
+export * as doorMarket from './door_market/index.ts';

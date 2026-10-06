@@ -13,12 +13,13 @@ import { atomic, Journal, optional } from '../../src/useful_work/wire_field/stor
 
 export interface PeerConfig { run_id: string; role: WorldRole; root: string; bind_host: string; port: number; peers: Wire; endpoints: Record<WorldRole, string>;
   service_endpoint: string; network_interface: string; issue_window_ms: number; response_window_ms: number; starts_after_ms: number;
-  retry_ms: number; timeout_ms: number; unavailable_ms: number; late_window_ms: number; run_timeout_ms: number; surface: Wire; job_spec: Wire }
+  retry_ms: number; timeout_ms: number; unavailable_ms: number; late_window_ms: number; run_timeout_ms: number; surface: Wire; job_spec: Wire; door_market?: Wire }
 export class Peer {
   readonly messages = new Map<string, Wire>(); readonly journal: Journal; readonly server;
   readonly inFlight = new Set<string>(); private receiving = Promise.resolve(); private applying = false; private flushing = false;
   handler: (message: Wire) => Promise<void> = async () => {}; progress: () => Promise<void> = async () => {};
   nativeHandler?: (req: IncomingMessage, res: ServerResponse) => void;
+  marketHandler?: (req: IncomingMessage, res: ServerResponse) => Promise<void>;
   stopRequested = false; complete = false; private lastError: string | null = null;
   readonly config:PeerConfig; readonly keys:P256KeyMaterial;
   constructor(config: PeerConfig, keys: P256KeyMaterial) {
@@ -28,6 +29,7 @@ export class Peer {
     this.server = createServer(async (req, res) => {
       if (req.url === '/health' && req.method === 'GET') { res.writeHead(200).end(JSON.stringify({ role: config.role, ready: true })); return; }
       if (req.url === '/native' && this.nativeHandler) { this.nativeHandler(req, res); return; }
+      if (req.url === '/doors' && req.method === 'GET' && this.marketHandler) { await this.marketHandler(req, res); return; }
       if (req.url !== '/wire' || req.method !== 'POST') { res.writeHead(404).end(); return; }
       try {
         assert(Number(req.headers['content-length'] ?? 0) <= MAX_WIRE_BYTES, 'WIRE_HTTP_LIMIT'); let size = 0; const chunks: Buffer[] = [];
@@ -122,7 +124,7 @@ export class Peer {
         const missing = claims.dependencies.filter((d: string) => !seen.has(d));
         if (missing.length) { if (!this.journal.events.some(e => e.kind === 'PENDING' && e.message_id === id)) await this.journal.append('PENDING', id, { missing }); continue; }
         try { await this.handler(m); await this.journal.append('APPLIED', id); }
-        catch (error: any) { await this.journal.append('DOMAIN_FAILURE', id, { error: String(error.message).slice(0,160) }); this.lastError = String(error.message); }
+        catch (error: any) { const reason=String(error.message).slice(0,160);await this.journal.append('DOMAIN_FAILURE', id, { error: reason }); this.lastError = String(error.message);console.error(this.role,'DOMAIN_FAILURE',claims.topic,reason); }
       }
       await this.progress();
     } catch (error: any) { if (this.lastError !== error.message) { this.lastError = error.message; console.error(this.role, error.message); } }
@@ -136,7 +138,9 @@ export class Peer {
     const ids = new Set(events.filter(e => ['RECEIVE','SEND_INTENT'].includes(e.kind)).map(e => e.message_id));
     const delivery = await sealLocalView({ run_id: this.config.run_id, role: this.role, peers: this.config.peers, messages: [...this.messages.values()].filter(m => ids.has(m.crossing.crossing_id)), events }, this.keys, now());
     await atomic(join(this.config.root,'cuts',delivery.view.view_id.split(':')[1]+'.json'),delivery);
-    await atomic(join(this.config.root, 'public-local-view.json'), delivery); return delivery;
+    await atomic(join(this.config.root, 'public-local-view.json'), delivery);
+    if(this.config.door_market&&this.role==='A'&&this.complete)await (await import('../useful-work-field-003/market.ts')).preserveMarket(this,delivery);
+    return delivery;
   }
   async quiesce() {while(this.applying||this.inFlight.size)await new Promise(yes=>setTimeout(yes,50));await this.receiving;await this.journal.idle();}
 }
