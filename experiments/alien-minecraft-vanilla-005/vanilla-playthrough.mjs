@@ -86,6 +86,21 @@ async function waitForSpawn(bot) {
 async function go(bot, pos, radius) {
   await bot.pathfinder.goto(new GoalNear(pos.x, pos.y, pos.z, radius));
 }
+
+async function waitForBlock(bot, pos, expectedName, timeoutMs = 10000) {
+  const started = Date.now();
+  while (Date.now() - started < timeoutMs) {
+    const block = bot.blockAt(new Vec3(pos.x, pos.y, pos.z));
+    if (block && block.name === expectedName) return block;
+    await sleep(100);
+  }
+  const finalBlock = bot.blockAt(new Vec3(pos.x, pos.y, pos.z));
+  throw new Error(
+    'CLIENT_BLOCK_SYNC_TIMEOUT:' + expectedName + ':' +
+    pos.x + ',' + pos.y + ',' + pos.z + ':' +
+    (finalBlock && finalBlock.name)
+  );
+}
 function inventoryCount(bot, name) {
   return bot.inventory.items()
     .filter((item) => item.name === name)
@@ -173,10 +188,7 @@ async function main() {
       for (let occurrence = 0; occurrence < counts[nibble]; occurrence += 1) {
         const target = quarryPos(nibble, occurrence);
         await go(bot, target, 1);
-        const block = bot.blockAt(new Vec3(target.x, target.y, target.z));
-        if (!block || block.name !== WOOL[nibble]) {
-          throw new Error('QUARRY_BLOCK_MISMATCH:' + nibble + ':' + occurrence + ':' + (block && block.name));
-        }
+        const block = await waitForBlock(bot, target, WOOL[nibble]);
         const inventoryBefore = inventoryCount(bot, block.name);
         await bot.dig(block);
 
