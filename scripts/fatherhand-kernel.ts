@@ -113,6 +113,7 @@ export async function runFatherHandKernel(): Promise<Record<string, any>> {
     trust,
     succession.successor.public_key,
     orchard.public_key,
+    orchard.world_id,
     'webz-peer-auth',
     '2026-10-08T00:00:00.000Z',
   ))) {
