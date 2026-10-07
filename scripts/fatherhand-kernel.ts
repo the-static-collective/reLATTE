@@ -8,6 +8,7 @@ import {
   delegateOperationalKey,
   issueRecoverySet,
   recoverKidShare,
+  retireFatherHand,
   trustPeerFounder,
   verifyFatherHandFounding,
   verifyFatherHandSuccession,
@@ -27,6 +28,9 @@ export async function runFatherHandKernel(): Promise<Record<string, any>> {
   }
 
   const recovery = await issueRecoverySet(father0, 5, 3);
+  // Simulate the real recovery condition: the original cold secret is gone
+  // before any FatherKid quorum is exercised.
+  retireFatherHand(father0);
   let twoShareRefused = false;
   try {
     const ceremony = await beginRecoveryCeremony(
@@ -130,6 +134,7 @@ export async function runFatherHandKernel(): Promise<Record<string, any>> {
       total: recovery.total,
       threshold: recovery.threshold,
       distinct_lineages: recovery.shares.length,
+      genesis_secret_retired_before_recovery: true,
       two_share_recovery_refused: twoShareRefused,
       child_descendants_recovered_one_lineage: recoveredA.lineage_id === recovery.shares[0].lineage_id,
     },
