@@ -42,6 +42,39 @@ test('FatherHand handle exposes no private-key property and can be explicitly re
   recovered.close();
 });
 
+test('cold-root and FounderNode handles refuse public-field mutation instead of signing contradictory identities', async () => {
+  const father = await createFatherHandGenesis();
+  father.generation = 99;
+  await assert.rejects(
+    () => issueRecoverySet(father, 5, 3),
+    /FATHERHAND_HANDLE_IDENTITY_MISMATCH/,
+  );
+
+  const cleanFather = await createFatherHandGenesis();
+  const founder = await createFounderNode(
+    cleanFather,
+    'webz:the-static-collective/mutation-test',
+    ['webz-world-identity', 'delegate-operational-peer-keys'],
+  );
+  const op = await createOperationalKey();
+  founder.fingerprint = 'foundernode-v0:' + '0'.repeat(64);
+  await assert.rejects(
+    () => delegateOperationalKey(
+      founder,
+      op.public_key,
+      'webz-peer-https',
+      {
+        serial: 1,
+        not_before: '2026-10-07T00:00:00.000Z',
+        not_after: '2027-10-07T00:00:00.000Z',
+        endpoint_constraints: [],
+        replaces_fingerprint: null,
+      },
+    ),
+    /FOUNDERNODE_HANDLE_IDENTITY_MISMATCH/,
+  );
+});
+
 test('FatherHand founds an independently generated FounderNode without parent-key derivation', async () => {
   const father = await createFatherHandGenesis();
   const founder = await createFounderNode(
