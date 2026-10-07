@@ -55,6 +55,10 @@ async function parse(path,max=MAX) {
   validate(isRecord(obj),'ARTIFACT_OBJECT_REQUIRED');
   return obj;
 }
+async function exists(path) {
+  try {await lstat(path);return true;}
+  catch (error) {if (error?.code==='ENOENT') return false; throw error;}
+}
 async function outJson(dir,filename,value) {
   await mkdir(dir,{recursive:true});
   forbid(value);
@@ -193,9 +197,34 @@ export async function processReceiver(inputDir,publicOutputDir,privateRoot,remot
   const rel=relative(normalize(publicOutputDir),normalize(privateRoot));
   validate(rel==='..' || rel.startsWith('..'+String.fromCharCode(47)) ||
     isAbsolute(rel),'PRIVATE_RECEIVER_ROOT_INSIDE_PUBLIC_ARTIFACT');
-  await LocalReceiver.create(privateRoot,{
-    world_id:DST,receiver_particular:RECEIVER,contract_ref:CONTRACT,
-  });
+  const priorConfig=join(privateRoot,'receiver.json');
+  if (await exists(priorConfig)) {
+    const resumed=await LocalReceiver.open(privateRoot);
+    validate(resumed.config.world_id===DST &&
+      resumed.config.receiver_particular===RECEIVER &&
+      resumed.config.contract_ref===CONTRACT,'RECEIVER_ROOT_BELONGS_TO_DIFFERENT_WORLD');
+    const priorPublic=join(publicOutputDir,'orchard-public-receipts.json');
+    if (await exists(priorPublic)) {
+      // Do not mint duplicate source or receiver evidence after a completed
+      // delivery. First verify all public signatures and the held private
+      // receiver bytes through LocalReceiver.open's cold replay.
+      await verifyTransfer(inputDir,publicOutputDir);
+      const packet=await parse(priorPublic,220000);
+      validate(JSON.stringify(packet.source)===JSON.stringify(manifest.source) &&
+        JSON.stringify(packet.receiver)===JSON.stringify(remote),
+        'RETRY_FROM_DIFFERENT_RUNNER_OR_SOURCE');
+      for (const kind of Object.keys(KINDS)) {
+        validate(resumed.getPayloadCustodyReceipt(packets[kind].crossing.crossing_id)?.receipt_id===
+          packet.results[kind].custody_receipt.receipt_id,'RETRY_CONFLICTS_WITH_LOCAL_SIGNED_JOURNAL');
+      }
+      return packet;
+    }
+  } else {
+    validate(!(await exists(privateRoot)),'INCOMPLETE_RECIPIENT_ROOT_NEEDS_OPERATOR_INSPECTION');
+    await LocalReceiver.create(privateRoot,{
+      world_id:DST,receiver_particular:RECEIVER,contract_ref:CONTRACT,
+    });
+  }
   const result={};
   for (const [index,kind] of Object.keys(KINDS).entries()) {
     // The custody-delivery owner opens and appends its own journal event.
