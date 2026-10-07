@@ -273,7 +273,7 @@ export async function observeUdpDatagramSwarm(
     );
 
     return makeObservation(
-      'udp-datagram-swarm' as never,
+      'udp-datagram-swarm',
       `udp-session:${sessionId}:sender-port:${senderAddress.port}:transcript:${transcript}`,
       reconstructed.bytes,
       'application/octet-stream',
