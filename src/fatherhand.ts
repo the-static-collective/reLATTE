@@ -374,8 +374,8 @@ export async function createFounderNode(
   worldId: string,
   scopes: string[],
 ): Promise<FounderNode> {
-  if (typeof worldId !== 'string' || worldId.length < 3 || worldId.length > 256) throw new Error('INVALID_WORLD_ID');
-  const allowedScopes = assertStringArray(scopes, 'INVALID_FOUNDER_SCOPES');
+  const canonicalWorldId = validateWorldId(worldId);
+  const allowedScopes = validateClosedScopes(scopes, FOUNDER_SCOPE_ALLOWLIST, 'INVALID_FOUNDER_SCOPES');
   const keys = await generateP256KeyPair();
   const founderPublic = normalizePublicJwk(keys.publicKeyJwk);
   const statement: Record<string, any> = {
@@ -383,7 +383,7 @@ export async function createFounderNode(
     statement_id: 'pending',
     fatherhand_fingerprint: father.fingerprint,
     fatherhand_generation: father.generation,
-    founder_world_id: worldId,
+    founder_world_id: canonicalWorldId,
     founder_public_key: founderPublic,
     founder_fingerprint: founderNodeFingerprint(founderPublic),
     scopes: allowedScopes,
@@ -404,7 +404,7 @@ export async function createFounderNode(
   );
   assertPublicArtifactSafe(statement);
   const founder: FounderNode = {
-    world_id: worldId,
+    world_id: canonicalWorldId,
     fingerprint: statement.founder_fingerprint,
     public_key: founderPublic,
     founding_statement: statement,
@@ -428,9 +428,9 @@ export async function verifyFatherHandFounding(value: unknown): Promise<boolean>
     ], 'INVALID_FOUNDING_STATEMENT');
     if (statement.schema !== 'fatherhand.founding/v0') return false;
     if (!Number.isSafeInteger(statement.fatherhand_generation) || statement.fatherhand_generation < 0) return false;
-    if (typeof statement.founder_world_id !== 'string' || statement.founder_world_id.length === 0) return false;
+    validateWorldId(statement.founder_world_id);
     validateTimestamp(statement.created_at);
-    assertStringArray(statement.scopes, 'INVALID_FOUNDER_SCOPES');
+    validateClosedScopes(statement.scopes, FOUNDER_SCOPE_ALLOWLIST, 'INVALID_FOUNDER_SCOPES');
     exactKeys(statement.constraints, ['delegation_must_be_scoped'], 'INVALID_FOUNDING_CONSTRAINTS');
     if (statement.constraints.delegation_must_be_scoped !== true) return false;
     const signer = verifySigningObject(statement.signing, FOUNDING_SIGNING_DOMAIN);
