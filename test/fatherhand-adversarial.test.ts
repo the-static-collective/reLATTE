@@ -427,6 +427,43 @@ test('recovery parsing refuses candidate floods and oversized private share enco
   );
 });
 
+test('two-generation recovery chain verifies only when each successor names the observed prior head', async () => {
+  const father0 = await createFatherHandGenesis();
+  const set0 = await issueRecoverySet(father0, 5, 3);
+  const ceremony0 = await beginRecoveryCeremony(
+    { fingerprint: father0.fingerprint, generation: father0.generation, public_key: father0.public_key },
+    set0.shares.slice(0, 3),
+  );
+  const first = await ceremony0.createSuccessor({
+    reason: 'red-team-chain-0-to-1',
+    retained_founder_fingerprints: [],
+    revoked_founder_fingerprints: [],
+    previous_lineage_head: null,
+  });
+
+  const set1 = await issueRecoverySet(first.successor, 5, 3);
+  const ceremony1 = await beginRecoveryCeremony(
+    {
+      fingerprint: first.successor.fingerprint,
+      generation: first.successor.generation,
+      public_key: first.successor.public_key,
+    },
+    set1.shares.slice(0, 3),
+  );
+  const second = await ceremony1.createSuccessor({
+    reason: 'red-team-chain-1-to-2',
+    retained_founder_fingerprints: [],
+    revoked_founder_fingerprints: [],
+    previous_lineage_head: first.statement.statement_id,
+  });
+
+  const verified = await verifyFatherHandSuccessionSet([second.statement, first.statement]);
+  assert.equal(verified.valid, true);
+  assert.equal(verified.current_generation, 2);
+  assert.equal(verified.current_fatherhand_fingerprint, second.successor.fingerprint);
+  assert.equal(verified.lineage_head, second.statement.statement_id);
+});
+
 test('a valid signed successor with an unknown prior head is not accepted as a complete lineage', async () => {
   const father = await createFatherHandGenesis();
   const set = await issueRecoverySet(father, 5, 3);
