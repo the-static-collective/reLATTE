@@ -9,8 +9,14 @@ import { LocalReceiver, sha256Hex, verifyCrossingEnvelope, verifyReceipt } from 
 const ONE_PIXEL_PNG=Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL/nwAAAABJRU5ErkJggg==','base64');
 
-function run(script,args){
-  return new Promise((ok,fail)=>{
+interface RunResult {
+  code: number | null;
+  stdout: string;
+  stderr: string;
+}
+
+function run(script:string,args:string[]):Promise<RunResult>{
+  return new Promise<RunResult>((ok,fail)=>{
     const child=spawn(process.execPath,['--experimental-strip-types',resolve(script),...args],{stdio:['ignore','pipe','pipe']});
     let stdout='',stderr='';
     child.stdout.setEncoding('utf8'); child.stderr.setEncoding('utf8');
@@ -18,7 +24,7 @@ function run(script,args){
     child.once('error',fail); child.once('close',code=>ok({code,stdout,stderr}));
   });
 }
-async function seedFixture(base){
+async function seedFixture(base:string):Promise<{seedRoot:string;seed:any}>{
   const image=join(base,'seed.png'),text=join(base,'seed.txt'),seedRoot=join(base,'seed-root');
   await writeFile(image,ONE_PIXEL_PNG);
   await writeFile(text,'The chest freezer does not hold meat. It holds syllables.\n');
@@ -34,7 +40,7 @@ test('literal PLANT produces admitted local uptake, fresh SVG child crossing and
     const out=join(base,'germinated');
     const planted=await run('scripts/paperchain-plant.mjs',[seedRoot,out,'PLANT']);
     assert.equal(planted.code,0,planted.stderr);
-    const witness=JSON.parse(planted.stdout);
+    const witness:any=JSON.parse(planted.stdout);
     assert.equal(witness.schema,'paperchain.germination-witness/v0');
     assert.equal(witness.consent,'PLANT');
     assert.equal(witness.held_seed_crossing,seed.crossing_id);
@@ -48,9 +54,9 @@ test('literal PLANT produces admitted local uptake, fresh SVG child crossing and
     assert.match(svg.toString('utf8'),/PAPERCHAIN \/ GERMINATION 002/);
     assert.match(svg.toString('utf8'),/PLANTED DESCENDANT/);
 
-    const plant=JSON.parse(await readFile(join(out,'planting-crossing.json'),'utf8'));
-    const admit=JSON.parse(await readFile(join(out,'plant-admit-receipt.json'),'utf8'));
-    const descendant=JSON.parse(await readFile(join(out,'descendant-crossing.json'),'utf8'));
+    const plant:any=JSON.parse(await readFile(join(out,'planting-crossing.json'),'utf8'));
+    const admit:any=JSON.parse(await readFile(join(out,'plant-admit-receipt.json'),'utf8'));
+    const descendant:any=JSON.parse(await readFile(join(out,'descendant-crossing.json'),'utf8'));
     assert.equal(await verifyCrossingEnvelope(plant),true);
     assert.equal(await verifyReceipt(admit),true);
     assert.equal(admit.kind,'R3_ADMIT');
