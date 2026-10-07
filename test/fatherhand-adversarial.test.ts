@@ -269,6 +269,25 @@ test('HTTPS delegation endpoint constraints reject downgrade, credentials, fragm
   }
 });
 
+test('recovery parsing refuses candidate floods and oversized private share encodings before interpolation', async () => {
+  const father = await createFatherHandGenesis();
+  const set = await issueRecoverySet(father, 5, 3);
+
+  await assert.rejects(
+    () => import('../src/fatherhand.ts').then(({ reconstructFatherHand }) =>
+      reconstructFatherHand(Array.from({ length: 256 }, () => set.shares[0]), father.fingerprint)),
+    /RECOVERY_CANDIDATE_LIMIT/,
+  );
+
+  const oversized = structuredClone(set.shares[0]);
+  oversized.share_bytes = 'A'.repeat(4096);
+  await assert.rejects(
+    () => import('../src/fatherhand.ts').then(({ reconstructFatherHand }) =>
+      reconstructFatherHand([oversized, set.shares[1], set.shares[2]], father.fingerprint)),
+    /INVALID_RECOVERY_SHARE_BYTES/,
+  );
+});
+
 test('same recovery set can cryptographically fork offline; set verifier must detect ambiguity', async () => {
   const father = await createFatherHandGenesis();
   const set = await issueRecoverySet(father, 5, 3);
