@@ -1,0 +1,691 @@
+{
+  "schema": "relatte.sovereign-view/v0",
+  "history": {
+    "admin_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+    "records": [
+      {
+        "schema": "relatte.receipt/v0",
+        "crossing_id": "bootstrap:genesis",
+        "world_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+        "receiver_particular": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+        "kind": "RECEIVED",
+        "semantic_effect": "none",
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "extensions": {
+          "bootstrap_journal": {
+            "schema": "relatte.bootstrap-journal/v0",
+            "admin_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+            "kind": "GENESIS",
+            "parent": null,
+            "data": {
+              "scope": "SOVEREIGN_LOCAL_ROOT",
+              "constitution_nonce": "8f56a7de-0d38-4f23-b30b-e5dbd19a6aff"
+            }
+          }
+        },
+        "receipt_id": "relatte-receipt-v0:c689ce7ac2a90c792f6f2f56e89b4a3cddbc57ae0a82ccbce2c377f2c5cc4a9b",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "rE9xVpbcU6DR2Av6KgeYZEMzrnWtlFujD4xKjEa0UGk",
+            "y": "f9-gxwJNbCWdIEdfUDdngbsPD8pRtngB-L1ZlDVWOB4"
+          },
+          "signature": "IuWv89-z16M1BWrHEydLxZyDecDx8dmH4tPZnak-MNWp9AmCYUaoXhWUYbeS16M5F4JB7wpiOw9TeHtfaxm85w",
+          "domain": "relatte.receipt-signature/v0"
+        }
+      },
+      {
+        "schema": "relatte.receipt/v0",
+        "crossing_id": "relatte-receipt-v0:c689ce7ac2a90c792f6f2f56e89b4a3cddbc57ae0a82ccbce2c377f2c5cc4a9b",
+        "world_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+        "receiver_particular": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+        "kind": "RECEIVED",
+        "semantic_effect": "none",
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "extensions": {
+          "bootstrap_journal": {
+            "schema": "relatte.bootstrap-journal/v0",
+            "admin_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+            "kind": "DELEGATE_POLICY",
+            "parent": "relatte-receipt-v0:c689ce7ac2a90c792f6f2f56e89b4a3cddbc57ae0a82ccbce2c377f2c5cc4a9b",
+            "data": {
+              "policy_key": "ba2481ad1da43768ac0175ba3e5019f1a33821f46e56b738915818159361aaac",
+              "slot": "e7d2cb2b-698f-483c-9d4c-4802a44febff",
+              "version": 1,
+              "scope": "ONE_DECLARED_POLICY_SLOT"
+            }
+          }
+        },
+        "receipt_id": "relatte-receipt-v0:7741f2de8ac44839fbddb95f4b1301fc933736df0505f58f8d0f16ea515127ad",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "rE9xVpbcU6DR2Av6KgeYZEMzrnWtlFujD4xKjEa0UGk",
+            "y": "f9-gxwJNbCWdIEdfUDdngbsPD8pRtngB-L1ZlDVWOB4"
+          },
+          "signature": "YdMl6YMmc5rHUH1zvvX_mjmAFNyIUTVI4xrB_Yi-LSl93PzWrGHVhF7UbESqzeZ9DLwPvcQOvttHhS4O7NHmkg",
+          "domain": "relatte.receipt-signature/v0"
+        }
+      },
+      {
+        "schema": "relatte.receipt/v0",
+        "crossing_id": "relatte-receipt-v0:7741f2de8ac44839fbddb95f4b1301fc933736df0505f58f8d0f16ea515127ad",
+        "world_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+        "receiver_particular": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+        "kind": "RECEIVED",
+        "semantic_effect": "none",
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "extensions": {
+          "bootstrap_journal": {
+            "schema": "relatte.bootstrap-journal/v0",
+            "admin_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+            "kind": "SELECT_POLICY",
+            "parent": "relatte-receipt-v0:7741f2de8ac44839fbddb95f4b1301fc933736df0505f58f8d0f16ea515127ad",
+            "data": {
+              "claim_id": "relatte-receipt-v0:cfaf1f269940e932f49c3d72f08dd1dadd93f06aef9015a7aabe6947aadb6f4f"
+            }
+          }
+        },
+        "receipt_id": "relatte-receipt-v0:b0c5b4d3261bf5dcc33ab4b73c298c5d6503444e0f97a594b851d15cc41f0203",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "rE9xVpbcU6DR2Av6KgeYZEMzrnWtlFujD4xKjEa0UGk",
+            "y": "f9-gxwJNbCWdIEdfUDdngbsPD8pRtngB-L1ZlDVWOB4"
+          },
+          "signature": "F9RgX_8TcIIe_rsjoU82_ih8bce-23OuD6IT7pB2SsOXh2h7_sRPTn0QG2F1neXcTsHPXdXQ2TvIq_oMBr56mA",
+          "domain": "relatte.receipt-signature/v0"
+        }
+      }
+    ]
+  },
+  "archive": [
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "bootstrap:genesis",
+      "world_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+      "receiver_particular": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_journal": {
+          "schema": "relatte.bootstrap-journal/v0",
+          "admin_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+          "kind": "GENESIS",
+          "parent": null,
+          "data": {
+            "scope": "SOVEREIGN_LOCAL_ROOT",
+            "constitution_nonce": "8f56a7de-0d38-4f23-b30b-e5dbd19a6aff"
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:c689ce7ac2a90c792f6f2f56e89b4a3cddbc57ae0a82ccbce2c377f2c5cc4a9b",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "rE9xVpbcU6DR2Av6KgeYZEMzrnWtlFujD4xKjEa0UGk",
+          "y": "f9-gxwJNbCWdIEdfUDdngbsPD8pRtngB-L1ZlDVWOB4"
+        },
+        "signature": "IuWv89-z16M1BWrHEydLxZyDecDx8dmH4tPZnak-MNWp9AmCYUaoXhWUYbeS16M5F4JB7wpiOw9TeHtfaxm85w",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-receipt-v0:c689ce7ac2a90c792f6f2f56e89b4a3cddbc57ae0a82ccbce2c377f2c5cc4a9b",
+      "world_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+      "receiver_particular": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_journal": {
+          "schema": "relatte.bootstrap-journal/v0",
+          "admin_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+          "kind": "DELEGATE_POLICY",
+          "parent": "relatte-receipt-v0:c689ce7ac2a90c792f6f2f56e89b4a3cddbc57ae0a82ccbce2c377f2c5cc4a9b",
+          "data": {
+            "policy_key": "ba2481ad1da43768ac0175ba3e5019f1a33821f46e56b738915818159361aaac",
+            "slot": "e7d2cb2b-698f-483c-9d4c-4802a44febff",
+            "version": 1,
+            "scope": "ONE_DECLARED_POLICY_SLOT"
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:7741f2de8ac44839fbddb95f4b1301fc933736df0505f58f8d0f16ea515127ad",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "rE9xVpbcU6DR2Av6KgeYZEMzrnWtlFujD4xKjEa0UGk",
+          "y": "f9-gxwJNbCWdIEdfUDdngbsPD8pRtngB-L1ZlDVWOB4"
+        },
+        "signature": "YdMl6YMmc5rHUH1zvvX_mjmAFNyIUTVI4xrB_Yi-LSl93PzWrGHVhF7UbESqzeZ9DLwPvcQOvttHhS4O7NHmkg",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-receipt-v0:7741f2de8ac44839fbddb95f4b1301fc933736df0505f58f8d0f16ea515127ad",
+      "world_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+      "receiver_particular": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_journal": {
+          "schema": "relatte.bootstrap-journal/v0",
+          "admin_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+          "kind": "SELECT_POLICY",
+          "parent": "relatte-receipt-v0:7741f2de8ac44839fbddb95f4b1301fc933736df0505f58f8d0f16ea515127ad",
+          "data": {
+            "claim_id": "relatte-receipt-v0:cfaf1f269940e932f49c3d72f08dd1dadd93f06aef9015a7aabe6947aadb6f4f"
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:b0c5b4d3261bf5dcc33ab4b73c298c5d6503444e0f97a594b851d15cc41f0203",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "rE9xVpbcU6DR2Av6KgeYZEMzrnWtlFujD4xKjEa0UGk",
+          "y": "f9-gxwJNbCWdIEdfUDdngbsPD8pRtngB-L1ZlDVWOB4"
+        },
+        "signature": "F9RgX_8TcIIe_rsjoU82_ih8bce-23OuD6IT7pB2SsOXh2h7_sRPTn0QG2F1neXcTsHPXdXQ2TvIq_oMBr56mA",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "bootstrap:policy:e7d2cb2b-698f-483c-9d4c-4802a44febff",
+      "world_id": "policy:P",
+      "receiver_particular": "policy:P",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_policy": {
+          "schema": "relatte.bootstrap-policy/v0",
+          "slot": "e7d2cb2b-698f-483c-9d4c-4802a44febff",
+          "version": 1,
+          "scope": "ONE_RULE_FOR_BOTH_ADMINS",
+          "basis_heads": [
+            "relatte-receipt-v0:7741f2de8ac44839fbddb95f4b1301fc933736df0505f58f8d0f16ea515127ad"
+          ],
+          "terms": {
+            "handoff_rule": "SOURCE_MAY_SELF_ADMIT"
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:cfaf1f269940e932f49c3d72f08dd1dadd93f06aef9015a7aabe6947aadb6f4f",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "9pSZW-aC2hFCUxzux3mYbHDr7asUGZTlKwb4e8138EI",
+          "y": "zu7G_OgP0yE_55A-IdMqcenhDwjUet_y8UXcjDw3O78"
+        },
+        "signature": "TL4WoOBfeYasnm5LA6VLxNO-FC_1RiRtkob3Sf3DGSN7zrcRbzyGNkNI9vzfH3WCQYAvIi9mwKVcm_7fz1Ctpw",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-receipt-v0:b0c5b4d3261bf5dcc33ab4b73c298c5d6503444e0f97a594b851d15cc41f0203",
+      "world_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+      "receiver_particular": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_journal": {
+          "schema": "relatte.bootstrap-journal/v0",
+          "admin_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+          "kind": "OBSERVE_CONFLICT",
+          "parent": "relatte-receipt-v0:b0c5b4d3261bf5dcc33ab4b73c298c5d6503444e0f97a594b851d15cc41f0203",
+          "data": {
+            "claim_ids": [
+              "relatte-receipt-v0:7e6ad7c64664a88c45a69abfcb67eb1fdb5d014f560f776699291a343ad60cae",
+              "relatte-receipt-v0:cfaf1f269940e932f49c3d72f08dd1dadd93f06aef9015a7aabe6947aadb6f4f"
+            ]
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:fd515f2e767be3d2b5b7816f89b28e41cc97b51b8504cca8f0a14a54244b2f75",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "rE9xVpbcU6DR2Av6KgeYZEMzrnWtlFujD4xKjEa0UGk",
+          "y": "f9-gxwJNbCWdIEdfUDdngbsPD8pRtngB-L1ZlDVWOB4"
+        },
+        "signature": "ZOKQu86zI2f8XSAkrSH-bk0UCMd5VyKJG__sQUgJEuCjxLPU7bGHclip_dGTag6TfUap6ro-7ZDCI_GLkcOuMw",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "bootstrap:genesis",
+      "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_journal": {
+          "schema": "relatte.bootstrap-journal/v0",
+          "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+          "kind": "GENESIS",
+          "parent": null,
+          "data": {
+            "scope": "SOVEREIGN_LOCAL_ROOT",
+            "constitution_nonce": "d93f954f-a6f4-4c48-849a-a3fa777f5126"
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+          "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+        },
+        "signature": "04-tY2O264SdZ1plMXUqBVMr4n2pkFr2HFD3Q-Pv6em4xO7WdQK66u9SuUZalKEc0AikhDAAiPyMCGl_vfJVig",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+      "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_journal": {
+          "schema": "relatte.bootstrap-journal/v0",
+          "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+          "kind": "DELEGATE_POLICY",
+          "parent": "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+          "data": {
+            "policy_key": "ba2481ad1da43768ac0175ba3e5019f1a33821f46e56b738915818159361aaac",
+            "slot": "e7d2cb2b-698f-483c-9d4c-4802a44febff",
+            "version": 1,
+            "scope": "ONE_DECLARED_POLICY_SLOT"
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:2442da86c4fb00e5c329c3404c6acdae7996c5290ff3c7f17d179f6ed3424fc3",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+          "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+        },
+        "signature": "W7mDfJCBk_G0fYE-yvch0BtSvXGUs_v7JeD3wPvGQhLtMT0UzNBoRCNqobRGA8zOHDubAKVrdCeF2KovEvTyJQ",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-receipt-v0:2442da86c4fb00e5c329c3404c6acdae7996c5290ff3c7f17d179f6ed3424fc3",
+      "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_journal": {
+          "schema": "relatte.bootstrap-journal/v0",
+          "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+          "kind": "SELECT_POLICY",
+          "parent": "relatte-receipt-v0:2442da86c4fb00e5c329c3404c6acdae7996c5290ff3c7f17d179f6ed3424fc3",
+          "data": {
+            "claim_id": "relatte-receipt-v0:7e6ad7c64664a88c45a69abfcb67eb1fdb5d014f560f776699291a343ad60cae"
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:4a047ab3265791ef44e6f063dfcb6a50ec285fee4b08a047b09723338038ff40",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+          "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+        },
+        "signature": "hQ_naknusrK4wZjQLymoLS2-L4XXnNCeCnwBu64HlGnjEa5k7ude6ZEW25U2I5u5QWi0ImmF9TeU_rwRkBNCDw",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-receipt-v0:4a047ab3265791ef44e6f063dfcb6a50ec285fee4b08a047b09723338038ff40",
+      "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_journal": {
+          "schema": "relatte.bootstrap-journal/v0",
+          "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+          "kind": "OBSERVE_CONFLICT",
+          "parent": "relatte-receipt-v0:4a047ab3265791ef44e6f063dfcb6a50ec285fee4b08a047b09723338038ff40",
+          "data": {
+            "claim_ids": [
+              "relatte-receipt-v0:7e6ad7c64664a88c45a69abfcb67eb1fdb5d014f560f776699291a343ad60cae",
+              "relatte-receipt-v0:cfaf1f269940e932f49c3d72f08dd1dadd93f06aef9015a7aabe6947aadb6f4f"
+            ]
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:2165dcb8833ff8ebf72678607ac341094ea009d85eda99b0f873f1927ace628a",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+          "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+        },
+        "signature": "v4FONC62fbF_BphpzxVhSWTLErJxEz7IkfoIf3ZEu7bhXoHMl6yP9ls5QOmh70ssw_jKcwvQhtQzyLim7dYvfw",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "bootstrap:policy:e7d2cb2b-698f-483c-9d4c-4802a44febff",
+      "world_id": "policy:P",
+      "receiver_particular": "policy:P",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_policy": {
+          "schema": "relatte.bootstrap-policy/v0",
+          "slot": "e7d2cb2b-698f-483c-9d4c-4802a44febff",
+          "version": 1,
+          "scope": "ONE_RULE_FOR_BOTH_ADMINS",
+          "basis_heads": [
+            "relatte-receipt-v0:2442da86c4fb00e5c329c3404c6acdae7996c5290ff3c7f17d179f6ed3424fc3"
+          ],
+          "terms": {
+            "handoff_rule": "RECEIVER_MUST_ATTEST"
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:7e6ad7c64664a88c45a69abfcb67eb1fdb5d014f560f776699291a343ad60cae",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "9pSZW-aC2hFCUxzux3mYbHDr7asUGZTlKwb4e8138EI",
+          "y": "zu7G_OgP0yE_55A-IdMqcenhDwjUet_y8UXcjDw3O78"
+        },
+        "signature": "y_JCMRiUamNePggI0BDVLZkkPix3XuckjOr3c90Z6O8pvfgZAGDbVrCpMMLIINkrfSANUzWcmdogNx8RGAnySA",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "bootstrap:join:[\"relatte-receipt-v0:2165dcb8833ff8ebf72678607ac341094ea009d85eda99b0f873f1927ace628a\",\"relatte-receipt-v0:fd515f2e767be3d2b5b7816f89b28e41cc97b51b8504cca8f0a14a54244b2f75\"]",
+      "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_proposal": {
+          "schema": "relatte.bootstrap-proposal/v0",
+          "proposal_nonce": "f976f5ee-27bb-4452-9900-052829b2bd2a",
+          "slot": "e7d2cb2b-698f-483c-9d4c-4802a44febff",
+          "version": 2,
+          "participants": [
+            {
+              "admin_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+              "key": "d4d6f301b5afb806238fff4fd9b3b4cfb69fdda7f3da36c99582adc0aadbfca2",
+              "genesis_id": "relatte-receipt-v0:c689ce7ac2a90c792f6f2f56e89b4a3cddbc57ae0a82ccbce2c377f2c5cc4a9b",
+              "head_id": "relatte-receipt-v0:fd515f2e767be3d2b5b7816f89b28e41cc97b51b8504cca8f0a14a54244b2f75",
+              "prior_policy_id": "relatte-receipt-v0:cfaf1f269940e932f49c3d72f08dd1dadd93f06aef9015a7aabe6947aadb6f4f"
+            },
+            {
+              "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+              "key": "40390871741258b25e73797699c95b57b1de8dafbb75e1b5aa675812191065c9",
+              "genesis_id": "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+              "head_id": "relatte-receipt-v0:2165dcb8833ff8ebf72678607ac341094ea009d85eda99b0f873f1927ace628a",
+              "prior_policy_id": "relatte-receipt-v0:7e6ad7c64664a88c45a69abfcb67eb1fdb5d014f560f776699291a343ad60cae"
+            }
+          ],
+          "conflict_ids": [
+            "relatte-receipt-v0:7e6ad7c64664a88c45a69abfcb67eb1fdb5d014f560f776699291a343ad60cae",
+            "relatte-receipt-v0:cfaf1f269940e932f49c3d72f08dd1dadd93f06aef9015a7aabe6947aadb6f4f"
+          ],
+          "terms": {
+            "scope": "FUTURE_CROSS_ADMIN_HANDOFFS",
+            "quorum": 2,
+            "membership": "EXACT_EDGE_PARTICIPANTS",
+            "root_import": false,
+            "history_rewrite": false
+          },
+          "activation": "AFTER_BOTH_LOCAL_ADMISSIONS",
+          "history_mode": "RETAIN_BOTH_UNCHANGED"
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:a6b02431f77a5e5db19df8ea6cf66493012c477d5139e622e7633ee1de5b4564",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+          "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+        },
+        "signature": "fslr4AqwZp7pcB0OMNCyGtEAET4sNvGMK-TYDA8yyiqGGUHReuhrq2p_6nQA3_NBJ0IyGoBvGK6LHeGy2ppQ8g",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "bootstrap:join:[\"relatte-receipt-v0:2165dcb8833ff8ebf72678607ac341094ea009d85eda99b0f873f1927ace628a\",\"relatte-receipt-v0:fd515f2e767be3d2b5b7816f89b28e41cc97b51b8504cca8f0a14a54244b2f75\"]",
+      "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_proposal": {
+          "schema": "relatte.bootstrap-proposal/v0",
+          "proposal_nonce": "16618f5e-691a-42d5-b9fd-401af46ac4e3",
+          "slot": "e7d2cb2b-698f-483c-9d4c-4802a44febff",
+          "version": 2,
+          "participants": [
+            {
+              "admin_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+              "key": "d4d6f301b5afb806238fff4fd9b3b4cfb69fdda7f3da36c99582adc0aadbfca2",
+              "genesis_id": "relatte-receipt-v0:c689ce7ac2a90c792f6f2f56e89b4a3cddbc57ae0a82ccbce2c377f2c5cc4a9b",
+              "head_id": "relatte-receipt-v0:fd515f2e767be3d2b5b7816f89b28e41cc97b51b8504cca8f0a14a54244b2f75",
+              "prior_policy_id": "relatte-receipt-v0:cfaf1f269940e932f49c3d72f08dd1dadd93f06aef9015a7aabe6947aadb6f4f"
+            },
+            {
+              "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+              "key": "40390871741258b25e73797699c95b57b1de8dafbb75e1b5aa675812191065c9",
+              "genesis_id": "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+              "head_id": "relatte-receipt-v0:2165dcb8833ff8ebf72678607ac341094ea009d85eda99b0f873f1927ace628a",
+              "prior_policy_id": "relatte-receipt-v0:7e6ad7c64664a88c45a69abfcb67eb1fdb5d014f560f776699291a343ad60cae"
+            }
+          ],
+          "conflict_ids": [
+            "relatte-receipt-v0:7e6ad7c64664a88c45a69abfcb67eb1fdb5d014f560f776699291a343ad60cae",
+            "relatte-receipt-v0:cfaf1f269940e932f49c3d72f08dd1dadd93f06aef9015a7aabe6947aadb6f4f"
+          ],
+          "terms": {
+            "scope": "FUTURE_CROSS_ADMIN_HANDOFFS",
+            "quorum": 2,
+            "membership": "EXACT_EDGE_PARTICIPANTS",
+            "root_import": false,
+            "history_rewrite": false
+          },
+          "activation": "AFTER_BOTH_LOCAL_ADMISSIONS",
+          "history_mode": "RETAIN_BOTH_UNCHANGED"
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:296dc83fd03af0a18d6bcd5a5c3ea4cb7e9bcd3b2b5a4343e37c2580e53d8288",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+          "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+        },
+        "signature": "QsftpvgsbKDxhU2t4tE2e6s5M0eJJpvXAyIZ86R0PS686PfhnZL6niawfT-DE8Ajr1se8v4LEQlw_HWSRhU3dA",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-receipt-v0:a6b02431f77a5e5db19df8ea6cf66493012c477d5139e622e7633ee1de5b4564",
+      "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_decision": {
+          "schema": "relatte.bootstrap-local-decision/v0",
+          "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+          "proposal_id": "relatte-receipt-v0:a6b02431f77a5e5db19df8ea6cf66493012c477d5139e622e7633ee1de5b4564",
+          "base_head": "relatte-receipt-v0:2165dcb8833ff8ebf72678607ac341094ea009d85eda99b0f873f1927ace628a",
+          "local_genesis": "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+          "peer_key": "d4d6f301b5afb806238fff4fd9b3b4cfb69fdda7f3da36c99582adc0aadbfca2",
+          "peer_genesis": "relatte-receipt-v0:c689ce7ac2a90c792f6f2f56e89b4a3cddbc57ae0a82ccbce2c377f2c5cc4a9b",
+          "decision": "ADMIT",
+          "scope": "THIS_FUTURE_POLICY_EDGE_ONLY",
+          "selection_basis": "EXPLICIT_LOCAL_ROOT_DECISION",
+          "decision_nonce": "46e7cb70-a02d-447c-81ee-e9781ee2e6de"
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:47e513eecca3ff77c2fc19b4a56d4c9a7297e51def5ba255dbb5a60119ba1abc",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+          "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+        },
+        "signature": "IXEvKj95oCNt_8mh6DVRQ-QEiKAF3ZuvPj-L_p00jgC9iI1YIWdiaH8YrkkdkiCzasvpf0O0sY_MSxiO9P10cg",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-receipt-v0:296dc83fd03af0a18d6bcd5a5c3ea4cb7e9bcd3b2b5a4343e37c2580e53d8288",
+      "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_decision": {
+          "schema": "relatte.bootstrap-local-decision/v0",
+          "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+          "proposal_id": "relatte-receipt-v0:296dc83fd03af0a18d6bcd5a5c3ea4cb7e9bcd3b2b5a4343e37c2580e53d8288",
+          "base_head": "relatte-receipt-v0:2165dcb8833ff8ebf72678607ac341094ea009d85eda99b0f873f1927ace628a",
+          "local_genesis": "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+          "peer_key": "d4d6f301b5afb806238fff4fd9b3b4cfb69fdda7f3da36c99582adc0aadbfca2",
+          "peer_genesis": "relatte-receipt-v0:c689ce7ac2a90c792f6f2f56e89b4a3cddbc57ae0a82ccbce2c377f2c5cc4a9b",
+          "decision": "ADMIT",
+          "scope": "THIS_FUTURE_POLICY_EDGE_ONLY",
+          "selection_basis": "EXPLICIT_LOCAL_ROOT_DECISION",
+          "decision_nonce": "bf8e563a-cb79-4db9-a0cb-ffc20c168da3"
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:4de5b80c3b1be881c97b36eb09796e6bd5d467fbafe28fa80b5a6e03302235af",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+          "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+        },
+        "signature": "F2thvxN8qSxP4a8AgGSdBmR1xTVBGxBbkePxHcLRoj__eGSe6GkVB-oPkotdxwTH-X0I_WAFcur7HI2lAxQSKw",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    }
+  ],
+  "observations": [
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-receipt-v0:b0c5b4d3261bf5dcc33ab4b73c298c5d6503444e0f97a594b851d15cc41f0203",
+      "world_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+      "receiver_particular": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "sovereign_observation": {
+          "schema": "relatte.sovereign-observation/v0",
+          "admin_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+          "parent": null,
+          "history_head": "relatte-receipt-v0:b0c5b4d3261bf5dcc33ab4b73c298c5d6503444e0f97a594b851d15cc41f0203",
+          "archive_ids": [
+            "relatte-receipt-v0:2165dcb8833ff8ebf72678607ac341094ea009d85eda99b0f873f1927ace628a",
+            "relatte-receipt-v0:2442da86c4fb00e5c329c3404c6acdae7996c5290ff3c7f17d179f6ed3424fc3",
+            "relatte-receipt-v0:296dc83fd03af0a18d6bcd5a5c3ea4cb7e9bcd3b2b5a4343e37c2580e53d8288",
+            "relatte-receipt-v0:47e513eecca3ff77c2fc19b4a56d4c9a7297e51def5ba255dbb5a60119ba1abc",
+            "relatte-receipt-v0:4a047ab3265791ef44e6f063dfcb6a50ec285fee4b08a047b09723338038ff40",
+            "relatte-receipt-v0:4de5b80c3b1be881c97b36eb09796e6bd5d467fbafe28fa80b5a6e03302235af",
+            "relatte-receipt-v0:7741f2de8ac44839fbddb95f4b1301fc933736df0505f58f8d0f16ea515127ad",
+            "relatte-receipt-v0:7e6ad7c64664a88c45a69abfcb67eb1fdb5d014f560f776699291a343ad60cae",
+            "relatte-receipt-v0:a6b02431f77a5e5db19df8ea6cf66493012c477d5139e622e7633ee1de5b4564",
+            "relatte-receipt-v0:b0c5b4d3261bf5dcc33ab4b73c298c5d6503444e0f97a594b851d15cc41f0203",
+            "relatte-receipt-v0:c689ce7ac2a90c792f6f2f56e89b4a3cddbc57ae0a82ccbce2c377f2c5cc4a9b",
+            "relatte-receipt-v0:cfaf1f269940e932f49c3d72f08dd1dadd93f06aef9015a7aabe6947aadb6f4f",
+            "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+            "relatte-receipt-v0:fd515f2e767be3d2b5b7816f89b28e41cc97b51b8504cca8f0a14a54244b2f75"
+          ],
+          "conflict_ids": [
+            "relatte-signed-conflict-v0:9a225f31a15ec8d34723af5034d0e88d908eb51f59b3025cafcd7f86f5e06869",
+            "relatte-signed-conflict-v0:b85a43a0e2b3f6ebe437ca13b9b3c34c5e95f7d8d8bfe298a08be80789f86c54"
+          ],
+          "authority_import": false,
+          "scope": "KNOWN_SIGNED_CLAIMS_ONLY"
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:2206cf890c93d5a5f34e1f37bef18459a9f3165f6492b5b5ac63407bf1baef3d",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "rE9xVpbcU6DR2Av6KgeYZEMzrnWtlFujD4xKjEa0UGk",
+          "y": "f9-gxwJNbCWdIEdfUDdngbsPD8pRtngB-L1ZlDVWOB4"
+        },
+        "signature": "fq68IU87QTnxOsdf902kuS6L1-Tvli-ZPbza3oUizr8bq8tpgD37ccx8sxwEkewmsw-GeIgzk2vhZkQwO6VhQQ",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    }
+  ]
+}

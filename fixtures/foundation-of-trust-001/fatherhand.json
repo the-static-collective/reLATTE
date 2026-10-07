@@ -1,0 +1,107 @@
+{
+  "schema": "relatte.fatherhand-hostile-specimen/v0",
+  "identities": {
+    "A": {
+      "constitution": {
+        "schema": "relatte.particular-constitution/v0",
+        "world_id": "world:A",
+        "lineage_root": "founder-seed",
+        "inherited_content_ref": "sha256:d3f53338ee5bd350e01b6f0e46e4efdd99fdee334e1d1c156760d5ed2964cfb7",
+        "constitution_nonce": "a0fe6239-5fce-40a2-b631-5236104219a0",
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "laws": [
+          "COPY != PARTICULAR",
+          "SHARED CONTENT != SHARED IDENTITY",
+          "SHARED ANCESTRY != SHARED STATE"
+        ],
+        "constitution_id": "relatte-particular-constitution-v0:f0bf4286f49948a0668192093ee9be3e48ae5080c5816f2426fead939cc3111f",
+        "particular_id": "relatte-particular-v0:aa65e6c4835fcbb8b00c40c224f913ee03f2009bd777475329e497a0938f1d69"
+      },
+      "public_key": {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "QuOYs9-bknf-2A24oSo5lBKGublUJBbww7D8WUpS6Og",
+        "y": "49nEp7x7608BXyPtvD4rgJTviBmzCw4Pfkco9KtF29s"
+      }
+    },
+    "B": {
+      "constitution": {
+        "schema": "relatte.particular-constitution/v0",
+        "world_id": "world:B",
+        "lineage_root": "founder-seed",
+        "inherited_content_ref": "sha256:d3f53338ee5bd350e01b6f0e46e4efdd99fdee334e1d1c156760d5ed2964cfb7",
+        "constitution_nonce": "94853c6c-8774-4ebb-8ab8-01af37b57312",
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "laws": [
+          "COPY != PARTICULAR",
+          "SHARED CONTENT != SHARED IDENTITY",
+          "SHARED ANCESTRY != SHARED STATE"
+        ],
+        "constitution_id": "relatte-particular-constitution-v0:fd2da6f3dff1b45f1dba086e629bca7894e27aecd59fe4637a9de3a2786847ae",
+        "particular_id": "relatte-particular-v0:94bfad65db840fef135c8c55d646226227f9bcf077ed4ae42423c7f90c622369"
+      },
+      "public_key": {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "1dXrDCXXrjdKxN0be8S9sAf798cPy5QUpcYg_CfmPEM",
+        "y": "ckmqs1Ai8_KHqZHNIKxhM4BBLX2WexU9m6UFWPt8VIQ"
+      }
+    },
+    "C2": {
+      "constitution": {
+        "schema": "relatte.particular-constitution/v0",
+        "world_id": "world:C2",
+        "lineage_root": "founder-seed",
+        "inherited_content_ref": "sha256:d3f53338ee5bd350e01b6f0e46e4efdd99fdee334e1d1c156760d5ed2964cfb7",
+        "constitution_nonce": "9592d0ab-864b-4665-85b1-d50ed9c5b13c",
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "laws": [
+          "COPY != PARTICULAR",
+          "SHARED CONTENT != SHARED IDENTITY",
+          "SHARED ANCESTRY != SHARED STATE"
+        ],
+        "constitution_id": "relatte-particular-constitution-v0:4c278f5d051a7a34a48a3db8a21cb01c54f7de9b4fa9321a4a0d86d3d043b440",
+        "particular_id": "relatte-particular-v0:f766f5ed4a7afa859d42015a57f700d111356b71244271a518d2dff86356b593"
+      },
+      "public_key": {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "drBMi58IPlZJrpZvhMVQDOmk1WaVEA4Rpi8y8mXjlCQ",
+        "y": "qpb_2ZGcCWWesahB293vbl2uUGOY75-cbzOXFQGGNXc"
+      }
+    }
+  },
+  "edges": [
+    {
+      "directory": "AB",
+      "crossing_id": "relatte-crossing-v0:7267fa9115a75c37e70ef640654848b2c08d5707730d88d55725d73b89e63d24"
+    },
+    {
+      "directory": "BC2",
+      "crossing_id": "relatte-crossing-v0:e9a6e527391dbe7c265d5b44d5afe27ce61a500701e0125d12e74eba909c91cf"
+    }
+  ],
+  "restarted_B": {
+    "particular_id": "relatte-particular-v0:94bfad65db840fef135c8c55d646226227f9bcf077ed4ae42423c7f90c622369",
+    "records_received": 2,
+    "public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "1dXrDCXXrjdKxN0be8S9sAf798cPy5QUpcYg_CfmPEM",
+      "y": "ckmqs1Ai8_KHqZHNIKxhM4BBLX2WexU9m6UFWPt8VIQ"
+    }
+  },
+  "claim_ids": [
+    "F01",
+    "F02",
+    "F03",
+    "F04",
+    "F05",
+    "F06"
+  ],
+  "local_process_death": "OBSERVED_BY_HARNESS",
+  "physical_erasure": "UNOBSERVED",
+  "independent_machines": "UNOBSERVED",
+  "private_material_in_public_output": false,
+  "signing_authority_inherited": false
+}

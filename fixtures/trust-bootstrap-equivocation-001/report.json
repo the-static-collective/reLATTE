@@ -1,0 +1,533 @@
+{
+  "schema": "relatte.bootstrap-specimen-report/v0",
+  "trace": [
+    {
+      "op": "init",
+      "side": "A",
+      "pid": 13044,
+      "public_input_sha256": "3153f550e8aa0f4b25c05f837a6dd902f79e0d891ef1e0f308696745acce3032"
+    },
+    {
+      "op": "init",
+      "side": "B",
+      "pid": 13056,
+      "public_input_sha256": "ff0c52b6b30a05ee3bba78594f8de6be21c22c049241644b39d3fa6aec777c8f"
+    },
+    {
+      "op": "policy-init",
+      "side": "P",
+      "pid": 13068,
+      "public_input_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "op": "delegate",
+      "side": "A",
+      "pid": 13080,
+      "public_input_sha256": "c60bbeabe6e3d704de4cd4e5bc52881dc2f93fc3b0d9f24f15d86aef50979f23"
+    },
+    {
+      "op": "delegate",
+      "side": "B",
+      "pid": 13092,
+      "public_input_sha256": "c60bbeabe6e3d704de4cd4e5bc52881dc2f93fc3b0d9f24f15d86aef50979f23"
+    },
+    {
+      "op": "policy-sign",
+      "side": "P",
+      "pid": 13104,
+      "public_input_sha256": "31fffdca514f98ab146f6aef6231a1092985a80085f165540117eb4cb4428ba0"
+    },
+    {
+      "op": "policy-sign",
+      "side": "P",
+      "pid": 13116,
+      "public_input_sha256": "da6a9c31c8571e0f7275ea2ff9301481522f2f3319d475a5627a28acc9212f1c"
+    },
+    {
+      "op": "select",
+      "side": "A",
+      "pid": 13128,
+      "public_input_sha256": "20f8e4669d3b254175f0256b0cd518682f7a12ef40c7b8a4cbd6cdd07a10e387"
+    },
+    {
+      "op": "select",
+      "side": "B",
+      "pid": 13140,
+      "public_input_sha256": "e32d750f354331356d1a276866ba139f213aa200355f1e61e0d0beaea4d0f329"
+    },
+    {
+      "op": "observe",
+      "side": "A",
+      "pid": 13152,
+      "public_input_sha256": "1637e83d46bc9125bc67f2c0d43365b5fdc95092bddc1ef4265ad8989a40f927"
+    },
+    {
+      "op": "observe",
+      "side": "B",
+      "pid": 13164,
+      "public_input_sha256": "1637e83d46bc9125bc67f2c0d43365b5fdc95092bddc1ef4265ad8989a40f927"
+    },
+    {
+      "op": "propose",
+      "side": "A",
+      "pid": 13176,
+      "public_input_sha256": "a1aec749009ffd67259051b767f24532f58cdb4db48bb8f4a8f31a90215761f7"
+    },
+    {
+      "op": "admit-exact",
+      "side": "A",
+      "pid": 13188,
+      "public_input_sha256": "e44806deb044645cf38bf9628a89c9d3d36cf1b3b4e62bee7b7bef845f0d2524"
+    },
+    {
+      "op": "admit-exact",
+      "side": "B",
+      "pid": 13200,
+      "public_input_sha256": "d7d2f215a31bcb3fccd7e1531cd3abc85d571b9e122b72340de584d5d22a7f6f"
+    },
+    {
+      "op": "close",
+      "side": "A",
+      "pid": 13212,
+      "public_input_sha256": "1e5ea7859ab2e9ce85e5a7f1a95d2e6e0a45841f185039be08696a57f42a408b"
+    },
+    {
+      "op": "close",
+      "side": "B",
+      "pid": 13224,
+      "public_input_sha256": "0db2628831be2387ef059ce4393939a4f303f91d845a2228a08a947fd7ccc5f3"
+    },
+    {
+      "op": "commit",
+      "side": "A",
+      "pid": 13236,
+      "public_input_sha256": "63336418ed379e72b280786158b11f489806d1e9507f06bf2ff6b258dd00b83e"
+    },
+    {
+      "op": "commit",
+      "side": "B",
+      "pid": 13248,
+      "public_input_sha256": "63336418ed379e72b280786158b11f489806d1e9507f06bf2ff6b258dd00b83e"
+    },
+    {
+      "op": "restart",
+      "side": "B",
+      "pid": 13260,
+      "public_input_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    }
+  ],
+  "genesis_pins": [
+    {
+      "admin_id": "da042541-2c4b-4714-981d-18d69dd1354b",
+      "key": "f8eaaee47f79482748318b13082d83ba55f9cbeffe7cdba109e110dbe46766f3",
+      "genesis_id": "relatte-receipt-v0:ee39b6a3fcb5d211d07c205560531aef8be6de3f2cdf838391f88c2b149638de",
+      "head_id": "relatte-receipt-v0:ee39b6a3fcb5d211d07c205560531aef8be6de3f2cdf838391f88c2b149638de"
+    },
+    {
+      "admin_id": "27ec0032-0a58-4d4d-82c3-31657b68e11f",
+      "key": "6dce9a34d1bc9336afa4d3f7a2345a20bbfc3060060a2f8636445ebbd1f85851",
+      "genesis_id": "relatte-receipt-v0:f6707c50416e06722f954ea6567928dbf6b046f9f6dfc45316ec3976c31f7fec",
+      "head_id": "relatte-receipt-v0:f6707c50416e06722f954ea6567928dbf6b046f9f6dfc45316ec3976c31f7fec"
+    }
+  ],
+  "root_pins": [
+    {
+      "admin_id": "da042541-2c4b-4714-981d-18d69dd1354b",
+      "key": "f8eaaee47f79482748318b13082d83ba55f9cbeffe7cdba109e110dbe46766f3",
+      "genesis_id": "relatte-receipt-v0:ee39b6a3fcb5d211d07c205560531aef8be6de3f2cdf838391f88c2b149638de",
+      "head_id": "relatte-receipt-v0:1445b3906bb2fc241cfce3efbd438dcbf8f108be731c44a50fb92ae1fc555ae7"
+    },
+    {
+      "admin_id": "27ec0032-0a58-4d4d-82c3-31657b68e11f",
+      "key": "6dce9a34d1bc9336afa4d3f7a2345a20bbfc3060060a2f8636445ebbd1f85851",
+      "genesis_id": "relatte-receipt-v0:f6707c50416e06722f954ea6567928dbf6b046f9f6dfc45316ec3976c31f7fec",
+      "head_id": "relatte-receipt-v0:dbebd6424d5e664f5a996e050a094ad9b42b66b4995124219d8492b638b16a72"
+    }
+  ],
+  "discovery": [
+    {
+      "schema": "relatte.trust-bootstrap-assessment/v0",
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "evidence_subject": "THIS_MUTUAL_POLICY_EDGE",
+      "signature_evidence_level": "E2 SIGNED",
+      "reasons": [
+        "POLICY_EQUIVOCATION",
+        "FOREIGN_ROOT_NOT_LOCALLY_SELECTED",
+        "NO_MUTUAL_POLICY_EDGE"
+      ],
+      "conflict": "EQUIVOCATION",
+      "conflict_ids": [
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1",
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29"
+      ],
+      "signature_valid_ids": [
+        "relatte-receipt-v0:ee39b6a3fcb5d211d07c205560531aef8be6de3f2cdf838391f88c2b149638de",
+        "relatte-receipt-v0:2f693f57cddcfca3c4f285c6090ae81260e247c3613a9747ffa95e9754ccf3db",
+        "relatte-receipt-v0:575304cb44e7585378976d52b184a1aedc557837138de2e34f7955effc49baf3",
+        "relatte-receipt-v0:f6707c50416e06722f954ea6567928dbf6b046f9f6dfc45316ec3976c31f7fec",
+        "relatte-receipt-v0:1e769ae0521625a26b11ade3b611687b5c7b4461ee63a1875535dacc4b5c3556",
+        "relatte-receipt-v0:4dcf6bd518a81c301b79e30699c5af34d34c600d84332a46fecd94acc76ab735",
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1"
+      ],
+      "historical_heads": [
+        "relatte-receipt-v0:575304cb44e7585378976d52b184a1aedc557837138de2e34f7955effc49baf3",
+        "relatte-receipt-v0:4dcf6bd518a81c301b79e30699c5af34d34c600d84332a46fecd94acc76ab735"
+      ],
+      "historical_selections": [
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1"
+      ],
+      "joint_edge_id": null,
+      "local_admission": "UNOBSERVED",
+      "peer_admission": "UNOBSERVED",
+      "foreign_root_imported": false,
+      "automatic_convergence": false,
+      "authority_scope": "NONE",
+      "administrative_independence": "UNOBSERVED",
+      "human_independence": "UNOBSERVED",
+      "historical_truth": "UNOBSERVED",
+      "global_completeness": "UNOBSERVED",
+      "current_liveness": "UNOBSERVED"
+    },
+    {
+      "schema": "relatte.trust-bootstrap-assessment/v0",
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "evidence_subject": "THIS_MUTUAL_POLICY_EDGE",
+      "signature_evidence_level": "E2 SIGNED",
+      "reasons": [
+        "POLICY_EQUIVOCATION",
+        "FOREIGN_ROOT_NOT_LOCALLY_SELECTED",
+        "NO_MUTUAL_POLICY_EDGE"
+      ],
+      "conflict": "EQUIVOCATION",
+      "conflict_ids": [
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1",
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29"
+      ],
+      "signature_valid_ids": [
+        "relatte-receipt-v0:ee39b6a3fcb5d211d07c205560531aef8be6de3f2cdf838391f88c2b149638de",
+        "relatte-receipt-v0:2f693f57cddcfca3c4f285c6090ae81260e247c3613a9747ffa95e9754ccf3db",
+        "relatte-receipt-v0:575304cb44e7585378976d52b184a1aedc557837138de2e34f7955effc49baf3",
+        "relatte-receipt-v0:f6707c50416e06722f954ea6567928dbf6b046f9f6dfc45316ec3976c31f7fec",
+        "relatte-receipt-v0:1e769ae0521625a26b11ade3b611687b5c7b4461ee63a1875535dacc4b5c3556",
+        "relatte-receipt-v0:4dcf6bd518a81c301b79e30699c5af34d34c600d84332a46fecd94acc76ab735",
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1"
+      ],
+      "historical_heads": [
+        "relatte-receipt-v0:575304cb44e7585378976d52b184a1aedc557837138de2e34f7955effc49baf3",
+        "relatte-receipt-v0:4dcf6bd518a81c301b79e30699c5af34d34c600d84332a46fecd94acc76ab735"
+      ],
+      "historical_selections": [
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1"
+      ],
+      "joint_edge_id": null,
+      "local_admission": "UNOBSERVED",
+      "peer_admission": "UNOBSERVED",
+      "foreign_root_imported": false,
+      "automatic_convergence": false,
+      "authority_scope": "NONE",
+      "administrative_independence": "UNOBSERVED",
+      "human_independence": "UNOBSERVED",
+      "historical_truth": "UNOBSERVED",
+      "global_completeness": "UNOBSERVED",
+      "current_liveness": "UNOBSERVED"
+    }
+  ],
+  "outcomes": [
+    {
+      "schema": "relatte.trust-bootstrap-assessment/v0",
+      "status": "MUTUALLY_WITNESSED",
+      "evidence_level": "E3 CORROBORATED-KEYS",
+      "confidence": 3,
+      "evidence_subject": "THIS_MUTUAL_POLICY_EDGE",
+      "signature_evidence_level": "E2 SIGNED",
+      "reasons": [
+        "POLICY_EQUIVOCATION",
+        "BILATERAL_EDGE_SCOPED_ROOT_DECISIONS",
+        "PASTS_RETAINED_WITH_DISAGREEMENT",
+        "ADMINISTRATIVE_INDEPENDENCE_UNOBSERVED"
+      ],
+      "conflict": "EQUIVOCATION",
+      "conflict_ids": [
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1",
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29"
+      ],
+      "signature_valid_ids": [
+        "relatte-receipt-v0:ee39b6a3fcb5d211d07c205560531aef8be6de3f2cdf838391f88c2b149638de",
+        "relatte-receipt-v0:2f693f57cddcfca3c4f285c6090ae81260e247c3613a9747ffa95e9754ccf3db",
+        "relatte-receipt-v0:575304cb44e7585378976d52b184a1aedc557837138de2e34f7955effc49baf3",
+        "relatte-receipt-v0:1445b3906bb2fc241cfce3efbd438dcbf8f108be731c44a50fb92ae1fc555ae7",
+        "relatte-receipt-v0:f6707c50416e06722f954ea6567928dbf6b046f9f6dfc45316ec3976c31f7fec",
+        "relatte-receipt-v0:1e769ae0521625a26b11ade3b611687b5c7b4461ee63a1875535dacc4b5c3556",
+        "relatte-receipt-v0:4dcf6bd518a81c301b79e30699c5af34d34c600d84332a46fecd94acc76ab735",
+        "relatte-receipt-v0:dbebd6424d5e664f5a996e050a094ad9b42b66b4995124219d8492b638b16a72",
+        "relatte-receipt-v0:16614676e20080c89c53545d985f6edbc208d1429d190f3a5876e9189a904781",
+        "relatte-receipt-v0:e3197aef2030d2bdec667c736b079236b8ea71d4dfbca90f17f05a699c647ca3",
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1",
+        "relatte-receipt-v0:4ba9034303e1bff9983b761cbdd21e3f3b45137adab7d667fec3d081d7623f29",
+        "relatte-receipt-v0:3d536ad670027d73332c24a63820b0fb8b3ef9453b0aafc0daf06edafcecf461",
+        "relatte-receipt-v0:fbb51545c9bb8473c3343a29705d6c9f970d21c4db7882d6a0f649a0edf39ca8"
+      ],
+      "historical_heads": [
+        "relatte-receipt-v0:1445b3906bb2fc241cfce3efbd438dcbf8f108be731c44a50fb92ae1fc555ae7",
+        "relatte-receipt-v0:dbebd6424d5e664f5a996e050a094ad9b42b66b4995124219d8492b638b16a72"
+      ],
+      "historical_selections": [
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1"
+      ],
+      "joint_edge_id": "relatte-bootstrap-edge-v0:61ea54ef98750f50a221da81dd0655ff957c093c8b61673b5fe68cea5ac066fe",
+      "local_admission": "ADMITTED_BY_SIGNED_LOCAL_DECISION",
+      "peer_admission": "ATTRIBUTABLE_SIGNED_LOCAL_DECISION",
+      "foreign_root_imported": false,
+      "automatic_convergence": false,
+      "authority_scope": "THIS_FUTURE_POLICY_EDGE_ONLY",
+      "administrative_independence": "UNOBSERVED",
+      "human_independence": "UNOBSERVED",
+      "historical_truth": "UNOBSERVED",
+      "global_completeness": "UNOBSERVED",
+      "current_liveness": "UNOBSERVED"
+    },
+    {
+      "schema": "relatte.trust-bootstrap-assessment/v0",
+      "status": "MUTUALLY_WITNESSED",
+      "evidence_level": "E3 CORROBORATED-KEYS",
+      "confidence": 3,
+      "evidence_subject": "THIS_MUTUAL_POLICY_EDGE",
+      "signature_evidence_level": "E2 SIGNED",
+      "reasons": [
+        "POLICY_EQUIVOCATION",
+        "BILATERAL_EDGE_SCOPED_ROOT_DECISIONS",
+        "PASTS_RETAINED_WITH_DISAGREEMENT",
+        "ADMINISTRATIVE_INDEPENDENCE_UNOBSERVED"
+      ],
+      "conflict": "EQUIVOCATION",
+      "conflict_ids": [
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1",
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29"
+      ],
+      "signature_valid_ids": [
+        "relatte-receipt-v0:ee39b6a3fcb5d211d07c205560531aef8be6de3f2cdf838391f88c2b149638de",
+        "relatte-receipt-v0:2f693f57cddcfca3c4f285c6090ae81260e247c3613a9747ffa95e9754ccf3db",
+        "relatte-receipt-v0:575304cb44e7585378976d52b184a1aedc557837138de2e34f7955effc49baf3",
+        "relatte-receipt-v0:1445b3906bb2fc241cfce3efbd438dcbf8f108be731c44a50fb92ae1fc555ae7",
+        "relatte-receipt-v0:f6707c50416e06722f954ea6567928dbf6b046f9f6dfc45316ec3976c31f7fec",
+        "relatte-receipt-v0:1e769ae0521625a26b11ade3b611687b5c7b4461ee63a1875535dacc4b5c3556",
+        "relatte-receipt-v0:4dcf6bd518a81c301b79e30699c5af34d34c600d84332a46fecd94acc76ab735",
+        "relatte-receipt-v0:dbebd6424d5e664f5a996e050a094ad9b42b66b4995124219d8492b638b16a72",
+        "relatte-receipt-v0:16614676e20080c89c53545d985f6edbc208d1429d190f3a5876e9189a904781",
+        "relatte-receipt-v0:e3197aef2030d2bdec667c736b079236b8ea71d4dfbca90f17f05a699c647ca3",
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1",
+        "relatte-receipt-v0:4ba9034303e1bff9983b761cbdd21e3f3b45137adab7d667fec3d081d7623f29",
+        "relatte-receipt-v0:3d536ad670027d73332c24a63820b0fb8b3ef9453b0aafc0daf06edafcecf461",
+        "relatte-receipt-v0:fbb51545c9bb8473c3343a29705d6c9f970d21c4db7882d6a0f649a0edf39ca8"
+      ],
+      "historical_heads": [
+        "relatte-receipt-v0:1445b3906bb2fc241cfce3efbd438dcbf8f108be731c44a50fb92ae1fc555ae7",
+        "relatte-receipt-v0:dbebd6424d5e664f5a996e050a094ad9b42b66b4995124219d8492b638b16a72"
+      ],
+      "historical_selections": [
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1"
+      ],
+      "joint_edge_id": "relatte-bootstrap-edge-v0:61ea54ef98750f50a221da81dd0655ff957c093c8b61673b5fe68cea5ac066fe",
+      "local_admission": "ADMITTED_BY_SIGNED_LOCAL_DECISION",
+      "peer_admission": "ATTRIBUTABLE_SIGNED_LOCAL_DECISION",
+      "foreign_root_imported": false,
+      "automatic_convergence": false,
+      "authority_scope": "THIS_FUTURE_POLICY_EDGE_ONLY",
+      "administrative_independence": "UNOBSERVED",
+      "human_independence": "UNOBSERVED",
+      "historical_truth": "UNOBSERVED",
+      "global_completeness": "UNOBSERVED",
+      "current_liveness": "UNOBSERVED"
+    }
+  ],
+  "history_hashes": [
+    {
+      "side": "A",
+      "before_sha256": "e88e3a4957d6c114b8a698712eb8ca4537ea2871c6622a616f4dd98254ce38ea",
+      "before_byte_count": 3222,
+      "after_sha256": "d265b66081d42b348e1c32e69999742e606a6a23a0ab743fedf08c0508f05fde",
+      "before_is_exact_prefix": true
+    },
+    {
+      "side": "B",
+      "before_sha256": "895dab11bd83d8f7478a6eae6eab87924c443d370e491bb123221372c1656f48",
+      "before_byte_count": 3222,
+      "after_sha256": "4db53eb36e84e5253d18cefbba0c4796aaa062a2f89ae533aed72fdf4cf3e7af",
+      "before_is_exact_prefix": true
+    }
+  ],
+  "restarted_B": {
+    "schema": "relatte.trust-bootstrap-assessment/v0",
+    "status": "MUTUALLY_WITNESSED",
+    "evidence_level": "E3 CORROBORATED-KEYS",
+    "confidence": 3,
+    "evidence_subject": "THIS_MUTUAL_POLICY_EDGE",
+    "signature_evidence_level": "E2 SIGNED",
+    "reasons": [
+      "POLICY_EQUIVOCATION",
+      "BILATERAL_EDGE_SCOPED_ROOT_DECISIONS",
+      "PASTS_RETAINED_WITH_DISAGREEMENT",
+      "ADMINISTRATIVE_INDEPENDENCE_UNOBSERVED"
+    ],
+    "conflict": "EQUIVOCATION",
+    "conflict_ids": [
+      "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1",
+      "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29"
+    ],
+    "signature_valid_ids": [
+      "relatte-receipt-v0:ee39b6a3fcb5d211d07c205560531aef8be6de3f2cdf838391f88c2b149638de",
+      "relatte-receipt-v0:2f693f57cddcfca3c4f285c6090ae81260e247c3613a9747ffa95e9754ccf3db",
+      "relatte-receipt-v0:575304cb44e7585378976d52b184a1aedc557837138de2e34f7955effc49baf3",
+      "relatte-receipt-v0:1445b3906bb2fc241cfce3efbd438dcbf8f108be731c44a50fb92ae1fc555ae7",
+      "relatte-receipt-v0:f6707c50416e06722f954ea6567928dbf6b046f9f6dfc45316ec3976c31f7fec",
+      "relatte-receipt-v0:1e769ae0521625a26b11ade3b611687b5c7b4461ee63a1875535dacc4b5c3556",
+      "relatte-receipt-v0:4dcf6bd518a81c301b79e30699c5af34d34c600d84332a46fecd94acc76ab735",
+      "relatte-receipt-v0:dbebd6424d5e664f5a996e050a094ad9b42b66b4995124219d8492b638b16a72",
+      "relatte-receipt-v0:16614676e20080c89c53545d985f6edbc208d1429d190f3a5876e9189a904781",
+      "relatte-receipt-v0:e3197aef2030d2bdec667c736b079236b8ea71d4dfbca90f17f05a699c647ca3",
+      "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+      "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1",
+      "relatte-receipt-v0:4ba9034303e1bff9983b761cbdd21e3f3b45137adab7d667fec3d081d7623f29",
+      "relatte-receipt-v0:3d536ad670027d73332c24a63820b0fb8b3ef9453b0aafc0daf06edafcecf461",
+      "relatte-receipt-v0:fbb51545c9bb8473c3343a29705d6c9f970d21c4db7882d6a0f649a0edf39ca8"
+    ],
+    "historical_heads": [
+      "relatte-receipt-v0:1445b3906bb2fc241cfce3efbd438dcbf8f108be731c44a50fb92ae1fc555ae7",
+      "relatte-receipt-v0:dbebd6424d5e664f5a996e050a094ad9b42b66b4995124219d8492b638b16a72"
+    ],
+    "historical_selections": [
+      "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+      "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1"
+    ],
+    "joint_edge_id": "relatte-bootstrap-edge-v0:61ea54ef98750f50a221da81dd0655ff957c093c8b61673b5fe68cea5ac066fe",
+    "local_admission": "ADMITTED_BY_SIGNED_LOCAL_DECISION",
+    "peer_admission": "ATTRIBUTABLE_SIGNED_LOCAL_DECISION",
+    "foreign_root_imported": false,
+    "automatic_convergence": false,
+    "authority_scope": "THIS_FUTURE_POLICY_EDGE_ONLY",
+    "administrative_independence": "UNOBSERVED",
+    "human_independence": "UNOBSERVED",
+    "historical_truth": "UNOBSERVED",
+    "global_completeness": "UNOBSERVED",
+    "current_liveness": "UNOBSERVED"
+  },
+  "durable_B_state": {
+    "pin": {
+      "admin_id": "27ec0032-0a58-4d4d-82c3-31657b68e11f",
+      "key": "6dce9a34d1bc9336afa4d3f7a2345a20bbfc3060060a2f8636445ebbd1f85851",
+      "genesis_id": "relatte-receipt-v0:f6707c50416e06722f954ea6567928dbf6b046f9f6dfc45316ec3976c31f7fec",
+      "head_id": "relatte-receipt-v0:dbebd6424d5e664f5a996e050a094ad9b42b66b4995124219d8492b638b16a72",
+      "active_edge_id": "relatte-bootstrap-edge-v0:61ea54ef98750f50a221da81dd0655ff957c093c8b61673b5fe68cea5ac066fe"
+    },
+    "edge_id": "relatte-bootstrap-edge-v0:61ea54ef98750f50a221da81dd0655ff957c093c8b61673b5fe68cea5ac066fe",
+    "administrative_independence": "UNOBSERVED"
+  },
+  "replacement_verifiers": [
+    {
+      "status": "MUTUALLY_WITNESSED",
+      "evidence_level": "E3 CORROBORATED-KEYS",
+      "evidence_subject": "THIS_MUTUAL_POLICY_EDGE",
+      "conflict": "EQUIVOCATION",
+      "conflict_ids": [
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1",
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29"
+      ],
+      "historical_selections": [
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1"
+      ],
+      "joint_edge_id": "relatte-bootstrap-edge-v0:61ea54ef98750f50a221da81dd0655ff957c093c8b61673b5fe68cea5ac066fe",
+      "foreign_root_imported": false,
+      "administrative_independence": "UNOBSERVED",
+      "reasons": []
+    },
+    {
+      "status": "MUTUALLY_WITNESSED",
+      "evidence_level": "E3 CORROBORATED-KEYS",
+      "evidence_subject": "THIS_MUTUAL_POLICY_EDGE",
+      "conflict": "EQUIVOCATION",
+      "conflict_ids": [
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1",
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29"
+      ],
+      "historical_selections": [
+        "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+        "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1"
+      ],
+      "joint_edge_id": "relatte-bootstrap-edge-v0:61ea54ef98750f50a221da81dd0655ff957c093c8b61673b5fe68cea5ac066fe",
+      "foreign_root_imported": false,
+      "administrative_independence": "UNOBSERVED",
+      "reasons": []
+    }
+  ],
+  "fresh_without_root": {
+    "schema": "relatte.trust-bootstrap-assessment/v0",
+    "status": "HOLD",
+    "evidence_level": "E0 UNOBSERVED",
+    "confidence": 0,
+    "evidence_subject": "THIS_MUTUAL_POLICY_EDGE",
+    "signature_evidence_level": "E2 SIGNED",
+    "reasons": [
+      "POLICY_EQUIVOCATION",
+      "NO_LOCAL_ROOT_SELECTION"
+    ],
+    "conflict": "EQUIVOCATION",
+    "conflict_ids": [
+      "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1",
+      "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29"
+    ],
+    "signature_valid_ids": [
+      "relatte-receipt-v0:ee39b6a3fcb5d211d07c205560531aef8be6de3f2cdf838391f88c2b149638de",
+      "relatte-receipt-v0:2f693f57cddcfca3c4f285c6090ae81260e247c3613a9747ffa95e9754ccf3db",
+      "relatte-receipt-v0:575304cb44e7585378976d52b184a1aedc557837138de2e34f7955effc49baf3",
+      "relatte-receipt-v0:1445b3906bb2fc241cfce3efbd438dcbf8f108be731c44a50fb92ae1fc555ae7",
+      "relatte-receipt-v0:f6707c50416e06722f954ea6567928dbf6b046f9f6dfc45316ec3976c31f7fec",
+      "relatte-receipt-v0:1e769ae0521625a26b11ade3b611687b5c7b4461ee63a1875535dacc4b5c3556",
+      "relatte-receipt-v0:4dcf6bd518a81c301b79e30699c5af34d34c600d84332a46fecd94acc76ab735",
+      "relatte-receipt-v0:dbebd6424d5e664f5a996e050a094ad9b42b66b4995124219d8492b638b16a72",
+      "relatte-receipt-v0:16614676e20080c89c53545d985f6edbc208d1429d190f3a5876e9189a904781",
+      "relatte-receipt-v0:e3197aef2030d2bdec667c736b079236b8ea71d4dfbca90f17f05a699c647ca3",
+      "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+      "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1"
+    ],
+    "historical_heads": [
+      "relatte-receipt-v0:1445b3906bb2fc241cfce3efbd438dcbf8f108be731c44a50fb92ae1fc555ae7",
+      "relatte-receipt-v0:dbebd6424d5e664f5a996e050a094ad9b42b66b4995124219d8492b638b16a72"
+    ],
+    "historical_selections": [
+      "relatte-receipt-v0:aa1dc4b05dd12fe0cd117c723f1a08349c77e0e306d4ca266b59cda045e09a29",
+      "relatte-receipt-v0:411ead72644dacfebf9db5e9364f387c328bb9a69cf70e61701df74a9712c8a1"
+    ],
+    "joint_edge_id": null,
+    "local_admission": "UNOBSERVED",
+    "peer_admission": "UNOBSERVED",
+    "foreign_root_imported": false,
+    "automatic_convergence": false,
+    "authority_scope": "NONE",
+    "administrative_independence": "UNOBSERVED",
+    "human_independence": "UNOBSERVED",
+    "historical_truth": "UNOBSERVED",
+    "global_completeness": "UNOBSERVED",
+    "current_liveness": "UNOBSERVED"
+  },
+  "original_private_keys_deleted": "OBSERVED_IN_LOCAL_CAMPAIGN",
+  "original_runtime_directories_deleted": "OBSERVED_IN_LOCAL_CAMPAIGN",
+  "evidence_ceiling": "E3 CORROBORATED-KEYS",
+  "administrative_independence": "UNOBSERVED",
+  "human_independence": "UNOBSERVED",
+  "non_collusion": "UNOBSERVED",
+  "local_root_selection": "ASSUMED_EXTERNALLY",
+  "signed_decisions_are_scripted": true
+}

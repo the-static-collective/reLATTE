@@ -1,0 +1,246 @@
+{
+  "schema": "relatte.sovereign-view/v0",
+  "history": {
+    "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+    "records": [
+      {
+        "schema": "relatte.receipt/v0",
+        "crossing_id": "bootstrap:genesis",
+        "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+        "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+        "kind": "RECEIVED",
+        "semantic_effect": "none",
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "extensions": {
+          "bootstrap_journal": {
+            "schema": "relatte.bootstrap-journal/v0",
+            "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+            "kind": "GENESIS",
+            "parent": null,
+            "data": {
+              "scope": "SOVEREIGN_LOCAL_ROOT",
+              "constitution_nonce": "d93f954f-a6f4-4c48-849a-a3fa777f5126"
+            }
+          }
+        },
+        "receipt_id": "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+            "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+          },
+          "signature": "04-tY2O264SdZ1plMXUqBVMr4n2pkFr2HFD3Q-Pv6em4xO7WdQK66u9SuUZalKEc0AikhDAAiPyMCGl_vfJVig",
+          "domain": "relatte.receipt-signature/v0"
+        }
+      },
+      {
+        "schema": "relatte.receipt/v0",
+        "crossing_id": "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+        "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+        "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+        "kind": "RECEIVED",
+        "semantic_effect": "none",
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "extensions": {
+          "bootstrap_journal": {
+            "schema": "relatte.bootstrap-journal/v0",
+            "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+            "kind": "DELEGATE_POLICY",
+            "parent": "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+            "data": {
+              "policy_key": "ba2481ad1da43768ac0175ba3e5019f1a33821f46e56b738915818159361aaac",
+              "slot": "e7d2cb2b-698f-483c-9d4c-4802a44febff",
+              "version": 1,
+              "scope": "ONE_DECLARED_POLICY_SLOT"
+            }
+          }
+        },
+        "receipt_id": "relatte-receipt-v0:2442da86c4fb00e5c329c3404c6acdae7996c5290ff3c7f17d179f6ed3424fc3",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+            "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+          },
+          "signature": "W7mDfJCBk_G0fYE-yvch0BtSvXGUs_v7JeD3wPvGQhLtMT0UzNBoRCNqobRGA8zOHDubAKVrdCeF2KovEvTyJQ",
+          "domain": "relatte.receipt-signature/v0"
+        }
+      },
+      {
+        "schema": "relatte.receipt/v0",
+        "crossing_id": "relatte-receipt-v0:2442da86c4fb00e5c329c3404c6acdae7996c5290ff3c7f17d179f6ed3424fc3",
+        "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+        "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+        "kind": "RECEIVED",
+        "semantic_effect": "none",
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "extensions": {
+          "bootstrap_journal": {
+            "schema": "relatte.bootstrap-journal/v0",
+            "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+            "kind": "SELECT_POLICY",
+            "parent": "relatte-receipt-v0:2442da86c4fb00e5c329c3404c6acdae7996c5290ff3c7f17d179f6ed3424fc3",
+            "data": {
+              "claim_id": "relatte-receipt-v0:7e6ad7c64664a88c45a69abfcb67eb1fdb5d014f560f776699291a343ad60cae"
+            }
+          }
+        },
+        "receipt_id": "relatte-receipt-v0:4a047ab3265791ef44e6f063dfcb6a50ec285fee4b08a047b09723338038ff40",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+            "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+          },
+          "signature": "hQ_naknusrK4wZjQLymoLS2-L4XXnNCeCnwBu64HlGnjEa5k7ude6ZEW25U2I5u5QWi0ImmF9TeU_rwRkBNCDw",
+          "domain": "relatte.receipt-signature/v0"
+        }
+      }
+    ]
+  },
+  "archive": [
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "bootstrap:genesis",
+      "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_journal": {
+          "schema": "relatte.bootstrap-journal/v0",
+          "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+          "kind": "GENESIS",
+          "parent": null,
+          "data": {
+            "scope": "SOVEREIGN_LOCAL_ROOT",
+            "constitution_nonce": "d93f954f-a6f4-4c48-849a-a3fa777f5126"
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+          "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+        },
+        "signature": "04-tY2O264SdZ1plMXUqBVMr4n2pkFr2HFD3Q-Pv6em4xO7WdQK66u9SuUZalKEc0AikhDAAiPyMCGl_vfJVig",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+      "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_journal": {
+          "schema": "relatte.bootstrap-journal/v0",
+          "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+          "kind": "DELEGATE_POLICY",
+          "parent": "relatte-receipt-v0:ea01a92ee91be53504f2a1007f7a42784ab5f44af6731da53a003e966f221e7a",
+          "data": {
+            "policy_key": "ba2481ad1da43768ac0175ba3e5019f1a33821f46e56b738915818159361aaac",
+            "slot": "e7d2cb2b-698f-483c-9d4c-4802a44febff",
+            "version": 1,
+            "scope": "ONE_DECLARED_POLICY_SLOT"
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:2442da86c4fb00e5c329c3404c6acdae7996c5290ff3c7f17d179f6ed3424fc3",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+          "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+        },
+        "signature": "W7mDfJCBk_G0fYE-yvch0BtSvXGUs_v7JeD3wPvGQhLtMT0UzNBoRCNqobRGA8zOHDubAKVrdCeF2KovEvTyJQ",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-receipt-v0:2442da86c4fb00e5c329c3404c6acdae7996c5290ff3c7f17d179f6ed3424fc3",
+      "world_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "receiver_particular": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_journal": {
+          "schema": "relatte.bootstrap-journal/v0",
+          "admin_id": "13c3133d-b0c1-43e3-8865-48ea21412a32",
+          "kind": "SELECT_POLICY",
+          "parent": "relatte-receipt-v0:2442da86c4fb00e5c329c3404c6acdae7996c5290ff3c7f17d179f6ed3424fc3",
+          "data": {
+            "claim_id": "relatte-receipt-v0:7e6ad7c64664a88c45a69abfcb67eb1fdb5d014f560f776699291a343ad60cae"
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:4a047ab3265791ef44e6f063dfcb6a50ec285fee4b08a047b09723338038ff40",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "fRECx7TAhydz3G8sMS4Q4hwTdqCHzCWNWuDGiR5TM78",
+          "y": "HGZ0_pOMyeEdJ8yYgwDEF0szPPvgxZ3dnyYOtnTqXWA"
+        },
+        "signature": "hQ_naknusrK4wZjQLymoLS2-L4XXnNCeCnwBu64HlGnjEa5k7ude6ZEW25U2I5u5QWi0ImmF9TeU_rwRkBNCDw",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "bootstrap:policy:e7d2cb2b-698f-483c-9d4c-4802a44febff",
+      "world_id": "policy:P",
+      "receiver_particular": "policy:P",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "bootstrap_policy": {
+          "schema": "relatte.bootstrap-policy/v0",
+          "slot": "e7d2cb2b-698f-483c-9d4c-4802a44febff",
+          "version": 1,
+          "scope": "ONE_RULE_FOR_BOTH_ADMINS",
+          "basis_heads": [
+            "relatte-receipt-v0:2442da86c4fb00e5c329c3404c6acdae7996c5290ff3c7f17d179f6ed3424fc3"
+          ],
+          "terms": {
+            "handoff_rule": "RECEIVER_MUST_ATTEST"
+          }
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:7e6ad7c64664a88c45a69abfcb67eb1fdb5d014f560f776699291a343ad60cae",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "9pSZW-aC2hFCUxzux3mYbHDr7asUGZTlKwb4e8138EI",
+          "y": "zu7G_OgP0yE_55A-IdMqcenhDwjUet_y8UXcjDw3O78"
+        },
+        "signature": "y_JCMRiUamNePggI0BDVLZkkPix3XuckjOr3c90Z6O8pvfgZAGDbVrCpMMLIINkrfSANUzWcmdogNx8RGAnySA",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    }
+  ],
+  "observations": []
+}

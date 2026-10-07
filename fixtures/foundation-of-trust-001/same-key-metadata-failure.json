@@ -1,0 +1,91 @@
+{
+  "tested_sha": "e250ad4bb1a45b4b30b43a34ff9f0f9fbc4bf6c5",
+  "crossing": {
+    "schema": "relatte.crossing-envelope/v0",
+    "protocol_version": "0",
+    "source_particular": "P",
+    "source_world": "W",
+    "declared_kind": "handoff",
+    "payload_refs": [
+      {
+        "role": "payload",
+        "address": "bytes"
+      }
+    ],
+    "created_at": "2026-10-07T00:00:00Z",
+    "extensions": {
+      "two_witness_handoff": {
+        "schema": "relatte.two-witness-handoff/v0",
+        "handoff_id": "H",
+        "receiver_world": "X",
+        "receiver_particular": "Q",
+        "thing_ref": "bytes"
+      }
+    },
+    "crossing_id": "relatte-crossing-v0:77a195d5dad3a036fdad11576bc71e5209ce5dc95c53c03c1dca4068629ceabe",
+    "signing": {
+      "algorithm": "ECDSA-P256-SHA256",
+      "public_key": {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "ZxKlUC5d80KyvwjUeXSYFDEohG4VqCbETa4HuHnFXXA",
+        "y": "WWROGJY1J3_oJjCdQc6prmICDzknET6zkSNNyKZ2GwI"
+      },
+      "signature": "a5MOToSBIknwzXq6csQM97ced7J5GaES0Ilm08PvmodgZ7TA-YMRP4JSuS_GCohNSpFyzDaZTsKBb8fck53y8Q",
+      "domain": "relatte.crossing-signature/v0"
+    }
+  },
+  "receipt": {
+    "schema": "relatte.receipt/v0",
+    "crossing_id": "relatte-crossing-v0:77a195d5dad3a036fdad11576bc71e5209ce5dc95c53c03c1dca4068629ceabe",
+    "world_id": "X",
+    "receiver_particular": "Q",
+    "kind": "RECEIVED",
+    "semantic_effect": "none",
+    "created_at": "2026-10-07T00:00:00Z",
+    "extensions": {
+      "two_witness_handoff": {
+        "schema": "relatte.two-witness-handoff/v0",
+        "handoff_id": "H",
+        "receiver_world": "X",
+        "receiver_particular": "Q",
+        "thing_ref": "bytes",
+        "source_particular": "P"
+      }
+    },
+    "receipt_id": "relatte-receipt-v0:ec64fe8e23da10e9f514761674ba5dcf5756916b0de4444942d2ea29cc30f1fa",
+    "signing": {
+      "algorithm": "ECDSA-P256-SHA256",
+      "public_key": {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "ZxKlUC5d80KyvwjUeXSYFDEohG4VqCbETa4HuHnFXXA",
+        "y": "WWROGJY1J3_oJjCdQc6prmICDzknET6zkSNNyKZ2GwI",
+        "kid": "same-key-another-label"
+      },
+      "signature": "-JfiSKnDHYEkYv_OWzBQjoJ5di9G68qwjfWuLEgWga-sKM0ob0uhj8o3rTwdrkfCI-8jaMm8POkh3LJsi81JKA",
+      "domain": "relatte.receipt-signature/v0"
+    }
+  },
+  "baseline_result": {
+    "schema": "relatte.two-witness-assessment/v0",
+    "status": "CORROBORATED",
+    "crossing_id": "relatte-crossing-v0:77a195d5dad3a036fdad11576bc71e5209ce5dc95c53c03c1dca4068629ceabe",
+    "handoff_id": "H",
+    "reasons": [
+      "MATCHING_SIGNED_SOURCE_AND_RECEIVER_WITNESSES"
+    ],
+    "independence_basis": "DISTINCT_SIGNING_KEYS_ONLY",
+    "laws": [
+      "ONE WITNESS = CLAIM",
+      "TWO MATCHING WITNESSES = CORROBORATED",
+      "WITNESS DISAGREEMENT = HOLD",
+      "SAME KEY != TWO WITNESSES",
+      "DISTINCT KEYS != INDEPENDENT CUSTODY",
+      "CORROBORATION != TRUTH",
+      "CORROBORATION != ADMISSION",
+      "RECEIPT != AUTHORITY"
+    ]
+  },
+  "expected_reason": "WITNESS_KEYS_NOT_DISTINCT"
+}

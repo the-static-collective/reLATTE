@@ -1,0 +1,239 @@
+{
+  "schema": "relatte.foundation-mutation-report/v0",
+  "total": 21,
+  "killed": 21,
+  "results": [
+    {
+      "id": "COUNT_SAME_KEY_TWICE",
+      "file": "src/two-witness.ts",
+      "before": "if (sourceKey === receiverKey)",
+      "after": "if (false)",
+      "test": "frozen baseline same-key metadata",
+      "original_file_sha256": "42da1d64d46104441f04062542719ee0a9570e8fb944e12472c0a54ee4cdf35d",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "POINTER_IMPLIES_CONTINUITY",
+      "file": "src/foundation-of-trust.ts",
+      "before": "const adjacency = new Map<string, string[]>();",
+      "after": "return { status: 'VERIFIED', same_particular: true, reasons: ['MUTANT'], authority: 'UNOBSERVED' };\n  const adjacency = new Map<string, string[]>();",
+      "test": "pointer forgery has no consequential path",
+      "original_file_sha256": "9f2d9894fbb40382ff18696b31483fb92ddcc75eaa3bcb4d48ce79a58fc3b52a",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "ANCESTOR_DONATES_AUTHORITY",
+      "file": "src/particularity.ts",
+      "before": "return grant.subject.id === args.particular_id;",
+      "after": "return true;",
+      "test": "byte-identical cloned seeds",
+      "original_file_sha256": "ee1fbcf41056b142b77cd1366d997f066e6177feb495352527bcbdfa33b0f9b2",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "IGNORE_MISSING_SIGNED_EDGE",
+      "file": "src/foundation-of-trust.ts",
+      "before": "if (!result.historically_verified) continue;",
+      "after": "if (false) continue;",
+      "test": "A to B to C survives every surface",
+      "original_file_sha256": "9f2d9894fbb40382ff18696b31483fb92ddcc75eaa3bcb4d48ce79a58fc3b52a",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "IGNORE_REPLAY_CROSSING",
+      "file": "src/two-witness.ts",
+      "before": "if (receipt.crossing_id !== crossing.crossing_id)",
+      "after": "if (false)",
+      "test": "receipt replay changes only causal crossing",
+      "original_file_sha256": "42da1d64d46104441f04062542719ee0a9570e8fb944e12472c0a54ee4cdf35d",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "IGNORE_PAYLOAD_BINDING",
+      "file": "src/two-witness.ts",
+      "before": "receiptBinding?.thing_ref !== binding.thing_ref",
+      "after": "false",
+      "test": "only payload substitution HOLD",
+      "original_file_sha256": "42da1d64d46104441f04062542719ee0a9570e8fb944e12472c0a54ee4cdf35d",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "TRUST_VERIFIER_OUTPUT",
+      "file": "src/foundation-of-trust.ts",
+      "before": "const { bundle, roots } = args;",
+      "after": "const { bundle, roots } = args;\n    if ((bundle as any).assessment) return { ...out, status: 'VERIFIED' };",
+      "test": "lying verifier output is rejected",
+      "original_file_sha256": "9f2d9894fbb40382ff18696b31483fb92ddcc75eaa3bcb4d48ce79a58fc3b52a",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "IGNORE_SOURCE_EQUIVOCATION",
+      "file": "src/foundation-of-trust.ts",
+      "before": "if (new Set(sourceClaims.map(account)).size > 1)",
+      "after": "if (false)",
+      "test": "SOURCE equivocation remains reconstructible",
+      "original_file_sha256": "9f2d9894fbb40382ff18696b31483fb92ddcc75eaa3bcb4d48ce79a58fc3b52a",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "IGNORE_RECEIVER_EQUIVOCATION",
+      "file": "src/foundation-of-trust.ts",
+      "before": "if (new Set(sameKey.map(receiptAccount)).size > 1)",
+      "after": "if (false)",
+      "test": "RECEIVER equivocation remains reconstructible",
+      "original_file_sha256": "9f2d9894fbb40382ff18696b31483fb92ddcc75eaa3bcb4d48ce79a58fc3b52a",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "WITHHOLD_EVIDENCE_UPGRADES_TRUST",
+      "file": "src/foundation-of-trust.ts",
+      "before": "if (inventory.record_ids.some((id: string) => !ids.includes(id)))",
+      "after": "if (false)",
+      "test": "every deletion subset of a frozen scope",
+      "original_file_sha256": "9f2d9894fbb40382ff18696b31483fb92ddcc75eaa3bcb4d48ce79a58fc3b52a",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "IGNORE_EVENT_POLICY_VERSION",
+      "file": "src/foundation-of-trust.ts",
+      "before": "if (foundation.policy_id !== roots.policy_id) return reject('EVENT_POLICY_MISMATCH');",
+      "after": "// MUTANT: ignore pinned event policy",
+      "test": "threshold cannot retroactively change",
+      "original_file_sha256": "9f2d9894fbb40382ff18696b31483fb92ddcc75eaa3bcb4d48ce79a58fc3b52a",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "IGNORE_ROLE_MEMBERSHIP",
+      "file": "src/foundation-of-trust.ts",
+      "before": "if (!member(target, 'SOURCE')) return reject('UNAUTHORIZED_SOURCE_ROLE');",
+      "after": "// MUTANT: allow arbitrary source key",
+      "test": "unauthorized key stays HOLD",
+      "original_file_sha256": "9f2d9894fbb40382ff18696b31483fb92ddcc75eaa3bcb4d48ce79a58fc3b52a",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "COUNT_DUPLICATE_SIGNER",
+      "file": "src/foundation-of-trust.ts",
+      "before": "if (keys.has(signingKeyIdentity(receipt))) return reject('DUPLICATE_SIGNER');",
+      "after": "keys.add('mutant-count:' + receipt.receipt_id);",
+      "test": "one key cannot count twice",
+      "original_file_sha256": "9f2d9894fbb40382ff18696b31483fb92ddcc75eaa3bcb4d48ce79a58fc3b52a",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "ACCEPT_RETIRED_KEYS",
+      "file": "src/foundation-of-trust.ts",
+      "before": "&& !retired;",
+      "after": ";",
+      "test": "historical replay after revocation",
+      "original_file_sha256": "9f2d9894fbb40382ff18696b31483fb92ddcc75eaa3bcb4d48ce79a58fc3b52a",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "IGNORE_SELECTED_POLICY_PIN",
+      "file": "src/foundation-of-trust.ts",
+      "before": "bundle.policy.receipt_id !== roots.policy_id",
+      "after": "false",
+      "test": "policy signer compromise cannot change",
+      "original_file_sha256": "9f2d9894fbb40382ff18696b31483fb92ddcc75eaa3bcb4d48ce79a58fc3b52a",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "ERASE_DUPLICATE_JSON_NAMES",
+      "file": "src/evidence-json.ts",
+      "before": "fail(!keys.has(key), 'DUPLICATE_JSON_KEY');",
+      "after": "// MUTANT: silently erase duplicate names\n        ",
+      "test": "duplicate JSON keys fail at parser boundary",
+      "original_file_sha256": "3d56a0b2c776f49020f9074e9c8d92d762e4a4ad0fb0d15f18b6706dc0fbd348",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "ALLOW_SIGNED_ACCESSORS",
+      "file": "src/canonical.ts",
+      "before": "if (descriptor.get || descriptor.set) throw new Error('ACCESSOR_PROPERTY');",
+      "after": "// MUTANT: allow dynamic accessors",
+      "test": "accessor changes identity or fails verification",
+      "original_file_sha256": "b6d24d216b4b58da105f3f776021b34fd4ed73984dae676f776b070e477c35b3",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "TRUST_UNSIGNED_RUNNER_METADATA",
+      "file": "scripts/two-witness-custody-002.mjs",
+      "before": "validate(canonicalize(receiver.receiver_job) === canonicalize(receiver.receipt.extensions?.custody_002?.job ?? null), 'UNSIGNED_RECEIVER_JOB_METADATA');",
+      "after": "// MUTANT: trust unsigned wrapper job",
+      "test": "unsigned-metadata fails loudly",
+      "test_file": "test/fatherhand-hostile.test.ts",
+      "original_file_sha256": "25d8c3fe3ab43693eed2b31fda3ca6bafd54e763652b12ae34ca8a02628efb60",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "PROMOTE_KEYS_TO_MACHINES",
+      "file": "src/foundation-of-trust.ts",
+      "before": "distinct_machine: 'UNOBSERVED'",
+      "after": "distinct_machine: 'OBSERVED'",
+      "test": "two genuine keys under one custodian",
+      "original_file_sha256": "9f2d9894fbb40382ff18696b31483fb92ddcc75eaa3bcb4d48ce79a58fc3b52a",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "INFER_MISSING_NAME_PATH",
+      "file": "src/particularity.ts",
+      "before": "if (args.from_surface_id === args.to_surface_id) return true;",
+      "after": "return true;",
+      "test": "provisional name surfaces mutate independently",
+      "original_file_sha256": "ee1fbcf41056b142b77cd1366d997f066e6177feb495352527bcbdfa33b0f9b2",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    },
+    {
+      "id": "ACCEPT_CIRCULAR_TRUST",
+      "file": "src/foundation-of-trust.ts",
+      "before": "fail(!visiting.has(id), 'CIRCULAR_TRUST_JUSTIFICATION');",
+      "after": "if (visiting.has(id)) return;",
+      "test": "root graph must terminate",
+      "original_file_sha256": "9f2d9894fbb40382ff18696b31483fb92ddcc75eaa3bcb4d48ce79a58fc3b52a",
+      "killed": true,
+      "exit_status": 1,
+      "failure_kind": "ASSERTION"
+    }
+  ]
+}

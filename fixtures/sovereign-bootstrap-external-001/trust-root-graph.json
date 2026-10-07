@@ -1,0 +1,106 @@
+[
+  {
+    "id": "A-independent-local-selection",
+    "depends_on": [],
+    "basis": "Actual A administration and separately retained key/genesis/history/observation selection S26",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "B-independent-local-selection",
+    "depends_on": [],
+    "basis": "Actual B administration and separately retained key/genesis/history/observation selection S26; required for B perspective, not imported by A",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "honest-verifier",
+    "depends_on": [],
+    "basis": "At least one correct replaceable verifier/runtime/configuration per claimed conclusion S28",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "crypto",
+    "depends_on": [],
+    "basis": "Existing P-256/SHA-256/canonicalization S30",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "public-and-pin-survival",
+    "depends_on": [],
+    "basis": "Enough archive and independently retained public selections S29",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "local-adversarial-campaign",
+    "depends_on": [],
+    "basis": "Same-host local hostile signatures and offline adapter tests S03/S05/S20; external domain claims UNOBSERVED S01/S02",
+    "class": "OBSERVED"
+  },
+  {
+    "id": "signed-records",
+    "depends_on": [
+      "crypto",
+      "honest-verifier",
+      "public-and-pin-survival"
+    ],
+    "basis": "Canonical IDs and valid signatures reconstructible S22",
+    "class": "DERIVED"
+  },
+  {
+    "id": "A-policy-attribution",
+    "depends_on": [
+      "A-independent-local-selection",
+      "signed-records"
+    ],
+    "basis": "A locally delegated P for exact slot; no foreign root admission S04",
+    "class": "DERIVED"
+  },
+  {
+    "id": "B-policy-attribution",
+    "depends_on": [
+      "B-independent-local-selection",
+      "signed-records"
+    ],
+    "basis": "B locally delegated P for exact slot; no foreign root admission S04",
+    "class": "DERIVED"
+  },
+  {
+    "id": "P-conflicting-accounts",
+    "depends_on": [
+      "A-policy-attribution",
+      "B-policy-attribution",
+      "signed-records"
+    ],
+    "basis": "Two incompatible global rules attributable to P S04",
+    "class": "DERIVED"
+  },
+  {
+    "id": "B-contradictory-signed-claims",
+    "depends_on": [
+      "signed-records"
+    ],
+    "basis": "B point signs competing accounts; requires no trust in B sovereignty S05/S06",
+    "class": "DERIVED"
+  },
+  {
+    "id": "owner-remembered-conflicts",
+    "depends_on": [
+      "A-independent-local-selection",
+      "B-independent-local-selection",
+      "signed-records",
+      "public-and-pin-survival"
+    ],
+    "basis": "Pinned monotone local observations and counterevidence S07/S10/S18",
+    "class": "DERIVED"
+  },
+  {
+    "id": "explicit-bilateral-new-edge",
+    "depends_on": [
+      "owner-remembered-conflicts",
+      "P-conflicting-accounts",
+      "B-contradictory-signed-claims",
+      "signed-records"
+    ],
+    "basis": "Fresh exact peer choices, all known conflict IDs, new version, both closures; E3 only S14/S25/S40",
+    "class": "DERIVED"
+  }
+]

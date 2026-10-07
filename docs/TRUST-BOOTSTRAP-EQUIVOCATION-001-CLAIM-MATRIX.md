@@ -1,0 +1,46 @@
+# TRUST-BOOTSTRAP-EQUIVOCATION-001 — claim matrix
+
+Machine-readable source: [claim-matrix.json](../fixtures/trust-bootstrap-equivocation-001/claim-matrix.json). Every experiment claim in the accompanying prose refers to these IDs.
+
+| ID | Exact claim | Class | Basis / limit |
+| --- | --- | --- | --- |
+| B01 | Local A and B have distinct normalized P-256 root keys and separate constitutions before P is created | OBSERVED | specimen trace/genesis pins; keys generated in separate local subprocesses; not separate administrators |
+| B02 | A and B locally delegate P only one named versioned policy slot | DERIVED | root-signed causal DELEGATE_POLICY records; no root-selection, admission or root-editing power delegated |
+| B03 | P signs incompatible accounts for the same declared global slot/version/scope; each claim binds only its own local delegation | DERIVED | both valid signatures under the exact delegated P curve point; immutable claims retained |
+| B04 | A and B discover P disagreement without importing the foreign root as authority | DERIVED | before-meeting fixture assessments; own preselected root/head; P already locally delegated; EQUIVOCATION/HOLD |
+| B05 | Matching signatures or a complete public bundle automatically select a fresh verifier root | REFUTED | NO_LOCAL_ROOT_SELECTION; caller must independently supply its own selection |
+| B06 | Both original histories and original incompatible policy selections survive the new edge unchanged | OBSERVED | signed journals; before hashes and exact append-log byte-prefix checks; snapshots are not authority |
+| B07 | A future edge requires exact, attributable, scope-limited local decisions from both distinct root keys | DERIVED | proposal, decisions, both frozen-encounter closures; E3 CORROBORATED-KEYS only |
+| B08 | One root can refuse or withhold its decision without the verifier silently converging | DERIVED | REFUSE -> LOCAL_ADMISSION_REFUSED; missing consent -> BOTH_LOCAL_ADMISSIONS_REQUIRED; no imported foreign root |
+| B09 | Policy P can impersonate either sovereign root decision or rewrite delegated trust roots | REFUTED | valid malicious P signature remains valid; LOCAL_DECISION_SIGNER_OR_ROLE_MISMATCH; sharing P with a root key fails POLICY_KEY_IS_ADMIN_ROOT |
+| B10 | Own normalized key, genesis and durable history head must match a separately retained selection | DERIVED | fully re-signed replacement history/proposal/closure fails PINNED_LOCAL_HISTORY_CHANGED |
+| B11 | Two root labels or JWK metadata aliases establish two root signers | REFUTED | ROOT_KEYS_NOT_DISTINCT on genuine same-key valid signatures; normalized point comparisons |
+| B12 | Version 2 activates only for this new future policy edge and retains both version 1 choices | DERIVED | root-import/history-rewrite flags fixed false; exact participant old-head/old-policy IDs; both signed local admissions |
+| B13 | Removing a known contradictory decision could improve the preliminary unclosed design | OBSERVED | preserved omission-failure.json; initial design lacked signed scope commitments; repaired specimen retains valid contradiction |
+| B14 | Deleting committed encounter records can preserve or lower the earned edge level but cannot raise it | DERIVED | both signed core digest/record manifests; 63 deletion combinations and conflicting-decision removal oracle; frozen scope only |
+| B15 | Globally withheld policies, admissions, root forks and secret key copies are absent | UNOBSERVED | closure enumerates only this observed encounter; broker/signers may hide other complete scopes |
+| B16 | Local signer keys and participant directories are deleted; B replays from durable public local evidence | OBSERVED | process harness removes private JWKs before B restart; removes A/B/P directories before C/D native reconstruction; no physical-erasure claim |
+| B17 | No private key fields are in intended public bootstrap contexts or artifacts | OBSERVED | forbidPrivateEvidence before public transport/signing and on every public output; local private JWK stores removed; universal non-export UNOBSERVED |
+| B18 | Fresh replacement implementations rebuild IDs, verify signatures and reconstruct the same frozen edge | OBSERVED | public bundle/root files after original directories removed; native verifier independent of primary assessment/protocol/canonical implementation |
+| B19 | The two verification paths are fully independent | REFUTED | share strict ingress, specification, Node/JSON/runtime and crypto-provider ancestry; native helper shared with earlier independent foundation verifier |
+| B20 | Clock values establish policy chronology or arrival time | REFUTED | ancient/future/reversed signed decision timestamps accepted by causal parent bindings; trusted arrival chronology UNOBSERVED |
+| B21 | Different signatures/timestamps on identical policy bodies are themselves equivocation | REFUTED | equivocation compares canonical policy semantics; equal bodies are not contradiction |
+| B22 | External local root/head selection and honest control of a root key are guaranteed by its self-signature | REFUTED | self-consistency is cryptographic; key control and trustworthy preselection remain root assumptions |
+| B23 | Externally selected original local root/head/known activation belongs to the intended administrator | ASSUMED | pins must precede hostile proof selection and survive outside hostile broker; software cannot authenticate their external origin |
+| B24 | P-256/SHA-256, canonicalization, chosen verifier/runtime/config and its local inputs are sufficiently sound | ASSUMED | existing crypto and canonicalization; at least one honest replacement verifier and selection source |
+| B25 | Enough public evidence, root/head selections and known activation records survive | ASSUMED | all archive/selection loss cannot be recovered from cryptography; independently retained backups needed |
+| B26 | Separate administrative/protection/custody domains, physical machines, humans, non-collusion or live consent were established | UNOBSERVED | same-host controlled experiment with scripted decisions; no external domain/control attestation supplied |
+| B27 | A signature on ADMIT establishes a human decision or that a remote sovereign actually enacted the consequence | REFUTED | attributable signed local declaration only; local harness commit/restart observed separately |
+| B28 | A known locally retained activation prevents an otherwise valid second edge silently replacing it | DERIVED | active_edge_id pin; KNOWN_ACTIVE_POLICY_FORK; participant commit retains content-addressed encounter and refuses overwrite |
+| B29 | A fresh historical verifier without retained activation can prove a unique global future policy | REFUTED | two valid mutually signed edges reconstruct separately; each remains cryptographically coherent; global uniqueness/finality UNOBSERVED |
+| B30 | Signed encounter closure proves global completeness or bounded finality | REFUTED | THIS_FROZEN_ENCOUNTER_ONLY; no global consensus/absence proof/finality rule |
+| B31 | Malicious verifier reports and broker record listings can grant bootstrap authority | REFUTED | unknown assessment rejected; unsigned scope cannot supply both signed closures; replacement verifier recomputes |
+| B32 | Malformed/semantic/replay attacks fail for their named reason while malicious valid signatures remain valid | DERIVED | strict extension shapes; semantic test attackers re-sign and re-close mutated proof; precise reason assertions |
+| B33 | Bootstrap regression tests, seeded mutations, replay and deliberately broken guard tests pass at tested SHA | OBSERVED | final test/CI report; 48 added bootstrap tests, 128 seeded hostile decisions, 11 new code mutants; not exhaustive coverage |
+| B34 | Existing draft PR remains open, draft and unmerged | OBSERVED | GitHub PR metadata final check; no merge request |
+| B35 | This pass demonstrates trust infrastructure across independently administered roots | UNOBSERVED | external independently administered root campaign still required; local proof attack/reconstruction is bounded research evidence |
+| B36 | Explicit future membership is two exact signing keys, with administrative/human quorum unobserved | DERIVED | proposal quorum 2, EXACT_EDGE_PARTICIPANTS; no Sybil-resistant external membership proof |
+| B37 | Trust derivation is acyclic and ends at declared external assumptions | DERIVED | trust-root-graph.json; root selection has no dependence on the new joint edge; root-graph validator |
+| B38 | Current full local regression suite contains 296 passing cases and no failures | OBSERVED | npm run verify final run; former 248 tests plus 48 bootstrap cases; separate workflow counts reported separately |
+| B39 | The current mutant campaign detects 32 deliberately removed guards | OBSERVED | mutation-report.json; earlier 21 plus 11 bootstrap mutants; named assertion failures |
+| B40 | Actual next hardest experiment requires pre-existing separately administered roots while P and one administration equivocate or withhold | UNOBSERVED | supply public roots/control evidence externally, retain independent pins and exchange contrary evidence through hostile transport; no external campaign executed here |

@@ -1,0 +1,116 @@
+[
+  {
+    "id": "crypto-and-canonicalization",
+    "depends_on": [],
+    "basis": "P-256/SHA-256 and implementation/runtime assumptions B24",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "honest-verifier-and-inputs",
+    "depends_on": [],
+    "basis": "At least one honest independently executed verifier/configuration B24",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "A-external-selection",
+    "depends_on": [],
+    "basis": "A own previously selected key/genesis/head and any known activation, outside hostile transport B23",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "B-external-selection",
+    "depends_on": [],
+    "basis": "B own previously selected key/genesis/head and any known activation, outside hostile transport B23",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "public-evidence-survival",
+    "depends_on": [],
+    "basis": "Durable sufficient records and independent pins B25",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "local-process-campaign",
+    "depends_on": [],
+    "basis": "Local subprocesses/private files removed, B public restart, fresh C/D; actual administrative separation UNOBSERVED B16/B26",
+    "class": "OBSERVED"
+  },
+  {
+    "id": "signed-records",
+    "depends_on": [
+      "crypto-and-canonicalization",
+      "honest-verifier-and-inputs",
+      "public-evidence-survival"
+    ],
+    "basis": "Rebuilt receipt IDs and verified signatures B18",
+    "class": "DERIVED"
+  },
+  {
+    "id": "A-bounded-P-delegation",
+    "depends_on": [
+      "A-external-selection",
+      "signed-records"
+    ],
+    "basis": "A journal binds P only this policy slot B02",
+    "class": "DERIVED"
+  },
+  {
+    "id": "B-bounded-P-delegation",
+    "depends_on": [
+      "B-external-selection",
+      "signed-records"
+    ],
+    "basis": "B journal binds P only this policy slot B02",
+    "class": "DERIVED"
+  },
+  {
+    "id": "P-equivocation",
+    "depends_on": [
+      "A-bounded-P-delegation",
+      "B-bounded-P-delegation",
+      "signed-records"
+    ],
+    "basis": "Contradictory global terms under same slot/version; no preselected foreign root in either initial claim B03/B04; does not import either root",
+    "class": "DERIVED"
+  },
+  {
+    "id": "A-exact-peer-choice",
+    "depends_on": [
+      "A-external-selection",
+      "signed-records",
+      "P-equivocation"
+    ],
+    "basis": "A locally signed this exact B key/genesis/edge; foreign root not globally imported B07",
+    "class": "DERIVED"
+  },
+  {
+    "id": "B-exact-peer-choice",
+    "depends_on": [
+      "B-external-selection",
+      "signed-records",
+      "P-equivocation"
+    ],
+    "basis": "B locally signed this exact A key/genesis/edge; foreign root not globally imported B07",
+    "class": "DERIVED"
+  },
+  {
+    "id": "frozen-encounter",
+    "depends_on": [
+      "A-exact-peer-choice",
+      "B-exact-peer-choice",
+      "signed-records"
+    ],
+    "basis": "Both root closure receipts commit known records; global completeness UNOBSERVED B14/B15",
+    "class": "DERIVED"
+  },
+  {
+    "id": "mutual-future-edge",
+    "depends_on": [
+      "A-exact-peer-choice",
+      "B-exact-peer-choice",
+      "frozen-encounter"
+    ],
+    "basis": "E3 cryptographic keys, original pasts unchanged, disagreement retained; no human/admin quorum B06/B07/B12/B36",
+    "class": "DERIVED"
+  }
+]
