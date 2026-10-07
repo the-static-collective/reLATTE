@@ -65,7 +65,7 @@ test('unverified byte substitution is caught before receiver creates recipient r
   try{
     await prepareSender(h.fixtureRoot,h.output,sender);
     await update(join(h.output,'carrier-fruit.json'),o=>{o.payload_base64=Buffer.from('{"fake":true}').toString('base64');});
-    await assert.rejects(()=>processReceiver(h.output,h.publicDir,h.privateRoot,receiver),/INCONSISTENT_ARTIFACT_HANDOFF|CARRIER_NOT_BOUND_TO_DECLARED_SOURCE|UNAUTHORIZED_FIXTURE/);
+    await assert.rejects(()=>processReceiver(h.output,h.publicDir,h.privateRoot,receiver),/INCONSISTENT_ARTIFACT_HANDOFF|CARRIER_NOT_BOUND_TO_DECLARED_SOURCE|UNAUTHORIZED_FIXTURE|UNRECOGNIZED_FIXTURE_FIELDS/);
     await assert.rejects(()=>stat(h.privateRoot),{code:'ENOENT'});
   }finally{await rm(h.root,{recursive:true,force:true});}
 });
