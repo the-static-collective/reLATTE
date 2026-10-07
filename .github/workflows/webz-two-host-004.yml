@@ -1,0 +1,108 @@
+name: TWO-HOST-WEBZ-004 brokered two-runner witness
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  sender:
+    name: A - sign real Sanctuary fixture bytes
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install pinned reLATTE dependencies
+        run: npm install --ignore-scripts
+      - name: Original Workbench fictional fixture bytes at immutable WEBZ-003 commit
+        uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/static-workbench
+          ref: 53db559bbc510ad1003a0f8330d1673dcd04d7a0
+          path: .compat/static-workbench
+          persist-credentials: false
+      - name: Negative and cold local material-crossing tests
+        run: node --experimental-strip-types --test test/webz-two-host-004.test.mjs
+      - name: Sender runner signs crossing over exact real first-party bytes
+        run: |
+          mkdir -p work/webz004/sender
+          node --experimental-strip-types scripts/webz-two-host-004.mjs sender .compat/static-workbench/static_workbench/web work/webz004/sender
+          test ! -e work/webz004/sender/receiver-key.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: webz004-sender-carriers
+          path: work/webz004/sender/
+          if-no-files-found: error
+          retention-days: 7
+
+  receiver:
+    name: B - independently receive bytes and sign Orchard custody
+    needs: [sender]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install receiver-owned reLATTE dependencies
+        run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: webz004-sender-carriers
+          path: work/webz004/sender
+      - name: Recipient runner chooses policy and independently signs actual bytes
+        run: |
+          mkdir -p work/webz004/receiver-public
+          node --experimental-strip-types scripts/webz-two-host-004.mjs receiver work/webz004/sender work/webz004/receiver-public "$RUNNER_TEMP/webz004-recipient-private"
+          test -f "$RUNNER_TEMP/webz004-recipient-private/receiver-key.json"
+          test ! -e work/webz004/receiver-public/receiver-key.json
+          test "$(find work/webz004/receiver-public -maxdepth 1 -type f | wc -l)" -eq 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: webz004-orchard-public-receipts
+          path: work/webz004/receiver-public/
+          if-no-files-found: error
+          retention-days: 7
+
+  verifier:
+    name: C - verify both worlds, literal bytes and opposed signed decisions
+    needs: [sender, receiver]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install verifier-owned reLATTE dependencies
+        run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: webz004-sender-carriers
+          path: work/webz004/sender
+      - uses: actions/download-artifact@v4
+        with:
+          name: webz004-orchard-public-receipts
+          path: work/webz004/receiver-public
+      - name: Cryptographic verification across separate hosted jobs
+        run: |
+          node --experimental-strip-types scripts/webz-two-host-004.mjs verify work/webz004/sender work/webz004/receiver-public | tee work/webz004/verified-public-witness.json
+          grep -q '"verified": true' work/webz004/verified-public-witness.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: webz004-third-party-verified-witness
+          path: work/webz004/verified-public-witness.json
+          if-no-files-found: error
+          retention-days: 7
