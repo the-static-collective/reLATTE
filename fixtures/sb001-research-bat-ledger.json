@@ -1,0 +1,178 @@
+{
+  "schema": "supabardo.sb001-research-bat-ledger/v0",
+  "specimen": "SB-001",
+  "claim": "research-informed adversarial coverage ledger; not compliance or certification",
+  "sources": [
+    {
+      "id": "NIST-800-207",
+      "url": "https://csrc.nist.gov/pubs/sp/800/207/final",
+      "theme": "zero trust; no implicit trust from network location or ownership"
+    },
+    {
+      "id": "NIST-800-218",
+      "url": "https://csrc.nist.gov/pubs/sp/800/218/final",
+      "theme": "secure software development and supply-chain risk reduction"
+    },
+    {
+      "id": "SLSA-1.2",
+      "url": "https://slsa.dev/spec/v1.2/",
+      "theme": "artifact provenance, hosted builders, hardened builds"
+    },
+    {
+      "id": "IN-TOTO",
+      "url": "https://in-toto.io/docs/getting-started/",
+      "theme": "authorized functionaries, material/product rules, signed step links"
+    },
+    {
+      "id": "SIGSTORE",
+      "url": "https://docs.sigstore.dev/about/threat-model/",
+      "theme": "signature attribution is not policy or goodness; transparency assumptions"
+    },
+    {
+      "id": "TUF",
+      "url": "https://theupdateframework.io/docs/security/",
+      "theme": "rollback, freeze, fast-forward, and mix-and-match attacks"
+    },
+    {
+      "id": "OWASP-CICD",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/CI_CD_Security_Cheat_Sheet.html",
+      "theme": "dependency and pipeline integrity, immutable references, least privilege"
+    },
+    {
+      "id": "CISA-SBOM-2025",
+      "url": "https://www.cisa.gov/sites/default/files/2025-08/2025_CISA_SBOM_Minimum_Elements.pdf",
+      "theme": "component identity, hashes, dependency relationships, known unknowns"
+    }
+  ],
+  "bats": [
+    {
+      "id": "RBAT-ZT-01",
+      "source": "NIST-800-207",
+      "status": "PASS",
+      "attack": "treat co-location, service presence, or another role's identity as implicit authority",
+      "evidence": [
+        "scripts/sb001-verify.ts",
+        "test/supabardo-sb001-bat.test.ts"
+      ],
+      "result": "source, Bardo, and destination identities are distinct; network/service location grants no authority"
+    },
+    {
+      "id": "RBAT-POLICY-01",
+      "source": "SIGSTORE",
+      "status": "PASS",
+      "attack": "freshly sign semantically unlawful claims and extension-smuggled authority",
+      "evidence": [
+        "scripts/sb001-verify.ts",
+        "test/supabardo-sb001-bat.test.ts"
+      ],
+      "result": "valid signatures remain attributable but policy-invalid statements are refused"
+    },
+    {
+      "id": "RBAT-LINK-01",
+      "source": "IN-TOTO",
+      "status": "PASS",
+      "attack": "reuse or mix signed links from separately lawful ceremonies",
+      "evidence": [
+        "fixtures/sb001-evidence-manifest.json",
+        "test/supabardo-sb001-bat.test.ts"
+      ],
+      "result": "crossing/receipt ancestry and pinned whole-evidence identity reject link reuse and mix-and-match"
+    },
+    {
+      "id": "RBAT-ROLLBACK-01",
+      "source": "TUF",
+      "status": "PASS",
+      "attack": "replace historical SB-001 with a different lawful ceremony or prior evidence set",
+      "evidence": [
+        "fixtures/sb001-evidence-manifest.json",
+        "scripts/sb001-verify.ts",
+        "test/supabardo-sb001-bat.test.ts"
+      ],
+      "result": "pinned evidence-set ID rejects historical substitution"
+    },
+    {
+      "id": "RBAT-FREEZE-01",
+      "source": "TUF",
+      "status": "NONTRANSFER",
+      "attack": "treat unresolved WAIT as an update freeze that must expire",
+      "evidence": [
+        "docs/SUPABARDO-SB-001.md"
+      ],
+      "result": "not imported: unresolved duration is domain policy; forced freshness would collapse legitimate uncertainty"
+    },
+    {
+      "id": "RBAT-PROV-01",
+      "source": "SLSA-1.2",
+      "status": "PARTIAL",
+      "attack": "substitute source commit, repository, ref, path, blob, route, or role key",
+      "evidence": [
+        "scripts/sb001-verify.ts",
+        "fixtures/sb001-evidence-manifest.json",
+        "test/supabardo-sb001-bat.test.ts"
+      ],
+      "result": "source and evidence provenance are pinned, but no independent hosted-builder provenance attestation exists"
+    },
+    {
+      "id": "RBAT-CI-01",
+      "source": "OWASP-CICD",
+      "status": "PASS",
+      "attack": "mutable CI action tags, excessive token permissions, persisted checkout credentials, lifecycle-script execution",
+      "evidence": [
+        ".github/workflows/verify.yml"
+      ],
+      "result": "actions pinned to commit SHAs; contents read-only; checkout credentials not persisted; package lifecycle scripts suppressed"
+    },
+    {
+      "id": "RBAT-DEPS-01",
+      "source": "OWASP-CICD",
+      "status": "OPEN",
+      "attack": "dependency-resolution drift, registry substitution, or transitive dependency change",
+      "evidence": [
+        "package.json",
+        "docs/SUPABARDO-SB-001-DEFENSE-PROFILE.md"
+      ],
+      "result": "direct dependency versions are exact, but no committed package-lock currently exists; reproducible dependency resolution is not proven"
+    },
+    {
+      "id": "RBAT-SBOM-01",
+      "source": "CISA-SBOM-2025",
+      "status": "OPEN",
+      "attack": "unknown or substituted software component hidden outside the declared inventory",
+      "evidence": [
+        "package.json",
+        "docs/SUPABARDO-SB-001-DEFENSE-PROFILE.md"
+      ],
+      "result": "no machine-readable SBOM is currently committed; component completeness is not proven"
+    },
+    {
+      "id": "RBAT-TRANSPARENCY-01",
+      "source": "SIGSTORE",
+      "status": "OPEN",
+      "attack": "all local historical material is rewritten before an external observer sees it",
+      "evidence": [
+        "docs/SUPABARDO-SB-001-DEFENSE-PROFILE.md"
+      ],
+      "result": "no independent transparency log or external checkpoint witness exists yet"
+    },
+    {
+      "id": "RBAT-REPO-01",
+      "source": "NIST-800-218",
+      "status": "OPEN",
+      "attack": "repository-control compromise changes verifier and evidence together",
+      "evidence": [
+        "GitHub API: repository rulesets returned empty; branch-protection endpoint unavailable to integration"
+      ],
+      "result": "repository policy is not treated as a proven root of trust"
+    },
+    {
+      "id": "RBAT-COLLUSION-01",
+      "source": "NIST-800-207",
+      "status": "OPEN",
+      "attack": "source, Bardo, and destination keys all collude before the ceremony",
+      "evidence": [
+        "docs/SUPABARDO-SB-001-DEFENSE-PROFILE.md"
+      ],
+      "result": "outside SB-001's proof boundary; requires an external trust root, quorum, hardware-backed identity, or transparency witness"
+    }
+  ]
+}
