@@ -38,12 +38,22 @@ export interface FatherHand {
   public_key: PublicJwk;
 }
 
-const fatherHandSecrets = new WeakMap<FatherHand, CryptoKey>();
+const fatherHandSecrets = new WeakMap<FatherHand, {
+  privateKey: CryptoKey;
+  fingerprint: string;
+  generation: number;
+  publicKey: string;
+}>();
 
 function requireFatherHandPrivateKey(father: FatherHand): CryptoKey {
-  const key = fatherHandSecrets.get(father);
-  if (!key) throw new Error('FATHERHAND_PRIVATE_KEY_UNAVAILABLE');
-  return key;
+  const secret = fatherHandSecrets.get(father);
+  if (!secret) throw new Error('FATHERHAND_PRIVATE_KEY_UNAVAILABLE');
+  if (
+    father.fingerprint !== secret.fingerprint ||
+    father.generation !== secret.generation ||
+    JSON.stringify(father.public_key) !== secret.publicKey
+  ) throw new Error('FATHERHAND_HANDLE_IDENTITY_MISMATCH');
+  return secret.privateKey;
 }
 
 export function retireFatherHand(father: FatherHand): void {
@@ -57,12 +67,24 @@ export interface FounderNode {
   founding_statement: Record<string, any>;
 }
 
-const founderNodeSecrets = new WeakMap<FounderNode, CryptoKey>();
+const founderNodeSecrets = new WeakMap<FounderNode, {
+  privateKey: CryptoKey;
+  worldId: string;
+  fingerprint: string;
+  publicKey: string;
+  foundingStatementId: string;
+}>();
 
 function requireFounderNodePrivateKey(founder: FounderNode): CryptoKey {
-  const key = founderNodeSecrets.get(founder);
-  if (!key) throw new Error('FOUNDERNODE_PRIVATE_KEY_UNAVAILABLE');
-  return key;
+  const secret = founderNodeSecrets.get(founder);
+  if (!secret) throw new Error('FOUNDERNODE_PRIVATE_KEY_UNAVAILABLE');
+  if (
+    founder.world_id !== secret.worldId ||
+    founder.fingerprint !== secret.fingerprint ||
+    JSON.stringify(founder.public_key) !== secret.publicKey ||
+    founder.founding_statement?.statement_id !== secret.foundingStatementId
+  ) throw new Error('FOUNDERNODE_HANDLE_IDENTITY_MISMATCH');
+  return secret.privateKey;
 }
 
 export interface OperationalKey {
@@ -273,7 +295,12 @@ async function createFatherHand(generation: number): Promise<FatherHand> {
     fingerprint: fatherHandFingerprint(keys.publicKeyJwk),
     public_key: normalizePublicJwk(keys.publicKeyJwk),
   };
-  fatherHandSecrets.set(father, keys.privateKey);
+  fatherHandSecrets.set(father, {
+    privateKey: keys.privateKey,
+    fingerprint: father.fingerprint,
+    generation: father.generation,
+    publicKey: JSON.stringify(father.public_key),
+  });
   return father;
 }
 
@@ -340,7 +367,13 @@ export async function createFounderNode(
     public_key: founderPublic,
     founding_statement: statement,
   };
-  founderNodeSecrets.set(founder, keys.privateKey);
+  founderNodeSecrets.set(founder, {
+    privateKey: keys.privateKey,
+    worldId: founder.world_id,
+    fingerprint: founder.fingerprint,
+    publicKey: JSON.stringify(founder.public_key),
+    foundingStatementId: founder.founding_statement.statement_id,
+  });
   return founder;
 }
 
