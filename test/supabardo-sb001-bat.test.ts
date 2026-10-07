@@ -474,3 +474,62 @@ test('research BAT rejects signed authority smuggling through destination extens
   b.disposition = await sealReceipt(draft, b.destinationKeys);
   await expectRefusal(b, /SB001_DESTINATION_EXTENSION_SMUGGLING/);
 });
+
+
+test('research BAT rejects signed claim-limit escalation to physical-boot proof', async () => {
+  const b = await freshBundle();
+  const draft = crossingDraft(b.crossing);
+  draft.extensions.sb001.claim_limit = 'Physical boot proven and universally authoritative.';
+  b.crossing = await sealCrossingEnvelope(draft, b.sourceKeys);
+  await expectRefusal(b, /SB001_CLAIM_LIMIT_ESCALATION/);
+});
+
+test('research BAT rejects contradictory signed law smuggled into WAIT law array', async () => {
+  const b = await freshBundle();
+  const draft = receiptDraft(b.unresolved);
+  draft.extensions.supabardo.laws.push('BARDO = DESTINATION AUTHORITY');
+  b.unresolved = await sealReceipt(draft, b.bardoKeys);
+  await expectRefusal(b, /SB001_WAIT_LAW_DRIFT/);
+});
+
+test('research BAT rejects contradictory signed law smuggled into destination law array', async () => {
+  const b = await freshBundle();
+  const draft = receiptDraft(b.disposition);
+  draft.extensions.local_receiver.laws.push('SOURCE = DESTINATION');
+  b.disposition = await sealReceipt(draft, b.destinationKeys);
+  await expectRefusal(b, /SB001_DESTINATION_LAW_DRIFT/);
+});
+
+test('research BAT rejects extra destination descendant smuggled into a valid ADMIT', async () => {
+  const b = await freshBundle();
+  const draft = receiptDraft(b.disposition);
+  draft.descendant_refs.push('particular:attacker:shadow-descendant');
+  b.disposition = await sealReceipt(draft, b.destinationKeys);
+  await expectRefusal(b, /SB001_DESTINATION_DESCENDANT_DRIFT/);
+});
+
+test('research BAT rejects extra unresolved residual hidden beside P', async () => {
+  const b = await freshBundle();
+  const draft = receiptDraft(b.unresolved);
+  draft.residual_refs.push('sha256:' + 'f'.repeat(64));
+  b.unresolved = await sealReceipt(draft, b.bardoKeys);
+  await expectRefusal(b, /SB001_WAIT_RESIDUAL_DRIFT/);
+});
+
+test('research BAT rejects source blob substitution even when the source signs it', async () => {
+  const b = await freshBundle();
+  const draft = crossingDraft(b.crossing);
+  draft.extensions.sb001.source_blob_sha = 'f'.repeat(40);
+  b.crossing = await sealCrossingEnvelope(draft, b.sourceKeys);
+  await expectRefusal(b, /SB001_SOURCE_BLOB_SUBSTITUTION/);
+});
+
+test('research BAT rejects pinned-manifest body tampering without requiring private keys', async () => {
+  const bundle = await pinnedBundle();
+  const manifest = JSON.parse(await readFile(EVIDENCE_MANIFEST, 'utf8'));
+  manifest.body.claim_limit = 'all authority transferred';
+  await assert.rejects(
+    () => verifyPinnedSb001EvidenceSet(bundle, manifest),
+    /SB001_EVIDENCE_BODY_MISMATCH/,
+  );
+});
