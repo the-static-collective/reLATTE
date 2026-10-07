@@ -1,0 +1,185 @@
+name: ALIEN-MINECRAFT-VANILLA-005 real server proof
+
+on:
+  push:
+    branches:
+      - experiment/alien-minecraft-vanilla-005
+    paths:
+      - "experiments/alien-minecraft-vanilla-005/**"
+      - "experiments/polyglot-crossing-001/common.ts"
+      - ".github/workflows/alien-minecraft-vanilla-005.yml"
+  pull_request:
+    paths:
+      - "experiments/alien-minecraft-vanilla-005/**"
+      - "experiments/polyglot-crossing-001/common.ts"
+      - ".github/workflows/alien-minecraft-vanilla-005.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  vanilla-playthrough:
+    name: official Mojang server + external bot + server-side replay
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Install pinned external Minecraft clients
+        run: |
+          npm install --no-save --ignore-scripts \
+            mineflayer@4.39.0 \
+            mineflayer-pathfinder@2.4.5 \
+            rcon-client@4.2.5 \
+            vec3@0.2.0 \
+            minecraft-data@3.114.0
+
+      - name: Resolve and verify official Mojang 26.1.1 server jar
+        run: |
+          set -euo pipefail
+          mkdir -p work/minecraft/server
+          curl --fail --silent --show-error \
+            https://piston-meta.mojang.com/mc/game/version_manifest_v2.json \
+            -o work/minecraft/version-manifest.json
+
+          python3 - <<'PY'
+          import json, pathlib, urllib.request
+          root = pathlib.Path("work/minecraft")
+          manifest = json.loads((root / "version-manifest.json").read_text())
+          version = next(v for v in manifest["versions"] if v["id"] == "26.1.1")
+          data = json.load(urllib.request.urlopen(version["url"]))
+          server = data["downloads"]["server"]
+          meta = {
+              "id": data["id"],
+              "type": data["type"],
+              "releaseTime": data["releaseTime"],
+              "server_url": server["url"],
+              "server_sha1": server["sha1"],
+              "server_size": server["size"],
+              "version_metadata_url": version["url"],
+          }
+          (root / "server-version.json").write_text(json.dumps(meta, indent=2) + "\n")
+          urllib.request.urlretrieve(server["url"], root / "server/server.jar")
+          PY
+
+          cd work/minecraft/server
+          EXPECTED="$(python3 -c 'import json; print(json.load(open("../server-version.json"))["server_sha1"])')"
+          ACTUAL="$(sha1sum server.jar | awk '{print $1}')"
+          test "$ACTUAL" = "$EXPECTED"
+          echo "official server sha1 verified: $ACTUAL"
+
+      - name: Configure vanilla server
+        run: |
+          cat > work/minecraft/server/server.properties <<'EOF'
+          server-port=25565
+          online-mode=false
+          enforce-secure-profile=false
+          gamemode=survival
+          force-gamemode=true
+          difficulty=peaceful
+          spawn-protection=0
+          generate-structures=false
+          level-type=minecraft:flat
+          view-distance=5
+          simulation-distance=5
+          enable-rcon=true
+          rcon.port=25575
+          rcon.password=relatte-ci
+          enable-query=false
+          motd=reLATTE ALIEN-MINECRAFT-VANILLA-005
+          EOF
+          echo "eula=true" > work/minecraft/server/eula.txt
+
+      - name: Start official vanilla server
+        run: |
+          set -euo pipefail
+          cd work/minecraft/server
+          java -Xms1G -Xmx2G -jar server.jar nogui > server.log 2>&1 &
+          echo $! > server.pid
+
+          for i in $(seq 1 120); do
+            if grep -q 'Done (' server.log; then
+              echo "vanilla server ready"
+              exit 0
+            fi
+            if ! kill -0 "$(cat server.pid)" 2>/dev/null; then
+              cat server.log
+              exit 1
+            fi
+            sleep 1
+          done
+
+          cat server.log
+          echo "server did not become ready" >&2
+          exit 1
+
+      - name: Run real player protocol playthrough and cross result
+        env:
+          MC_HOST: 127.0.0.1
+          MC_PORT: "25565"
+          MC_RCON_PORT: "25575"
+          MC_RCON_PASSWORD: relatte-ci
+          MC_BOT_NAME: RelatteBot
+          MC_VERSION_META: work/minecraft/server-version.json
+          MC_EVIDENCE_OUT: work/minecraft/evidence.json
+        run: |
+          node --experimental-strip-types \
+            experiments/alien-minecraft-vanilla-005/vanilla-playthrough.mjs
+
+      - name: Verify evidence and frozen core
+        run: |
+          set -euo pipefail
+          test -s work/minecraft/evidence.json
+          grep -q '"official_vanilla_server_runtime": "OBSERVED"' work/minecraft/evidence.json
+          grep -q '"real_protocol_client_join": "OBSERVED"' work/minecraft/evidence.json
+          grep -q '"in_world_mining": "OBSERVED"' work/minecraft/evidence.json
+          grep -q '"in_world_block_placement": "OBSERVED"' work/minecraft/evidence.json
+          grep -q '"server_side_final_block_verification": "OBSERVED"' work/minecraft/evidence.json
+
+          test "$(git rev-parse HEAD:src)" = "c0e4d2c59481e0fb2a4bf4bb294f373907fd2b76"
+
+          python3 - <<'PY'
+          import json
+          e = json.load(open("work/minecraft/evidence.json"))
+          assert e["version"]["id"] == "26.1.1"
+          assert e["server_verified_blocks"] == e["wool_blocks"]
+          assert e["observation"]["native_claims"]["server_mods"] == []
+          assert e["receipt"]["kind"] == "R3_HOLD"
+          print(json.dumps({
+              "minecraft_version": e["version"]["id"],
+              "server_jar_sha1": e["version"]["server_sha1"],
+              "mined_blocks": e["observation"]["native_claims"]["mined_blocks"],
+              "placed_blocks": e["observation"]["native_claims"]["placed_blocks"],
+              "server_verified_blocks": e["server_verified_blocks"],
+              "payload_sha256": e["payload_sha256"],
+              "crossing_id": e["crossing"]["crossing_id"],
+              "receipt_id": e["receipt"]["receipt_id"],
+          }, indent=2))
+          PY
+
+      - name: Preserve server and crossing evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alien-minecraft-vanilla-005-evidence
+          path: |
+            work/minecraft/evidence.json
+            work/minecraft/server-version.json
+            work/minecraft/server/server.log
+            work/minecraft/server/world/level.dat
+            work/minecraft/server/world/region/
+          if-no-files-found: warn
+          retention-days: 7

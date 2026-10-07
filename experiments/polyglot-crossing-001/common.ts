@@ -20,7 +20,8 @@ export type PolyglotSubstrate =
   | 'udp-datagram-swarm'
   | 'midi-event-stream'
   | 'langton-ant-field'
-  | 'minecraft-playthrough';
+  | 'minecraft-playthrough'
+  | 'minecraft-vanilla-server';
 
 export type LocalDisposition = 'R3_HOLD' | 'R3_ADMIT' | 'R3_REFUSE' | 'RETURN';
 
