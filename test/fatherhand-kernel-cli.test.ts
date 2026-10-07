@@ -18,6 +18,7 @@ test('synthetic FatherHand kernel emits public-only network-free witness', () =>
   assert.equal(report.network_used, false);
   assert.equal(report.all_root_handles_retired_before_report, true);
   assert.equal(report.operational_key_handle_retired_before_report, true);
+  assert.equal(report.foundernode_handles_retired_before_report, true);
   assert.equal(report.recovery.total, 5);
   assert.equal(report.recovery.threshold, 3);
   assert.equal(report.recovery.genesis_secret_retired_before_recovery, true);
