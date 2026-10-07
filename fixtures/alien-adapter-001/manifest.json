@@ -1,0 +1,12 @@
+{
+  "schema": "relatte.alien-adapter-manifest/v0",
+  "experiment": "ALIEN-ADAPTER-001",
+  "substrate": "udp-datagram-swarm",
+  "frozen_core_commit": "f5cb7488bebc1a6e27fd458ad40af9b9b6f9e858",
+  "frozen_src_tree": "c0e4d2c59481e0fb2a4bf4bb294f373907fd2b76",
+  "native_durable_object": false,
+  "native_delivery_guarantee": "none",
+  "normative_core_mutations_allowed": 0,
+  "remote_network_execution": "UNOBSERVED",
+  "independent_administration": "UNOBSERVED"
+}
