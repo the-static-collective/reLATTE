@@ -20,7 +20,7 @@ const { pathfinder, Movements, goals } = require('mineflayer-pathfinder');
 const { Vec3 } = require('vec3');
 const minecraftData = require('minecraft-data');
 const { Rcon } = require('rcon-client');
-const { GoalNear } = goals;
+const { GoalNear, GoalBlock } = goals;
 
 const HOST = process.env.MC_HOST || '127.0.0.1';
 const PORT = Number(process.env.MC_PORT || '25565');
@@ -179,7 +179,8 @@ async function main() {
     for (let index = 0; index < nibbles.length; index += 1) {
       const nibble = nibbles[index];
       const target = wallPos(index);
-      await go(bot, target, 2);
+      const stand = { x: target.x, y: target.y, z: target.z + 1 };
+      await bot.pathfinder.goto(new GoalBlock(stand.x, stand.y, stand.z));
 
       const item = bot.inventory.items().find((candidate) => candidate.name === WOOL[nibble]);
       if (!item) throw new Error('INVENTORY_MISSING:' + WOOL[nibble] + ':' + index);
@@ -191,8 +192,12 @@ async function main() {
       const before = bot.blockAt(new Vec3(target.x, target.y, target.z));
       if (before && before.name !== 'air') throw new Error('WALL_TARGET_OCCUPIED:' + index + ':' + before.name);
 
-      await bot.placeBlock(reference, new Vec3(0, 1, 0));
-      await sleep(75);
+      await bot._placeBlockWithOptions(
+        reference,
+        new Vec3(0, 1, 0),
+        { swingArm: 'right', forceLook: true },
+      );
+      await sleep(125);
       const after = bot.blockAt(new Vec3(target.x, target.y, target.z));
       if (!after || after.name !== WOOL[nibble]) throw new Error('PLACEMENT_MISMATCH:' + index + ':' + (after && after.name));
       placed.push(after.name);
