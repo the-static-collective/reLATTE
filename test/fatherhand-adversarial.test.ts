@@ -14,6 +14,7 @@ import {
   verifyFatherHandSuccessionSet,
   verifyOperationalDelegation,
   verifyPeerTrust,
+  verifyTrustedPeerOperationalKey,
 } from '../src/fatherhand.ts';
 
 const VALID_WORLD = 'webz:the-static-collective/sanctuary';
@@ -139,6 +140,79 @@ test('peer invitations reject control characters and ambiguous identifiers', asy
       /INVALID_INVITATION_ID/,
     );
   }
+});
+
+test('composed peer verification refuses mix-and-match FounderNode, world and operational keys', async () => {
+  const local = await createFatherHandGenesis();
+  const remoteRoot = await createFatherHandGenesis();
+  const remote = await createFounderNode(
+    remoteRoot,
+    REMOTE_WORLD,
+    ['webz-world-identity', 'delegate-operational-peer-keys'],
+  );
+  const remoteOp = await createOperationalKey();
+  const delegation = await delegateOperationalKey(
+    remote,
+    remoteOp.public_key,
+    'webz-peer-https',
+    {
+      serial: 1,
+      not_before: '2026-10-07T00:00:00.000Z',
+      not_after: '2099-01-01T00:00:00.000Z',
+      endpoint_constraints: ['https://orchard.example.invalid'],
+      replaces_fingerprint: null,
+    },
+  );
+  const trust = await trustPeerFounder(
+    local,
+    REMOTE_WORLD,
+    remote.public_key,
+    ['webz-peer-auth'],
+    { expires_at: '2099-01-01T00:00:00.000Z', invitation_id: 'invite:orchard:composed' },
+  );
+  const at = trust.created_at;
+
+  assert.equal(await verifyTrustedPeerOperationalKey({
+    peer_trust: trust,
+    founding_statement: remote.founding_statement,
+    delegation,
+    local_fatherhand_public_key: local.public_key,
+    expected_remote_world_id: REMOTE_WORLD,
+    presented_operational_public_key: remoteOp.public_key,
+    peer_scope: 'webz-peer-auth',
+    operational_scope: 'webz-peer-https',
+    at,
+  }), true);
+
+  const impostorOp = await createOperationalKey();
+  assert.equal(await verifyTrustedPeerOperationalKey({
+    peer_trust: trust,
+    founding_statement: remote.founding_statement,
+    delegation,
+    local_fatherhand_public_key: local.public_key,
+    expected_remote_world_id: REMOTE_WORLD,
+    presented_operational_public_key: impostorOp.public_key,
+    peer_scope: 'webz-peer-auth',
+    operational_scope: 'webz-peer-https',
+    at,
+  }), false);
+
+  const wrongWorldFounder = await createFounderNode(
+    remoteRoot,
+    'webz:the-static-collective/not-orchard',
+    ['webz-world-identity', 'delegate-operational-peer-keys'],
+  );
+  assert.equal(await verifyTrustedPeerOperationalKey({
+    peer_trust: trust,
+    founding_statement: wrongWorldFounder.founding_statement,
+    delegation,
+    local_fatherhand_public_key: local.public_key,
+    expected_remote_world_id: REMOTE_WORLD,
+    presented_operational_public_key: remoteOp.public_key,
+    peer_scope: 'webz-peer-auth',
+    operational_scope: 'webz-peer-https',
+    at,
+  }), false);
 });
 
 test('peer trust cannot be replayed under a different remote world label', async () => {
