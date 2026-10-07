@@ -1,0 +1,39 @@
+{
+  "schema": "relatte.receipt/v0",
+  "crossing_id": "relatte-crossing-v0:1989c09663894c47364a5279d1cb74d0884ca408ad3f93cc2f242eb8568976e2",
+  "world_id": "supabardo:sb003",
+  "receiver_particular": "crossing-field:sb003",
+  "kind": "SB003_EXIT",
+  "semantic_effect": "none",
+  "contract_ref": "supabardo:sb003/v0",
+  "pre_state_ref": "relatte-receipt-v0:985503490cb9e9b6c6f74f7929440586109937eaac0efb48d857b94cd20fdee8",
+  "post_state_ref": "relatte-receipt-v0:b4f709f5aa2338bdd27e715e0340819192c12b5c1ca9f6c57d82f627d76ee939",
+  "descendant_refs": [],
+  "residual_refs": [],
+  "note": "B created a fresh local descendant; Bardo may die without inheriting B meaning.",
+  "created_at": "2026-10-07T00:45:00.000Z",
+  "extensions": {
+    "supabardo": {
+      "terminal_occurrence": "EXIT",
+      "successor_acceptance_receipt_id": "relatte-receipt-v0:14d7a27761cf6b9457429c6384062dc8780d4b83677c473acd5b4168b03b1e68",
+      "successor_disposition_receipt_id": "relatte-receipt-v0:b4f709f5aa2338bdd27e715e0340819192c12b5c1ca9f6c57d82f627d76ee939",
+      "laws": [
+        "EXIT != ADMISSION",
+        "SUCCESSOR != PREDECESSOR",
+        "DESTINATION MEANING REMAINS LOCAL"
+      ]
+    }
+  },
+  "receipt_id": "relatte-receipt-v0:5882bfb030f329d32a38bd11201348473c6e3109c3d5c3e0ae9a17b29649933d",
+  "signing": {
+    "algorithm": "ECDSA-P256-SHA256",
+    "public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "RYLxHgx-sZTqMadv-IX0G464ynSg0gwPti8Wd0ssiDI",
+      "y": "Yp-EehgTEjqrUVpRX6xd5iCKETSMmHKkJSn_IbyFITY"
+    },
+    "signature": "9ZBqFApWNlPTzeKxQzMD0C4fzuArQ5B-B3m0STeKUV2q6mKJSwEwQy5N4Yoizr9uq0w0_Wv1UVHfYcCfhFxOEg",
+    "domain": "relatte.receipt-signature/v0"
+  }
+}
