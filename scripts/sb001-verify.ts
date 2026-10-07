@@ -37,6 +37,13 @@ function requireArrayExcludes(value: unknown, excluded: string, code: string): v
   if (!Array.isArray(value) || value.includes(excluded)) throw new Error(code);
 }
 
+function requireExactArray(value: unknown, expected: readonly string[], code: string): void {
+  if (!Array.isArray(value) || value.length !== expected.length) throw new Error(code);
+  for (let i = 0; i < expected.length; i++) {
+    if (value[i] !== expected[i]) throw new Error(code);
+  }
+}
+
 function requireOnlyKeys(value: unknown, allowed: readonly string[], code: string): AnyRecord {
   const record = asRecord(value, code);
   const allowedSet = new Set(allowed);
@@ -197,6 +204,11 @@ export async function verifySb001Bundle(bundle: Sb001Bundle): Promise<true> {
     '2b317402c4769319220cd6bc3e5d20c3978dbfbf',
     'SB001_SOURCE_BLOB_SUBSTITUTION',
   );
+  requireEqual(
+    crossing.extensions?.sb001?.claim_limit,
+    'Executable STATIC-OS software occurrence; not a physical boot witness.',
+    'SB001_CLAIM_LIMIT_ESCALATION',
+  );
   requireOnlyKeys(
     crossing.extensions?.sb001,
     ['source_repository', 'source_ref', 'source_commit', 'source_path', 'source_blob_sha', 'claim_limit'],
@@ -213,15 +225,15 @@ export async function verifySb001Bundle(bundle: Sb001Bundle): Promise<true> {
   requireEqual(release.receiver_particular, crossing.source_particular, 'SB001_RELEASE_WRONG_PARTICULAR');
   requireEqual(release.post_state_ref, crossing.crossing_id, 'SB001_RELEASE_LOST_CROSSING');
   requireEqual(release.extensions?.supabardo?.source_bytes_may_remain, true, 'SB001_RELEASE_ERASURE_CONFUSION');
-  requireArrayIncludes(
+  requireExactArray(
     release.extensions?.supabardo?.laws,
-    'RELEASE != ERASURE',
-    'SB001_RELEASE_LAW_MISSING',
+    ['RELEASE != ERASURE', 'COPY != SECOND AUTHORITY'],
+    'SB001_RELEASE_LAW_DRIFT',
   );
-  requireArrayIncludes(
+  requireExactArray(
     release.residual_refs,
-    `sha256:${SB001_PAYLOAD_SHA256}`,
-    'SB001_RELEASE_LOST_PAYLOAD_REF',
+    [`sha256:${SB001_PAYLOAD_SHA256}`],
+    'SB001_RELEASE_RESIDUAL_DRIFT',
   );
   requireOnlyKeys(
     release.extensions?.supabardo,
@@ -241,17 +253,20 @@ export async function verifySb001Bundle(bundle: Sb001Bundle): Promise<true> {
     null,
     'SB001_PREMATURE_DESTINATION_MEANING',
   );
-  for (const occurrence of ['ENTER', 'FORM', 'WITNESS', 'WAIT']) {
-    requireArrayIncludes(
-      unresolved.extensions?.supabardo?.occurrence_classes,
-      occurrence,
-      `SB001_MISSING_${occurrence}`,
-    );
-  }
-  requireArrayExcludes(
+  requireExactArray(
     unresolved.extensions?.supabardo?.occurrence_classes,
-    'EXIT',
-    'SB001_EXIT_BEFORE_DESTINATION',
+    ['ENTER', 'FORM', 'WITNESS', 'WAIT'],
+    'SB001_OCCURRENCE_DRIFT',
+  );
+  requireExactArray(
+    unresolved.extensions?.supabardo?.laws,
+    ['OPEN != ADMITTED', 'WITNESS != AUTHORITY', 'PRESENCE != ASSENT'],
+    'SB001_WAIT_LAW_DRIFT',
+  );
+  requireExactArray(
+    unresolved.residual_refs,
+    [`sha256:${SB001_PAYLOAD_SHA256}`],
+    'SB001_WAIT_RESIDUAL_DRIFT',
   );
   requireOnlyKeys(
     unresolved.extensions?.supabardo,
@@ -277,6 +292,21 @@ export async function verifySb001Bundle(bundle: Sb001Bundle): Promise<true> {
     unresolved.receipt_id,
     'SB001_DESTINATION_LOST_UNRESOLVED_ANCESTRY',
   );
+  requireExactArray(
+    disposition.extensions?.local_receiver?.laws,
+    ['RECEIPT != ADMISSION', 'HOLD != ADMIT', 'AUTHORITY IS LOCAL'],
+    'SB001_DESTINATION_LAW_DRIFT',
+  );
+  requireExactArray(
+    disposition.descendant_refs,
+    ['particular:sb001-b:constituted-world-001'],
+    'SB001_DESTINATION_DESCENDANT_DRIFT',
+  );
+  requireExactArray(
+    disposition.residual_refs,
+    [],
+    'SB001_DESTINATION_RESIDUAL_DRIFT',
+  );
   requireOnlyKeys(
     disposition.extensions?.local_receiver,
     ['disposition', 'laws', 'supabardo_unresolved_receipt_id'],
@@ -296,6 +326,13 @@ export async function verifySb001Bundle(bundle: Sb001Bundle): Promise<true> {
     disposition.receipt_id,
     'SB001_EXIT_WRONG_DESTINATION_RECEIPT',
   );
+  requireExactArray(
+    exit.extensions?.supabardo?.laws,
+    ['EXIT != ADMISSION', 'DESTINATION MEANING REMAINS LOCAL'],
+    'SB001_EXIT_LAW_DRIFT',
+  );
+  requireExactArray(exit.descendant_refs, [], 'SB001_EXIT_DESCENDANT_DRIFT');
+  requireExactArray(exit.residual_refs, [], 'SB001_EXIT_RESIDUAL_DRIFT');
   requireOnlyKeys(
     exit.extensions?.supabardo,
     ['state_before_exit', 'terminal_occurrence', 'destination_disposition_receipt_id', 'laws'],
