@@ -81,8 +81,25 @@ function distance(a: Vec3, b: Vec3): number {
   return Math.abs(a.x - b.x) + Math.abs(a.y - b.y) + Math.abs(a.z - b.z);
 }
 
-function quarryPos(index: number): Vec3 {
-  return { x: index, y: Y, z: QUARRY_Z };
+function quarryPos(nibble: number, index: number): Vec3 {
+  if (!Number.isInteger(nibble) || nibble < 0 || nibble > 15) {
+    throw new Error('MINECRAFT_QUARRY_NIBBLE_INVALID');
+  }
+  return { x: nibble, y: Y, z: QUARRY_Z - index - 1 };
+}
+
+function quarryBlockAt(value: Vec3, frameNibbles: number): WoolBlock | null {
+  if (
+    value.y !== Y ||
+    !Number.isInteger(value.x) ||
+    value.x < 0 ||
+    value.x > 15 ||
+    !Number.isInteger(value.z)
+  ) return null;
+
+  const index = QUARRY_Z - value.z - 1;
+  if (index < 0 || index >= frameNibbles) return null;
+  return WOOL[value.x] ?? null;
 }
 
 function wallPos(index: number): Vec3 {
@@ -175,7 +192,7 @@ export function makeMinecraftPlaythrough(
   for (const index of order) {
     const nibble = nibbles[index]!;
     const block = WOOL[nibble]!;
-    const quarry = quarryPos(index);
+    const quarry = quarryPos(nibble, index);
     const wall = wallPos(index);
 
     events.push({
@@ -240,13 +257,6 @@ export function replayMinecraftPlaythrough(
     }
   }
 
-  const quarry = new Map<string, WoolBlock>();
-  for (let index = 0; index < value.frame_nibbles; index += 1) {
-    // Quarry block color is derived from the eventual claimed break event.
-    // It is fixed lazily on first legal break, then the cell is consumed.
-    quarry.set(posKey(quarryPos(index)), 'minecraft:white_wool');
-  }
-
   const mined = new Set<string>();
   const inventory = new Map<WoolBlock, number>();
   const build = new Map<string, WoolBlock>();
@@ -266,11 +276,14 @@ export function replayMinecraftPlaythrough(
     if (event.kind === 'break') {
       if (!samePos(position, event.at)) throw new Error('MINECRAFT_BREAK_OUT_OF_REACH');
       const key = posKey(event.at);
-      if (!quarry.has(key) || mined.has(key)) throw new Error('MINECRAFT_BLOCK_NOT_MINEABLE');
+      const expectedBlock = quarryBlockAt(event.at, value.frame_nibbles);
+      if (!expectedBlock || mined.has(key)) {
+        throw new Error('MINECRAFT_BLOCK_NOT_MINEABLE');
+      }
+      if (event.block !== expectedBlock) {
+        throw new Error('MINECRAFT_MINED_BLOCK_MISMATCH');
+      }
 
-      // Quarry cells are designated by index; the playthrough binds the mined
-      // wool color at that cell exactly once. Conservation is enforced after.
-      nibbleForBlock(event.block);
       mined.add(key);
       minedCount += 1;
       inventory.set(event.block, (inventory.get(event.block) ?? 0) + 1);
