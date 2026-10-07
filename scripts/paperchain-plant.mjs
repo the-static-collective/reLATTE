@@ -1,5 +1,5 @@
-// GERMINATION-002 — explicit PAPERCHAIN PLANT -> admitted local uptake -> fresh child crossing.
-// Uses existing reLATTE primitives without teaching the core manga semantics.
+// GERMINATION-002 — held PAPERCHAIN seed + Fatherhand capacity + explicit PLANT -> fresh descendant.
+// reLATTE binds foreign capacity evidence without absorbing Fatherhand semantics.
 import { lstat, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { isAbsolute, join, resolve } from 'node:path';
@@ -18,6 +18,11 @@ import {
   verifyReceipt,
 } from '../src/index.ts';
 
+const FATHERHAND_SCHEMA='tranchnode/fatherhand-paperchain-plant-witness/v0.1';
+const FATHERHAND_RECEIPT_SCHEMA='tranchnode/fatherhand-authority-validation-receipt/v0.1';
+const PLANT_CAPABILITY='paperchain.plant';
+const PLANT_PURPOSE='purpose:paperchain:germination';
+
 function plus(date, ms) {
   return new Date(Date.parse(date) + ms).toISOString();
 }
@@ -25,6 +30,54 @@ function xml(value) {
   return String(value)
     .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
     .replaceAll('"','&quot;').replaceAll("'","&apos;");
+}
+function exactStrings(value, expected) {
+  return Array.isArray(value) &&
+    value.length===expected.length &&
+    [...value].sort().every((entry,index)=>entry===expected[index]);
+}
+async function loadFatherhandWitness(path, manifest, seedWitness) {
+  if(typeof path!=='string' || path.length===0) throw new Error('FATHERHAND_WITNESS_REQUIRED');
+  if(!isAbsolute(path)) throw new Error('FATHERHAND_WITNESS_PATH_NOT_ABSOLUTE');
+  const info=await lstat(path);
+  if(!info.isFile() || info.isSymbolicLink() || info.size===0 || info.size>262144)
+    throw new Error('FATHERHAND_WITNESS_NOT_BOUNDED_REGULAR_FILE');
+  const bytes=await readFile(path);
+  let authority;
+  try{authority=JSON.parse(bytes.toString('utf8'));}catch{throw new Error('INVALID_FATHERHAND_WITNESS_JSON');}
+  const expectedScope=[manifest.seed_id,seedWitness.crossing_id].sort();
+  if(authority.schema!==FATHERHAND_SCHEMA ||
+     authority.seedId!==manifest.seed_id ||
+     authority.heldCrossingId!==seedWitness.crossing_id ||
+     authority.capacityState!=='valid')
+    throw new Error('FATHERHAND_WITNESS_BINDING_INVALID');
+  const required=authority.requiredAct;
+  if(!required || required.capability!==PLANT_CAPABILITY ||
+     required.purposeId!==PLANT_PURPOSE ||
+     !exactStrings(required.scopeRefs,expectedScope))
+    throw new Error('FATHERHAND_REQUIRED_ACT_MISMATCH');
+  const validation=authority.validation;
+  if(!validation || validation.schema!==FATHERHAND_RECEIPT_SCHEMA ||
+     validation.result!=='valid' ||
+     !Array.isArray(validation.failures) || validation.failures.length!==0 ||
+     !Array.isArray(validation.uncertainties) || validation.uncertainties.length!==0 ||
+     validation.evaluatorVersion!=='fatherhand-grant-validator/v0.1' ||
+     typeof validation.terminalGrantId!=='string' || validation.terminalGrantId.length===0 ||
+     typeof validation.fatherhandId!=='string' || validation.fatherhandId.length===0)
+    throw new Error('FATHERHAND_CAPACITY_NOT_VALID');
+  if(!validation.required ||
+     validation.required.capability!==PLANT_CAPABILITY ||
+     validation.required.purposeId!==PLANT_PURPOSE ||
+     !exactStrings(validation.required.scopeRefs,expectedScope))
+    throw new Error('FATHERHAND_VALIDATION_SCOPE_MISMATCH');
+  return {
+    value:authority,
+    bytes,
+    sha256:sha256Hex(bytes),
+    terminalGrantId:validation.terminalGrantId,
+    fatherhandId:validation.fatherhandId,
+    evaluatorVersion:validation.evaluatorVersion,
+  };
 }
 async function destinationProcess(request) {
   const entry=fileURLToPath(new URL('./material-delivery.ts',import.meta.url));
@@ -65,9 +118,11 @@ function seedlingSvg(manifest, parentCrossingId) {
 </svg>\n`,'utf8');
 }
 
-export async function plantPaperchain(seedRoot, outputRoot, consent, createdAt=new Date().toISOString()) {
+export async function plantPaperchain(seedRoot, outputRoot, consent, fatherhandPath, createdAt=new Date().toISOString()) {
   if(consent!=='PLANT') throw new Error('EXPLICIT_PLANT_REQUIRED');
-  if(!isAbsolute(seedRoot)||!isAbsolute(outputRoot)) throw new Error('ABSOLUTE_PATHS_REQUIRED');
+  if(!fatherhandPath) throw new Error('FATHERHAND_WITNESS_REQUIRED');
+  if(!isAbsolute(seedRoot)||!isAbsolute(outputRoot)||!isAbsolute(fatherhandPath))
+    throw new Error('ABSOLUTE_PATHS_REQUIRED');
   if(!Number.isFinite(Date.parse(createdAt))) throw new Error('INVALID_CREATION_TIME');
   try{await lstat(outputRoot);throw new Error('OUTPUT_ROOT_ALREADY_EXISTS');}
   catch(error){if(error.code!=='ENOENT')throw error;}
@@ -90,6 +145,7 @@ export async function plantPaperchain(seedRoot, outputRoot, consent, createdAt=n
      custody.extensions?.local_receiver?.payload_custody?.retained!==true)
     throw new Error('PARENT_NOT_VERIFIED_HELD_SEED');
 
+  const fatherhand=await loadFatherhandWitness(fatherhandPath,manifest,witness);
   const childBytes=seedlingSvg(manifest,witness.crossing_id);
   if(childBytes.length===0 || childBytes.length>65536) throw new Error('CHILD_BYTES_OUT_OF_CUSTODY_BOUND');
   const childHash=sha256Hex(childBytes);
@@ -102,13 +158,31 @@ export async function plantPaperchain(seedRoot, outputRoot, consent, createdAt=n
     declared_kind:'PAPERCHAIN_PLANTING',
     payload_refs:[{address:'sha256:'+witness.seed_manifest_sha256,role:'held-seed-manifest',media_type:'application/json'}],
     requested_effect:{kind:'explicit-local-plant',authority:'receiver-local'},
-    capability_ref:null,privacy_policy:null,audience_policy:null,
+    capability_ref:'sha256:'+fatherhand.sha256,
+    privacy_policy:null,audience_policy:null,
     return_address:'return:paperchain/seed-vault',
     created_at:createdAt,
-    extensions:{paperchain:{consent:'PLANT',held_parent:witness.crossing_id,seed_id:manifest.seed_id}},
+    extensions:{
+      paperchain:{consent:'PLANT',held_parent:witness.crossing_id,seed_id:manifest.seed_id},
+      fatherhand_capacity:{
+        schema:FATHERHAND_SCHEMA,
+        witness_sha256:fatherhand.sha256,
+        fatherhand_id:fatherhand.fatherhandId,
+        terminal_grant_id:fatherhand.terminalGrantId,
+        evaluator_version:fatherhand.evaluatorVersion,
+        required_act:{
+          capability:PLANT_CAPABILITY,
+          scope_refs:[manifest.seed_id,witness.crossing_id].sort(),
+          purpose_id:PLANT_PURPOSE,
+        },
+        inherited_authority:false,
+      },
+    },
   },await generateP256KeyPair());
 
   await mkdir(outputRoot,{recursive:true});
+  const fatherhandCopy=join(outputRoot,'fatherhand-plant-witness.json');
+  await writeFile(fatherhandCopy,fatherhand.bytes);
   const gardenRoot=join(outputRoot,'garden');
   const garden=await LocalReceiver.create(gardenRoot,{
     world_id:'world:paperchain/garden',
@@ -139,12 +213,12 @@ export async function plantPaperchain(seedRoot, outputRoot, consent, createdAt=n
     world_id:'world:paperchain/garden',
     local_particular:'particular:paperchain/gardener',
     variation:{
-      preserved:['seed identity','source image digest','attributable parent crossing'],
+      preserved:['seed identity','source image digest','attributable parent crossing','Fatherhand capacity witness digest'],
       varied:['held seed becomes an explicitly planted local occurrence'],
       introduced:['deterministic vector seedling descendant','fresh descendant signing key'],
-      retired:['assumption that HOLD itself authorizes germination'],
+      retired:['assumption that HOLD or capacity evidence alone authorizes germination'],
     },
-    note:'Human/operator supplied literal PLANT; local garden admitted a fresh planting crossing before reproduction.',
+    note:'Literal PLANT plus bounded Fatherhand capacity evidence preceded receiver-local admission and reproduction.',
     created_at:plus(createdAt,4000),
   });
   const descendant=await sealCrossingEnvelope(buildCulturalDescendantDraft({
@@ -190,6 +264,13 @@ export async function plantPaperchain(seedRoot, outputRoot, consent, createdAt=n
     schema:'paperchain.germination-witness/v0',
     consent:'PLANT',
     held_seed_crossing:witness.crossing_id,
+    fatherhand:{
+      witness_path:fatherhandCopy,
+      witness_sha256:fatherhand.sha256,
+      fatherhand_id:fatherhand.fatherhandId,
+      terminal_grant_id:fatherhand.terminalGrantId,
+      capacity_state:'valid',
+    },
     planting_crossing_id:plantCrossing.crossing_id,
     plant_admit_receipt_id:admit.receipt_id,
     field_projection_id:field.projection_id,
@@ -200,8 +281,25 @@ export async function plantPaperchain(seedRoot, outputRoot, consent, createdAt=n
     nursery_hold_receipt_id:childCustody.disposition_receipt.receipt_id,
     child_custody_receipt_id:childCustody.custody_receipt.receipt_id,
     nursery_cold_replay:childCustody.receiver_snapshot,
-    laws:['HOLD != PLANT','PLANT != INHERITED AUTHORITY','DESCENDANT != ANCESTOR','ANCESTRY != AUTHORITY','ARRIVAL != ADMISSION'],
-    not_proven:['full-source-image-byte-custody','remote-network-crossing','human-identity','publication','fitness-or-quality'],
+    laws:[
+      'HOLD != PLANT',
+      'CAPACITY != CONSENT',
+      'CONSENT != CAPACITY',
+      'VALIDATION != ACTIVATION',
+      'FATHERHAND VALIDATION != RELATTE ADMISSION',
+      'PLANT != INHERITED AUTHORITY',
+      'DESCENDANT != ANCESTOR',
+      'ANCESTRY != AUTHORITY',
+      'ARRIVAL != ADMISSION',
+    ],
+    not_proven:[
+      'full-source-image-byte-custody',
+      'remote-network-crossing',
+      'human-identity',
+      'Fatherhand-witness-cryptographic-authenticity',
+      'publication',
+      'fitness-or-quality',
+    ],
   };
   await Promise.all([
     writeFile(join(outputRoot,'planting-crossing.json'),JSON.stringify(plantCrossing,null,2)+'\n'),
@@ -215,12 +313,12 @@ export async function plantPaperchain(seedRoot, outputRoot, consent, createdAt=n
 }
 
 if(process.argv[1] && pathToFileURL(resolve(process.argv[1])).href===import.meta.url){
-  const [seedRootArg,outputArg,consent]=process.argv.slice(2);
-  if(!seedRootArg||!outputArg){
-    process.stderr.write('Usage: node --experimental-strip-types scripts/paperchain-plant.mjs SEED_OUTPUT_DIR GERMINATION_OUTPUT_DIR PLANT\n');
+  const [seedRootArg,outputArg,consent,fatherhandArg]=process.argv.slice(2);
+  if(!seedRootArg||!outputArg||!fatherhandArg){
+    process.stderr.write('Usage: node --experimental-strip-types scripts/paperchain-plant.mjs SEED_OUTPUT_DIR GERMINATION_OUTPUT_DIR PLANT FATHERHAND_WITNESS.json\n');
     process.exitCode=2;
   }else{
-    plantPaperchain(resolve(seedRootArg),resolve(outputArg),consent)
+    plantPaperchain(resolve(seedRootArg),resolve(outputArg),consent,resolve(fatherhandArg))
       .then(result=>process.stdout.write(JSON.stringify(result,null,2)+'\n'))
       .catch(error=>{process.stderr.write(JSON.stringify({error:error.message})+'\n');process.exitCode=1;});
   }
