@@ -561,12 +561,14 @@ class RecoveredFatherHand {
   readonly fingerprint: string;
   readonly generation: number;
   readonly public_key: PublicJwk;
+  readonly recovery_set_id: string;
   #privateKey: CryptoKey | null;
 
-  constructor(fingerprint: string, generation: number, publicKey: PublicJwk, privateKey: CryptoKey) {
+  constructor(fingerprint: string, generation: number, publicKey: PublicJwk, recoverySetId: string, privateKey: CryptoKey) {
     this.fingerprint = fingerprint;
     this.generation = generation;
     this.public_key = publicKey;
+    this.recovery_set_id = recoverySetId;
     this.#privateKey = privateKey;
   }
 
@@ -616,7 +618,7 @@ export async function reconstructFatherHand(
     const publicKey = await publicJwkFromPrivateKey(key);
     const fingerprint = fatherHandFingerprint(publicKey);
     if (fingerprint !== expectedFingerprint) throw new Error('RECOVERED_FATHERHAND_FINGERPRINT_MISMATCH');
-    return new RecoveredFatherHand(fingerprint, first.fatherhand_generation, publicKey, key);
+    return new RecoveredFatherHand(fingerprint, first.fatherhand_generation, publicKey, first.recovery_set_id, key);
   } finally {
     recovered.fill(0);
   }
@@ -755,6 +757,7 @@ function successionBody(statement: Record<string, any>): Record<string, any> {
     schema: statement.schema,
     old_fatherhand_fingerprint: statement.old_fatherhand_fingerprint,
     old_generation: statement.old_generation,
+    recovery_set_id: statement.recovery_set_id,
     new_fatherhand_public_key: statement.new_fatherhand_public_key,
     new_fatherhand_fingerprint: statement.new_fatherhand_fingerprint,
     new_generation: statement.new_generation,
@@ -804,6 +807,7 @@ class RecoveryCeremony {
       statement_id: 'pending',
       old_fatherhand_fingerprint: old.fingerprint,
       old_generation: old.generation,
+      recovery_set_id: old.recovery_set_id,
       new_fatherhand_public_key: successor.public_key,
       new_fatherhand_fingerprint: successor.fingerprint,
       new_generation: successor.generation,
@@ -873,11 +877,12 @@ export async function verifyFatherHandSuccession(value: unknown): Promise<boolea
   try {
     const statement = exactKeys(value, [
       'schema', 'statement_id', 'old_fatherhand_fingerprint', 'old_generation',
-      'new_fatherhand_public_key', 'new_fatherhand_fingerprint', 'new_generation',
+      'recovery_set_id', 'new_fatherhand_public_key', 'new_fatherhand_fingerprint', 'new_generation',
       'reason', 'previous_lineage_head', 'retained_founder_fingerprints',
       'revoked_founder_fingerprints', 'created_at', 'old_signing', 'new_countersigning',
     ], 'INVALID_SUCCESSION_STATEMENT');
     if (statement.schema !== 'fatherhand.succession/v0') return false;
+    if (!/^fatherhand-recovery-v0:[a-f0-9]{32}$/.test(statement.recovery_set_id)) return false;
     if (!Number.isSafeInteger(statement.old_generation) || statement.old_generation < 0 || statement.new_generation !== statement.old_generation + 1) return false;
     if (typeof statement.reason !== 'string' || statement.reason.length === 0 || statement.reason.length > 160) return false;
     if (statement.previous_lineage_head !== null && (typeof statement.previous_lineage_head !== 'string' || statement.previous_lineage_head.length === 0)) return false;
