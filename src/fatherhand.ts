@@ -1350,3 +1350,58 @@ export async function verifyPeerTrust(
     return false;
   }
 }
+
+
+export async function verifyTrustedPeerOperationalKey(args: {
+  peer_trust: unknown;
+  founding_statement: unknown;
+  delegation: unknown;
+  local_fatherhand_public_key: unknown;
+  expected_remote_world_id: string;
+  presented_operational_public_key: unknown;
+  peer_scope: string;
+  operational_scope: string;
+  at: string;
+}): Promise<boolean> {
+  try {
+    const expectedWorld = validateWorldId(args.expected_remote_world_id, 'INVALID_REMOTE_WORLD');
+    if (!(await verifyFatherHandFounding(args.founding_statement))) return false;
+    const founding = args.founding_statement as Record<string, any>;
+    if (founding.founder_world_id !== expectedWorld) return false;
+    const founderKey = normalizePublicJwk(founding.founder_public_key);
+    const founderFingerprint = founderNodeFingerprint(founderKey);
+    if (founding.founder_fingerprint !== founderFingerprint) return false;
+
+    if (!(await verifyPeerTrust(
+      args.peer_trust,
+      args.local_fatherhand_public_key,
+      founderKey,
+      expectedWorld,
+      args.peer_scope,
+      args.at,
+    ))) return false;
+    const trust = args.peer_trust as Record<string, any>;
+    if (
+      trust.remote_founder_fingerprint !== founderFingerprint ||
+      JSON.stringify(trust.remote_founder_public_key) !== JSON.stringify(founderKey)
+    ) return false;
+
+    if (!(await verifyOperationalDelegation(
+      args.delegation,
+      founderFingerprint,
+      args.operational_scope,
+      args.at,
+      founding,
+    ))) return false;
+    const delegation = args.delegation as Record<string, any>;
+    const presented = normalizePublicJwk(args.presented_operational_public_key);
+    if (
+      delegation.operational_fingerprint !== operationalKeyFingerprint(presented) ||
+      JSON.stringify(delegation.operational_public_key) !== JSON.stringify(presented)
+    ) return false;
+
+    return true;
+  } catch {
+    return false;
+  }
+}
