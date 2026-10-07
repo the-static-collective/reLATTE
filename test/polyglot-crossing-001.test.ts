@@ -26,6 +26,8 @@ import {
   observePrintableCarrier,
 } from '../experiments/polyglot-crossing-001/physical-carrier-adapter.ts';
 
+const FROZEN_SRC_TREE_SHA = 'c0e4d2c59481e0fb2a4bf4bb294f373907fd2b76';
+
 const PAYLOAD = Buffer.from(
   JSON.stringify({
     schema: 'static.polyglot-seed/v0',
@@ -51,14 +53,15 @@ async function hop(
   });
 }
 
-test('POLYGLOT-CROSSING-001: normative src core is unchanged from frozen SHA', () => {
-  const changed = execFileSync(
+test('POLYGLOT-CROSSING-001: normative src core tree is frozen byte-for-byte', () => {
+  const currentSrcTree = execFileSync(
     'git',
-    ['diff', '--name-only', FROZEN_CORE_SHA, 'HEAD', '--', 'src'],
+    ['rev-parse', 'HEAD:src'],
     { encoding: 'utf8' },
   ).trim();
 
-  assert.equal(changed, '');
+  assert.equal(currentSrcTree, FROZEN_SRC_TREE_SHA);
+  assert.equal(FROZEN_CORE_SHA, 'f5cb7488bebc1a6e27fd458ad40af9b9b6f9e858');
 });
 
 test('POLYGLOT-CROSSING-001: six alien substrates preserve bytes without collapsing native particulars', async () => {
