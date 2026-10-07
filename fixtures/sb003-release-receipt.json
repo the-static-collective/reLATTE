@@ -1,0 +1,38 @@
+{
+  "schema": "relatte.receipt/v0",
+  "crossing_id": "relatte-crossing-v0:1989c09663894c47364a5279d1cb74d0884ca408ad3f93cc2f242eb8568976e2",
+  "world_id": "world:sb003-a",
+  "receiver_particular": "particular:sb003-a",
+  "kind": "SB003_RELEASE",
+  "semantic_effect": "crossing-released",
+  "contract_ref": "supabardo:sb003/v0",
+  "pre_state_ref": "local-state:sb003-a:before-release",
+  "post_state_ref": "relatte-crossing-v0:1989c09663894c47364a5279d1cb74d0884ca408ad3f93cc2f242eb8568976e2",
+  "descendant_refs": [],
+  "residual_refs": [
+    "sha256:476d5062adf81b18d9fa2ae3fe39c9b2c1a2115bf7f9f5c177901d741fed22e2"
+  ],
+  "note": "A releases the Ark; release does not transfer identity or admission.",
+  "created_at": "2026-10-07T00:38:00.000Z",
+  "extensions": {
+    "supabardo": {
+      "source_bytes_may_remain": true,
+      "laws": [
+        "RELEASE != ERASURE",
+        "ARK != AUTHORITY TRANSFER"
+      ]
+    }
+  },
+  "receipt_id": "relatte-receipt-v0:61cd90f1afccedbd00e810753354fa05400ab503397f53c01c12e9610b70735b",
+  "signing": {
+    "algorithm": "ECDSA-P256-SHA256",
+    "public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "Lms3RuEoikmUFzFTeOz9nr7mMj_2bYizJ36_-Xf72MM",
+      "y": "zE6PEXgH0TX7Ge2R35Ax7m_pEW6J5aZ13szDGOZjSbQ"
+    },
+    "signature": "xeDa2baCfqVBh1o4pOVRWj-kvuFJVwgqjqRQLiC0rdIi7fDGIdpC7Yr5Ik0U6My5prGtlqL8Vudn0fNT2xq4EQ",
+    "domain": "relatte.receipt-signature/v0"
+  }
+}
