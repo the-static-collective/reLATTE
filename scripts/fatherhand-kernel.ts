@@ -9,6 +9,7 @@ import {
   issueRecoverySet,
   recoverKidShare,
   retireFatherHand,
+  retireFounderNode,
   retireOperationalKey,
   trustPeerFounder,
   verifyFatherHandFounding,
@@ -124,6 +125,8 @@ export async function runFatherHandKernel(): Promise<Record<string, any>> {
     throw new Error('PEER_TRUST_COLD_VERIFY_FAILED');
   }
   retireFatherHand(succession.successor);
+  retireFounderNode(sanctuary);
+  retireFounderNode(orchard);
   retireOperationalKey(transport);
 
   const report = {
@@ -132,6 +135,7 @@ export async function runFatherHandKernel(): Promise<Record<string, any>> {
     network_used: false,
     all_root_handles_retired_before_report: true,
     operational_key_handle_retired_before_report: true,
+    foundernode_handles_retired_before_report: true,
     fatherhand_genesis: {
       fingerprint: father0.fingerprint,
       generation: father0.generation,
