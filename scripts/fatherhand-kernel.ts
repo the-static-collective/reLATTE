@@ -83,6 +83,7 @@ export async function runFatherHandKernel(): Promise<Record<string, any>> {
     sanctuary.fingerprint,
     'webz-peer-https',
     '2026-10-08T00:00:00.000Z',
+    sanctuary.founding_statement,
   ))) {
     throw new Error('OPERATIONAL_DELEGATION_COLD_VERIFY_FAILED');
   }
