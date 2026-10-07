@@ -16,7 +16,8 @@ export type PolyglotSubstrate =
   | 'sqlite'
   | 'http'
   | 'signed-json'
-  | 'physical-carrier';
+  | 'physical-carrier'
+  | 'udp-datagram-swarm';
 
 export type LocalDisposition = 'R3_HOLD' | 'R3_ADMIT' | 'R3_REFUSE' | 'RETURN';
 
