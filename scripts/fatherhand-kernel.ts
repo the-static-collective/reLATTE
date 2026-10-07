@@ -97,6 +97,7 @@ export async function runFatherHandKernel(): Promise<Record<string, any>> {
   if (!(await verifyFatherHandFounding(orchard.founding_statement))) {
     throw new Error('REMOTE_FOUNDING_COLD_VERIFY_FAILED');
   }
+  retireFatherHand(remoteFather);
 
   const trust = await trustPeerFounder(
     succession.successor,
@@ -117,11 +118,13 @@ export async function runFatherHandKernel(): Promise<Record<string, any>> {
   ))) {
     throw new Error('PEER_TRUST_COLD_VERIFY_FAILED');
   }
+  retireFatherHand(succession.successor);
 
   const report = {
     schema: 'webz.fatherhand-kernel-witness/v0',
     synthetic_only: true,
     network_used: false,
+    all_root_handles_retired_before_report: true,
     fatherhand_genesis: {
       fingerprint: father0.fingerprint,
       generation: father0.generation,
