@@ -1,0 +1,44 @@
+{
+  "schema": "relatte.receipt/v0",
+  "crossing_id": "relatte-crossing-v0:0a33b019864dcc754e97ade9fb7d45229b9ef74b0ba11c4f8cfaca92ee8f384a",
+  "world_id": "world:sb002-creative-desk",
+  "receiver_particular": "creative-desk:sb002",
+  "kind": "TOASTER_HOLD",
+  "semantic_effect": "proposal-held",
+  "contract_ref": "toaster:creative-local-disposition/v0",
+  "pre_state_ref": "local-state:sb002:before",
+  "post_state_ref": "local-state:sb002:held",
+  "descendant_refs": [],
+  "residual_refs": [
+    "sha256:b9feba52bf6ca98f26d395d0e637d316600a856d379955c4fa47c36da4dfb545"
+  ],
+  "note": "Destination holds the proposal because no human KEEP or REFUSE was observed.",
+  "created_at": "2026-10-07T00:23:00.000Z",
+  "extensions": {
+    "local_receiver": {
+      "disposition": "HOLD",
+      "render_authority": false,
+      "human_keep_observed": false,
+      "human_refuse_observed": false,
+      "supabardo_unresolved_receipt_id": "relatte-receipt-v0:dc23cdb27673d16ba3a75b286803ef094ae8ebc0203a03a52cc5234f872e9557",
+      "laws": [
+        "HOLD != KEEP",
+        "HOLD != REFUSE",
+        "PROPOSAL != RENDER AUTHORITY",
+        "AUTHORITY IS LOCAL"
+      ]
+    }
+  },
+  "receipt_id": "relatte-receipt-v0:397de3219d9f3918b717093ef8dcd81413823eeec068c7329c1b5aece0097394",
+  "signing": {
+    "algorithm": "ECDSA-P256-SHA256",
+    "public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "YsJ0JtTjzPuOwT_kMeOhzBECIP1AMlc2RiR2lBa1LjQ",
+      "y": "62W8AeZg7fLG-Z6vuc3-kQS6ttCw54PZJ5JfU48Ijak"
+    },
+    "signature": "gmFvoTKDm76ZCcLnSe5V3EaukIXQVBUAhBU9FMjlkOOrO02UasyRyJLivxl61AruDIgBZNsDzuOFhKNJx6TmvA",
+    "domain": "relatte.receipt-signature/v0"
+  }
+}
