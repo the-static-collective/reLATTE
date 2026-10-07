@@ -1,0 +1,28 @@
+{
+  "schema": "supabardo.sb003-evidence-manifest/v0",
+  "body": {
+    "schema": "supabardo.sb003-evidence-set/v0",
+    "specimen": "SB-003",
+    "ark_sha256": "476d5062adf81b18d9fa2ae3fe39c9b2c1a2115bf7f9f5c177901d741fed22e2",
+    "crossing_id": "relatte-crossing-v0:1989c09663894c47364a5279d1cb74d0884ca408ad3f93cc2f242eb8568976e2",
+    "release_receipt_id": "relatte-receipt-v0:61cd90f1afccedbd00e810753354fa05400ab503397f53c01c12e9610b70735b",
+    "unresolved_receipt_id": "relatte-receipt-v0:985503490cb9e9b6c6f74f7929440586109937eaac0efb48d857b94cd20fdee8",
+    "successor_acceptance_receipt_id": "relatte-receipt-v0:14d7a27761cf6b9457429c6384062dc8780d4b83677c473acd5b4168b03b1e68",
+    "disposition_receipt_id": "relatte-receipt-v0:b4f709f5aa2338bdd27e715e0340819192c12b5c1ca9f6c57d82f627d76ee939",
+    "exit_receipt_id": "relatte-receipt-v0:5882bfb030f329d32a38bd11201348473c6e3109c3d5c3e0ae9a17b29649933d",
+    "source_key_sha256": "6b098ae6e80b754f372eaf6140b2d22f7b477108db8c62d811a57759e2002089",
+    "bardo_key_sha256": "62ac7e01d7544d56341625123e568cc40a5203a4ba647571ce8c9aa4ac97c6c6",
+    "successor_key_sha256": "db7f91e25265980d8633572eecab80e24be497c1417518566b2f567e7ab3e4bb",
+    "causal_chain": [
+      "crossing_id -> release.post_state_ref",
+      "release.receipt_id -> unresolved.pre_state_ref",
+      "unresolved.receipt_id -> successor_acceptance.pre_state_ref",
+      "successor_acceptance.receipt_id -> disposition.pre_state_ref",
+      "unresolved.receipt_id -> exit.pre_state_ref",
+      "disposition.receipt_id -> exit.post_state_ref"
+    ],
+    "destination_disposition": "ADMIT",
+    "claim_limit": "Succession continuity only; successor remains a fresh local identity and does not inherit predecessor key or admission."
+  },
+  "evidence_set_id": "sb003-evidence-v0:706d1f95a15e11435c3d770886243b78a225677bde7926f02ed07d49bd6afb27"
+}

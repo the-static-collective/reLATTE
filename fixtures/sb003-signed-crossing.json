@@ -1,0 +1,47 @@
+{
+  "schema": "relatte.crossing-envelope/v0",
+  "protocol_version": "0",
+  "source_particular": "particular:sb003-a",
+  "source_world": "world:sb003-a",
+  "source_history_head": "local-history:sb003-a:terminal",
+  "parents": [],
+  "declared_kind": "SB003_SUCCESSION_ARK",
+  "payload_refs": [
+    {
+      "address": "sha256:476d5062adf81b18d9fa2ae3fe39c9b2c1a2115bf7f9f5c177901d741fed22e2",
+      "role": "succession-ark",
+      "media_type": "application/json"
+    }
+  ],
+  "requested_effect": {
+    "destination_disposition": "local",
+    "successor_identity": "fresh-required"
+  },
+  "capability_ref": "relatte:succession-ark/v0",
+  "privacy_policy": {
+    "retention": "decay-after-export"
+  },
+  "audience_policy": {
+    "destination": "world:sb003-b"
+  },
+  "return_address": "supabardo:return:sb003",
+  "created_at": "2026-10-07T00:37:00.000Z",
+  "extensions": {
+    "sb003": {
+      "ark_schema": "supabardo.sb003-ark/v0",
+      "claim_limit": "Succession crossing only; no inherited identity, key, or admission."
+    }
+  },
+  "crossing_id": "relatte-crossing-v0:1989c09663894c47364a5279d1cb74d0884ca408ad3f93cc2f242eb8568976e2",
+  "signing": {
+    "algorithm": "ECDSA-P256-SHA256",
+    "public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "Lms3RuEoikmUFzFTeOz9nr7mMj_2bYizJ36_-Xf72MM",
+      "y": "zE6PEXgH0TX7Ge2R35Ax7m_pEW6J5aZ13szDGOZjSbQ"
+    },
+    "signature": "LqpeHtFwaOEvxQbjCGJDzVJABCGm7rf9fIBnN_2uuyXrT50NgDfp2jpp1Po6iKm7GAocVHGrRkCELfwJTIaTtg",
+    "domain": "relatte.crossing-signature/v0"
+  }
+}

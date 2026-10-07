@@ -1,0 +1,45 @@
+{
+  "schema": "relatte.receipt/v0",
+  "crossing_id": "relatte-crossing-v0:1989c09663894c47364a5279d1cb74d0884ca408ad3f93cc2f242eb8568976e2",
+  "world_id": "world:sb003-b",
+  "receiver_particular": "particular:sb003-b",
+  "kind": "SB003_SUCCESSOR_ACCEPTANCE",
+  "semantic_effect": "none",
+  "contract_ref": "relatte:sb003-succession/v0",
+  "pre_state_ref": "relatte-receipt-v0:985503490cb9e9b6c6f74f7929440586109937eaac0efb48d857b94cd20fdee8",
+  "post_state_ref": "relatte-receipt-v0:985503490cb9e9b6c6f74f7929440586109937eaac0efb48d857b94cd20fdee8",
+  "descendant_refs": [],
+  "residual_refs": [
+    "sha256:476d5062adf81b18d9fa2ae3fe39c9b2c1a2115bf7f9f5c177901d741fed22e2"
+  ],
+  "note": "B accepts an attributable continuity reference under fresh local identity.",
+  "created_at": "2026-10-07T00:43:00.000Z",
+  "extensions": {
+    "succession": {
+      "predecessor_world_id": "world:sb003-a",
+      "successor_world_id": "world:sb003-b",
+      "authority": "fresh-local",
+      "inherited_private_key": false,
+      "inherited_admission": false,
+      "supabardo_unresolved_receipt_id": "relatte-receipt-v0:985503490cb9e9b6c6f74f7929440586109937eaac0efb48d857b94cd20fdee8",
+      "laws": [
+        "SUCCESSOR != PREDECESSOR",
+        "CONTINUITY != IDENTITY",
+        "ANCESTRY != AUTHORITY",
+        "SUCCESSION CLAIM != INHERITED ADMISSION"
+      ]
+    }
+  },
+  "receipt_id": "relatte-receipt-v0:14d7a27761cf6b9457429c6384062dc8780d4b83677c473acd5b4168b03b1e68",
+  "signing": {
+    "algorithm": "ECDSA-P256-SHA256",
+    "public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "LgCksbfSOrbn7j5kcd5toKvps-jcJY_zY2YV4KKIrTs",
+      "y": "x9M63ZqaaKAYHdJz67DJ6ogqqT5b3Wa8jgEGnlRRuSY"
+    },
+    "signature": "wGG87-XhAoYODLufnJ2s4GQIXyEkHG0dEYxDNg0LpYBNWmnlNiOdU8ED4oYXcOYLYM54-XtwdecgmIN_z-RvpA",
+    "domain": "relatte.receipt-signature/v0"
+  }
+}

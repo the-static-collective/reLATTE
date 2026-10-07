@@ -1,0 +1,18 @@
+{
+  "schema": "supabardo.sb003-ark/v0",
+  "specimen": "SB-003",
+  "predecessor_world_id": "world:sb003-a",
+  "predecessor_particular": "particular:sb003-a",
+  "successor_policy": "fresh-identity-required",
+  "recoverable_capability": {
+    "capability_ref": "capability:sb003-demo",
+    "payload_address": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  "laws": [
+    "SUCCESSOR != PREDECESSOR",
+    "RECONSTITUTION != RESURRECTION",
+    "ANCESTRY != AUTHORITY",
+    "ARK != INHERITED ADMISSION"
+  ],
+  "claim_limit": "Durable succession Ark; proves attributable continuity evidence, not predecessor identity or inherited admission."
+}

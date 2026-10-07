@@ -1,0 +1,46 @@
+{
+  "schema": "relatte.receipt/v0",
+  "crossing_id": "relatte-crossing-v0:1989c09663894c47364a5279d1cb74d0884ca408ad3f93cc2f242eb8568976e2",
+  "world_id": "supabardo:sb003",
+  "receiver_particular": "crossing-field:sb003",
+  "kind": "SB003_UNRESOLVED_INTERVAL",
+  "semantic_effect": "none",
+  "contract_ref": "supabardo:sb003/v0",
+  "pre_state_ref": "relatte-receipt-v0:61cd90f1afccedbd00e810753354fa05400ab503397f53c01c12e9610b70735b",
+  "post_state_ref": "relatte-crossing-v0:1989c09663894c47364a5279d1cb74d0884ca408ad3f93cc2f242eb8568976e2",
+  "descendant_refs": [],
+  "residual_refs": [
+    "sha256:476d5062adf81b18d9fa2ae3fe39c9b2c1a2115bf7f9f5c177901d741fed22e2"
+  ],
+  "note": "Ark has left A; successor meaning remains unresolved.",
+  "created_at": "2026-10-07T00:39:00.000Z",
+  "extensions": {
+    "supabardo": {
+      "state": "OPEN",
+      "destination_disposition": null,
+      "occurrence_classes": [
+        "ENTER",
+        "FORM",
+        "WITNESS",
+        "WAIT"
+      ],
+      "laws": [
+        "OPEN != ADMITTED",
+        "PREDECESSOR DEATH != SUCCESSOR IDENTITY",
+        "WITNESS != AUTHORITY"
+      ]
+    }
+  },
+  "receipt_id": "relatte-receipt-v0:985503490cb9e9b6c6f74f7929440586109937eaac0efb48d857b94cd20fdee8",
+  "signing": {
+    "algorithm": "ECDSA-P256-SHA256",
+    "public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "RYLxHgx-sZTqMadv-IX0G464ynSg0gwPti8Wd0ssiDI",
+      "y": "Yp-EehgTEjqrUVpRX6xd5iCKETSMmHKkJSn_IbyFITY"
+    },
+    "signature": "8RhY8A-44blJnbPR72IAOVv7d1xuoEQYEfYWo2zDrIOht0cAcWd6w43t9sQFcS1obbRWVF6BS6RtYMz-DBXm5Q",
+    "domain": "relatte.receipt-signature/v0"
+  }
+}
