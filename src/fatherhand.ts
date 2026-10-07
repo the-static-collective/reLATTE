@@ -142,7 +142,12 @@ function requireFounderNodePrivateKey(founder: FounderNode): CryptoKey {
 export interface OperationalKey {
   fingerprint: string;
   public_key: PublicJwk;
-  private_key: CryptoKey;
+}
+
+const operationalKeySecrets = new WeakMap<OperationalKey, CryptoKey>();
+
+export function retireOperationalKey(key: OperationalKey): void {
+  operationalKeySecrets.delete(key);
 }
 
 export interface FatherKid {
@@ -1026,11 +1031,12 @@ export async function verifyFatherHandSuccessionSet(
 export async function createOperationalKey(): Promise<OperationalKey> {
   const keys = await generateP256KeyPair();
   const publicKey = normalizePublicJwk(keys.publicKeyJwk);
-  return {
+  const operational: OperationalKey = {
     fingerprint: operationalKeyFingerprint(publicKey),
     public_key: publicKey,
-    private_key: keys.privateKey,
   };
+  operationalKeySecrets.set(operational, keys.privateKey);
+  return operational;
 }
 
 function authorityScopeForOperationalScope(scope: string): string {
