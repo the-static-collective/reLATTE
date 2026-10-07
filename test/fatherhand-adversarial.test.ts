@@ -59,6 +59,18 @@ test('world identity rejects display-confusable, control, URL-ish and noncanonic
   }
 });
 
+test('every FounderNode must actually carry world-identity authority', async () => {
+  const father = await createFatherHandGenesis();
+  await assert.rejects(
+    () => createFounderNode(
+      father,
+      VALID_WORLD,
+      ['delegate-operational-peer-keys'],
+    ),
+    /FOUNDER_WORLD_IDENTITY_SCOPE_REQUIRED/,
+  );
+});
+
 test('authority scopes are closed allowlists, not arbitrary typo-compatible strings', async () => {
   const father = await createFatherHandGenesis();
   await assert.rejects(
@@ -78,6 +90,24 @@ test('authority scopes are closed allowlists, not arbitrary typo-compatible stri
     ),
     /INVALID_PEER_SCOPES/,
   );
+});
+
+test('peer invitations reject control characters and ambiguous identifiers', async () => {
+  const local = await createFatherHandGenesis();
+  const remoteRoot = await createFatherHandGenesis();
+  const remote = await createFounderNode(remoteRoot, REMOTE_WORLD, ['webz-world-identity']);
+  for (const invitation_id of ['invite:ok\nTRUST', ' invite:leading', 'invite:trailing ', 'invite:☃']) {
+    await assert.rejects(
+      () => trustPeerFounder(
+        local,
+        REMOTE_WORLD,
+        remote.public_key,
+        ['webz-peer-auth'],
+        { expires_at: '2099-01-01T00:00:00.000Z', invitation_id },
+      ),
+      /INVALID_INVITATION_ID/,
+    );
+  }
 });
 
 test('peer trust cannot be replayed under a different remote world label', async () => {
@@ -148,6 +178,56 @@ test('peer trust is temporally bounded on both sides of creation', async () => {
       REMOTE_WORLD,
       'webz-peer-auth',
       '2000-01-01T00:00:00.000Z',
+    ),
+    false,
+  );
+});
+
+test('operational delegations cannot be valid before they were signed or be born already expired', async () => {
+  const father = await createFatherHandGenesis();
+  const founder = await createFounderNode(
+    father,
+    VALID_WORLD,
+    ['webz-world-identity', 'delegate-operational-peer-keys'],
+  );
+  const op = await createOperationalKey();
+
+  await assert.rejects(
+    () => delegateOperationalKey(
+      founder,
+      op.public_key,
+      'webz-peer-https',
+      {
+        serial: 1,
+        not_before: '1999-01-01T00:00:00.000Z',
+        not_after: '2000-01-01T00:00:00.000Z',
+        endpoint_constraints: ['https://sanctuary.example.invalid'],
+        replaces_fingerprint: null,
+      },
+    ),
+    /INVALID_DELEGATION_CREATION_WINDOW/,
+  );
+
+  const delegation = await delegateOperationalKey(
+    founder,
+    op.public_key,
+    'webz-peer-https',
+    {
+      serial: 2,
+      not_before: '1999-01-01T00:00:00.000Z',
+      not_after: '2099-01-01T00:00:00.000Z',
+      endpoint_constraints: ['https://sanctuary.example.invalid'],
+      replaces_fingerprint: null,
+    },
+  );
+
+  assert.equal(
+    await verifyOperationalDelegation(
+      delegation,
+      founder.fingerprint,
+      'webz-peer-https',
+      '2000-01-01T00:00:00.000Z',
+      founder.founding_statement,
     ),
     false,
   );
