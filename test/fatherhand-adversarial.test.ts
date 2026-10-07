@@ -19,6 +19,22 @@ import {
 const VALID_WORLD = 'webz:the-static-collective/sanctuary';
 const REMOTE_WORLD = 'webz:the-static-collective/orchard-022100';
 
+test('public-artifact scanner rejects hidden CryptoKey objects even under innocent field names', async () => {
+  const pair = await crypto.subtle.generateKey(
+    { name: 'ECDSA', namedCurve: 'P-256' },
+    true,
+    ['sign', 'verify'],
+  ) as CryptoKeyPair;
+  assert.throws(
+    () => assertPublicArtifactSafe({ innocent_name: pair.privateKey }),
+    /PRIVATE_KEY_MATERIAL/,
+  );
+  assert.throws(
+    () => assertPublicArtifactSafe({ bytes: new Uint8Array([1, 2, 3]) }),
+    /NON_JSON_PUBLIC_ARTIFACT/,
+  );
+});
+
 test('public-artifact scanning refuses cycles and excessive nesting instead of recursing unbounded', () => {
   const cyclic: Record<string, any> = {};
   cyclic.self = cyclic;
