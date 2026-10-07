@@ -4,13 +4,32 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
-      - run: npm install
+      - run: npm ci --ignore-scripts
+      - name: Supply-chain invariants
+        run: |
+          git diff --exit-code -- package.json package-lock.json
+          ! grep -RE 'uses:[[:space:]]+actions/[^@]+@v[0-9]+' .github/workflows
       - run: npm run verify
+      - name: WEBZ-005 synthetic FatherHand root-kernel witness
+        run: |
+          node --experimental-strip-types scripts/fatherhand-kernel.ts | tee /tmp/fatherhand-public.json
+          grep -q '"synthetic_only": true' /tmp/fatherhand-public.json
+          grep -q '"network_used": false' /tmp/fatherhand-public.json
+          grep -q '"all_root_handles_retired_before_report": true' /tmp/fatherhand-public.json
+          grep -q '"operational_key_handle_retired_before_report": true' /tmp/fatherhand-public.json
+          grep -q '"foundernode_handles_retired_before_report": true' /tmp/fatherhand-public.json
+          ! grep -Eq '"(d|private_key|share_bytes|fragment_bytes|seed_material|recovery_payload|secret_share)"[[:space:]]*:' /tmp/fatherhand-public.json

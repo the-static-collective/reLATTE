@@ -428,3 +428,32 @@ Daily Slice       Haunted Toaster
 The shared substrate is forbidden from learning either donor family's semantics.
 
 > **EDGE ADAPTER != CORE EXCEPTION**
+
+
+## WEBZ-005 FatherHand / FounderNode Root Kernel
+
+[WEBZ-005 FatherHand / FounderNode](docs/WEBZ-005-FATHERHAND-FOUNDERNODE.md) adds a deliberately **cold human-root trust layer** above world identity without putting that root into ordinary runtime authority.
+
+```text
+FatherHand-0
+   ├─ signs FounderNode
+   └─ 5 FatherKids / any 3
+          ↓
+     bounded recovery
+          ↓
+     FatherHand-1 succession
+
+FounderNode
+   └─ scoped operational keys
+
+FatherHand
+   └─ explicit peer FounderNode trust mark
+```
+
+The executable specimen is intentionally **network-free and synthetic**. It uses P-256 WebCrypto for root/world signatures and exact `shamir-secret-sharing@0.0.4` for threshold backup. FatherKid metadata is FatherHand-signed; private share bytes are never ordinary public receipts. The original root handle is retired before recovery, three distinct lineages reconstruct the expected root fingerprint, recovery may perform one signed succession act, and descendants of one FatherKid still count as **one** FatherHand-level lineage.
+
+Ordinary `src/index.ts` exports public verification functions but not cold-root creation, recovery, share, or trust-signing authority.
+
+> **THE SEED SURVIVES THROUGH ITS CHILDREN WITHOUT LIVING WHOLE INSIDE ANY ONE CHILD.**
+
+[Executable evidence](docs/receipts/WEBZ-005-FATHERHAND-KERNEL.md) records the synthetic CI witness and its limitations. Direct authenticated HTTPS remains a later gate.

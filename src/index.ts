@@ -16,3 +16,15 @@ export * from './pulse.ts';
 export * from './organ.ts';
 export * from './roundtrip.ts';
 export * from './material-delivery.ts';
+export {
+  assertPublicArtifactSafe,
+  fatherHandFingerprint,
+  founderNodeFingerprint,
+  operationalKeyFingerprint,
+  verifyFatherHandFounding,
+  verifyFatherHandSuccession,
+  verifyFatherHandSuccessionSet,
+  verifyOperationalDelegation,
+  verifyPeerTrust,
+  verifyTrustedPeerOperationalKey,
+} from './fatherhand.ts';

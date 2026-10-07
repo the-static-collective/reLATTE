@@ -13,16 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: "24"
       - name: Install pinned reLATTE dependencies
-        run: npm install --ignore-scripts
+        run: npm ci --ignore-scripts
       - name: Original Workbench fictional fixture bytes at immutable WEBZ-003 commit
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: the-static-collective/static-workbench
           ref: 53db559bbc510ad1003a0f8330d1673dcd04d7a0
@@ -35,7 +35,7 @@ jobs:
           mkdir -p work/webz004/sender
           node --experimental-strip-types scripts/webz-two-host-004.mjs sender .compat/static-workbench/static_workbench/web work/webz004/sender
           test ! -e work/webz004/sender/receiver-key.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: webz004-sender-carriers
           path: work/webz004/sender/
@@ -48,15 +48,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: "24"
       - name: Install receiver-owned reLATTE dependencies
-        run: npm install --ignore-scripts
-      - uses: actions/download-artifact@v4
+        run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           name: webz004-sender-carriers
           path: work/webz004/sender
@@ -67,7 +67,7 @@ jobs:
           test -f "$RUNNER_TEMP/webz004-recipient-private/receiver-key.json"
           test ! -e work/webz004/receiver-public/receiver-key.json
           test "$(find work/webz004/receiver-public -maxdepth 1 -type f | wc -l)" -eq 1
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: webz004-orchard-public-receipts
           path: work/webz004/receiver-public/
@@ -80,19 +80,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: "24"
       - name: Install verifier-owned reLATTE dependencies
-        run: npm install --ignore-scripts
-      - uses: actions/download-artifact@v4
+        run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           name: webz004-sender-carriers
           path: work/webz004/sender
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           name: webz004-orchard-public-receipts
           path: work/webz004/receiver-public
@@ -100,7 +100,7 @@ jobs:
         run: |
           node --experimental-strip-types scripts/webz-two-host-004.mjs verify work/webz004/sender work/webz004/receiver-public | tee work/webz004/verified-public-witness.json
           grep -q '"verified": true' work/webz004/verified-public-witness.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: webz004-third-party-verified-witness
           path: work/webz004/verified-public-witness.json
