@@ -83,14 +83,17 @@ export interface FatherHand {
   public_key: PublicJwk;
 }
 
-const fatherHandSecrets = new WeakMap<FatherHand, {
+type FatherHandSecretState = {
   privateKey: CryptoKey;
   fingerprint: string;
   generation: number;
   publicKey: string;
-}>();
+  recoverySetIssued: boolean;
+};
 
-function requireFatherHandPrivateKey(father: FatherHand): CryptoKey {
+const fatherHandSecrets = new WeakMap<FatherHand, FatherHandSecretState>();
+
+function requireFatherHandSecret(father: FatherHand): FatherHandSecretState {
   const secret = fatherHandSecrets.get(father);
   if (!secret) throw new Error('FATHERHAND_PRIVATE_KEY_UNAVAILABLE');
   if (
@@ -98,7 +101,11 @@ function requireFatherHandPrivateKey(father: FatherHand): CryptoKey {
     father.generation !== secret.generation ||
     JSON.stringify(father.public_key) !== secret.publicKey
   ) throw new Error('FATHERHAND_HANDLE_IDENTITY_MISMATCH');
-  return secret.privateKey;
+  return secret;
+}
+
+function requireFatherHandPrivateKey(father: FatherHand): CryptoKey {
+  return requireFatherHandSecret(father).privateKey;
 }
 
 export function retireFatherHand(father: FatherHand): void {
@@ -345,6 +352,7 @@ async function createFatherHand(generation: number): Promise<FatherHand> {
     fingerprint: father.fingerprint,
     generation: father.generation,
     publicKey: JSON.stringify(father.public_key),
+    recoverySetIssued: false,
   });
   return father;
 }
@@ -522,42 +530,55 @@ export async function issueRecoverySet(
   if (!Number.isSafeInteger(total) || !Number.isSafeInteger(threshold) || threshold < 2 || total < threshold || total > 255) {
     throw new Error('INVALID_RECOVERY_THRESHOLD');
   }
-  const exported = new Uint8Array(await crypto.subtle.exportKey('pkcs8', requireFatherHandPrivateKey(father)));
-  let pieces: Uint8Array[];
+  const secretState = requireFatherHandSecret(father);
+  if (secretState.recoverySetIssued) throw new Error('FATHERHAND_RECOVERY_SET_ALREADY_ISSUED');
+
+  const exported = new Uint8Array(await crypto.subtle.exportKey('pkcs8', secretState.privateKey));
+  let pieces: Uint8Array[] = [];
   try {
     pieces = await split(exported, total, threshold);
+    const recoverySetId = randomId('fatherhand-recovery-v0:');
+    const shares: FatherKid[] = [];
+    for (const bytes of pieces) {
+      const copy = new Uint8Array(bytes);
+      const share: FatherKid = {
+        schema: 'fatherhand.recovery-share/v0',
+        fatherhand_fingerprint: father.fingerprint,
+        fatherhand_generation: father.generation,
+        fatherhand_public_key: father.public_key,
+        recovery_set_id: recoverySetId,
+        lineage_id: randomId('fatherkid-v0:'),
+        share_index: copy[copy.length - 1]!,
+        threshold,
+        total,
+        share_bytes: base64url(copy),
+        share_checksum: sha256Hex(copy),
+        share_signature: 'pending',
+        scope: 'RECOVERY_ONLY',
+      };
+      share.share_signature = await sign(
+        secretState.privateKey,
+        RECOVERY_SHARE_SIGNATURE_DOMAIN,
+        recoveryShareIdentity(share),
+      );
+      shares.push(share);
+      copy.fill(0);
+    }
+
+    const hardenedPrivateKey = await crypto.subtle.importKey(
+      'pkcs8',
+      new Uint8Array(exported),
+      { name: 'ECDSA', namedCurve: 'P-256' },
+      false,
+      ['sign'],
+    );
+    secretState.privateKey = hardenedPrivateKey;
+    secretState.recoverySetIssued = true;
+    return { schema: 'fatherhand.recovery-set/v0', recovery_set_id: recoverySetId, threshold, total, shares };
   } finally {
     exported.fill(0);
+    for (const bytes of pieces) bytes.fill(0);
   }
-  const recoverySetId = randomId('fatherhand-recovery-v0:');
-  const shares: FatherKid[] = [];
-  for (const bytes of pieces) {
-    const copy = new Uint8Array(bytes);
-    const share: FatherKid = {
-      schema: 'fatherhand.recovery-share/v0',
-      fatherhand_fingerprint: father.fingerprint,
-      fatherhand_generation: father.generation,
-      fatherhand_public_key: father.public_key,
-      recovery_set_id: recoverySetId,
-      lineage_id: randomId('fatherkid-v0:'),
-      share_index: copy[copy.length - 1]!,
-      threshold,
-      total,
-      share_bytes: base64url(copy),
-      share_checksum: sha256Hex(copy),
-      share_signature: 'pending',
-      scope: 'RECOVERY_ONLY',
-    };
-    share.share_signature = await sign(
-      requireFatherHandPrivateKey(father),
-      RECOVERY_SHARE_SIGNATURE_DOMAIN,
-      recoveryShareIdentity(share),
-    );
-    shares.push(share);
-    copy.fill(0);
-    bytes.fill(0);
-  }
-  return { schema: 'fatherhand.recovery-set/v0', recovery_set_id: recoverySetId, threshold, total, shares };
 }
 
 class RecoveredFatherHand {
