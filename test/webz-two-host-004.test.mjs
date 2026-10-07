@@ -128,7 +128,7 @@ test('same receiver machine retries a completed handoff without rewriting signed
     const before=await changed(h);
     const journal=await readFile(join(h.privateRoot,'journal.jsonl'),'utf8');
     const repeated=await processReceiver(h.output,h.publicDir,h.privateRoot,receiver);
-    assert.equal(JSON.stringify(repeated,null,2)+'\\n',before);
+    assert.equal(JSON.stringify(repeated,null,2)+'\n',before);
     assert.equal(await readFile(join(h.privateRoot,'journal.jsonl'),'utf8'),journal);
     assert.equal((await verifyTransfer(h.output,h.publicDir)).verified,true);
   }finally{await rm(h.root,{recursive:true,force:true});}
