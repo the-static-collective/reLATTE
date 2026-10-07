@@ -155,6 +155,16 @@ function stateHash(steps: number, ant: AntState, black: Set<string>): string {
   }), 'utf8'));
 }
 
+export function computeLangtonCarrierStateHash(value: Pick<LangtonCarrier, 'steps' | 'ant' | 'black_cells'>): string {
+  const black = new Set<string>();
+  for (const cell of value.black_cells) {
+    parseKey(cell);
+    if (black.has(cell)) throw new Error('LANGTON_DUPLICATE_CELL');
+    black.add(cell);
+  }
+  return stateHash(value.steps, value.ant, black);
+}
+
 export function encodePayloadAsLangton(
   payload: Uint8Array,
   steps = DEFAULT_STEPS,
@@ -212,7 +222,7 @@ export function decodePayloadFromLangton(value: LangtonCarrier): Buffer {
     direction: value.ant.direction,
   };
 
-  if (stateHash(value.steps, ant, black) !== value.final_state_sha256) {
+  if (computeLangtonCarrierStateHash(value) !== value.final_state_sha256) {
     throw new Error('LANGTON_FINAL_STATE_MISMATCH');
   }
 
