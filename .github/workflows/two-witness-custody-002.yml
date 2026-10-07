@@ -1,0 +1,98 @@
+name: TWO-WITNESS-CUSTODY-002 three-runner proof
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  sender:
+    name: A - source witness, private key retained only in process
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install --ignore-scripts
+      - name: Produce public source witness
+        run: |
+          mkdir -p work/two-witness-002/source
+          node --experimental-strip-types scripts/two-witness-custody-002.mjs sender work/two-witness-002/source
+          test "$(find work/two-witness-002/source -maxdepth 1 -type f | wc -l)" -eq 1
+          test ! -e work/two-witness-002/source/private-key.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: two-witness-002-source
+          path: work/two-witness-002/source/
+          if-no-files-found: error
+          retention-days: 7
+
+  receiver:
+    name: B - independent runner receives A and signs receiver witness
+    needs: [sender]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: two-witness-002-source
+          path: work/two-witness-002/source
+      - name: Produce public receiver witness with fresh process-local key
+        run: |
+          mkdir -p work/two-witness-002/receiver
+          node --experimental-strip-types scripts/two-witness-custody-002.mjs receiver work/two-witness-002/source work/two-witness-002/receiver
+          test "$(find work/two-witness-002/receiver -maxdepth 1 -type f | wc -l)" -eq 1
+          test ! -e work/two-witness-002/receiver/private-key.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: two-witness-002-receiver
+          path: work/two-witness-002/receiver/
+          if-no-files-found: error
+          retention-days: 7
+
+  verifier:
+    name: C - reconstruct corroboration from public evidence only
+    needs: [sender, receiver]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: two-witness-002-source
+          path: work/two-witness-002/source
+      - uses: actions/download-artifact@v4
+        with:
+          name: two-witness-002-receiver
+          path: work/two-witness-002/receiver
+      - name: Third-party verification and hostile mutation checks
+        run: |
+          node --experimental-strip-types scripts/two-witness-custody-002.mjs verify work/two-witness-002/source work/two-witness-002/receiver | tee work/two-witness-002/verified.json
+          grep -q '"verified": true' work/two-witness-002/verified.json
+          grep -q '"status": "CORROBORATED"' work/two-witness-002/verified.json
+          grep -q '"distinct_ephemeral_runner_fingerprints": true' work/two-witness-002/verified.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: two-witness-002-third-party-verification
+          path: work/two-witness-002/verified.json
+          if-no-files-found: error
+          retention-days: 7
