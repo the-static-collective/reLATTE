@@ -14,3 +14,9 @@ jobs:
           node-version: 22
       - run: npm install
       - run: npm run verify
+      - name: WEBZ-005 synthetic FatherHand root-kernel witness
+        run: |
+          node --experimental-strip-types scripts/fatherhand-kernel.ts | tee /tmp/fatherhand-public.json
+          grep -q '"synthetic_only": true' /tmp/fatherhand-public.json
+          grep -q '"network_used": false' /tmp/fatherhand-public.json
+          ! grep -Eq '"(d|private_key|share_bytes|fragment_bytes|seed_material|recovery_payload|secret_share)"[[:space:]]*:' /tmp/fatherhand-public.json
