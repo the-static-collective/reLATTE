@@ -923,6 +923,7 @@ export async function delegateOperationalKey(
     replaces_fingerprint: string | null;
   },
 ): Promise<Record<string, any>> {
+  const founderPrivateKey = requireFounderNodePrivateKey(founder);
   if (typeof scope !== 'string' || scope.length === 0) throw new Error('INVALID_DELEGATION_SCOPE');
   const authorityScope = authorityScopeForOperationalScope(scope);
   if (!(await verifyFatherHandFounding(founder.founding_statement)) ||
@@ -965,7 +966,7 @@ export async function delegateOperationalKey(
     canonicalizeDomainValue(DELEGATION_ID_DOMAIN, delegationBody(statement)),
   );
   statement.signing.signature = await sign(
-    requireFounderNodePrivateKey(founder),
+    founderPrivateKey,
     DELEGATION_SIGNATURE_DOMAIN,
     { statement_id: statement.statement_id, ...delegationBody(statement) },
   );
