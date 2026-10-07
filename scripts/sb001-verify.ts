@@ -156,6 +156,38 @@ export async function verifySb001Bundle(bundle: Sb001Bundle): Promise<true> {
   requireEqual(crossing.declared_kind, 'STATIC_OS_WHOLE_BODY_PARTICULAR', 'SB001_CROSSING_KIND');
   requireEqual(crossing.requested_effect?.destination_disposition, 'local', 'SB001_GLOBALIZED_REQUEST');
   requireEqual(crossing.privacy_policy?.retention, 'decay-after-export', 'SB001_RETENTION_DRIFT');
+  requireEqual(crossing.audience_policy?.destination, 'world:sb001-b', 'SB001_DESTINATION_SUBSTITUTION');
+  requireEqual(crossing.return_address, 'supabardo:return:sb001', 'SB001_RETURN_ROUTE_SUBSTITUTION');
+  requireEqual(
+    crossing.source_history_head,
+    'c1f3024e267ecf033e03f7707bcb07e784e1f095',
+    'SB001_SOURCE_COMMIT_SUBSTITUTION',
+  );
+  requireEqual(
+    crossing.extensions?.sb001?.source_repository,
+    'the-static-collective/static-os',
+    'SB001_SOURCE_REPOSITORY_SUBSTITUTION',
+  );
+  requireEqual(
+    crossing.extensions?.sb001?.source_ref,
+    'experiment/witness-to-world-crossing-001',
+    'SB001_SOURCE_REF_SUBSTITUTION',
+  );
+  requireEqual(
+    crossing.extensions?.sb001?.source_commit,
+    crossing.source_history_head,
+    'SB001_SOURCE_COMMIT_SPLIT',
+  );
+  requireEqual(
+    crossing.extensions?.sb001?.source_path,
+    'examples/world-receipt.independent-contradiction.json',
+    'SB001_SOURCE_PATH_SUBSTITUTION',
+  );
+  requireEqual(
+    crossing.extensions?.sb001?.source_blob_sha,
+    '2b317402c4769319220cd6bc3e5d20c3978dbfbf',
+    'SB001_SOURCE_BLOB_SUBSTITUTION',
+  );
 
   for (const receipt of [release, unresolved, disposition, exit]) {
     requireEqual(receipt.crossing_id, crossing.crossing_id, 'SB001_CROSSING_ID_SPLIT');
