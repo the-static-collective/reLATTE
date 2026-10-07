@@ -36,7 +36,18 @@ export interface FatherHand {
   generation: number;
   fingerprint: string;
   public_key: PublicJwk;
-  private_key: CryptoKey;
+}
+
+const fatherHandSecrets = new WeakMap<FatherHand, CryptoKey>();
+
+function requireFatherHandPrivateKey(father: FatherHand): CryptoKey {
+  const key = fatherHandSecrets.get(father);
+  if (!key) throw new Error('FATHERHAND_PRIVATE_KEY_UNAVAILABLE');
+  return key;
+}
+
+export function retireFatherHand(father: FatherHand): void {
+  fatherHandSecrets.delete(father);
 }
 
 export interface FounderNode {
@@ -250,12 +261,13 @@ export function assertPublicArtifactSafe(value: unknown): void {
 async function createFatherHand(generation: number): Promise<FatherHand> {
   if (!Number.isSafeInteger(generation) || generation < 0) throw new Error('INVALID_FATHERHAND_GENERATION');
   const keys = await generateP256KeyPair();
-  return {
+  const father: FatherHand = {
     generation,
     fingerprint: fatherHandFingerprint(keys.publicKeyJwk),
     public_key: normalizePublicJwk(keys.publicKeyJwk),
-    private_key: keys.privateKey,
   };
+  fatherHandSecrets.set(father, keys.privateKey);
+  return father;
 }
 
 export async function createFatherHandGenesis(): Promise<FatherHand> {
@@ -310,7 +322,7 @@ export async function createFounderNode(
     canonicalizeDomainValue(FOUNDING_ID_DOMAIN, foundingBody(statement)),
   );
   statement.signing.signature = await sign(
-    father.private_key,
+    requireFatherHandPrivateKey(father),
     FOUNDING_SIGNATURE_DOMAIN,
     { statement_id: statement.statement_id, ...foundingBody(statement) },
   );
@@ -424,7 +436,7 @@ export async function issueRecoverySet(
   if (!Number.isSafeInteger(total) || !Number.isSafeInteger(threshold) || threshold < 2 || total < threshold || total > 255) {
     throw new Error('INVALID_RECOVERY_THRESHOLD');
   }
-  const exported = new Uint8Array(await crypto.subtle.exportKey('pkcs8', father.private_key));
+  const exported = new Uint8Array(await crypto.subtle.exportKey('pkcs8', requireFatherHandPrivateKey(father)));
   let pieces: Uint8Array[];
   try {
     pieces = await split(exported, total, threshold);
@@ -451,7 +463,7 @@ export async function issueRecoverySet(
       scope: 'RECOVERY_ONLY',
     };
     share.share_signature = await sign(
-      father.private_key,
+      requireFatherHandPrivateKey(father),
       RECOVERY_SHARE_SIGNATURE_DOMAIN,
       recoveryShareIdentity(share),
     );
@@ -735,7 +747,7 @@ class RecoveryCeremony {
       { statement_id: statement.statement_id, ...successionBody(statement) },
     );
     statement.new_countersigning.signature = await sign(
-      successor.private_key,
+      requireFatherHandPrivateKey(successor),
       SUCCESSION_NEW_SIGNATURE_DOMAIN,
       {
         statement_id: statement.statement_id,
@@ -997,7 +1009,7 @@ export async function trustPeerFounder(
     canonicalizeDomainValue(PEER_TRUST_ID_DOMAIN, peerTrustBody(statement)),
   );
   statement.signing.signature = await sign(
-    father.private_key,
+    requireFatherHandPrivateKey(father),
     PEER_TRUST_SIGNATURE_DOMAIN,
     { statement_id: statement.statement_id, ...peerTrustBody(statement) },
   );
