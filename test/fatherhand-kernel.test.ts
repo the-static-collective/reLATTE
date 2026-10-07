@@ -316,7 +316,7 @@ test('FatherHand peer trust pins exact remote FounderNode with no hostname/TOFU 
     {expires_at: '2027-10-07T00:00:00.000Z', invitation_id: 'invite:webz005:orchard:001'},
   );
   assert.equal(
-    await verifyPeerTrust(mark, local.public_key, remote.public_key, 'webz-peer-auth', '2026-10-08T00:00:00.000Z'),
+    await verifyPeerTrust(mark, local.public_key, remote.public_key, remote.world_id, 'webz-peer-auth', '2026-10-08T00:00:00.000Z'),
     true,
   );
 
@@ -327,11 +327,11 @@ test('FatherHand peer trust pins exact remote FounderNode with no hostname/TOFU 
     ['webz-world-identity'],
   );
   assert.equal(
-    await verifyPeerTrust(mark, local.public_key, impostor.public_key, 'webz-peer-auth', '2026-10-08T00:00:00.000Z'),
+    await verifyPeerTrust(mark, local.public_key, impostor.public_key, remote.world_id, 'webz-peer-auth', '2026-10-08T00:00:00.000Z'),
     false,
   );
   assert.equal(
-    await verifyPeerTrust(mark, local.public_key, remote.public_key, 'artifact-admission', '2026-10-08T00:00:00.000Z'),
+    await verifyPeerTrust(mark, local.public_key, remote.public_key, remote.world_id, 'artifact-admission', '2026-10-08T00:00:00.000Z'),
     false,
   );
   assertPublicArtifactSafe(mark);
