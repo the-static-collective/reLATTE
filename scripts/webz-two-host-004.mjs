@@ -124,7 +124,8 @@ function assertSeparate(source,receiver) {
   validate(source.machine_fingerprint!==receiver.machine_fingerprint,'NO_INDEPENDENT_RUNNER_EVIDENCE');
 }
 
-export async function prepareSender(fixtureRoot,outputDir,source=await jobWitness('sender')) {
+export async function prepareSender(fixtureRoot,outputDir,source=null) {
+  source ??= await jobWitness('sender');
   safeJobMeta(source,'sender');
   await mkdir(outputDir,{recursive:true});
   const stamps={};
@@ -183,7 +184,8 @@ async function validateSender(inputDir) {
   return {manifest,packets};
 }
 
-export async function processReceiver(inputDir,publicOutputDir,privateRoot,remote=await jobWitness('receiver')) {
+export async function processReceiver(inputDir,publicOutputDir,privateRoot,remote=null) {
+  remote ??= await jobWitness('receiver');
   safeJobMeta(remote,'receiver');
   const {manifest,packets}=await validateSender(inputDir);
   assertSeparate(manifest.source,remote);
