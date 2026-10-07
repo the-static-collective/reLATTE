@@ -849,10 +849,18 @@ export async function createOperationalKey(): Promise<OperationalKey> {
   };
 }
 
+function authorityScopeForOperationalScope(scope: string): string {
+  if (scope === 'webz-peer-https') return 'delegate-operational-peer-keys';
+  if (scope === 'relatte-receiver') return 'delegate-relatte-receiver-key';
+  throw new Error('INVALID_DELEGATION_SCOPE');
+}
+
 function delegationBody(statement: Record<string, any>): Record<string, any> {
   return {
     schema: statement.schema,
     founder_fingerprint: statement.founder_fingerprint,
+    founding_statement_id: statement.founding_statement_id,
+    authority_scope: statement.authority_scope,
     operational_public_key: statement.operational_public_key,
     operational_fingerprint: statement.operational_fingerprint,
     scope: statement.scope,
@@ -883,6 +891,14 @@ export async function delegateOperationalKey(
   },
 ): Promise<Record<string, any>> {
   if (typeof scope !== 'string' || scope.length === 0) throw new Error('INVALID_DELEGATION_SCOPE');
+  const authorityScope = authorityScopeForOperationalScope(scope);
+  if (!(await verifyFatherHandFounding(founder.founding_statement)) ||
+      founder.founding_statement.founder_fingerprint !== founder.fingerprint ||
+      JSON.stringify(founder.founding_statement.founder_public_key) !== JSON.stringify(founder.public_key) ||
+      !Array.isArray(founder.founding_statement.scopes) ||
+      !founder.founding_statement.scopes.includes(authorityScope)) {
+    throw new Error('FOUNDER_SCOPE_NOT_AUTHORIZED');
+  }
   if (!Number.isSafeInteger(details.serial) || details.serial < 1) throw new Error('INVALID_DELEGATION_SERIAL');
   validateTimestamp(details.not_before);
   validateTimestamp(details.not_after);
@@ -896,6 +912,8 @@ export async function delegateOperationalKey(
     schema: 'foundernode.delegation/v0',
     statement_id: 'pending',
     founder_fingerprint: founder.fingerprint,
+    founding_statement_id: founder.founding_statement.statement_id,
+    authority_scope: authorityScope,
     operational_public_key: publicKey,
     operational_fingerprint: operationalKeyFingerprint(publicKey),
     scope,
@@ -927,14 +945,25 @@ export async function verifyOperationalDelegation(
   expectedFounderFingerprint: string,
   requiredScope: string,
   at: string,
+  foundingStatementValue: unknown,
 ): Promise<boolean> {
   try {
     const statement = exactKeys(value, [
-      'schema', 'statement_id', 'founder_fingerprint', 'operational_public_key',
-      'operational_fingerprint', 'scope', 'serial', 'not_before', 'not_after',
+      'schema', 'statement_id', 'founder_fingerprint', 'founding_statement_id',
+      'authority_scope', 'operational_public_key', 'operational_fingerprint',
+      'scope', 'serial', 'not_before', 'not_after',
       'endpoint_constraints', 'replaces_fingerprint', 'created_at', 'signing',
     ], 'INVALID_DELEGATION_STATEMENT');
     if (statement.schema !== 'foundernode.delegation/v0' || statement.founder_fingerprint !== expectedFounderFingerprint || statement.scope !== requiredScope) return false;
+    const authorityScope = authorityScopeForOperationalScope(requiredScope);
+    if (statement.authority_scope !== authorityScope) return false;
+    if (!(await verifyFatherHandFounding(foundingStatementValue))) return false;
+    const founding = foundingStatementValue as Record<string, any>;
+    if (founding.statement_id !== statement.founding_statement_id ||
+        founding.founder_fingerprint !== expectedFounderFingerprint ||
+        JSON.stringify(founding.founder_public_key) !== JSON.stringify(statement.signing.public_key) ||
+        !Array.isArray(founding.scopes) ||
+        !founding.scopes.includes(authorityScope)) return false;
     if (!Number.isSafeInteger(statement.serial) || statement.serial < 1) return false;
     validateTimestamp(statement.not_before);
     validateTimestamp(statement.not_after);
