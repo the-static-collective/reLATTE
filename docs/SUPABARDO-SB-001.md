@@ -161,13 +161,25 @@ Positive control plus fifteen hostile cases exercised:
 
 The first BAT CI run failed one test because the causal-inversion attack changed the destination receipt identity without updating EXIT. The verifier correctly refused the stale ancestry first. The BAT was repaired to preserve the new receipt chain so it could reach the intended causal-order gate.
 
-Final repository verification:
+Final repository verification after the original BAT:
 
 ```text
 tests 130
 pass 130
 fail 0
 ```
+
+A subsequent research-BAT pass imported attack ideas from NIST zero trust/SSDF, SLSA, in-toto, Sigstore, TUF, OWASP CI/CD guidance, and CISA SBOM guidance. It added source-provenance substitution, route substitution, valid-signature policy smuggling, exact semantic-array closure, history replay, key replacement, mix-and-match, dishonest-clock, dependency-claim, SBOM-claim, and explicit open-boundary tests.
+
+Latest repository verification:
+
+```text
+tests 153
+pass 153
+fail 0
+```
+
+See `docs/SUPABARDO-SB-001-RESEARCH-BATS.md` and `fixtures/sb001-research-bat-ledger.json`.
 
 The bounded semantic verifier lives at `scripts/sb001-verify.ts`. It is intentionally **not exported from the reusable reLATTE API**: reLATTE verifies portable crossing/receipt structure and signatures; the SB-001 specimen owns its local SupaBardo laws.
 
