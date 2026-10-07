@@ -221,6 +221,20 @@ function normalizePublicJwk(value: unknown): PublicJwk {
   return { kty: 'EC', crv: 'P-256', x: key.x, y: key.y };
 }
 
+async function generateNonExtractableP256KeyPair(): Promise<P256KeyMaterial> {
+  const pair = await crypto.subtle.generateKey(
+    { name: 'ECDSA', namedCurve: 'P-256' },
+    false,
+    ['sign', 'verify'],
+  ) as CryptoKeyPair;
+  const exported = await crypto.subtle.exportKey('jwk', pair.publicKey);
+  return {
+    privateKey: pair.privateKey,
+    publicKey: pair.publicKey,
+    publicKeyJwk: normalizePublicJwk(exported),
+  };
+}
+
 async function publicJwkFromPrivateKey(privateKey: CryptoKey): Promise<PublicJwk> {
   const exported = await crypto.subtle.exportKey('jwk', privateKey);
   if (exported.kty !== 'EC' || exported.crv !== 'P-256' || !exported.x || !exported.y) {
@@ -420,7 +434,7 @@ export async function createFounderNode(
   const canonicalWorldId = validateWorldId(worldId);
   const allowedScopes = validateClosedScopes(scopes, FOUNDER_SCOPE_ALLOWLIST, 'INVALID_FOUNDER_SCOPES');
   if (!allowedScopes.includes('webz-world-identity')) throw new Error('FOUNDER_WORLD_IDENTITY_SCOPE_REQUIRED');
-  const keys = await generateP256KeyPair();
+  const keys = await generateNonExtractableP256KeyPair();
   const founderPublic = normalizePublicJwk(keys.publicKeyJwk);
   const statement: Record<string, any> = {
     schema: 'fatherhand.founding/v0',
@@ -1069,7 +1083,7 @@ export async function verifyFatherHandSuccessionSet(
 }
 
 export async function createOperationalKey(): Promise<OperationalKey> {
-  const keys = await generateP256KeyPair();
+  const keys = await generateNonExtractableP256KeyPair();
   const publicKey = normalizePublicJwk(keys.publicKeyJwk);
   const operational: OperationalKey = {
     fingerprint: operationalKeyFingerprint(publicKey),
