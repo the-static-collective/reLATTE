@@ -1,0 +1,57 @@
+{
+  "schema": "relatte.crossing-envelope/v0",
+  "protocol_version": "0",
+  "source_particular": "toaster-proposal:sb002:bardo-six-up-001",
+  "source_world": "toaster:the-haunted-toaster",
+  "source_history_head": "2c86d684138f3008344b18202b81193db0c947c7",
+  "parents": [],
+  "declared_kind": "HAUNTED_TOASTER_CREATIVE_PROPOSAL",
+  "payload_refs": [
+    {
+      "address": "sha256:b9feba52bf6ca98f26d395d0e637d316600a856d379955c4fa47c36da4dfb545",
+      "role": "creative-proposal",
+      "media_type": "application/json"
+    }
+  ],
+  "requested_effect": {
+    "destination_disposition": "local",
+    "allowed": [
+      "KEEP",
+      "HOLD",
+      "REFUSE"
+    ]
+  },
+  "capability_ref": "creative.toaster.candidate",
+  "privacy_policy": {
+    "field": "bounded",
+    "retention": "decay-after-export"
+  },
+  "audience_policy": {
+    "destination": "world:sb002-creative-desk"
+  },
+  "return_address": "supabardo:return:sb002",
+  "created_at": "2026-10-07T00:20:00.000Z",
+  "extensions": {
+    "sb002": {
+      "source_repository": "the-static-collective/the-haunted-toaster",
+      "source_commit": "2c86d684138f3008344b18202b81193db0c947c7",
+      "source_path": "experiments/supabardo-sb002-001/proposal.json",
+      "source_blob_sha": "c70db798cbbe19e78d8cbe965d6cbfbac4393de1",
+      "keep_law_commit": "4ecfe391171758cbe1d247787d95b7680e31146b",
+      "keep_law_path": "src/full-measure/scripts/smoke-candidates.cjs",
+      "claim_limit": "Creative proposal only; no KEEP and no render authority."
+    }
+  },
+  "crossing_id": "relatte-crossing-v0:0a33b019864dcc754e97ade9fb7d45229b9ef74b0ba11c4f8cfaca92ee8f384a",
+  "signing": {
+    "algorithm": "ECDSA-P256-SHA256",
+    "public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "4Y-SRTl0qi7YniI904Yh69A_s0UGW_fDOlmtPqB-9ro",
+      "y": "1v5V9sUHzpjLBrIpzRbSw5JKPivBv0K-J5NyYTqYdU0"
+    },
+    "signature": "El5jZekJ8oBGOU-C22dQSJZe8DW-YVIeIHa8ihL75v3wuTJeA1ypEIWQh3lL2kkEKGn0-xDrzJbkrekA7J0jyQ",
+    "domain": "relatte.crossing-signature/v0"
+  }
+}

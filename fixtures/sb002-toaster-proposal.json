@@ -1,0 +1,40 @@
+{
+  "schema": "toaster.candidate-proposal/v0",
+  "specimen": "SB-002",
+  "proposal_id": "toaster-proposal:sb002:bardo-six-up-001",
+  "source": {
+    "repository": "the-static-collective/the-haunted-toaster",
+    "base_commit": "3652c2a96b6b287cda316d1c92daadf7c7417eaf",
+    "keep_law_commit": "4ecfe391171758cbe1d247787d95b7680e31146b",
+    "keep_law_path": "src/full-measure/scripts/smoke-candidates.cjs"
+  },
+  "candidate": {
+    "family": "six-up",
+    "root_seed": "sb002-bardo-six-up-001",
+    "candidate_index": 1,
+    "preset_id": "wireOrchard",
+    "toast_feel_id": "wire-heat",
+    "title": "SB-002 BARDO PROPOSAL",
+    "artist": "The Static Collective"
+  },
+  "state": {
+    "proposal_only": true,
+    "source_selected_candidate": false,
+    "destination_disposition": null,
+    "render_authority": false
+  },
+  "destination_choices": ["KEEP", "HOLD", "REFUSE"],
+  "requested_effect": {
+    "destination_disposition": "local",
+    "automatic_keep": false,
+    "automatic_render": false
+  },
+  "laws": [
+    "PROPOSAL != KEEP",
+    "SELECTION != KEEP",
+    "KEEP != RENDER",
+    "ARRIVAL != ADMISSION",
+    "SOURCE != DESTINATION AUTHORITY"
+  ],
+  "claim_limit": "A real bounded Toaster creative proposal descriptor. It is not a rendered candidate, a KEEP decision, or production authority."
+}

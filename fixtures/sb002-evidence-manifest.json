@@ -1,0 +1,26 @@
+{
+  "schema": "supabardo.sb002-evidence-manifest/v0",
+  "body": {
+    "schema": "supabardo.sb002-evidence-set/v0",
+    "specimen": "SB-002",
+    "proposal_sha256": "b9feba52bf6ca98f26d395d0e637d316600a856d379955c4fa47c36da4dfb545",
+    "crossing_id": "relatte-crossing-v0:0a33b019864dcc754e97ade9fb7d45229b9ef74b0ba11c4f8cfaca92ee8f384a",
+    "release_receipt_id": "relatte-receipt-v0:84bd9992085f6180d6ba2797123dd60fa2f17f563b959d430b5420eccf689e5c",
+    "unresolved_receipt_id": "relatte-receipt-v0:dc23cdb27673d16ba3a75b286803ef094ae8ebc0203a03a52cc5234f872e9557",
+    "disposition_receipt_id": "relatte-receipt-v0:397de3219d9f3918b717093ef8dcd81413823eeec068c7329c1b5aece0097394",
+    "exit_receipt_id": "relatte-receipt-v0:49708c38ac23610405f975d9bb34f1c960b62bd70d261de7971e52e812095651",
+    "source_key_sha256": "e58ef4714a68a7f7c16bd18ed8511a93f4989ba9958b9d9e90678d56a06bc40c",
+    "bardo_key_sha256": "a8c83d1f449d7012a6cef120364530d616ded6d8804de5a8e8b173ac7ecac14a",
+    "destination_key_sha256": "917f12cd130928f5ecfbcbb8f83b6ab1f146969bbcee09ebb8964d298407299c",
+    "causal_chain": [
+      "crossing_id -> release.post_state_ref",
+      "release.receipt_id -> unresolved.pre_state_ref",
+      "unresolved.receipt_id -> disposition.extensions.local_receiver.supabardo_unresolved_receipt_id",
+      "unresolved.receipt_id -> exit.pre_state_ref",
+      "disposition.receipt_id -> exit.post_state_ref"
+    ],
+    "destination_disposition": "HOLD",
+    "claim_limit": "Creative proposal crossing only; no KEEP, REFUSE, render authority, or universal SupaBardo promotion."
+  },
+  "evidence_set_id": "sb002-evidence-v0:a44ce387493dec11fbd0902a8ca03f090b3d08ee79db89e53084f84195bbd581"
+}
