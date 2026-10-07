@@ -1,0 +1,242 @@
+[
+  {
+    "id": "B01",
+    "claim": "Local A and B have distinct normalized P-256 root keys and separate constitutions before P is created",
+    "evidence_class": "OBSERVED",
+    "basis": "specimen trace/genesis pins; keys generated in separate local subprocesses; not separate administrators"
+  },
+  {
+    "id": "B02",
+    "claim": "A and B locally delegate P only one named versioned policy slot",
+    "evidence_class": "DERIVED",
+    "basis": "root-signed causal DELEGATE_POLICY records; no root-selection, admission or root-editing power delegated"
+  },
+  {
+    "id": "B03",
+    "claim": "P signs incompatible accounts for the same declared global slot/version/scope; each claim binds only its own local delegation",
+    "evidence_class": "DERIVED",
+    "basis": "both valid signatures under the exact delegated P curve point; immutable claims retained"
+  },
+  {
+    "id": "B04",
+    "claim": "A and B discover P disagreement without importing the foreign root as authority",
+    "evidence_class": "DERIVED",
+    "basis": "before-meeting fixture assessments; own preselected root/head; P already locally delegated; EQUIVOCATION/HOLD"
+  },
+  {
+    "id": "B05",
+    "claim": "Matching signatures or a complete public bundle automatically select a fresh verifier root",
+    "evidence_class": "REFUTED",
+    "basis": "NO_LOCAL_ROOT_SELECTION; caller must independently supply its own selection"
+  },
+  {
+    "id": "B06",
+    "claim": "Both original histories and original incompatible policy selections survive the new edge unchanged",
+    "evidence_class": "OBSERVED",
+    "basis": "signed journals; before hashes and exact append-log byte-prefix checks; snapshots are not authority"
+  },
+  {
+    "id": "B07",
+    "claim": "A future edge requires exact, attributable, scope-limited local decisions from both distinct root keys",
+    "evidence_class": "DERIVED",
+    "basis": "proposal, decisions, both frozen-encounter closures; E3 CORROBORATED-KEYS only"
+  },
+  {
+    "id": "B08",
+    "claim": "One root can refuse or withhold its decision without the verifier silently converging",
+    "evidence_class": "DERIVED",
+    "basis": "REFUSE -> LOCAL_ADMISSION_REFUSED; missing consent -> BOTH_LOCAL_ADMISSIONS_REQUIRED; no imported foreign root"
+  },
+  {
+    "id": "B09",
+    "claim": "Policy P can impersonate either sovereign root decision or rewrite delegated trust roots",
+    "evidence_class": "REFUTED",
+    "basis": "valid malicious P signature remains valid; LOCAL_DECISION_SIGNER_OR_ROLE_MISMATCH; sharing P with a root key fails POLICY_KEY_IS_ADMIN_ROOT"
+  },
+  {
+    "id": "B10",
+    "claim": "Own normalized key, genesis and durable history head must match a separately retained selection",
+    "evidence_class": "DERIVED",
+    "basis": "fully re-signed replacement history/proposal/closure fails PINNED_LOCAL_HISTORY_CHANGED"
+  },
+  {
+    "id": "B11",
+    "claim": "Two root labels or JWK metadata aliases establish two root signers",
+    "evidence_class": "REFUTED",
+    "basis": "ROOT_KEYS_NOT_DISTINCT on genuine same-key valid signatures; normalized point comparisons"
+  },
+  {
+    "id": "B12",
+    "claim": "Version 2 activates only for this new future policy edge and retains both version 1 choices",
+    "evidence_class": "DERIVED",
+    "basis": "root-import/history-rewrite flags fixed false; exact participant old-head/old-policy IDs; both signed local admissions"
+  },
+  {
+    "id": "B13",
+    "claim": "Removing a known contradictory decision could improve the preliminary unclosed design",
+    "evidence_class": "OBSERVED",
+    "basis": "preserved omission-failure.json; initial design lacked signed scope commitments; repaired specimen retains valid contradiction"
+  },
+  {
+    "id": "B14",
+    "claim": "Deleting committed encounter records can preserve or lower the earned edge level but cannot raise it",
+    "evidence_class": "DERIVED",
+    "basis": "both signed core digest/record manifests; 63 deletion combinations and conflicting-decision removal oracle; frozen scope only"
+  },
+  {
+    "id": "B15",
+    "claim": "Globally withheld policies, admissions, root forks and secret key copies are absent",
+    "evidence_class": "UNOBSERVED",
+    "basis": "closure enumerates only this observed encounter; broker/signers may hide other complete scopes"
+  },
+  {
+    "id": "B16",
+    "claim": "Local signer keys and participant directories are deleted; B replays from durable public local evidence",
+    "evidence_class": "OBSERVED",
+    "basis": "process harness removes private JWKs before B restart; removes A/B/P directories before C/D native reconstruction; no physical-erasure claim"
+  },
+  {
+    "id": "B17",
+    "claim": "No private key fields are in intended public bootstrap contexts or artifacts",
+    "evidence_class": "OBSERVED",
+    "basis": "forbidPrivateEvidence before public transport/signing and on every public output; local private JWK stores removed; universal non-export UNOBSERVED"
+  },
+  {
+    "id": "B18",
+    "claim": "Fresh replacement implementations rebuild IDs, verify signatures and reconstruct the same frozen edge",
+    "evidence_class": "OBSERVED",
+    "basis": "public bundle/root files after original directories removed; native verifier independent of primary assessment/protocol/canonical implementation"
+  },
+  {
+    "id": "B19",
+    "claim": "The two verification paths are fully independent",
+    "evidence_class": "REFUTED",
+    "basis": "share strict ingress, specification, Node/JSON/runtime and crypto-provider ancestry; native helper shared with earlier independent foundation verifier"
+  },
+  {
+    "id": "B20",
+    "claim": "Clock values establish policy chronology or arrival time",
+    "evidence_class": "REFUTED",
+    "basis": "ancient/future/reversed signed decision timestamps accepted by causal parent bindings; trusted arrival chronology UNOBSERVED"
+  },
+  {
+    "id": "B21",
+    "claim": "Different signatures/timestamps on identical policy bodies are themselves equivocation",
+    "evidence_class": "REFUTED",
+    "basis": "equivocation compares canonical policy semantics; equal bodies are not contradiction"
+  },
+  {
+    "id": "B22",
+    "claim": "External local root/head selection and honest control of a root key are guaranteed by its self-signature",
+    "evidence_class": "REFUTED",
+    "basis": "self-consistency is cryptographic; key control and trustworthy preselection remain root assumptions"
+  },
+  {
+    "id": "B23",
+    "claim": "Externally selected original local root/head/known activation belongs to the intended administrator",
+    "evidence_class": "ASSUMED",
+    "basis": "pins must precede hostile proof selection and survive outside hostile broker; software cannot authenticate their external origin"
+  },
+  {
+    "id": "B24",
+    "claim": "P-256/SHA-256, canonicalization, chosen verifier/runtime/config and its local inputs are sufficiently sound",
+    "evidence_class": "ASSUMED",
+    "basis": "existing crypto and canonicalization; at least one honest replacement verifier and selection source"
+  },
+  {
+    "id": "B25",
+    "claim": "Enough public evidence, root/head selections and known activation records survive",
+    "evidence_class": "ASSUMED",
+    "basis": "all archive/selection loss cannot be recovered from cryptography; independently retained backups needed"
+  },
+  {
+    "id": "B26",
+    "claim": "Separate administrative/protection/custody domains, physical machines, humans, non-collusion or live consent were established",
+    "evidence_class": "UNOBSERVED",
+    "basis": "same-host controlled experiment with scripted decisions; no external domain/control attestation supplied"
+  },
+  {
+    "id": "B27",
+    "claim": "A signature on ADMIT establishes a human decision or that a remote sovereign actually enacted the consequence",
+    "evidence_class": "REFUTED",
+    "basis": "attributable signed local declaration only; local harness commit/restart observed separately"
+  },
+  {
+    "id": "B28",
+    "claim": "A known locally retained activation prevents an otherwise valid second edge silently replacing it",
+    "evidence_class": "DERIVED",
+    "basis": "active_edge_id pin; KNOWN_ACTIVE_POLICY_FORK; participant commit retains content-addressed encounter and refuses overwrite"
+  },
+  {
+    "id": "B29",
+    "claim": "A fresh historical verifier without retained activation can prove a unique global future policy",
+    "evidence_class": "REFUTED",
+    "basis": "two valid mutually signed edges reconstruct separately; each remains cryptographically coherent; global uniqueness/finality UNOBSERVED"
+  },
+  {
+    "id": "B30",
+    "claim": "Signed encounter closure proves global completeness or bounded finality",
+    "evidence_class": "REFUTED",
+    "basis": "THIS_FROZEN_ENCOUNTER_ONLY; no global consensus/absence proof/finality rule"
+  },
+  {
+    "id": "B31",
+    "claim": "Malicious verifier reports and broker record listings can grant bootstrap authority",
+    "evidence_class": "REFUTED",
+    "basis": "unknown assessment rejected; unsigned scope cannot supply both signed closures; replacement verifier recomputes"
+  },
+  {
+    "id": "B32",
+    "claim": "Malformed/semantic/replay attacks fail for their named reason while malicious valid signatures remain valid",
+    "evidence_class": "DERIVED",
+    "basis": "strict extension shapes; semantic test attackers re-sign and re-close mutated proof; precise reason assertions"
+  },
+  {
+    "id": "B33",
+    "claim": "Bootstrap regression tests, seeded mutations, replay and deliberately broken guard tests pass at tested SHA",
+    "evidence_class": "OBSERVED",
+    "basis": "final test/CI report; 48 added bootstrap tests, 128 seeded hostile decisions, 11 new code mutants; not exhaustive coverage"
+  },
+  {
+    "id": "B34",
+    "claim": "Existing draft PR remains open, draft and unmerged",
+    "evidence_class": "OBSERVED",
+    "basis": "GitHub PR metadata final check; no merge request"
+  },
+  {
+    "id": "B35",
+    "claim": "This pass demonstrates trust infrastructure across independently administered roots",
+    "evidence_class": "UNOBSERVED",
+    "basis": "external independently administered root campaign still required; local proof attack/reconstruction is bounded research evidence"
+  },
+  {
+    "id": "B36",
+    "claim": "Explicit future membership is two exact signing keys, with administrative/human quorum unobserved",
+    "evidence_class": "DERIVED",
+    "basis": "proposal quorum 2, EXACT_EDGE_PARTICIPANTS; no Sybil-resistant external membership proof"
+  },
+  {
+    "id": "B37",
+    "claim": "Trust derivation is acyclic and ends at declared external assumptions",
+    "evidence_class": "DERIVED",
+    "basis": "trust-root-graph.json; root selection has no dependence on the new joint edge; root-graph validator"
+  },
+  {
+    "id": "B38",
+    "claim": "Current full local regression suite contains 296 passing cases and no failures",
+    "evidence_class": "OBSERVED",
+    "basis": "npm run verify final run; former 248 tests plus 48 bootstrap cases; separate workflow counts reported separately"
+  },
+  {
+    "id": "B39",
+    "claim": "The current mutant campaign detects 32 deliberately removed guards",
+    "evidence_class": "OBSERVED",
+    "basis": "mutation-report.json; earlier 21 plus 11 bootstrap mutants; named assertion failures"
+  },
+  {
+    "id": "B40",
+    "claim": "Actual next hardest experiment requires pre-existing separately administered roots while P and one administration equivocate or withhold",
+    "evidence_class": "UNOBSERVED",
+    "basis": "supply public roots/control evidence externally, retain independent pins and exchange contrary evidence through hostile transport; no external campaign executed here"
+  }
+]

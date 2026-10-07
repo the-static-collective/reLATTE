@@ -63,6 +63,9 @@ function signedRecord(r) {
   requireThat(verify('sha256', Buffer.from(sigDomain + canon(sigBody)), { key: createPublicKey({ key: key(r), format: 'jwk' }), dsaEncoding: 'ieee-p1363' }, bytes(r.signing.signature, 64)), 'INVALID_SIGNATURE');
   return id;
 }
+// Reusable low-level native verification for other bounded specimens. The
+// separate bootstrap verifier still implements its own policy/role checks.
+export { signedRecord, fingerprint, canon, publicOnly };
 
 export function independentlyVerify(bundle, roots, crossingId) {
   try {

@@ -7,9 +7,10 @@
     "check": "tsc --noEmit",
     "build": "tsc",
     "test": "node --test --experimental-strip-types test/*.test.ts",
-    "verify": "npm run check && npm test && npm run trust:mutations && npm run trust:replay && npm run build",
+    "verify": "npm run check && npm test && npm run trust:mutations && npm run trust:replay && npm run bootstrap:replay && npm run build",
     "trust:mutations": "node --experimental-strip-types scripts/foundation-of-trust-mutations.mjs",
-    "trust:replay": "node --experimental-strip-types scripts/foundation-of-trust-replay.mjs"
+    "trust:replay": "node --experimental-strip-types scripts/foundation-of-trust-replay.mjs",
+    "bootstrap:replay": "node --experimental-strip-types scripts/trust-bootstrap-specimen.mjs"
   },
   "dependencies": {
     "json-canonicalize": "3.0.1"
