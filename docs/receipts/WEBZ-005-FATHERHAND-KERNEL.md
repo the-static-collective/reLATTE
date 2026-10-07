@@ -2,8 +2,8 @@
 
 **Status:** executable **synthetic, network-free** cryptographic specimen. **Not merged, not production key material, and not direct HTTPS authority.**  
 **Feature PR:** reLATTE #66.  
-**Verified functional revision:** `cc35744f321e511927d6c22f4981859783603338`.  
-**Verification run:** GitHub Actions `37584102302` on 2026-10-07 UTC.
+**Verified functional revision:** `d37e0a3a82fb03f3b47b328ee802bf56c752946a`.  
+**Verification run:** GitHub Actions `37584781568` on 2026-10-07 UTC.
 
 ## What executed
 
@@ -20,13 +20,15 @@ The kernel created only fresh ephemeral test keys and exercised the entire pre-n
 9. independently generated a replaceable operational key and signed a scope/time-bounded FounderNode delegation;
 10. generated a separate synthetic Orchard FounderNode and created an exact **FatherHand-1 peer trust mark** for that remote FounderNode, with no TOFU path;
 11. cold-verified the founding, recovery integrity, succession, delegation and peer-trust public evidence;
-12. emitted a public-only `webz.fatherhand-kernel-witness/v0` report, then CI scanned it for private JWK `d`, private-key fields, share bytes, descendant fragment bytes, seed material and recovery payload fields.
+12. retired the synthetic remote FatherHand and FatherHand-1 handles after their bounded acts, so **all root handles were retired before report emission**;
+13. emitted a public-only `webz.fatherhand-kernel-witness/v0` report, then CI scanned it for private JWK `d`, private-key fields, share bytes, descendant fragment bytes, seed material and recovery payload fields.
 
 The public report states:
 
 ```text
 synthetic_only: true
 network_used: false
+all_root_handles_retired_before_report: true
 recovery: 3 of 5
 genesis_secret_retired_before_recovery: true
 two_share_recovery_refused: true
@@ -42,7 +44,7 @@ tofu_used: false
 The standard `npm run verify` gate passed:
 
 - TypeScript no-emit check;
-- **129 tests passed, 0 failed**;
+- **130 tests passed, 0 failed**;
 - production build passed;
 - explicit WEBZ-005 synthetic kernel step passed;
 - public output leak grep passed.
@@ -50,6 +52,7 @@ The standard `npm run verify` gate passed:
 The tests include:
 
 - ordinary `src/index.ts` exposes **public FatherHand verification** functions but **not** cold-root generation, threshold recovery, ceremony, child-share or trust-mark signing authority;
+- FatherHand and FounderNode authority handles bind their hidden private capabilities to immutable identity snapshots, refusing attempts to mutate their public generation/world/fingerprint/key identity before a signing act;
 - FatherHand object handles have **no enumerable/private-key property**; private CryptoKey capability is stored outside the serializable handle and can be explicitly retired;
 - founding statement mutation fails verification;
 - fewer than three FatherKids refuse;
@@ -60,6 +63,7 @@ The tests include:
 - FatherKid descendant reconstruction returns the signed original parent-share identity, preserving **one lineage = one vote**;
 - old-root recovery capability cannot sign a second succession after the first completed act;
 - altered succession, delegated scope, expiry or peer FounderNode key fails verification;
+- operational delegation is accepted only when it chains to the exact FatherHand-signed FounderNode founding statement and that founding statement authorizes the required delegation scope; an under-authorized FounderNode cannot delegate a webZ HTTPS key;
 - a different remote FounderNode with the same world-name string does **not** satisfy the FatherHand trust mark;
 - public evidence scanner rejects private JWK and recovery-secret-shaped fields.
 
