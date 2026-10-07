@@ -318,30 +318,39 @@ function assertStringList(value: unknown, code: string): string[] {
 }
 
 export function assertPublicArtifactSafe(value: unknown): void {
-  const visit = (node: unknown): void => {
+  const active = new WeakSet<object>();
+  const visit = (node: unknown, depth: number): void => {
+    if (depth > 64) throw new Error('PUBLIC_ARTIFACT_DEPTH_LIMIT');
     if (!node || typeof node !== 'object') return;
-    if (Array.isArray(node)) {
-      for (const child of node) visit(child);
-      return;
-    }
-    for (const [key, child] of Object.entries(node as Record<string, unknown>)) {
-      const lower = key.toLowerCase();
-      if (lower === 'd' || lower === 'private_key' || lower === 'privatekey') {
-        throw new Error('PRIVATE_KEY_MATERIAL');
+    const object = node as object;
+    if (active.has(object)) throw new Error('CYCLIC_PUBLIC_ARTIFACT');
+    active.add(object);
+    try {
+      if (Array.isArray(node)) {
+        for (const child of node) visit(child, depth + 1);
+        return;
       }
-      if (
-        lower === 'share_bytes' ||
-        lower === 'fragment_bytes' ||
-        lower === 'seed_material' ||
-        lower === 'recovery_payload' ||
-        lower === 'secret_share'
-      ) {
-        throw new Error('PRIVATE_RECOVERY_MATERIAL');
+      for (const [key, child] of Object.entries(node as Record<string, unknown>)) {
+        const lower = key.toLowerCase();
+        if (lower === 'd' || lower === 'private_key' || lower === 'privatekey') {
+          throw new Error('PRIVATE_KEY_MATERIAL');
+        }
+        if (
+          lower === 'share_bytes' ||
+          lower === 'fragment_bytes' ||
+          lower === 'seed_material' ||
+          lower === 'recovery_payload' ||
+          lower === 'secret_share'
+        ) {
+          throw new Error('PRIVATE_RECOVERY_MATERIAL');
+        }
+        visit(child, depth + 1);
       }
-      visit(child);
+    } finally {
+      active.delete(object);
     }
   };
-  visit(value);
+  visit(value, 0);
 }
 
 async function createFatherHand(generation: number): Promise<FatherHand> {
