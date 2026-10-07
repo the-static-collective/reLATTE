@@ -1,0 +1,242 @@
+[
+  {
+    "id": "S01",
+    "claim": "SOVEREIGN-BOOTSTRAP-EXTERNAL-001 was executed across independently administered pre-existing roots",
+    "evidence_class": "UNOBSERVED",
+    "basis": "external-inputs.json: NOT_EXECUTED / BLOCKED_EXTERNAL_INPUTS; no independently administered roots or operator evidence supplied"
+  },
+  {
+    "id": "S02",
+    "claim": "Current local adversarial specimens establish separate administrators, independent pin retention or absence of shared orchestration",
+    "evidence_class": "UNOBSERVED",
+    "basis": "test helper/driver controls both local keys; no CI or local directory trick upgrades this"
+  },
+  {
+    "id": "S03",
+    "claim": "The external operator adapter takes one existing selected root/key and creates no new root",
+    "evidence_class": "OBSERVED",
+    "basis": "script has no init or generateP256KeyPair; checkpoint keeps original root/history; wrong key rejected"
+  },
+  {
+    "id": "S04",
+    "claim": "P equivocation is discoverable under each own-root delegation without admission of B authority",
+    "evidence_class": "DERIVED",
+    "basis": "own independently supplied root/history and selected P claim; signed incompatible global rules; peer_authority UNOBSERVED"
+  },
+  {
+    "id": "S05",
+    "claim": "B actively signs two competing activation claims for the same slot/version/base history",
+    "evidence_class": "OBSERVED",
+    "basis": "four hostile records: two role-correct B proposals and two valid B decisions; signatures verified separately"
+  },
+  {
+    "id": "S06",
+    "claim": "Contradictory B signatures are attributable before B sovereignty is trusted",
+    "evidence_class": "DERIVED",
+    "basis": "native/primary conflict reconstruction; E2 SIGNED, authority UNOBSERVED; no claim of B honesty or remote actual activation"
+  },
+  {
+    "id": "S07",
+    "claim": "B can silently erase A previously recorded contradiction by serving only one branch",
+    "evidence_class": "REFUTED",
+    "basis": "local view and owner-pinned observation head remain separate from incoming evidence; local merge only adds"
+  },
+  {
+    "id": "S08",
+    "claim": "Separate observers can exchange previously disjoint B branches and reconstruct a signed contradiction",
+    "evidence_class": "DERIVED",
+    "basis": "observer-union specimen; neither observer alone saw the activation fork; union retains both records"
+  },
+  {
+    "id": "S09",
+    "claim": "An observer can prove a never-seen deliberately withheld B fork",
+    "evidence_class": "REFUTED",
+    "basis": "incomplete never-observed history test; global_completeness UNOBSERVED; refusal needs no invented contradiction"
+  },
+  {
+    "id": "S10",
+    "claim": "Pinned signed observation history preserves remembered conflict IDs when payload records are lost",
+    "evidence_class": "DERIVED",
+    "basis": "known-loss.json: remembered IDs remain; fresh signature-pair reconstruction degrades to E0; HOLD"
+  },
+  {
+    "id": "S11",
+    "claim": "Remembered conflict IDs establish currently reconstructible counterevidence without the underlying records",
+    "evidence_class": "REFUTED",
+    "basis": "remembered local signed claim and reproducible signed pair are distinct; missing archive prevents new checkpoint/edge"
+  },
+  {
+    "id": "S12",
+    "claim": "The prior stateless assessor could forget its conflict facet after truncated input while still failing closed",
+    "evidence_class": "OBSERVED",
+    "basis": "prior-stateless-loss.json on baseline a8f975b: EQUIVOCATION before, UNOBSERVED/HOLD after; not an admission bypass"
+  },
+  {
+    "id": "S13",
+    "claim": "Hostile proof can replace the independently retained own view with a cleaner candidate",
+    "evidence_class": "REFUTED",
+    "basis": "RETAINED_LOCAL_VIEW_REPLACEMENT; known local IDs copied before assessing incoming edge"
+  },
+  {
+    "id": "S14",
+    "claim": "A fresh bilateral edge advances beyond known version 2 claims and acknowledges every known contradiction",
+    "evidence_class": "DERIVED",
+    "basis": "new version 3 proposal, local decisions, both frozen closures; exact conflict IDs, old policy IDs, history/observation heads and view digests"
+  },
+  {
+    "id": "S15",
+    "claim": "The new edge erases either old policy selection, history or known contradiction",
+    "evidence_class": "REFUTED",
+    "basis": "fixed false history_rewrite/sovereignty_import/conflict_erasure; old data immutable; signed conflicts retained"
+  },
+  {
+    "id": "S16",
+    "claim": "Neither side can authorize a new edge by withholding, refusing or replaying old consent",
+    "evidence_class": "DERIVED",
+    "basis": "missing/refusal HOLD; old receipt type/proposal binding cannot serve new scoped local decision"
+  },
+  {
+    "id": "S17",
+    "claim": "P can impersonate either local root decision",
+    "evidence_class": "REFUTED",
+    "basis": "P signature remains valid but wrong root/role rejected; root point distinct from delegated P"
+  },
+  {
+    "id": "S18",
+    "claim": "One valid signer can fabricate a conflict fact solely through a local conflict label",
+    "evidence_class": "REFUTED",
+    "basis": "every observation snapshot recomputes conflicts from archived signed records; false conflict assertions fail"
+  },
+  {
+    "id": "S19",
+    "claim": "Losing signed archive or closure evidence can increase an earned edge level",
+    "evidence_class": "REFUTED",
+    "basis": "all archive record deletions tested with retained owner pins/views; frozen core binds all decision receipts; levels decrease or remain"
+  },
+  {
+    "id": "S20",
+    "claim": "128 deterministically selected incomplete deliveries preserve known local contradiction",
+    "evidence_class": "OBSERVED",
+    "basis": "seed 0x5e001; durable local archive unchanged; incoming subset never substitutes for owner history"
+  },
+  {
+    "id": "S21",
+    "claim": "Benign JWK key IDs hide one underlying B signing key",
+    "evidence_class": "REFUTED",
+    "basis": "normalized P-256 point comparison detects B fork despite metadata aliases"
+  },
+  {
+    "id": "S22",
+    "claim": "Primary and native verifiers independently reconstruct the same conflict and final edge IDs",
+    "evidence_class": "OBSERVED",
+    "basis": "frozen fixtures, independent semantic path, node:crypto signatures and ID bodies, cold public-only subprocess replay"
+  },
+  {
+    "id": "S23",
+    "claim": "The verifier paths have full implementation or cryptographic independence",
+    "evidence_class": "REFUTED",
+    "basis": "shared specification, strict ingress, Node/JSON/runtime ancestry and native foundation receipt primitives; no high-level assessment imports"
+  },
+  {
+    "id": "S24",
+    "claim": "A software signature establishes old objective truth, actual remote activation or an honest administrator",
+    "evidence_class": "REFUTED",
+    "basis": "history means old attributable local statements and choices; historical_truth UNOBSERVED; malicious B signatures stay valid"
+  },
+  {
+    "id": "S25",
+    "claim": "Fresh edge grants global peer sovereignty or transfers root authority",
+    "evidence_class": "REFUTED",
+    "basis": "THIS_NEW_EDGE_ONLY; peer_key/genesis explicitly selected only for the exact new edge; administrative/human authority unobserved"
+  },
+  {
+    "id": "S26",
+    "claim": "Actual administrators A/B and their previously selected root/head/observation pins are independently controlled",
+    "evidence_class": "ASSUMED",
+    "basis": "external run requires operator-owned roots and separately retained pins; caller must supply and substantiate external control sources"
+  },
+  {
+    "id": "S27",
+    "claim": "Root pre-existence, independent administration and no shared orchestration can be proven by timestamps, root self-signatures or local metadata",
+    "evidence_class": "REFUTED",
+    "basis": "external evidence/inspection is required; machine and key multiplicity is not administration"
+  },
+  {
+    "id": "S28",
+    "claim": "At least one honest verifier, runtime/configuration and protected local selection survives",
+    "evidence_class": "ASSUMED",
+    "basis": "an administrator can ignore any verifier; an honest replacement under that administrator root can reproduce the result"
+  },
+  {
+    "id": "S29",
+    "claim": "Enough public counterevidence and separately retained selections survive",
+    "evidence_class": "ASSUMED",
+    "basis": "all archive and pin loss prevents reconstruction; exact backups can recover, changed trust selections are new decisions"
+  },
+  {
+    "id": "S30",
+    "claim": "P-256/SHA-256 and the canonical signed receipt implementation remain sound",
+    "evidence_class": "ASSUMED",
+    "basis": "existing reLATTE cryptography/canonicalization unchanged; no new cryptographic primitive"
+  },
+  {
+    "id": "S31",
+    "claim": "New edge has global finality or excludes all hidden future competing activations",
+    "evidence_class": "UNOBSERVED",
+    "basis": "both current keys may sign another fork; no global completeness/consensus; known later forks remain detectable on encounter"
+  },
+  {
+    "id": "S32",
+    "claim": "Malicious B can be forced to consent, behave honestly or reach an actual human conclusion",
+    "evidence_class": "REFUTED",
+    "basis": "liveness/current consent/human identity unobserved; verifier symmetry does not establish operator cooperation"
+  },
+  {
+    "id": "S33",
+    "claim": "External signing ceremony and pre-existing roots remain required inputs",
+    "evidence_class": "OBSERVED",
+    "basis": "external-inputs.json names missing root/pin/control/operator evidence; actual external execution NOT_EXECUTED"
+  },
+  {
+    "id": "S34",
+    "claim": "30 new local malicious-admin tests and current 326-test main suite pass",
+    "evidence_class": "OBSERVED",
+    "basis": "final verification: 296 prior cases plus 30; actual external administrative campaign not counted as passing"
+  },
+  {
+    "id": "S35",
+    "claim": "39 deliberate invariant removals are detected, including seven new sovereign guards",
+    "evidence_class": "OBSERVED",
+    "basis": "mutation report; names exact killer test and source hash; no exhaustive invariant coverage claim"
+  },
+  {
+    "id": "S36",
+    "claim": "PR #67 remains draft and unmerged at the reported SHA",
+    "evidence_class": "OBSERVED",
+    "basis": "GitHub metadata final check; no merge"
+  },
+  {
+    "id": "S37",
+    "claim": "Public contexts/fixtures and the cold verifier transport private keys",
+    "evidence_class": "REFUTED",
+    "basis": "public-only ingress/output checks; one existing local JWK read by signer; cold replay reads only public evidence/pins; secret-copy absence globally UNOBSERVED"
+  },
+  {
+    "id": "S38",
+    "claim": "Trust graph closes through circular mutual root endorsement",
+    "evidence_class": "REFUTED",
+    "basis": "acyclic graph ends at external local selection, survival and verifier assumptions; new edge does not justify its prior roots"
+  },
+  {
+    "id": "S39",
+    "claim": "A future bilateral act imports B historical claims as A accepted truth",
+    "evidence_class": "REFUTED",
+    "basis": "explicit acknowledgement retains contradiction rather than endorsing its truth; old local selections stay distinct"
+  },
+  {
+    "id": "S40",
+    "claim": "The experiment strongest currently earned result is a local E3 distinct-key reconciliation with E2 retained contradictions",
+    "evidence_class": "DERIVED",
+    "basis": "primary/native frozen proof; actual independent administration and no common orchestration remain UNOBSERVED"
+  }
+]

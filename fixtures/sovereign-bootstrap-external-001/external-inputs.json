@@ -1,0 +1,18 @@
+{
+  "schema": "relatte.sovereign-external-inputs/v0",
+  "experiment": "SOVEREIGN-BOOTSTRAP-EXTERNAL-001",
+  "status": "BLOCKED_EXTERNAL_INPUTS",
+  "external_execution": "NOT_EXECUTED",
+  "selected_external_A": null,
+  "selected_external_B": null,
+  "root_preexistence": "UNOBSERVED",
+  "independent_administration": "UNOBSERVED",
+  "independent_pin_retention": "UNOBSERVED",
+  "shared_orchestration_absence": "UNOBSERVED",
+  "missing": [
+    "A_EXISTING_PUBLIC_ROOT_AND_INDEPENDENTLY_RETAINED_PIN",
+    "B_EXISTING_PUBLIC_ROOT_AND_INDEPENDENTLY_RETAINED_PIN",
+    "EXTERNAL_CONTROL_AND_PREEXISTENCE_EVIDENCE",
+    "INDEPENDENT_OPERATOR_SIGNED_ACTS"
+  ]
+}

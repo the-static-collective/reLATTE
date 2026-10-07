@@ -20,3 +20,4 @@ export * from './particularity.ts';
 export * from './two-witness.ts';
 export * from './foundation-of-trust.ts';
 export * from './trust-bootstrap.ts';
+export * from './sovereign-bootstrap-external.ts';

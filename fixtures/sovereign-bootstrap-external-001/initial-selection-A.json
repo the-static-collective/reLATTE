@@ -1,0 +1,9 @@
+{
+  "root": {
+    "admin_id": "fe6932a8-9f44-4a3e-84d8-a2c547f527dc",
+    "key": "d4d6f301b5afb806238fff4fd9b3b4cfb69fdda7f3da36c99582adc0aadbfca2",
+    "genesis_id": "relatte-receipt-v0:c689ce7ac2a90c792f6f2f56e89b4a3cddbc57ae0a82ccbce2c377f2c5cc4a9b",
+    "head_id": "relatte-receipt-v0:b0c5b4d3261bf5dcc33ab4b73c298c5d6503444e0f97a594b851d15cc41f0203"
+  },
+  "observation_head": null
+}

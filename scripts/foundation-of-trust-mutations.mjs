@@ -41,6 +41,13 @@ const mutants = [
   { id: 'BOOTSTRAP_IGNORE_ACTIVATION_FORK', file: 'src/trust-bootstrap.ts', before: "requireThat(!args.local_root.active_edge_id || args.local_root.active_edge_id === edgeId, 'KNOWN_ACTIVE_POLICY_FORK');", after: '// MUTANT: overwrite a retained active edge', test: 'second valid joint edge cannot overwrite', test_file: 'test/trust-bootstrap.test.ts' },
   { id: 'BOOTSTRAP_POLICY_KEY_IS_ROOT', file: 'src/trust-bootstrap.ts', before: "requireThat(!bundle.journals.some(j => rootKey(j) === slot.policy_key), 'POLICY_KEY_IS_ADMIN_ROOT');", after: '// MUTANT: P can also use a root key', test: 'sharing a policy key with an admin root', test_file: 'test/trust-bootstrap.test.ts' },
   { id: 'BOOTSTRAP_IGNORE_PROPOSER_ROLE', file: 'src/trust-bootstrap.ts', before: 'proposer && bundle.proposal.world_id === proposer.admin_id && bundle.proposal.receiver_particular === proposer.admin_id', after: 'proposer', test: 'valid proposer signature with another admin role', test_file: 'test/trust-bootstrap.test.ts' },
+  { id: 'SOVEREIGN_IGNORE_ACTIVE_B_FORK', file: 'src/sovereign-bootstrap-external.ts', before: 'const id = canonicalize({ kind, key, context });', after: "if (kind === 'ROOT_ACTIVATION_EQUIVOCATION') return;\n    const id = canonicalize({ kind, key, context });", test: 'hostile P and actively equivocating B', test_file: 'test/sovereign-bootstrap-external.test.ts' },
+  { id: 'SOVEREIGN_IGNORE_KNOWLEDGE_PIN', file: 'src/sovereign-bootstrap-external.ts', before: "need(parent === selection.observation_head, 'PINNED_OBSERVATION_HEAD_CHANGED');", after: '// MUTANT: allow a forgotten observation log', test: 'replacing signed observation history', test_file: 'test/sovereign-bootstrap-external.test.ts' },
+  { id: 'SOVEREIGN_TRUST_INCOMING_OWN_VIEW', file: 'src/sovereign-bootstrap-external.ts', before: "if (args.local_view) need(sovereignViewDigest(own!) === sovereignViewDigest(args.local_view), 'RETAINED_LOCAL_VIEW_REPLACEMENT');", after: '// MUTANT: let peer replace retained local knowledge', test: 'B cannot replace A local retained view', test_file: 'test/sovereign-bootstrap-external.test.ts' },
+  { id: 'SOVEREIGN_IGNORE_LOCAL_ACK', file: 'src/sovereign-bootstrap-external.ts', before: "need(Array.isArray(d.acknowledged_conflicts) && sorted(d.acknowledged_conflicts) === sorted(expected.conflict_ids), 'LOCAL_CONTRADICTION_NOT_ACKNOWLEDGED');", after: '// MUTANT: allow unacknowledged known conflict', test: 'new local decision cannot fail to acknowledge', test_file: 'test/sovereign-bootstrap-external.test.ts' },
+  { id: 'SOVEREIGN_IGNORE_FROZEN_EDGE', file: 'src/sovereign-bootstrap-external.ts', before: "need(c.core_digest === sovereignEdgeCoreDigest(bundle), 'FROZEN_SOVEREIGN_EDGE_EVIDENCE_CHANGED');", after: '// MUTANT: closure does not bind decisions', test: 'replacing a correctly signed fresh decision', test_file: 'test/sovereign-bootstrap-external.test.ts' },
+  { id: 'SOVEREIGN_TRUST_P_AS_ROOT', file: 'src/sovereign-bootstrap-external.ts', before: 'participant && peer && participant.key === signingKeyIdentity(r)', after: 'participant && peer', test: 'hostile P cannot sign B sovereign decision', test_file: 'test/sovereign-bootstrap-external.test.ts' },
+  { id: 'SOVEREIGN_INVENT_SIGNED_CONFLICT', file: 'src/sovereign-bootstrap-external.ts', before: "need(sorted(then.map(c => c.id)) === sorted(e.conflict_ids), 'LOCAL_CONFLICT_RECORD_NOT_REPRODUCIBLE');", after: '// MUTANT: trust local conflict label without receipts', test: 'local observation claims must reproduce', test_file: 'test/sovereign-bootstrap-external.test.ts' },
 ];
 
 export async function runMutations(reportPath) {
@@ -67,5 +74,5 @@ export async function runMutations(reportPath) {
   return report;
 }
 if (process.argv[1] && resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
-  runMutations(process.argv[2]).catch(e => { process.stderr.write(e.message + '\n'); process.exitCode = 1; });
+  runMutations(process.argv[2] ?? process.env.RELATTE_MUTATION_REPORT).catch(e => { process.stderr.write(e.message + '\n'); process.exitCode = 1; });
 }
