@@ -427,6 +427,26 @@ test('recovery parsing refuses candidate floods and oversized private share enco
   );
 });
 
+test('a valid signed successor with an unknown prior head is not accepted as a complete lineage', async () => {
+  const father = await createFatherHandGenesis();
+  const set = await issueRecoverySet(father, 5, 3);
+  const ceremony = await beginRecoveryCeremony(
+    { fingerprint: father.fingerprint, generation: father.generation, public_key: father.public_key },
+    set.shares.slice(0, 3),
+  );
+  const succession = await ceremony.createSuccessor({
+    reason: 'red-team-unanchored',
+    retained_founder_fingerprints: [],
+    revoked_founder_fingerprints: [],
+    previous_lineage_head: 'fatherhand-succession-v0:' + 'a'.repeat(64),
+  });
+  assert.equal(await verifyFatherHandSuccession(succession.statement), true);
+  assert.deepEqual(await verifyFatherHandSuccessionSet([succession.statement]), {
+    valid: false,
+    code: 'UNANCHORED_SUCCESSION_LINEAGE',
+  });
+});
+
 test('succession-set verification is bounded against replay floods', async () => {
   const father = await createFatherHandGenesis();
   const set = await issueRecoverySet(father, 5, 3);
