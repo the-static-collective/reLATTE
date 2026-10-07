@@ -346,6 +346,48 @@ test('succession-set verification is bounded against replay floods', async () =>
   });
 });
 
+test('authority lineage metadata refuses noncanonical FounderNode and replacement fingerprints', async () => {
+  const father = await createFatherHandGenesis();
+  const set = await issueRecoverySet(father, 5, 3);
+  const ceremony = await beginRecoveryCeremony(
+    { fingerprint: father.fingerprint, generation: father.generation, public_key: father.public_key },
+    set.shares.slice(0, 3),
+  );
+  await assert.rejects(
+    () => ceremony.createSuccessor({
+      reason: 'garbage-retention',
+      retained_founder_fingerprints: ['not-a-foundernode'],
+      revoked_founder_fingerprints: [],
+      previous_lineage_head: null,
+    }),
+    /INVALID_RETAINED_FOUNDERS/,
+  );
+  ceremony.close();
+
+  const root = await createFatherHandGenesis();
+  const founder = await createFounderNode(
+    root,
+    VALID_WORLD,
+    ['webz-world-identity', 'delegate-operational-peer-keys'],
+  );
+  const op = await createOperationalKey();
+  await assert.rejects(
+    () => delegateOperationalKey(
+      founder,
+      op.public_key,
+      'webz-peer-https',
+      {
+        serial: 1,
+        not_before: '2026-10-07T00:00:00.000Z',
+        not_after: '2099-01-01T00:00:00.000Z',
+        endpoint_constraints: ['https://sanctuary.example.invalid'],
+        replaces_fingerprint: 'garbage',
+      },
+    ),
+    /INVALID_REPLACED_FINGERPRINT/,
+  );
+});
+
 test('same recovery set can cryptographically fork offline; set verifier must detect ambiguity', async () => {
   const father = await createFatherHandGenesis();
   const set = await issueRecoverySet(father, 5, 3);
