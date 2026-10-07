@@ -388,7 +388,7 @@ export async function createFounderNode(
     founder_fingerprint: founderNodeFingerprint(founderPublic),
     scopes: allowedScopes,
     constraints: { delegation_must_be_scoped: true },
-    created_at: now(),
+    created_at: createdAt,
     signing: {
       ...signingIdentity(father.public_key, FOUNDING_SIGNING_DOMAIN),
       signature: 'pending',
@@ -1094,10 +1094,12 @@ export async function trustPeerFounder(
   scopes: string[],
   constraints: { expires_at: string; invitation_id: string | null },
 ): Promise<Record<string, any>> {
-  if (typeof remoteWorldId !== 'string' || remoteWorldId.length === 0 || remoteWorldId.length > 256) throw new Error('INVALID_REMOTE_WORLD');
-  const allowedScopes = assertStringArray(scopes, 'INVALID_PEER_SCOPES');
+  const canonicalRemoteWorldId = validateWorldId(remoteWorldId, 'INVALID_REMOTE_WORLD');
+  const allowedScopes = validateClosedScopes(scopes, PEER_SCOPE_ALLOWLIST, 'INVALID_PEER_SCOPES');
   validateTimestamp(constraints.expires_at);
-  if (constraints.invitation_id !== null && (typeof constraints.invitation_id !== 'string' || constraints.invitation_id.length === 0)) {
+  const createdAt = now();
+  if (Date.parse(constraints.expires_at) <= Date.parse(createdAt)) throw new Error('INVALID_PEER_TRUST_WINDOW');
+  if (constraints.invitation_id !== null && (typeof constraints.invitation_id !== 'string' || constraints.invitation_id.length === 0 || constraints.invitation_id.length > 256)) {
     throw new Error('INVALID_INVITATION_ID');
   }
   const remoteKey = normalizePublicJwk(remoteFounderPublicKeyValue);
@@ -1105,7 +1107,7 @@ export async function trustPeerFounder(
     schema: 'fatherhand.peer-trust/v0',
     statement_id: 'pending',
     local_fatherhand_fingerprint: father.fingerprint,
-    remote_world_id: remoteWorldId,
+    remote_world_id: canonicalRemoteWorldId,
     remote_founder_public_key: remoteKey,
     remote_founder_fingerprint: founderNodeFingerprint(remoteKey),
     scopes: allowedScopes,
@@ -1134,6 +1136,7 @@ export async function verifyPeerTrust(
   value: unknown,
   localFatherHandPublicKeyValue: unknown,
   remoteFounderPublicKeyValue: unknown,
+  expectedRemoteWorldId: string,
   requiredScope: string,
   at: string,
 ): Promise<boolean> {
@@ -1144,12 +1147,16 @@ export async function verifyPeerTrust(
       'expires_at', 'invitation_id', 'decision', 'created_at', 'signing',
     ], 'INVALID_PEER_TRUST');
     if (statement.schema !== 'fatherhand.peer-trust/v0' || statement.decision !== 'TRUST') return false;
-    const scopes = assertStringArray(statement.scopes, 'INVALID_PEER_SCOPES');
+    const canonicalExpectedRemoteWorld = validateWorldId(expectedRemoteWorldId, 'INVALID_REMOTE_WORLD');
+    validateWorldId(statement.remote_world_id, 'INVALID_REMOTE_WORLD');
+    if (statement.remote_world_id !== canonicalExpectedRemoteWorld) return false;
+    const scopes = validateClosedScopes(statement.scopes, PEER_SCOPE_ALLOWLIST, 'INVALID_PEER_SCOPES');
     if (!scopes.includes(requiredScope)) return false;
     validateTimestamp(statement.expires_at);
     validateTimestamp(statement.created_at);
     validateTimestamp(at);
-    if (Date.parse(at) > Date.parse(statement.expires_at)) return false;
+    if (Date.parse(statement.expires_at) <= Date.parse(statement.created_at)) return false;
+    if (Date.parse(at) < Date.parse(statement.created_at) || Date.parse(at) > Date.parse(statement.expires_at)) return false;
     const localKey = normalizePublicJwk(localFatherHandPublicKeyValue);
     const remoteKey = normalizePublicJwk(remoteFounderPublicKeyValue);
     if (statement.local_fatherhand_fingerprint !== fatherHandFingerprint(localKey)) return false;
