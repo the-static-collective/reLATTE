@@ -1,6 +1,6 @@
 # WEBZ-005 — FatherHand / FounderNode Root Trust
 
-**Status:** Human-approved architecture direction; cryptographic design specification, not yet executable authority.
+**Status:** Human-approved architecture with an executable **synthetic, network-free root-kernel specimen** on PR #66. Not production authority and not yet direct HTTPS.
 
 ## Primitive split
 
@@ -86,7 +86,7 @@ Recommended first specimen:
           reconstruct FatherHand-0
           only inside recovery ceremony
 
-A FatherKid carries the FatherHand public fingerprint, FatherHand generation, recovery-set identifier, unique lineage identifier, threshold parameters, encoded share material, integrity/version metadata, and explicit RECOVERY_ONLY scope.
+A FatherKid carries the FatherHand public fingerprint **and public key**, FatherHand generation, recovery-set identifier, unique lineage identifier, the actual Shamir coordinate encoded by its share, threshold parameters, encoded share material, SHA-256 integrity metadata, a **FatherHand signature over all non-secret share metadata plus the share checksum**, and explicit RECOVERY_ONLY scope.
 
 No one FatherKid contains the whole root.
 
@@ -231,7 +231,7 @@ A new key alone never proves compromise resolution.
 
 ## First executable specimen
 
-Before remote HTTPS, implement a **network-free root kernel** that must:
+Before remote HTTPS, the branch implements a **network-free root kernel** that must:
 
 1. create FatherHand-0 offline in an isolated temporary directory;
 2. create an independently generated FounderNode;
@@ -248,7 +248,7 @@ Before remote HTTPS, implement a **network-free root kernel** that must:
 13. cold-verify all public statements;
 14. leave no root private material in ordinary runtime state after the ceremony.
 
-Only after this kernel passes review should WEBZ-005 implement remote peer enrollment and authenticated transport.
+Only after this kernel passes review and is explicitly merged should WEBZ-005 proceed to remote peer enrollment and authenticated transport.
 
 ## Cryptographic engineering constraints
 
