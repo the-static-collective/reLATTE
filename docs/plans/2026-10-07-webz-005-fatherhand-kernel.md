@@ -4,14 +4,14 @@
 
 **Architecture:** Keep FatherHand as a cold root that signs independently generated child identities. Use the existing reLATTE P-256 canonical signing/verification path for public statements. Use a vetted threshold-sharing dependency for root recovery; do not implement finite-field crypto locally. Ordinary runtime gets only public statements and delegated keys. Recovery reconstructs the old root only inside a bounded ceremony and immediately creates a successor generation.
 
-**Candidate threshold library:** pin a reviewed zero-dependency Uint8Array Shamir implementation after dependency review. The current candidate is shamir-secret-sharing 0.0.4. Its reconstruction result is not self-authenticating, so every recovered root MUST be checked against the expected FatherHand public fingerprint before it can sign anything.
+**Selected threshold library:** exact dependency `shamir-secret-sharing@0.0.4`. Upstream documents it as a zero-dependency Uint8Array implementation audited by Cure53 and Zellic. Its reconstruction result is explicitly **not self-authenticating**, so this implementation FatherHand-signs each share's lineage metadata/checksum and MUST still recompute the reconstructed root's expected FatherHand public fingerprint before exposing any recovered-root capability.
 
 **Execution method:** Native, task-by-task, RED -> GREEN -> verify -> commit. No network listener and no real user recovery material in this slice.
 
 ## Task 1 — Dependency and key-material boundary
 
 Files:
-- package.json / package-lock.json
+- package.json (this repository currently has no committed package-lock.json)
 - src/fatherhand.ts
 - test/fatherhand-boundary.test.ts
 
