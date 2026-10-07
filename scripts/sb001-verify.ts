@@ -37,6 +37,15 @@ function requireArrayExcludes(value: unknown, excluded: string, code: string): v
   if (!Array.isArray(value) || value.includes(excluded)) throw new Error(code);
 }
 
+function requireOnlyKeys(value: unknown, allowed: readonly string[], code: string): AnyRecord {
+  const record = asRecord(value, code);
+  const allowedSet = new Set(allowed);
+  for (const key of Object.keys(record)) {
+    if (!allowedSet.has(key)) throw new Error(code);
+  }
+  return record;
+}
+
 function normalizedPublicKey(value: unknown): Record<string, string> {
   const key = asRecord(value, 'SB001_INVALID_PUBLIC_KEY');
   if (
@@ -188,6 +197,11 @@ export async function verifySb001Bundle(bundle: Sb001Bundle): Promise<true> {
     '2b317402c4769319220cd6bc3e5d20c3978dbfbf',
     'SB001_SOURCE_BLOB_SUBSTITUTION',
   );
+  requireOnlyKeys(
+    crossing.extensions?.sb001,
+    ['source_repository', 'source_ref', 'source_commit', 'source_path', 'source_blob_sha', 'claim_limit'],
+    'SB001_CROSSING_EXTENSION_SMUGGLING',
+  );
 
   for (const receipt of [release, unresolved, disposition, exit]) {
     requireEqual(receipt.crossing_id, crossing.crossing_id, 'SB001_CROSSING_ID_SPLIT');
@@ -208,6 +222,11 @@ export async function verifySb001Bundle(bundle: Sb001Bundle): Promise<true> {
     release.residual_refs,
     `sha256:${SB001_PAYLOAD_SHA256}`,
     'SB001_RELEASE_LOST_PAYLOAD_REF',
+  );
+  requireOnlyKeys(
+    release.extensions?.supabardo,
+    ['laws', 'source_bytes_may_remain'],
+    'SB001_RELEASE_EXTENSION_SMUGGLING',
   );
 
   requireEqual(unresolved.kind, 'SB001_UNRESOLVED_INTERVAL', 'SB001_UNRESOLVED_KIND');
@@ -234,6 +253,11 @@ export async function verifySb001Bundle(bundle: Sb001Bundle): Promise<true> {
     'EXIT',
     'SB001_EXIT_BEFORE_DESTINATION',
   );
+  requireOnlyKeys(
+    unresolved.extensions?.supabardo,
+    ['state', 'occurrence_classes', 'destination_disposition', 'laws'],
+    'SB001_WAIT_EXTENSION_SMUGGLING',
+  );
 
   requireEqual(disposition.kind, 'R3_ADMIT', 'SB001_DESTINATION_NOT_ADMIT');
   requireEqual(disposition.world_id, 'world:sb001-b', 'SB001_DESTINATION_WORLD');
@@ -253,6 +277,11 @@ export async function verifySb001Bundle(bundle: Sb001Bundle): Promise<true> {
     unresolved.receipt_id,
     'SB001_DESTINATION_LOST_UNRESOLVED_ANCESTRY',
   );
+  requireOnlyKeys(
+    disposition.extensions?.local_receiver,
+    ['disposition', 'laws', 'supabardo_unresolved_receipt_id'],
+    'SB001_DESTINATION_EXTENSION_SMUGGLING',
+  );
 
   requireEqual(exit.kind, 'SB001_EXIT', 'SB001_EXIT_KIND');
   requireEqual(exit.semantic_effect, 'none', 'SB001_EXIT_CREATED_MEANING');
@@ -266,6 +295,11 @@ export async function verifySb001Bundle(bundle: Sb001Bundle): Promise<true> {
     exit.extensions?.supabardo?.destination_disposition_receipt_id,
     disposition.receipt_id,
     'SB001_EXIT_WRONG_DESTINATION_RECEIPT',
+  );
+  requireOnlyKeys(
+    exit.extensions?.supabardo,
+    ['state_before_exit', 'terminal_occurrence', 'destination_disposition_receipt_id', 'laws'],
+    'SB001_EXIT_EXTENSION_SMUGGLING',
   );
 
   const sourceKey = crossing.signing?.public_key;
