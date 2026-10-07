@@ -1,0 +1,40 @@
+{
+  "schema": "relatte.receipt/v0",
+  "crossing_id": "relatte-crossing-v0:1989c09663894c47364a5279d1cb74d0884ca408ad3f93cc2f242eb8568976e2",
+  "world_id": "world:sb003-b",
+  "receiver_particular": "particular:sb003-b",
+  "kind": "SB003_SUCCESSOR_ADMIT",
+  "semantic_effect": "sb003-successor-fresh-local-capability",
+  "contract_ref": "relatte:sb003-succession/v0",
+  "pre_state_ref": "relatte-receipt-v0:14d7a27761cf6b9457429c6384062dc8780d4b83677c473acd5b4168b03b1e68",
+  "post_state_ref": "local-state:sb003-b:admitted",
+  "descendant_refs": [
+    "capability:sb003-successor-descendant"
+  ],
+  "residual_refs": [],
+  "note": "B independently constitutes a new local descendant from the Ark.",
+  "created_at": "2026-10-07T00:44:00.000Z",
+  "extensions": {
+    "local_receiver": {
+      "disposition": "ADMIT",
+      "successor_acceptance_receipt_id": "relatte-receipt-v0:14d7a27761cf6b9457429c6384062dc8780d4b83677c473acd5b4168b03b1e68",
+      "laws": [
+        "ANCESTRY != AUTHORITY",
+        "DESCENDANT != RESURRECTED ORIGINAL",
+        "AUTHORITY IS LOCAL"
+      ]
+    }
+  },
+  "receipt_id": "relatte-receipt-v0:b4f709f5aa2338bdd27e715e0340819192c12b5c1ca9f6c57d82f627d76ee939",
+  "signing": {
+    "algorithm": "ECDSA-P256-SHA256",
+    "public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "LgCksbfSOrbn7j5kcd5toKvps-jcJY_zY2YV4KKIrTs",
+      "y": "x9M63ZqaaKAYHdJz67DJ6ogqqT5b3Wa8jgEGnlRRuSY"
+    },
+    "signature": "sEK9l_Zhaib8Gjlei3JrMu897kMou3deBQ_IrRYjrq7VMU5UqBmjI64lpZePkJ6LK7-gq6fxK_84FHo32rbw1w",
+    "domain": "relatte.receipt-signature/v0"
+  }
+}
