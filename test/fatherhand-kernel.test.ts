@@ -13,11 +13,34 @@ import {
   verifyPeerTrust,
   issueRecoverySet,
   reconstructFatherHand,
+  retireFatherHand,
   createKidBackupSet,
   recoverKidShare,
   beginRecoveryCeremony,
   verifyFatherHandSuccession,
 } from '../src/fatherhand.ts';
+
+test('FatherHand handle exposes no private-key property and can be explicitly retired before recovery', async () => {
+  const father = await createFatherHandGenesis();
+  assert.equal(Object.hasOwn(father, 'private_key'), false);
+  assert.equal(Object.hasOwn(father, 'privateKey'), false);
+  assert.doesNotThrow(() => assertPublicArtifactSafe(father));
+
+  const recovery = await issueRecoverySet(father, 5, 3);
+  retireFatherHand(father);
+  await assert.rejects(
+    () => issueRecoverySet(father, 5, 3),
+    /FATHERHAND_PRIVATE_KEY_UNAVAILABLE/,
+  );
+  await assert.rejects(
+    () => createFounderNode(father, 'webz:retired/world', ['webz-world-identity']),
+    /FATHERHAND_PRIVATE_KEY_UNAVAILABLE/,
+  );
+
+  const recovered = await reconstructFatherHand(recovery.shares.slice(0, 3), father.fingerprint);
+  assert.equal(recovered.fingerprint, father.fingerprint);
+  recovered.close();
+});
 
 test('FatherHand founds an independently generated FounderNode without parent-key derivation', async () => {
   const father = await createFatherHandGenesis();
