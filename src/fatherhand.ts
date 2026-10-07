@@ -1060,6 +1060,10 @@ export async function verifyFatherHandSuccessionSet(
   }
 
   const ordered = [...statements].sort((a, b) => a.old_generation - b.old_generation);
+  const first = ordered[0]!;
+  if (first.old_generation !== 0 || first.previous_lineage_head !== null) {
+    return { valid: false, code: 'UNANCHORED_SUCCESSION_LINEAGE' };
+  }
   for (let index = 1; index < ordered.length; index++) {
     const prior = ordered[index - 1]!;
     const current = ordered[index]!;
