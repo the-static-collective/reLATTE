@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import {
+  assertPublicArtifactSafe,
   beginRecoveryCeremony,
   createFatherHandGenesis,
   createFounderNode,
@@ -17,6 +18,20 @@ import {
 
 const VALID_WORLD = 'webz:the-static-collective/sanctuary';
 const REMOTE_WORLD = 'webz:the-static-collective/orchard-022100';
+
+test('public-artifact scanning refuses cycles and excessive nesting instead of recursing unbounded', () => {
+  const cyclic: Record<string, any> = {};
+  cyclic.self = cyclic;
+  assert.throws(() => assertPublicArtifactSafe(cyclic), /CYCLIC_PUBLIC_ARTIFACT/);
+
+  let deep: Record<string, any> = {};
+  const root = deep;
+  for (let i = 0; i < 70; i++) {
+    deep.next = {};
+    deep = deep.next;
+  }
+  assert.throws(() => assertPublicArtifactSafe(root), /PUBLIC_ARTIFACT_DEPTH_LIMIT/);
+});
 
 test('FatherHand can issue only one recovery set and remains able to sign after its key is hardened non-extractable', async () => {
   const father = await createFatherHandGenesis();
