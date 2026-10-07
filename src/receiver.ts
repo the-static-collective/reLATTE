@@ -286,21 +286,22 @@ export class LocalReceiver {
         if (event.crossing !== null) throw new Error('CUSTODY_EVENT_CANNOT_REDECLARE_CROSSING');
         const received = this.received.get(event.crossing_id);
         const disposed = this.dispositions.get(event.crossing_id);
+        const receipt = event.receipt as Record<string, any>;
         if (!received || !disposed) throw new Error('CUSTODY_BEFORE_DISPOSITION');
         if (this.custodyReceipts.has(event.crossing_id)) throw new Error('DUPLICATE_CUSTODY_EVENT');
-        if (event.receipt.kind !== 'PAYLOAD_BYTES_VERIFIED'
-            || event.receipt.semantic_effect !== 'none'
-            || event.receipt.crossing_id !== event.crossing_id
-            || event.receipt.world_id !== this.config.world_id
-            || event.receipt.receiver_particular !== this.config.receiver_particular
-            || event.receipt.created_at !== event.created_at
-            || event.receipt.pre_state_ref !== stateRef(this.config, this.received, this.dispositions)
-            || event.receipt.post_state_ref !== event.receipt.pre_state_ref
-            || event.receipt.signing?.public_key?.x !== disposed.receipt.signing?.public_key?.x
-            || event.receipt.signing?.public_key?.y !== disposed.receipt.signing?.public_key?.y) {
+        if (receipt.kind !== 'PAYLOAD_BYTES_VERIFIED'
+            || receipt.semantic_effect !== 'none'
+            || receipt.crossing_id !== event.crossing_id
+            || receipt.world_id !== this.config.world_id
+            || receipt.receiver_particular !== this.config.receiver_particular
+            || receipt.created_at !== event.created_at
+            || receipt.pre_state_ref !== stateRef(this.config, this.received, this.dispositions)
+            || receipt.post_state_ref !== receipt.pre_state_ref
+            || receipt.signing?.public_key?.x !== disposed.receipt.signing?.public_key?.x
+            || receipt.signing?.public_key?.y !== disposed.receipt.signing?.public_key?.y) {
           throw new Error('INVALID_CUSTODY_RECEIPT');
         }
-        const material = event.receipt.extensions?.local_receiver?.payload_custody;
+        const material = receipt.extensions?.local_receiver?.payload_custody;
         if (typeof material !== 'object' || material === null || Array.isArray(material)) {
           throw new Error('INVALID_CUSTODY_METADATA');
         }
@@ -315,8 +316,8 @@ export class LocalReceiver {
             || material.receive_receipt_id !== received.receipt.receipt_id
             || material.disposition_receipt_id !== disposed.receipt.receipt_id
             || !payloadAddresses(received.crossing).includes('sha256:' + digest)
-            || !Array.isArray(event.receipt.residual_refs)
-            || !event.receipt.residual_refs.includes('sha256:' + digest)) {
+            || !Array.isArray(receipt.residual_refs)
+            || !receipt.residual_refs.includes('sha256:' + digest)) {
           throw new Error('INVALID_CUSTODY_METADATA');
         }
         const file = join(this.root, 'payloads', event.crossing_id + '.bin');
@@ -328,7 +329,7 @@ export class LocalReceiver {
         } else if (await fileExists(file)) {
           throw new Error('REFUSED_PAYLOAD_WAS_RETAINED');
         }
-        this.custodyReceipts.set(event.crossing_id, event.receipt);
+        this.custodyReceipts.set(event.crossing_id, receipt);
       } else {
         throw new Error('INVALID_RECEIVER_EVENT_TYPE');
       }
