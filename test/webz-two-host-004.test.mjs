@@ -120,3 +120,26 @@ test('foreign material and malicious extra fields fail exact first-party allowli
     await assert.rejects(()=>prepareSender(h.fixtureRoot,h.output,sender),/UNRECOGNIZED_FIXTURE_FIELDS/);
   }finally{await rm(h.root,{recursive:true,force:true});}
 });
+
+test('same receiver machine retries a completed handoff without rewriting signed receipts',async()=>{
+  const h=await setup();
+  try{
+    await prepared(h);
+    const before=await changed(h);
+    const journal=await readFile(join(h.privateRoot,'journal.jsonl'),'utf8');
+    const repeated=await processReceiver(h.output,h.publicDir,h.privateRoot,receiver);
+    assert.equal(JSON.stringify(repeated,null,2)+'\\n',before);
+    assert.equal(await readFile(join(h.privateRoot,'journal.jsonl'),'utf8'),journal);
+    assert.equal((await verifyTransfer(h.output,h.publicDir)).verified,true);
+  }finally{await rm(h.root,{recursive:true,force:true});}
+});
+
+test('same-public-receipts retry with a foreign runner refuses rather than adopting a prior result',async()=>{
+  const h=await setup();
+  try{
+    await prepared(h);
+    await assert.rejects(()=>processReceiver(h.output,h.publicDir,h.privateRoot,{
+      ...receiver,machine_fingerprint:'c'.repeat(64),
+    }),/RETRY_FROM_DIFFERENT_RUNNER_OR_SOURCE/);
+  }finally{await rm(h.root,{recursive:true,force:true});}
+});
