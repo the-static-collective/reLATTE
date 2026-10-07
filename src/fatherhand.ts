@@ -304,17 +304,29 @@ function verifySigningObject(value: unknown, domain: string): { public_key: Publ
 }
 
 function assertStringArray(value: unknown, code: string): string[] {
-  if (!Array.isArray(value) || value.length === 0 || value.some((x) => typeof x !== 'string' || x.length === 0)) {
-    throw new Error(code);
-  }
+  if (
+    !Array.isArray(value) ||
+    value.length === 0 ||
+    value.length > 32 ||
+    value.some((x) => typeof x !== 'string' || x.length === 0 || x.length > 128)
+  ) throw new Error(code);
   if (new Set(value).size !== value.length) throw new Error(code);
   return [...value];
 }
 
 function assertStringList(value: unknown, code: string): string[] {
-  if (!Array.isArray(value) || value.some((x) => typeof x !== 'string' || x.length === 0)) throw new Error(code);
+  if (
+    !Array.isArray(value) ||
+    value.length > 256 ||
+    value.some((x) => typeof x !== 'string' || x.length === 0 || x.length > 512)
+  ) throw new Error(code);
   if (new Set(value).size !== value.length) throw new Error(code);
   return [...value];
+}
+
+function validateFounderFingerprints(values: string[], code: string): string[] {
+  if (values.some((value) => !/^foundernode-v0:[a-f0-9]{64}$/.test(value))) throw new Error(code);
+  return values;
 }
 
 export function assertPublicArtifactSafe(value: unknown): void {
@@ -841,8 +853,14 @@ class RecoveryCeremony {
   }): Promise<{ successor: FatherHand; statement: Record<string, any> }> {
     if (!this.#recovered) throw new Error('RECOVERY_CEREMONY_CLOSED');
     if (typeof args.reason !== 'string' || args.reason.length === 0 || args.reason.length > 160) throw new Error('INVALID_SUCCESSION_REASON');
-    const retained = assertStringList(args.retained_founder_fingerprints, 'INVALID_RETAINED_FOUNDERS');
-    const revoked = assertStringList(args.revoked_founder_fingerprints, 'INVALID_REVOKED_FOUNDERS');
+    const retained = validateFounderFingerprints(
+      assertStringList(args.retained_founder_fingerprints, 'INVALID_RETAINED_FOUNDERS'),
+      'INVALID_RETAINED_FOUNDERS',
+    );
+    const revoked = validateFounderFingerprints(
+      assertStringList(args.revoked_founder_fingerprints, 'INVALID_REVOKED_FOUNDERS'),
+      'INVALID_REVOKED_FOUNDERS',
+    );
     if (retained.some((x) => revoked.includes(x))) throw new Error('CONFLICTING_FOUNDER_STATUS');
     if (args.previous_lineage_head !== null && (typeof args.previous_lineage_head !== 'string' || args.previous_lineage_head.length === 0)) {
       throw new Error('INVALID_PREVIOUS_LINEAGE_HEAD');
@@ -933,8 +951,14 @@ export async function verifyFatherHandSuccession(value: unknown): Promise<boolea
     if (!Number.isSafeInteger(statement.old_generation) || statement.old_generation < 0 || statement.new_generation !== statement.old_generation + 1) return false;
     if (typeof statement.reason !== 'string' || statement.reason.length === 0 || statement.reason.length > 160) return false;
     if (statement.previous_lineage_head !== null && (typeof statement.previous_lineage_head !== 'string' || statement.previous_lineage_head.length === 0)) return false;
-    const retained = assertStringList(statement.retained_founder_fingerprints, 'INVALID_RETAINED_FOUNDERS');
-    const revoked = assertStringList(statement.revoked_founder_fingerprints, 'INVALID_REVOKED_FOUNDERS');
+    const retained = validateFounderFingerprints(
+      assertStringList(statement.retained_founder_fingerprints, 'INVALID_RETAINED_FOUNDERS'),
+      'INVALID_RETAINED_FOUNDERS',
+    );
+    const revoked = validateFounderFingerprints(
+      assertStringList(statement.revoked_founder_fingerprints, 'INVALID_REVOKED_FOUNDERS'),
+      'INVALID_REVOKED_FOUNDERS',
+    );
     if (retained.some((x) => revoked.includes(x))) return false;
     validateTimestamp(statement.created_at);
     const oldSigning = verifySigningObject(statement.old_signing, SUCCESSION_OLD_SIGNING_DOMAIN);
@@ -1109,7 +1133,10 @@ export async function delegateOperationalKey(
   const createdAt = now();
   if (Date.parse(details.not_after) <= Date.parse(createdAt)) throw new Error('INVALID_DELEGATION_CREATION_WINDOW');
   const constraints = validateEndpointConstraints(scope, details.endpoint_constraints);
-  if (details.replaces_fingerprint !== null && (typeof details.replaces_fingerprint !== 'string' || details.replaces_fingerprint.length === 0)) {
+  if (
+    details.replaces_fingerprint !== null &&
+    (typeof details.replaces_fingerprint !== 'string' || !/^foundernode-op-v0:[a-f0-9]{64}$/.test(details.replaces_fingerprint))
+  ) {
     throw new Error('INVALID_REPLACED_FINGERPRINT');
   }
   const publicKey = normalizePublicJwk(publicKeyValue);
@@ -1181,7 +1208,10 @@ export async function verifyOperationalDelegation(
       Date.parse(at) > Date.parse(statement.not_after)
     ) return false;
     validateEndpointConstraints(requiredScope, statement.endpoint_constraints);
-    if (statement.replaces_fingerprint !== null && (typeof statement.replaces_fingerprint !== 'string' || statement.replaces_fingerprint.length === 0)) return false;
+    if (
+      statement.replaces_fingerprint !== null &&
+      (typeof statement.replaces_fingerprint !== 'string' || !/^foundernode-op-v0:[a-f0-9]{64}$/.test(statement.replaces_fingerprint))
+    ) return false;
     const signer = verifySigningObject(statement.signing, DELEGATION_SIGNING_DOMAIN);
     if (!signer || founderNodeFingerprint(signer.public_key) !== expectedFounderFingerprint) return false;
     const op = normalizePublicJwk(statement.operational_public_key);
