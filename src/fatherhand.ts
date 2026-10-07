@@ -391,7 +391,7 @@ export async function createFounderNode(
     founder_fingerprint: founderNodeFingerprint(founderPublic),
     scopes: allowedScopes,
     constraints: { delegation_must_be_scoped: true },
-    created_at: createdAt,
+    created_at: now(),
     signing: {
       ...signingIdentity(father.public_key, FOUNDING_SIGNING_DOMAIN),
       signature: 'pending',
@@ -1193,7 +1193,7 @@ export async function trustPeerFounder(
     expires_at: constraints.expires_at,
     invitation_id: constraints.invitation_id,
     decision: 'TRUST',
-    created_at: now(),
+    created_at: createdAt,
     signing: {
       ...signingIdentity(father.public_key, PEER_TRUST_SIGNING_DOMAIN),
       signature: 'pending',
