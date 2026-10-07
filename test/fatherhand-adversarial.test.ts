@@ -295,6 +295,26 @@ test('recovery parsing refuses candidate floods and oversized private share enco
   );
 });
 
+test('succession-set verification is bounded against replay floods', async () => {
+  const father = await createFatherHandGenesis();
+  const set = await issueRecoverySet(father, 5, 3);
+  const ceremony = await beginRecoveryCeremony(
+    { fingerprint: father.fingerprint, generation: father.generation, public_key: father.public_key },
+    set.shares.slice(0, 3),
+  );
+  const succession = await ceremony.createSuccessor({
+    reason: 'red-team-replay-flood',
+    retained_founder_fingerprints: [],
+    revoked_founder_fingerprints: [],
+    previous_lineage_head: null,
+  });
+  const flooded = Array.from({ length: 257 }, () => succession.statement);
+  assert.deepEqual(await verifyFatherHandSuccessionSet(flooded), {
+    valid: false,
+    code: 'SUCCESSION_SET_LIMIT',
+  });
+});
+
 test('same recovery set can cryptographically fork offline; set verifier must detect ambiguity', async () => {
   const father = await createFatherHandGenesis();
   const set = await issueRecoverySet(father, 5, 3);
