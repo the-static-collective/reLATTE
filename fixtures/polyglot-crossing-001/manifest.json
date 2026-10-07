@@ -1,0 +1,17 @@
+{
+  "schema": "relatte.polyglot-crossing-manifest/v0",
+  "experiment": "POLYGLOT-CROSSING-001",
+  "frozen_core_commit": "f5cb7488bebc1a6e27fd458ad40af9b9b6f9e858",
+  "frozen_src_tree": "c0e4d2c59481e0fb2a4bf4bb294f373907fd2b76",
+  "substrates": [
+    "git",
+    "filesystem",
+    "sqlite",
+    "http",
+    "signed-json",
+    "physical-carrier"
+  ],
+  "normative_core_mutations_allowed": 0,
+  "physical_custody": "UNOBSERVED",
+  "universal_interoperability": "UNOBSERVED"
+}
