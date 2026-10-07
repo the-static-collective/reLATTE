@@ -18,6 +18,24 @@ import {
 const VALID_WORLD = 'webz:the-static-collective/sanctuary';
 const REMOTE_WORLD = 'webz:the-static-collective/orchard-022100';
 
+test('FatherHand can issue only one recovery set and remains able to sign after its key is hardened non-extractable', async () => {
+  const father = await createFatherHandGenesis();
+  const first = await issueRecoverySet(father, 5, 3);
+  assert.equal(first.shares.length, 5);
+
+  await assert.rejects(
+    () => issueRecoverySet(father, 5, 3),
+    /FATHERHAND_RECOVERY_SET_ALREADY_ISSUED/,
+  );
+
+  const founder = await createFounderNode(
+    father,
+    'webz:the-static-collective/post-hardening',
+    ['webz-world-identity'],
+  );
+  assert.equal(founder.founding_statement.fatherhand_fingerprint, father.fingerprint);
+});
+
 test('world identity rejects display-confusable, control, URL-ish and noncanonical spellings', async () => {
   const father = await createFatherHandGenesis();
   for (const world of [
