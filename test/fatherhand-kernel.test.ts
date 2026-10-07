@@ -53,6 +53,8 @@ test('FatherHand founds an independently generated FounderNode without parent-ke
   assert.equal(founder.founding_statement.fatherhand_fingerprint, father.fingerprint);
   assert.equal(founder.founding_statement.founder_fingerprint, founder.fingerprint);
   assert.notDeepEqual(founder.public_key, father.public_key);
+  assert.equal(Object.hasOwn(founder, 'private_key'), false);
+  assertPublicArtifactSafe(founder);
   assertPublicArtifactSafe(founder.founding_statement);
 
   const changed = structuredClone(founder.founding_statement);
