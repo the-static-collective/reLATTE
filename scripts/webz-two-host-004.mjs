@@ -193,11 +193,15 @@ export async function processReceiver(inputDir,publicOutputDir,privateRoot,remot
   const rel=relative(normalize(publicOutputDir),normalize(privateRoot));
   validate(rel==='..' || rel.startsWith('..'+String.fromCharCode(47)) ||
     isAbsolute(rel),'PRIVATE_RECEIVER_ROOT_INSIDE_PUBLIC_ARTIFACT');
-  const receiver=await LocalReceiver.create(privateRoot,{
+  await LocalReceiver.create(privateRoot,{
     world_id:DST,receiver_particular:RECEIVER,contract_ref:CONTRACT,
   });
   const result={};
   for (const [index,kind] of Object.keys(KINDS).entries()) {
+    // The custody-delivery owner opens and appends its own journal event.
+    // Reopen before every next parcel; a stale in-memory writer would reuse
+    // sequence numbers and break the receiver's append-only replay.
+    const receiver=await LocalReceiver.open(privateRoot);
     const crossing=packets[kind].crossing;
     const existing=await receiver.receive(crossing,instant(index*4));
     validate(await verifyReceipt(existing),'RECEIVER_RECEIVE_SIGNATURE_FAILED');
