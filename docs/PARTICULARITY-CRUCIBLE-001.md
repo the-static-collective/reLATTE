@@ -16,6 +16,8 @@ STATE != PARTICULAR
 CONTROL != IDENTITY
 ACCESS != EXISTENCE
 SURFACE DISCONTINUITY != PARTICULAR DISCONTINUITY
+PARTICULAR POINTER != CONTINUITY PROOF
+NO PARTICULAR CONTINUITY WITHOUT A WITNESSABLE PATH
 
 COPY != PARTICULAR
 SHARED CONTENT != SHARED IDENTITY
@@ -46,6 +48,8 @@ PARTICULAR P
         access != event:e
 ```
 
+A state surface is not allowed to prove continuity merely by carrying the same `particular_id`. A recorded state-transition path must join the surfaces. An impostor surface that names the same anchor but lacks that path is not accepted as continuous.
+
 The test requires all of these to be simultaneously true:
 
 ```text
@@ -54,6 +58,10 @@ controller(A) != controller(B)
 self(A) != self(B)
 
 particular(A) == particular(B)
+witnessable_state_path(A, B) == true
+
+impostor.particular_id == particular(A)
+witnessable_state_path(A, impostor) == false
 
 can_access(B, event:e) == false
 witnessed(event:e) == true
