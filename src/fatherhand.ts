@@ -54,6 +54,7 @@ function validateClosedScopes(value: unknown, allowed: Set<string>, code: string
 function validateEndpointConstraints(scope: string, value: unknown): string[] {
   const constraints = assertStringList(value, 'INVALID_ENDPOINT_CONSTRAINTS');
   if (scope !== 'webz-peer-https') return constraints;
+  const normalized: string[] = [];
   for (const entry of constraints) {
     let url: URL;
     try { url = new URL(entry); }
@@ -65,11 +66,13 @@ function validateEndpointConstraints(scope: string, value: unknown): string[] {
       url.hash !== '' ||
       url.search !== '' ||
       url.hostname === '' ||
+      url.pathname !== '/' ||
       /[\u0000-\u001f\u007f]/.test(entry) ||
-      url.toString() !== entry
+      url.origin !== entry
     ) throw new Error('INVALID_ENDPOINT_CONSTRAINTS');
+    normalized.push(url.origin);
   }
-  return constraints;
+  return normalized;
 }
 
 type PublicJwk = { kty: 'EC'; crv: 'P-256'; x: string; y: string };
