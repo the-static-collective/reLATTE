@@ -407,3 +407,61 @@ test('BAT rejects mix-and-match receipts from two independently lawful ceremonie
     /SB001_CROSSING_ID_SPLIT|SB001_DESTINATION_LOST_UNRESOLVED_ANCESTRY|SB001_EXIT_LOST_WAIT|SB001_EXIT_LOST_DESTINATION/,
   );
 });
+
+
+test('research BAT rejects source provenance commit substitution even when freshly signed', async () => {
+  const b = await freshBundle();
+  const draft = crossingDraft(b.crossing);
+  draft.source_history_head = 'f'.repeat(40);
+  draft.extensions.source_commit = draft.source_history_head;
+  b.crossing = await sealCrossingEnvelope(draft, b.sourceKeys);
+  await expectRefusal(b, /SB001_SOURCE_COMMIT_SUBSTITUTION|SB001_SOURCE_COMMIT_SPLIT/);
+});
+
+test('research BAT rejects source path substitution even when freshly signed', async () => {
+  const b = await freshBundle();
+  const draft = crossingDraft(b.crossing);
+  draft.extensions.source_path = 'examples/other.json';
+  b.crossing = await sealCrossingEnvelope(draft, b.sourceKeys);
+  await expectRefusal(b, /SB001_SOURCE_PATH_SUBSTITUTION/);
+});
+
+test('research BAT rejects destination-route substitution even when freshly signed', async () => {
+  const b = await freshBundle();
+  const draft = crossingDraft(b.crossing);
+  draft.audience_policy.destination = 'world:attacker';
+  b.crossing = await sealCrossingEnvelope(draft, b.sourceKeys);
+  await expectRefusal(b, /SB001_DESTINATION_SUBSTITUTION/);
+});
+
+test('research BAT rejects return-route substitution even when freshly signed', async () => {
+  const b = await freshBundle();
+  const draft = crossingDraft(b.crossing);
+  draft.return_address = 'supabardo:return:attacker';
+  b.crossing = await sealCrossingEnvelope(draft, b.sourceKeys);
+  await expectRefusal(b, /SB001_RETURN_ROUTE_SUBSTITUTION/);
+});
+
+test('research BAT rejects signed authority smuggling through WAIT extensions', async () => {
+  const b = await freshBundle();
+  const draft = receiptDraft(b.unresolved);
+  draft.extensions.supabardo.authority = 'global';
+  b.unresolved = await sealReceipt(draft, b.bardoKeys);
+  await expectRefusal(b, /SB001_WAIT_EXTENSION_SMUGGLING/);
+});
+
+test('research BAT rejects signed truth smuggling through EXIT extensions', async () => {
+  const b = await freshBundle();
+  const draft = receiptDraft(b.exit);
+  draft.extensions.supabardo.truth = true;
+  b.exit = await sealReceipt(draft, b.bardoKeys);
+  await expectRefusal(b, /SB001_EXIT_EXTENSION_SMUGGLING/);
+});
+
+test('research BAT rejects signed authority smuggling through destination extensions', async () => {
+  const b = await freshBundle();
+  const draft = receiptDraft(b.disposition);
+  draft.extensions.local_receiver.authority = 'universal';
+  b.disposition = await sealReceipt(draft, b.destinationKeys);
+  await expectRefusal(b, /SB001_DESTINATION_EXTENSION_SMUGGLING/);
+});
