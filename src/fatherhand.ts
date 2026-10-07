@@ -919,6 +919,77 @@ export async function verifyFatherHandSuccession(value: unknown): Promise<boolea
   }
 }
 
+export async function verifyFatherHandSuccessionSet(
+  values: unknown[],
+): Promise<Record<string, any>> {
+  if (!Array.isArray(values) || values.length === 0) {
+    return { valid: false, code: 'EMPTY_SUCCESSION_SET' };
+  }
+
+  const statements: Record<string, any>[] = [];
+  const seenIds = new Set<string>();
+  for (const value of values) {
+    if (!(await verifyFatherHandSuccession(value))) {
+      return { valid: false, code: 'INVALID_SUCCESSION_STATEMENT' };
+    }
+    const statement = value as Record<string, any>;
+    if (!seenIds.has(statement.statement_id)) {
+      seenIds.add(statement.statement_id);
+      statements.push(statement);
+    }
+  }
+
+  const byPredecessor = new Map<string, Record<string, any>[]>();
+  for (const statement of statements) {
+    const key = [
+      statement.old_fatherhand_fingerprint,
+      statement.old_generation,
+      statement.previous_lineage_head ?? 'GENESIS',
+    ].join('|');
+    const list = byPredecessor.get(key) ?? [];
+    list.push(statement);
+    byPredecessor.set(key, list);
+  }
+
+  for (const list of byPredecessor.values()) {
+    const successors = new Set(list.map((x) => x.new_fatherhand_fingerprint));
+    if (successors.size > 1) {
+      const first = list[0]!;
+      const recoverySets = new Set(list.map((x) => x.recovery_set_id));
+      return {
+        valid: false,
+        code: 'FATHERHAND_SUCCESSION_FORK',
+        old_fatherhand_fingerprint: first.old_fatherhand_fingerprint,
+        old_generation: first.old_generation,
+        recovery_set_id: recoverySets.size === 1 ? first.recovery_set_id : null,
+        previous_lineage_head: first.previous_lineage_head,
+      };
+    }
+  }
+
+  const ordered = [...statements].sort((a, b) => a.old_generation - b.old_generation);
+  for (let index = 1; index < ordered.length; index++) {
+    const prior = ordered[index - 1]!;
+    const current = ordered[index]!;
+    if (
+      current.old_generation !== prior.new_generation ||
+      current.old_fatherhand_fingerprint !== prior.new_fatherhand_fingerprint ||
+      current.previous_lineage_head !== prior.statement_id
+    ) {
+      return { valid: false, code: 'DISCONNECTED_SUCCESSION_LINEAGE' };
+    }
+  }
+
+  const head = ordered[ordered.length - 1]!;
+  return {
+    valid: true,
+    code: 'OK',
+    current_fatherhand_fingerprint: head.new_fatherhand_fingerprint,
+    current_generation: head.new_generation,
+    lineage_head: head.statement_id,
+  };
+}
+
 export async function createOperationalKey(): Promise<OperationalKey> {
   const keys = await generateP256KeyPair();
   const publicKey = normalizePublicJwk(keys.publicKeyJwk);
