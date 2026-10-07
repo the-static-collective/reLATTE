@@ -17,3 +17,4 @@ export * from './organ.ts';
 export * from './roundtrip.ts';
 export * from './material-delivery.ts';
 export * from './particularity.ts';
+export * from './two-witness.ts';
