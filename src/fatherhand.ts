@@ -228,10 +228,18 @@ async function generateNonExtractableP256KeyPair(): Promise<P256KeyMaterial> {
     ['sign', 'verify'],
   ) as CryptoKeyPair;
   const exported = await crypto.subtle.exportKey('jwk', pair.publicKey);
+  if (exported.kty !== 'EC' || exported.crv !== 'P-256' || !exported.x || !exported.y) {
+    throw new Error('INVALID_PUBLIC_KEY');
+  }
   return {
     privateKey: pair.privateKey,
     publicKey: pair.publicKey,
-    publicKeyJwk: normalizePublicJwk(exported),
+    publicKeyJwk: normalizePublicJwk({
+      kty: 'EC',
+      crv: 'P-256',
+      x: exported.x,
+      y: exported.y,
+    }),
   };
 }
 
