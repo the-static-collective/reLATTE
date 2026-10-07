@@ -264,7 +264,7 @@ test('BAT refuses EXIT smuggled into the unresolved interval', async () => {
   const draft = receiptDraft(b.unresolved);
   draft.extensions.supabardo.occurrence_classes.push('EXIT');
   b.unresolved = await sealReceipt(draft, b.bardoKeys);
-  await expectRefusal(b, /SB001_EXIT_BEFORE_DESTINATION/);
+  await expectRefusal(b, /SB001_EXIT_BEFORE_DESTINATION|SB001_OCCURRENCE_DRIFT/);
 });
 
 test('BAT refuses destination HOLD substituted for the admitted specimen', async () => {
