@@ -99,3 +99,64 @@ It demonstrates that the same unresolved-crossing law can carry both:
 That is the historical second-family extraction gate.
 
 It still does **not** imply that every crossing needs Supabase or that SupaBardo should become a permanent central service.
+
+
+## Live membrane witness
+
+The existing private WITNESS Supabase project was restored only for the bounded ceremony. SB-002 created a private `sb002_runtime` schema and one `crossings` row.
+
+Before use:
+
+```text
+to_regnamespace('sb002_runtime') = null
+to_regclass('sb002_runtime.crossings') = null
+```
+
+The schema revoked access from `PUBLIC`, `anon`, `authenticated`, and `service_role`; the table had RLS enabled as defense in depth. Direct privilege checks confirmed:
+
+```text
+anon schema usage           = false
+authenticated schema usage  = false
+anon table SELECT           = false
+authenticated table SELECT  = false
+```
+
+The live row first existed at **2026-10-07 00:23:34.35975+00** as:
+
+```text
+state = OPEN
+occurrence_classes = ENTER, FORM, WITNESS, WAIT
+destination_disposition_receipt_id = null
+destination_disposition = null
+proposal_sha256 = b9feba52bf6ca98f26d395d0e637d316600a856d379955c4fa47c36da4dfb545
+evidence_set_id = sb002-evidence-v0:a44ce387493dec11fbd0902a8ca03f090b3d08ee79db89e53084f84195bbd581
+```
+
+At **2026-10-07 00:23:56.954156+00**, only after the independent signed destination receipt existed, the row became:
+
+```text
+state = RESOLVED
+occurrence_classes = ENTER, FORM, WITNESS, WAIT, EXIT
+destination_disposition = HOLD
+destination_disposition_receipt_id =
+  relatte-receipt-v0:397de3219d9f3918b717093ef8dcd81413823eeec068c7329c1b5aece0097394
+```
+
+The entire `sb002_runtime` schema was then dropped with `CASCADE`.
+
+Post-destruction verification returned:
+
+```text
+to_regnamespace('sb002_runtime') = null
+to_regclass('sb002_runtime.crossings') = null
+```
+
+Supabase security advisors reported **zero security lints** after destruction.
+
+The live database is not required to reconstruct SB-002.
+
+```text
+MEMBRANE DEATH != EVIDENCE DEATH
+EXPERIMENT AUTHORIZATION != CREATIVE KEEP
+HOLD SURVIVES AS AN ATTRIBUTABLE LOCAL DISPOSITION
+```
