@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile, appendFile, stat } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, appendFile, stat, lstat, rename, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import { canonicalizeDomainValue, sha256Hex, validateTimestamp } from './canonical.ts';
@@ -45,7 +45,7 @@ interface JournalEventBody {
   schema: 'relatte.local-receiver-event/v0';
   seq: number;
   previous_hash: string | null;
-  event_type: 'RECEIVE' | 'DISPOSITION';
+  event_type: 'RECEIVE' | 'DISPOSITION' | 'CUSTODY';
   crossing_id: string;
   crossing: Record<string, unknown> | null;
   receipt: Record<string, unknown>;
@@ -173,6 +173,7 @@ export class LocalReceiver {
   private readonly keys: P256KeyMaterial;
   private readonly received = new Map<string, ReceivedEntry>();
   private readonly dispositions = new Map<string, DispositionEntry>();
+  private readonly custodyReceipts = new Map<string, Record<string, any>>();
   private historyHead: string | null = null;
   private eventCount = 0;
 
@@ -223,6 +224,7 @@ export class LocalReceiver {
   private async replay(): Promise<void> {
     this.received.clear();
     this.dispositions.clear();
+    this.custodyReceipts.clear();
     this.historyHead = null;
     this.eventCount = 0;
 
@@ -280,6 +282,53 @@ export class LocalReceiver {
           disposition,
           receipt: event.receipt as Record<string, any>,
         });
+      } else if (event.event_type === 'CUSTODY') {
+        if (event.crossing !== null) throw new Error('CUSTODY_EVENT_CANNOT_REDECLARE_CROSSING');
+        const received = this.received.get(event.crossing_id);
+        const disposed = this.dispositions.get(event.crossing_id);
+        if (!received || !disposed) throw new Error('CUSTODY_BEFORE_DISPOSITION');
+        if (this.custodyReceipts.has(event.crossing_id)) throw new Error('DUPLICATE_CUSTODY_EVENT');
+        if (event.receipt.kind !== 'PAYLOAD_BYTES_VERIFIED'
+            || event.receipt.semantic_effect !== 'none'
+            || event.receipt.crossing_id !== event.crossing_id
+            || event.receipt.world_id !== this.config.world_id
+            || event.receipt.receiver_particular !== this.config.receiver_particular
+            || event.receipt.created_at !== event.created_at
+            || event.receipt.pre_state_ref !== stateRef(this.config, this.received, this.dispositions)
+            || event.receipt.post_state_ref !== event.receipt.pre_state_ref
+            || event.receipt.signing?.public_key?.x !== disposed.receipt.signing?.public_key?.x
+            || event.receipt.signing?.public_key?.y !== disposed.receipt.signing?.public_key?.y) {
+          throw new Error('INVALID_CUSTODY_RECEIPT');
+        }
+        const material = event.receipt.extensions?.local_receiver?.payload_custody;
+        if (typeof material !== 'object' || material === null || Array.isArray(material)) {
+          throw new Error('INVALID_CUSTODY_METADATA');
+        }
+        const digest = material.sha256;
+        const byteLength = material.byte_length;
+        const retained = material.retained;
+        if (typeof digest !== 'string' || !/^[a-f0-9]{64}$/.test(digest)
+            || !Number.isSafeInteger(byteLength) || byteLength < 1 || byteLength > 65536
+            || !['HOLD','REFUSE'].includes(disposed.disposition)
+            || material.disposition !== disposed.disposition
+            || retained !== (disposed.disposition === 'HOLD')
+            || material.receive_receipt_id !== received.receipt.receipt_id
+            || material.disposition_receipt_id !== disposed.receipt.receipt_id
+            || !payloadAddresses(received.crossing).includes('sha256:' + digest)
+            || !Array.isArray(event.receipt.residual_refs)
+            || !event.receipt.residual_refs.includes('sha256:' + digest)) {
+          throw new Error('INVALID_CUSTODY_METADATA');
+        }
+        const file = join(this.root, 'payloads', event.crossing_id + '.bin');
+        if (retained) {
+          const bytes = await readFile(file);
+          if (bytes.length !== byteLength || sha256Hex(bytes) !== digest) {
+            throw new Error('INVALID_CUSTODY_BYTES');
+          }
+        } else if (await fileExists(file)) {
+          throw new Error('REFUSED_PAYLOAD_WAS_RETAINED');
+        }
+        this.custodyReceipts.set(event.crossing_id, event.receipt);
       } else {
         throw new Error('INVALID_RECEIVER_EVENT_TYPE');
       }
@@ -290,7 +339,7 @@ export class LocalReceiver {
   }
 
   private async appendEvent(
-    eventType: 'RECEIVE' | 'DISPOSITION',
+    eventType: 'RECEIVE' | 'DISPOSITION' | 'CUSTODY',
     crossingId: string,
     crossing: Record<string, unknown> | null,
     receipt: Record<string, unknown>,
@@ -415,6 +464,113 @@ export class LocalReceiver {
     const receipt = await sealReceipt(draft, this.keys);
     await this.appendEvent('DISPOSITION', crossingId, null, receipt, createdAt);
     this.dispositions.set(crossingId, { disposition, receipt });
+    return receipt;
+  }
+
+  /**
+   * Record actual payload-byte verification under the receiver's own signing
+   * key. The crossing must already be signed, RECEIVED, and locally disposed.
+   * HOLD keeps verified bytes in receiver-local quarantine; REFUSE verifies
+   * and discards them without admitting any world object.
+   *
+   * This is an additive R3 receipt, not a replacement for RECEIVE/HOLD/REFUSE.
+   */
+  async verifyPayloadBytes(
+    crossingId: string,
+    value: Uint8Array,
+    createdAt: string,
+  ): Promise<Record<string, any>> {
+    const received = this.received.get(crossingId);
+    if (!received) throw new Error('CROSSING_NOT_RECEIVED');
+    const disposed = this.dispositions.get(crossingId);
+    if (!disposed) throw new Error('DISPOSITION_REQUIRED');
+    if (disposed.disposition !== 'HOLD' && disposed.disposition !== 'REFUSE') {
+      throw new Error('CUSTODY_DISPOSITION_NOT_SUPPORTED');
+    }
+    if (!(value instanceof Uint8Array) || value.byteLength === 0) {
+      throw new Error('INVALID_PAYLOAD_BYTES');
+    }
+    if (value.byteLength > 65536) throw new Error('PAYLOAD_TOO_LARGE');
+    validateTimestamp(createdAt);
+    const bytes = Buffer.from(value);
+    const digest = sha256Hex(bytes);
+    if (!payloadAddresses(received.crossing).includes('sha256:' + digest)) {
+      throw new Error('PAYLOAD_SHA_MISMATCH');
+    }
+    const earlier = this.custodyReceipts.get(crossingId);
+    if (earlier) {
+      const claimed = earlier.extensions?.local_receiver?.payload_custody;
+      if (claimed?.sha256 !== digest || claimed?.byte_length !== bytes.length) {
+        throw new Error('CUSTODY_ALREADY_RECORDED');
+      }
+      if (claimed.retained) {
+        const kept = await readFile(join(this.root, 'payloads', crossingId + '.bin'));
+        if (!kept.equals(bytes)) throw new Error('INVALID_CUSTODY_BYTES');
+      }
+      return earlier;
+    }
+    const retain = disposed.disposition === 'HOLD';
+    if (retain) {
+      const folder = join(this.root,'payloads');
+      await mkdir(folder,{recursive:true});
+      const destination = join(folder,crossingId + '.bin');
+      const temporary = join(folder,crossingId + '.' + process.pid + '.pending');
+      let finalSymlink = false;
+      try {
+        const existing = await lstat(destination);
+        finalSymlink = existing.isSymbolicLink();
+      } catch (error: any) {
+        if (error?.code !== 'ENOENT') throw error;
+      }
+      if (finalSymlink) throw new Error('UNSAFE_CUSTODY_DESTINATION');
+      try {
+        await writeFile(temporary,bytes,{flag:'wx',mode:0o600});
+        await rename(temporary,destination);
+      } finally {
+        await rm(temporary,{force:true});
+      }
+      const persisted = await readFile(destination);
+      if (!persisted.equals(bytes)) throw new Error('INVALID_CUSTODY_BYTES');
+    }
+    const before = stateRef(this.config,this.received,this.dispositions);
+    const draft = {
+      schema:'relatte.receipt/v0',
+      crossing_id:crossingId,
+      world_id:this.config.world_id,
+      receiver_particular:this.config.receiver_particular,
+      kind:'PAYLOAD_BYTES_VERIFIED',
+      semantic_effect:'none',
+      contract_ref:this.config.contract_ref,
+      pre_state_ref:before,
+      post_state_ref:before,
+      descendant_refs:[],
+      residual_refs:['sha256:' + digest],
+      note:retain
+        ? 'receiver independently verified and retained exact payload bytes in quarantine; no admission'
+        : 'receiver independently verified exact payload bytes and refused retention; no admission',
+      created_at:createdAt,
+      extensions:{
+        local_receiver:{
+          payload_custody:{
+            sha256:digest,
+            byte_length:bytes.length,
+            retained:retain,
+            disposition:disposed.disposition,
+            receive_receipt_id:received.receipt.receipt_id,
+            disposition_receipt_id:disposed.receipt.receipt_id,
+          },
+          laws:[
+            'BYTES VERIFIED != ADMITTED',
+            'HOLD != ADMIT',
+            'REFUSE != RETAIN',
+            'RECEIPT SIGNATURE != HUMAN IDENTITY',
+          ],
+        },
+      },
+    };
+    const receipt = await sealReceipt(draft,this.keys);
+    await this.appendEvent('CUSTODY',crossingId,null,receipt,createdAt);
+    this.custodyReceipts.set(crossingId,receipt);
     return receipt;
   }
 
@@ -570,6 +726,10 @@ export class LocalReceiver {
 
   getReceiveReceipt(crossingId: string): Record<string, any> | null {
     return this.received.get(crossingId)?.receipt ?? null;
+  }
+
+  getPayloadCustodyReceipt(crossingId: string): Record<string, any> | null {
+    return this.custodyReceipts.get(crossingId) ?? null;
   }
 
   getDispositionReceipt(crossingId: string): Record<string, any> | null {
