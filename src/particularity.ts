@@ -9,6 +9,8 @@ export const PARTICULAR_CONSTITUTION_ID_DOMAIN =
 export const PARTICULAR_ID_DOMAIN = 'reLATTE-Particular-v0|';
 export const PARTICULAR_STATE_SURFACE_ID_DOMAIN =
   'reLATTE-ParticularStateSurface-v0|';
+export const PARTICULAR_STATE_TRANSITION_ID_DOMAIN =
+  'reLATTE-ParticularStateTransition-v0|';
 export const PARTICULAR_EVENT_WITNESS_ID_DOMAIN =
   'reLATTE-ParticularEventWitness-v0|';
 export const NAME_SURFACE_ID_DOMAIN = 'reLATTE-NameSurface-v0|';
@@ -68,6 +70,18 @@ export interface ParticularStateSurface {
   created_at: string;
 }
 
+export interface ParticularStateTransition {
+  schema: 'relatte.particular-state-transition/v0';
+  transition_id: string;
+  particular_id: string;
+  from_surface: ParticularStateSurface;
+  to_surface: ParticularStateSurface;
+  continuity_claim: 'SAME_PARTICULAR';
+  authority_transferred: false;
+  created_at: string;
+  laws: string[];
+}
+
 export interface ParticularEventWitness {
   schema: 'relatte.particular-event-witness/v0';
   witness_id: string;
@@ -113,6 +127,7 @@ export interface CapabilityGrant {
 export type ParticularityRecord =
   | ParticularConstitution
   | ParticularStateSurface
+  | ParticularStateTransition
   | ParticularEventWitness
   | NameSurfaceTransition
   | CapabilityGrant;
@@ -120,6 +135,7 @@ export type ParticularityRecord =
 export interface ParticularityProjection {
   particulars: Record<string, ParticularConstitution>;
   states: Record<string, ParticularStateSurface>;
+  state_transitions: Record<string, ParticularStateTransition>;
   witnesses: Record<string, ParticularEventWitness>;
   transitions: Record<string, NameSurfaceTransition>;
   grants: Record<string, CapabilityGrant>;
@@ -220,6 +236,44 @@ export function createParticularStateSurface(args: {
       PARTICULAR_STATE_SURFACE_ID_DOMAIN,
       body,
       'relatte-particular-state-surface-v0',
+    ),
+  };
+}
+
+export function createParticularStateTransition(args: {
+  from_surface: ParticularStateSurface;
+  to_surface: ParticularStateSurface;
+  created_at: string;
+}): ParticularStateTransition {
+  validateTimestamp(args.created_at);
+
+  if (args.from_surface.particular_id !== args.to_surface.particular_id) {
+    throw new Error('PARTICULAR_CONTINUITY_MISMATCH');
+  }
+
+  const body = {
+    schema: 'relatte.particular-state-transition/v0' as const,
+    particular_id: args.from_surface.particular_id,
+    from_surface: args.from_surface,
+    to_surface: args.to_surface,
+    continuity_claim: 'SAME_PARTICULAR' as const,
+    authority_transferred: false as const,
+    created_at: args.created_at,
+    laws: [
+      'STATE != PARTICULAR',
+      'CONTROL != IDENTITY',
+      'PARTICULAR POINTER != CONTINUITY PROOF',
+      'NO PARTICULAR CONTINUITY WITHOUT A WITNESSABLE PATH',
+      'PARTICULAR CONTINUITY != AUTHORITY CONTINUITY',
+    ],
+  };
+
+  return {
+    ...body,
+    transition_id: canonicalId(
+      PARTICULAR_STATE_TRANSITION_ID_DOMAIN,
+      body,
+      'relatte-particular-state-transition-v0',
     ),
   };
 }
@@ -383,6 +437,42 @@ function verifyStateSurface(value: ParticularStateSurface): boolean {
   return rebuilt.surface_id === value.surface_id;
 }
 
+function verifyStateTransition(value: ParticularStateTransition): boolean {
+  const from = createParticularStateSurface({
+    particular_id: value.from_surface.particular_id,
+    state_id: value.from_surface.state_id,
+    self_surface: value.from_surface.self_surface,
+    controller_id: value.from_surface.controller_id,
+    accessible_event_ids: value.from_surface.accessible_event_ids,
+    created_at: value.from_surface.created_at,
+  });
+  const to = createParticularStateSurface({
+    particular_id: value.to_surface.particular_id,
+    state_id: value.to_surface.state_id,
+    self_surface: value.to_surface.self_surface,
+    controller_id: value.to_surface.controller_id,
+    accessible_event_ids: value.to_surface.accessible_event_ids,
+    created_at: value.to_surface.created_at,
+  });
+  if (
+    from.surface_id !== value.from_surface.surface_id ||
+    to.surface_id !== value.to_surface.surface_id
+  ) {
+    return false;
+  }
+
+  const rebuilt = createParticularStateTransition({
+    from_surface: value.from_surface,
+    to_surface: value.to_surface,
+    created_at: value.created_at,
+  });
+  return (
+    rebuilt.transition_id === value.transition_id &&
+    value.continuity_claim === 'SAME_PARTICULAR' &&
+    value.authority_transferred === false
+  );
+}
+
 function verifyWitness(value: ParticularEventWitness): boolean {
   const rebuilt = createParticularEventWitness({
     particular_id: value.particular_id,
@@ -441,6 +531,7 @@ export function replayParticularity(
   const projection: ParticularityProjection = {
     particulars: {},
     states: {},
+    state_transitions: {},
     witnesses: {},
     transitions: {},
     grants: {},
@@ -463,6 +554,24 @@ export function replayParticularity(
         throw new Error('UNKNOWN_STATE_PARTICULAR');
       }
       projection.states[record.surface_id] = structuredClone(record);
+      continue;
+    }
+
+    if (record.schema === 'relatte.particular-state-transition/v0') {
+      if (!verifyStateTransition(record)) {
+        throw new Error('INVALID_PARTICULAR_STATE_TRANSITION');
+      }
+      if (!projection.particulars[record.particular_id]) {
+        throw new Error('UNKNOWN_STATE_TRANSITION_PARTICULAR');
+      }
+      if (
+        !projection.states[record.from_surface.surface_id] ||
+        !projection.states[record.to_surface.surface_id]
+      ) {
+        throw new Error('UNKNOWN_STATE_TRANSITION_SURFACE');
+      }
+      projection.state_transitions[record.transition_id] =
+        structuredClone(record);
       continue;
     }
 
@@ -516,7 +625,41 @@ export function statesShareParticular(
 ): boolean {
   const left = projection.states[leftSurfaceId];
   const right = projection.states[rightSurfaceId];
-  return Boolean(left && right && left.particular_id === right.particular_id);
+  if (!left || !right || left.particular_id !== right.particular_id) {
+    return false;
+  }
+  if (leftSurfaceId === rightSurfaceId) return true;
+
+  const adjacency = new Map<string, string[]>();
+  for (const transition of Object.values(projection.state_transitions)) {
+    if (
+      transition.particular_id !== left.particular_id ||
+      transition.continuity_claim !== 'SAME_PARTICULAR'
+    ) {
+      continue;
+    }
+    const forward = adjacency.get(transition.from_surface.surface_id) ?? [];
+    forward.push(transition.to_surface.surface_id);
+    adjacency.set(transition.from_surface.surface_id, forward);
+
+    const backward = adjacency.get(transition.to_surface.surface_id) ?? [];
+    backward.push(transition.from_surface.surface_id);
+    adjacency.set(transition.to_surface.surface_id, backward);
+  }
+
+  const seen = new Set<string>([leftSurfaceId]);
+  const queue = [leftSurfaceId];
+  while (queue.length > 0) {
+    const current = queue.shift()!;
+    for (const next of adjacency.get(current) ?? []) {
+      if (next === rightSurfaceId) return true;
+      if (!seen.has(next)) {
+        seen.add(next);
+        queue.push(next);
+      }
+    }
+  }
+  return false;
 }
 
 export function stateCanAccessEvent(
