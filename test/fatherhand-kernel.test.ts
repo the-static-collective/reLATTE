@@ -17,7 +17,7 @@ import {
   recoverKidShare,
   beginRecoveryCeremony,
   verifyFatherHandSuccession,
-} from '../src/index.ts';
+} from '../src/fatherhand.ts';
 
 test('FatherHand founds an independently generated FounderNode without parent-key derivation', async () => {
   const father = await createFatherHandGenesis();
