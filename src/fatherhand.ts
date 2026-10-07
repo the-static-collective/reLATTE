@@ -744,6 +744,9 @@ class RecoveryCeremony {
       },
     );
     assertPublicArtifactSafe(statement);
+    // Recovery is a one-shot bridge, not a resurrected daily root.
+    old.close();
+    this.#recovered = null;
     return { successor, statement };
   }
 
