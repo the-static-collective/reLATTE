@@ -387,6 +387,7 @@ export async function createFounderNode(
 ): Promise<FounderNode> {
   const canonicalWorldId = validateWorldId(worldId);
   const allowedScopes = validateClosedScopes(scopes, FOUNDER_SCOPE_ALLOWLIST, 'INVALID_FOUNDER_SCOPES');
+  if (!allowedScopes.includes('webz-world-identity')) throw new Error('FOUNDER_WORLD_IDENTITY_SCOPE_REQUIRED');
   const keys = await generateP256KeyPair();
   const founderPublic = normalizePublicJwk(keys.publicKeyJwk);
   const statement: Record<string, any> = {
@@ -441,7 +442,8 @@ export async function verifyFatherHandFounding(value: unknown): Promise<boolean>
     if (!Number.isSafeInteger(statement.fatherhand_generation) || statement.fatherhand_generation < 0) return false;
     validateWorldId(statement.founder_world_id);
     validateTimestamp(statement.created_at);
-    validateClosedScopes(statement.scopes, FOUNDER_SCOPE_ALLOWLIST, 'INVALID_FOUNDER_SCOPES');
+    const foundingScopes = validateClosedScopes(statement.scopes, FOUNDER_SCOPE_ALLOWLIST, 'INVALID_FOUNDER_SCOPES');
+    if (!foundingScopes.includes('webz-world-identity')) return false;
     exactKeys(statement.constraints, ['delegation_must_be_scoped'], 'INVALID_FOUNDING_CONSTRAINTS');
     if (statement.constraints.delegation_must_be_scoped !== true) return false;
     const signer = verifySigningObject(statement.signing, FOUNDING_SIGNING_DOMAIN);
@@ -1079,6 +1081,8 @@ export async function delegateOperationalKey(
   validateTimestamp(details.not_before);
   validateTimestamp(details.not_after);
   if (Date.parse(details.not_after) <= Date.parse(details.not_before)) throw new Error('INVALID_DELEGATION_WINDOW');
+  const createdAt = now();
+  if (Date.parse(details.not_after) <= Date.parse(createdAt)) throw new Error('INVALID_DELEGATION_CREATION_WINDOW');
   const constraints = validateEndpointConstraints(scope, details.endpoint_constraints);
   if (details.replaces_fingerprint !== null && (typeof details.replaces_fingerprint !== 'string' || details.replaces_fingerprint.length === 0)) {
     throw new Error('INVALID_REPLACED_FINGERPRINT');
@@ -1098,7 +1102,7 @@ export async function delegateOperationalKey(
     not_after: details.not_after,
     endpoint_constraints: constraints,
     replaces_fingerprint: details.replaces_fingerprint,
-    created_at: now(),
+    created_at: createdAt,
     signing: {
       ...signingIdentity(founder.public_key, DELEGATION_SIGNING_DOMAIN),
       signature: 'pending',
@@ -1145,7 +1149,12 @@ export async function verifyOperationalDelegation(
     validateTimestamp(statement.not_after);
     validateTimestamp(statement.created_at);
     validateTimestamp(at);
-    if (Date.parse(at) < Date.parse(statement.not_before) || Date.parse(at) > Date.parse(statement.not_after)) return false;
+    if (Date.parse(statement.not_after) <= Date.parse(statement.created_at)) return false;
+    if (
+      Date.parse(at) < Date.parse(statement.not_before) ||
+      Date.parse(at) < Date.parse(statement.created_at) ||
+      Date.parse(at) > Date.parse(statement.not_after)
+    ) return false;
     validateEndpointConstraints(requiredScope, statement.endpoint_constraints);
     if (statement.replaces_fingerprint !== null && (typeof statement.replaces_fingerprint !== 'string' || statement.replaces_fingerprint.length === 0)) return false;
     const signer = verifySigningObject(statement.signing, DELEGATION_SIGNING_DOMAIN);
@@ -1199,7 +1208,15 @@ export async function trustPeerFounder(
   validateTimestamp(constraints.expires_at);
   const createdAt = now();
   if (Date.parse(constraints.expires_at) <= Date.parse(createdAt)) throw new Error('INVALID_PEER_TRUST_WINDOW');
-  if (constraints.invitation_id !== null && (typeof constraints.invitation_id !== 'string' || constraints.invitation_id.length === 0 || constraints.invitation_id.length > 256)) {
+  if (
+    constraints.invitation_id !== null &&
+    (
+      typeof constraints.invitation_id !== 'string' ||
+      constraints.invitation_id.length === 0 ||
+      constraints.invitation_id.length > 256 ||
+      !/^invite:[a-z0-9][a-z0-9:_-]{0,249}$/.test(constraints.invitation_id)
+    )
+  ) {
     throw new Error('INVALID_INVITATION_ID');
   }
   const remoteKey = normalizePublicJwk(remoteFounderPublicKeyValue);
