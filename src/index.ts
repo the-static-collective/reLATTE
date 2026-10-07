@@ -23,6 +23,7 @@ export {
   operationalKeyFingerprint,
   verifyFatherHandFounding,
   verifyFatherHandSuccession,
+  verifyFatherHandSuccessionSet,
   verifyOperationalDelegation,
   verifyPeerTrust,
 } from './fatherhand.ts';
