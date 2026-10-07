@@ -10,6 +10,7 @@ import {
   verifyHopBinding,
 } from '../experiments/polyglot-crossing-001/common.ts';
 import {
+  computeLangtonCarrierStateHash,
   decodePayloadFromLangton,
   encodePayloadAsLangton,
   observeLangtonField,
@@ -130,23 +131,21 @@ test('ALIEN-LANGTON-003: transplanting a final field into another duration canno
   );
 });
 
-test('ALIEN-LANGTON-003: even a self-consistent forged final-state hash fails recovered origin integrity', () => {
+test('ALIEN-LANGTON-003: a hostile adapter can forge local state consistency but not the recovered origin', () => {
   const carrier = encodePayloadAsLangton(PAYLOAD, 1024);
   const tampered = structuredClone(carrier);
 
-  // This simulates a hostile adapter that is allowed to recompute its local
-  // state hash after altering the world. The final-state digest alone is not
-  // enough; reversal must still recover a valid framed origin.
   const target = tampered.black_cells[0]!;
   tampered.black_cells = tampered.black_cells.slice(1);
-
-  // We cannot legitimately recompute the private helper's state hash here,
-  // so alter the evolution count until the carrier's own state binding fails.
-  // The stronger property is separately exercised by origin digest validation
-  // in the adapter's decoder.
   assert.ok(target);
+
+  // Hostile adapter recomputes the final-state digest after changing its own
+  // world. Local self-consistency therefore passes. Reversal still has to
+  // recover the framed origin and its payload digest.
+  tampered.final_state_sha256 = computeLangtonCarrierStateHash(tampered);
+
   assert.throws(
     () => decodePayloadFromLangton(tampered),
-    /LANGTON_FINAL_STATE_MISMATCH/,
+    /LANGTON_MAGIC_MISMATCH|LANGTON_PAYLOAD_DIGEST_MISMATCH|LANGTON_ORIGIN_NOT_RECOVERED/,
   );
 });
