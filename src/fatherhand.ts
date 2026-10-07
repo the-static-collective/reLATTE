@@ -503,12 +503,11 @@ function recoveryShareRecord(value: unknown): FatherKid {
     !Number.isSafeInteger(share.threshold) || share.threshold < 2 ||
     !Number.isSafeInteger(share.total) || share.total < share.threshold || share.total > 255 ||
     typeof share.share_bytes !== 'string' ||
-    share.share_bytes.length === 0 ||
-    share.share_bytes.length > 1024 ||
     !HEX64.test(share.share_checksum) ||
     typeof share.share_signature !== 'string' ||
     share.scope !== 'RECOVERY_ONLY'
   ) throw new Error('INVALID_RECOVERY_SHARE');
+  if (share.share_bytes.length === 0 || share.share_bytes.length > 1024) throw new Error('INVALID_RECOVERY_SHARE_BYTES');
   share.fatherhand_public_key = normalizePublicJwk(share.fatherhand_public_key);
   if (fatherHandFingerprint(share.fatherhand_public_key) !== share.fatherhand_fingerprint) {
     throw new Error('RECOVERY_SHARE_FATHERHAND_KEY_MISMATCH');
@@ -675,11 +674,10 @@ function kidBackupRecord(value: unknown): FatherKidBackup {
     !Number.isSafeInteger(child.total) || child.total < child.threshold || child.total > 255 ||
     !HEX64.test(child.parent_share_checksum) || !HEX64.test(child.fragment_checksum) ||
     typeof child.fragment_bytes !== 'string' ||
-    child.fragment_bytes.length === 0 ||
-    child.fragment_bytes.length > 1024 ||
     typeof child.parent_share_signature !== 'string' ||
     child.scope !== 'KID_BACKUP_ONLY'
   ) throw new Error('INVALID_KID_BACKUP_SHARE');
+  if (child.fragment_bytes.length === 0 || child.fragment_bytes.length > 1024) throw new Error('INVALID_KID_BACKUP_BYTES');
   child.fatherhand_public_key = normalizePublicJwk(child.fatherhand_public_key);
   if (fatherHandFingerprint(child.fatherhand_public_key) !== child.fatherhand_fingerprint) {
     throw new Error('KID_BACKUP_FATHERHAND_KEY_MISMATCH');
