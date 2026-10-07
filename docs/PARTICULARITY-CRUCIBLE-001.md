@@ -1,5 +1,13 @@
 # PARTICULARITY-CRUCIBLE-001
 
+> FOUNDATION-OF-TRUST-001 boundary: the functions in this legacy crucible
+> reproduce unsigned structural declarations. A hash-valid state/name transition
+> or capability grant is not signer-authorized evidence. Anyone can invent such a
+> record. Consequential continuity must use the signed, policy-bound path assessor;
+> admission and capabilities remain separately selected local rules. See
+> [the hostile claim matrix](FOUNDATION-OF-TRUST-001-CLAIM-MATRIX.md), C04, C05,
+> C38 and C39. The original specimen below remains a structural identity model.
+
 ## Purpose
 
 This specimen attacks two opposite identity failures in one bounded executable model:

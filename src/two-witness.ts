@@ -12,6 +12,11 @@ export type TwoWitnessStatus = 'CLAIMED' | 'CORROBORATED' | 'HOLD';
 export interface TwoWitnessAssessment {
   schema: 'relatte.two-witness-assessment/v0';
   status: TwoWitnessStatus;
+  evidence_level: 'E0 UNOBSERVED' | 'E2 SIGNED' | 'E3 CORROBORATED-KEYS';
+  historical_truth: 'UNOBSERVED';
+  custody_domain: 'UNOBSERVED';
+  authority: 'UNOBSERVED';
+  admission: 'UNOBSERVED';
   crossing_id: string | null;
   handoff_id: string | null;
   reasons: string[];
@@ -45,7 +50,9 @@ function publicKeyFingerprint(value: unknown): string | null {
     return sha256Hex(
       canonicalizeDomainValue(
         'reLATTE-TwoWitnessPublicKey-v0|',
-        jwk,
+        // Protocol signing identity ignores JWK labels. Compare precisely the
+        // normalized curve point that signature verification actually uses.
+        { kty: jwk.kty, crv: jwk.crv, x: jwk.x, y: jwk.y },
       ),
     );
   } catch {
@@ -62,6 +69,8 @@ function hold(
   return {
     schema: 'relatte.two-witness-assessment/v0',
     status: 'HOLD',
+    evidence_level: 'E0 UNOBSERVED',
+    historical_truth: 'UNOBSERVED', custody_domain: 'UNOBSERVED', authority: 'UNOBSERVED', admission: 'UNOBSERVED',
     crossing_id: crossingId,
     handoff_id: handoffId,
     reasons,
@@ -115,6 +124,8 @@ export async function assessTwoWitnessHandoff(args: {
     return {
       schema: 'relatte.two-witness-assessment/v0',
       status: 'CLAIMED',
+      evidence_level: 'E2 SIGNED',
+      historical_truth: 'UNOBSERVED', custody_domain: 'UNOBSERVED', authority: 'UNOBSERVED', admission: 'UNOBSERVED',
       crossing_id: crossingId,
       handoff_id: handoffId,
       reasons: ['SOURCE_WITNESS_ONLY'],
@@ -174,6 +185,8 @@ export async function assessTwoWitnessHandoff(args: {
   return {
     schema: 'relatte.two-witness-assessment/v0',
     status: 'CORROBORATED',
+    evidence_level: 'E3 CORROBORATED-KEYS',
+    historical_truth: 'UNOBSERVED', custody_domain: 'UNOBSERVED', authority: 'UNOBSERVED', admission: 'UNOBSERVED',
     crossing_id: crossingId,
     handoff_id: handoffId,
     reasons: ['MATCHING_SIGNED_SOURCE_AND_RECEIVER_WITNESSES'],

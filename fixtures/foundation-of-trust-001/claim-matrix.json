@@ -1,0 +1,348 @@
+{
+  "schema": "relatte.foundation-claim-matrix/v0",
+  "claims": [
+    {
+      "id": "C01",
+      "claim": "137-test original regression baseline passed",
+      "classification": "OBSERVED",
+      "basis": "baseline on e250ad4; local npm run verify",
+      "limits": "Original baseline, before campaign"
+    },
+    {
+      "id": "C02",
+      "claim": "JWK metadata permitted one curve point to be counted as two keys",
+      "classification": "OBSERVED",
+      "basis": "same-key-metadata-failure.json baseline_result",
+      "limits": "Baseline bug is preserved"
+    },
+    {
+      "id": "C03",
+      "claim": "Normalized curve-point distinctness rejects the frozen same-key fraud",
+      "classification": "DERIVED",
+      "basis": "D tests and replay; WITNESS_KEYS_NOT_DISTINCT",
+      "limits": "Attribution is to key material, not humans"
+    },
+    {
+      "id": "C04",
+      "claim": "Unsigned hash-valid particularity transitions can be invented by anyone",
+      "classification": "OBSERVED",
+      "basis": "A hash-only weakness specimen/test",
+      "limits": "Legacy replay remains structural claim replay, not authorized evidence"
+    },
+    {
+      "id": "C05",
+      "claim": "Consequential continuity requires an authorized signed traversable path",
+      "classification": "DERIVED",
+      "basis": "assessContinuityPath; A/C tests",
+      "limits": "Under separately selected policy and inventory roots"
+    },
+    {
+      "id": "C06",
+      "claim": "Unsigned runner metadata previously supported a stronger custody report",
+      "classification": "OBSERVED",
+      "basis": "baseline custody verifier; F unsigned-metadata attack",
+      "limits": "Prior report cannot establish machine custody from public evidence alone"
+    },
+    {
+      "id": "C07",
+      "claim": "Signed runner declarations alone establish separate actual machines",
+      "classification": "REFUTED",
+      "basis": "F malicious valid machine-declaration specimen",
+      "limits": "Claim removed; E4 remains UNOBSERVED from artifacts"
+    },
+    {
+      "id": "C08",
+      "claim": "One operator can create two genuine keys and corroborate",
+      "classification": "OBSERVED",
+      "basis": "E mandatory permanent two-keys-one-custodian test",
+      "limits": "DISTINCT_SIGNING_KEYS_ONLY"
+    },
+    {
+      "id": "C09",
+      "claim": "Many keys imply many humans, custodians or administrative domains",
+      "classification": "REFUTED",
+      "basis": "S 1000-key one-process attack",
+      "limits": "Key-count threshold is Sybil-vulnerable"
+    },
+    {
+      "id": "C10",
+      "claim": "Verified witnesses bind the same crossing, handoff, parties, role and payload digest reference",
+      "classification": "DERIVED",
+      "basis": "primary and independent verifiers; I/J/K tests",
+      "limits": "Declared byte identity; actual payload material is not supplied"
+    },
+    {
+      "id": "C11",
+      "claim": "Crossing hash in receiver signature supplies causal binding",
+      "classification": "DERIVED",
+      "basis": "K isolated replay oracle",
+      "limits": "Does not prove key creation time or wall-clock arrival"
+    },
+    {
+      "id": "C12",
+      "claim": "A valid cryptographic signature establishes historical truth",
+      "classification": "REFUTED",
+      "basis": "M/N malicious but valid participants",
+      "limits": "Historical truth stays UNOBSERVED"
+    },
+    {
+      "id": "C13",
+      "claim": "Wall-clock timestamps establish trusted arrival chronology",
+      "classification": "REFUTED",
+      "basis": "L/N backdated, future and reversed timestamps",
+      "limits": "Trusted chronology stays UNOBSERVED"
+    },
+    {
+      "id": "C14",
+      "claim": "Known source/receiver contradictions survive replay and observer union",
+      "classification": "DERIVED",
+      "basis": "equivocation-source.json; equivocation-receiver.json; H tests",
+      "limits": "Conservative any authorized contradiction HOLD, including minority"
+    },
+    {
+      "id": "C15",
+      "claim": "Deleting any record in a pinned observation scope never raises earned confidence",
+      "classification": "DERIVED",
+      "basis": "Q deletion subsets; X seeded cases; replay loss_matrix",
+      "limits": "Requires independently retained inventory pin; replacement pin is new evidence/decision"
+    },
+    {
+      "id": "C16",
+      "claim": "Fresh verifier can detect every conflict withheld before its first observation",
+      "classification": "REFUTED",
+      "basis": "withholding-ceiling.json",
+      "limits": "Global completeness is UNOBSERVED"
+    },
+    {
+      "id": "C17",
+      "claim": "All artifact loss can be recovered cryptographically",
+      "classification": "REFUTED",
+      "basis": "Q empty observed scope; explicit survival root",
+      "limits": "Evidence cannot be fabricated"
+    },
+    {
+      "id": "C18",
+      "claim": "Historic signature validity survives key retirement and policy changes",
+      "classification": "DERIVED",
+      "basis": "K/M tests; frozen receipt IDs/signatures unchanged",
+      "limits": "Accepted current acts are evaluated separately"
+    },
+    {
+      "id": "C19",
+      "claim": "Current local policy can reject retired-key acts without rewriting receipts",
+      "classification": "DERIVED",
+      "basis": "CurrentTrustPolicy tests",
+      "limits": "Current policy is an explicit local input, not authenticated global truth"
+    },
+    {
+      "id": "C20",
+      "claim": "Versioned M-of-N policies count unique cryptographic keys with bounded roles",
+      "classification": "DERIVED",
+      "basis": "R 2/2,2/3,3/5 tests; S attack",
+      "limits": "Cryptographic quorum only; E6 does not imply E4 or E5"
+    },
+    {
+      "id": "C21",
+      "claim": "Independent custody/admin/human quorum membership is observed",
+      "classification": "UNOBSERVED",
+      "basis": "All default custody facets unobserved",
+      "limits": "Role membership selected externally, not an anti-Sybil proof"
+    },
+    {
+      "id": "C22",
+      "claim": "Policy signer and inventory pins are externally trusted",
+      "classification": "ASSUMED",
+      "basis": "trust-root-graph.json",
+      "limits": "Exact policy/observed-inventory pins must be supplied independently"
+    },
+    {
+      "id": "C23",
+      "claim": "P-256, SHA-256 and the executing runtimes/verifiers are sound",
+      "classification": "ASSUMED",
+      "basis": "cryptographic-root; honest-local-verifier nodes",
+      "limits": "No custom cryptography; implementations share standards and Node runtime"
+    },
+    {
+      "id": "C24",
+      "claim": "A second implementation reconstructs IDs, verifies signatures and compares bindings",
+      "classification": "OBSERVED",
+      "basis": "V shared frozen fixtures; native node:crypto verifier",
+      "limits": "Shares ingress parser, JSON semantics, protocol specification and Node/OpenSSL ancestry; not full independence"
+    },
+    {
+      "id": "C25",
+      "claim": "Verifier output, broker possession, provenance and lineage grant authority",
+      "classification": "REFUTED",
+      "basis": "O/G/B/FatherHand tests",
+      "limits": "Receiver admission, capabilities and finality are separate local rules"
+    },
+    {
+      "id": "C26",
+      "claim": "Separate physical machines/hardware have been established by this local campaign",
+      "classification": "UNOBSERVED",
+      "basis": "Local process harness only",
+      "limits": "External CI platform observations may show job separation, not independently proven hardware"
+    },
+    {
+      "id": "C27",
+      "claim": "Separate custody/administrative domains or humans, and non-collusion",
+      "classification": "UNOBSERVED",
+      "basis": "All evidence taxonomy facets",
+      "limits": "No E5 or human quorum earned"
+    },
+    {
+      "id": "C28",
+      "claim": "Public artifacts can show that a key was never secretly copied elsewhere",
+      "classification": "UNOBSERVED",
+      "basis": "F machine-claim ceiling",
+      "limits": "Schema/code-path inspection observes no transported private fields, not universal absence of export"
+    },
+    {
+      "id": "C29",
+      "claim": "Every specified mutant is detected by a named assertion failure",
+      "classification": "OBSERVED",
+      "basis": "mutation-report.json; npm run trust:mutations",
+      "limits": "Twenty-one code mutants; no claim of exhaustive mutation coverage"
+    },
+    {
+      "id": "C30",
+      "claim": "Canonicalization hostile cases have defined identity/rejection behavior",
+      "classification": "DERIVED",
+      "basis": "W tests and protocol defaults",
+      "limits": "Signed nested fields retained; omitted nullable defaults and JWK metadata exclusions documented"
+    },
+    {
+      "id": "C31",
+      "claim": "Seeded graph campaign covers 2048 generated cases in default tests/CI",
+      "classification": "OBSERVED",
+      "basis": "X seed 0x1f0a001; package verify workflow",
+      "limits": "Bounded generated cases, not exhaustive state-space proof"
+    },
+    {
+      "id": "C32",
+      "claim": "Raw signatures remain attributable even if role/current policy rejects the claim",
+      "classification": "DERIVED",
+      "basis": "A/J/M/N tests invoke signature verifier separately",
+      "limits": "SIGNATURE != TRUTH != ROLE != AUTHORITY"
+    },
+    {
+      "id": "C33",
+      "claim": "E0/E1/E2/E3/E4/E5/E6/E7 labels confer no authority",
+      "classification": "DERIVED",
+      "basis": "Assessment has authority/admission/finality UNOBSERVED; documented ladder",
+      "limits": "E1/E4/E5/E7 are documented facets and not default assessor upgrades"
+    },
+    {
+      "id": "C34",
+      "claim": "Draft PR remains unmerged",
+      "classification": "OBSERVED",
+      "basis": "GitHub PR metadata final check",
+      "limits": "No merge call; draft retained"
+    },
+    {
+      "id": "C35",
+      "claim": "Regression and hostile suites, replay and mutants pass at tested SHA",
+      "classification": "OBSERVED",
+      "basis": "Final validation report",
+      "limits": "Exact counts/SHA in final report; tested code tree includes frozen fixtures"
+    },
+    {
+      "id": "C36",
+      "claim": "Bounded separate ephemeral CI jobs are externally observed",
+      "classification": "UNOBSERVED",
+      "basis": "Await current SHA workflow result; report external run separately",
+      "limits": "Never inferred by the public artifact assessor"
+    },
+    {
+      "id": "C37",
+      "claim": "Archive availability, honest root selection and at least one correct verifier survive",
+      "classification": "ASSUMED",
+      "basis": "trust-root-graph.json",
+      "limits": "These are the compromise ceiling"
+    },
+    {
+      "id": "F01",
+      "claim": "A, B, C2 are independently constituted local protocol referents with distinct keys",
+      "classification": "OBSERVED",
+      "basis": "foundation-of-trust-specimen.mjs; fatherhand.json",
+      "limits": "Independent local processes/random constitutions; no human identity claim"
+    },
+    {
+      "id": "F02",
+      "claim": "A/B and B/C2 signed founding/descendant bindings match",
+      "classification": "DERIVED",
+      "basis": "AB/bundle.json; BC2/bundle.json; both verifiers",
+      "limits": "Signed LINEAGE declaration, not same-particular continuity"
+    },
+    {
+      "id": "F03",
+      "claim": "No private key field enters intended public FatherHand output",
+      "classification": "OBSERVED",
+      "basis": "forbidPrivateEvidence; public bundle tests",
+      "limits": "Keys remain in local stores until removal; no universal non-export claim"
+    },
+    {
+      "id": "F04",
+      "claim": "A local process/store is gone; B restarts; then original B/C2 stores are removed",
+      "classification": "OBSERVED",
+      "basis": "Specimen harness mkdtemp/rm and fresh subprocess execution",
+      "limits": "Physical erasure, kernel caches and externally real source death UNOBSERVED"
+    },
+    {
+      "id": "F05",
+      "claim": "Fresh primary/secondary processes reconstruct surviving lineage from only public records and roots",
+      "classification": "OBSERVED",
+      "basis": "FatherHand subprocess test; trust:replay",
+      "limits": "Bounded survivor verification facet; root selections still ASSUMED"
+    },
+    {
+      "id": "F06",
+      "claim": "A remains archived referent while B and C2 remain distinct and inherit no founder-only grant",
+      "classification": "DERIVED",
+      "basis": "replayParticularity and hasCapability assertions; topology",
+      "limits": "No inference that B contains A, acts with A key, or receives current authorization"
+    },
+    {
+      "id": "N01",
+      "claim": "PROVISIONAL_NU remains a provisional name-surface attack label",
+      "classification": "OBSERVED",
+      "basis": "VIII tests and docs",
+      "limits": "No normative definition promoted"
+    },
+    {
+      "id": "N02",
+      "claim": "Same carrier/referent claim or identical surface history supplies neither continuity nor authority",
+      "classification": "DERIVED",
+      "basis": "VIII/A/B/C tests",
+      "limits": "Structural name path is still a declaration; consequential path requires signed evidence"
+    },
+    {
+      "id": "L01",
+      "claim": "Local CI count and final commit checks establish bounded test execution only",
+      "classification": "OBSERVED",
+      "basis": "Final report and external job evidence if available",
+      "limits": "Not a generic security claim"
+    },
+    {
+      "id": "L02",
+      "claim": "Current target property holds under every combination of arbitrary compromise",
+      "classification": "REFUTED",
+      "basis": "Both-key malicious claims; withheld conflict; root/verifier/archive-loss ceilings",
+      "limits": "Strongest claim is bounded reconstruction/consistency under explicit roots"
+    },
+    {
+      "id": "C38",
+      "claim": "Two byte-identical complete constitution records establish two independently observed constitution events",
+      "classification": "REFUTED",
+      "basis": "B full-constitution-copy limitation specimen",
+      "limits": "A copied event record is replay, not evidence of a second event; extra independent event evidence is required"
+    },
+    {
+      "id": "C39",
+      "claim": "Legacy hash-only capability grants establish cryptographic authorization",
+      "classification": "REFUTED",
+      "basis": "Legacy replayParticularity grants are structural declarations; consequential assessor authority remains UNOBSERVED",
+      "limits": "Only separately selected local capability/admission rules grant authority"
+    }
+  ]
+}

@@ -1,0 +1,264 @@
+{
+  "bundle": {
+    "schema": "relatte.foundation-bundle/v0",
+    "policy": {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "control:foundation",
+      "world_id": "world:policy",
+      "receiver_particular": "policy:root",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "foundation_policy": {
+          "schema": "relatte.foundation-policy/v0",
+          "version": "1",
+          "quorum": 2,
+          "quorum_kind": "CRYPTOGRAPHIC_KEYS",
+          "members": [
+            {
+              "key": "3d1e008d78f4d47ead660dbc97e994514c3aa7be8a5255105f13c209bd4f1cfe",
+              "role": "SOURCE",
+              "particular": "P",
+              "world": "world:A"
+            },
+            {
+              "key": "67067efd68de661908ac08b755f30ef8bf0aa7d6251cc7c21aabf9b5e96bc2ee",
+              "role": "RECEIVER",
+              "particular": "Q",
+              "world": "world:B"
+            }
+          ],
+          "root_assumptions": [
+            "MEMBERSHIP_SELECTED_EXTERNALLY",
+            "INVENTORY_COMPLETENESS_BOUNDED_TO_PIN"
+          ]
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:4f134009e25477fdb36b58214ee0de8eedeeb0914fbe9b62bd9d68492a1fa02f",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "sUlzUBZwKT0-PK4_qJiFS7p4o0gtauV6mPwljtZPvAs",
+          "y": "rG-jni2AmqxsvyB9T8ls5ngdogbtvXQF07FnSN8AKFI"
+        },
+        "signature": "hg6aXEFi37yalxcnm9ADcIGdq6EwR2GVZPKZh98CQKhzZ3nXGeg3Iqch_2wSrZwG3A33GJWJ-bJShNw_fQKPWQ",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    "inventory": {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "control:foundation",
+      "world_id": "world:policy",
+      "receiver_particular": "policy:root",
+      "kind": "RECEIVED",
+      "semantic_effect": "none",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "extensions": {
+        "foundation_inventory": {
+          "schema": "relatte.foundation-inventory/v0",
+          "policy_id": "relatte-receipt-v0:4f134009e25477fdb36b58214ee0de8eedeeb0914fbe9b62bd9d68492a1fa02f",
+          "record_ids": [
+            "relatte-crossing-v0:243ec7b99b64f1ffe6a8056560d1755c4122a7d565615d460f92f9c81b952d81",
+            "relatte-receipt-v0:90a164cdf9935136bc786a906b0ed508795ba245ae580ff84f29dd02dd43e02a",
+            "relatte-receipt-v0:b48f55d91333eddbc4cd5624b1e17c9500239f060677b8a81d509ef45a84f84e"
+          ],
+          "scope": "OBSERVED_RECORDS_ONLY"
+        }
+      },
+      "receipt_id": "relatte-receipt-v0:5fd7493ff67b8f99d8583ddac65990f6cc3a47e21a0f9d754feb267ddf789ef1",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "sUlzUBZwKT0-PK4_qJiFS7p4o0gtauV6mPwljtZPvAs",
+          "y": "rG-jni2AmqxsvyB9T8ls5ngdogbtvXQF07FnSN8AKFI"
+        },
+        "signature": "APy5hng5ILkvpQhbIiIVgMrgWUjR1_fyYDtYYQUlw4mVztGh8ATWd11N8y6nkodD2t7LTBk458Mvfts0DznEbw",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    "records": [
+      {
+        "schema": "relatte.crossing-envelope/v0",
+        "protocol_version": "0",
+        "source_particular": "P",
+        "source_world": "world:A",
+        "source_history_head": null,
+        "parents": [],
+        "declared_kind": "FOUNDATION_HANDOFF",
+        "payload_refs": [
+          {
+            "address": "sha256:95e4c797170a5bf2816c7ddc8b1655b9e74d71f138104432097ea76f78c6065b",
+            "role": "payload",
+            "media_type": "application/octet-stream"
+          }
+        ],
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "requested_effect": {
+          "kind": "handoff-candidate",
+          "authority": "receiver-local"
+        },
+        "extensions": {
+          "two_witness_handoff": {
+            "schema": "relatte.two-witness-handoff/v0",
+            "handoff_id": "1fe13143-108e-49df-9688-c65a978862b0",
+            "receiver_world": "world:B",
+            "receiver_particular": "Q",
+            "thing_ref": "sha256:95e4c797170a5bf2816c7ddc8b1655b9e74d71f138104432097ea76f78c6065b"
+          },
+          "foundation": {
+            "policy_id": "relatte-receipt-v0:4f134009e25477fdb36b58214ee0de8eedeeb0914fbe9b62bd9d68492a1fa02f",
+            "relation": {
+              "kind": "LINEAGE",
+              "from": "P",
+              "to": "Q",
+              "identity_basis": "BYTE_IDENTITY"
+            }
+          }
+        },
+        "crossing_id": "relatte-crossing-v0:243ec7b99b64f1ffe6a8056560d1755c4122a7d565615d460f92f9c81b952d81",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "GWd4FpxqiGTfq2FXSdKSux76v569oexrXM_M-NsrK8I",
+            "y": "Y3_CwP2Ab1qw8ZQn-5f7kC5zmw5Sn00Q-vDf9vjtp-U"
+          },
+          "signature": "1xvLIndbvIi0ytRV57YLumkHRGIVimz7TUKVZx7Zx1raie1F_hpOtxfIM60Cba_vVM3nvXgHPPhUU2Rkw6JCdg",
+          "domain": "relatte.crossing-signature/v0"
+        }
+      },
+      {
+        "schema": "relatte.receipt/v0",
+        "crossing_id": "relatte-crossing-v0:243ec7b99b64f1ffe6a8056560d1755c4122a7d565615d460f92f9c81b952d81",
+        "world_id": "world:B",
+        "receiver_particular": "Q",
+        "kind": "RECEIVED",
+        "semantic_effect": "none",
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "extensions": {
+          "two_witness_handoff": {
+            "schema": "relatte.two-witness-handoff/v0",
+            "handoff_id": "1fe13143-108e-49df-9688-c65a978862b0",
+            "receiver_world": "world:B",
+            "receiver_particular": "Q",
+            "thing_ref": "sha256:95e4c797170a5bf2816c7ddc8b1655b9e74d71f138104432097ea76f78c6065b",
+            "source_particular": "P"
+          },
+          "foundation": {
+            "policy_id": "relatte-receipt-v0:4f134009e25477fdb36b58214ee0de8eedeeb0914fbe9b62bd9d68492a1fa02f",
+            "relation": {
+              "kind": "LINEAGE",
+              "from": "P",
+              "to": "Q",
+              "identity_basis": "BYTE_IDENTITY"
+            }
+          }
+        },
+        "receipt_id": "relatte-receipt-v0:90a164cdf9935136bc786a906b0ed508795ba245ae580ff84f29dd02dd43e02a",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "mYJo1w5BA5DoqRqlhKieaibck-61z0iHYK9JtAp4rLI",
+            "y": "UFk9BvO1x8qZwC2E1eZp4NxjRSD0RoIi2syqCY-HMQk"
+          },
+          "signature": "oV-9SNqX9UCPuzDZw4nsiUMW_7qtobRQNawh2QcQXc2vNLF9-LLLmglxApK_ivYzzK9QnIhYkQYa6Qg33auPKQ",
+          "domain": "relatte.receipt-signature/v0"
+        }
+      },
+      {
+        "schema": "relatte.receipt/v0",
+        "crossing_id": "relatte-crossing-v0:243ec7b99b64f1ffe6a8056560d1755c4122a7d565615d460f92f9c81b952d81",
+        "world_id": "world:B",
+        "receiver_particular": "Q",
+        "kind": "REFUSED",
+        "semantic_effect": "none",
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "extensions": {
+          "two_witness_handoff": {
+            "schema": "relatte.two-witness-handoff/v0",
+            "handoff_id": "1fe13143-108e-49df-9688-c65a978862b0",
+            "receiver_world": "world:B",
+            "receiver_particular": "Q",
+            "thing_ref": "sha256:95e4c797170a5bf2816c7ddc8b1655b9e74d71f138104432097ea76f78c6065b",
+            "source_particular": "P"
+          },
+          "foundation": {
+            "policy_id": "relatte-receipt-v0:4f134009e25477fdb36b58214ee0de8eedeeb0914fbe9b62bd9d68492a1fa02f",
+            "relation": {
+              "kind": "LINEAGE",
+              "from": "P",
+              "to": "Q",
+              "identity_basis": "BYTE_IDENTITY"
+            }
+          }
+        },
+        "receipt_id": "relatte-receipt-v0:b48f55d91333eddbc4cd5624b1e17c9500239f060677b8a81d509ef45a84f84e",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "mYJo1w5BA5DoqRqlhKieaibck-61z0iHYK9JtAp4rLI",
+            "y": "UFk9BvO1x8qZwC2E1eZp4NxjRSD0RoIi2syqCY-HMQk"
+          },
+          "signature": "zewFOYzU3aidqdAhYP1kqofIRhwMGymKDXQqQqNAAVtFMXo9y4XoNXeBKo5b9MXLQGH34OCktLTQ3pTH-jL_ug",
+          "domain": "relatte.receipt-signature/v0"
+        }
+      }
+    ]
+  },
+  "roots": {
+    "policy_key": "2d63f66f282248595464fdb8c81888b7b24f1fb8ece24d0d396e73b82f05da62",
+    "policy_id": "relatte-receipt-v0:4f134009e25477fdb36b58214ee0de8eedeeb0914fbe9b62bd9d68492a1fa02f",
+    "inventory_id": "relatte-receipt-v0:5fd7493ff67b8f99d8583ddac65990f6cc3a47e21a0f9d754feb267ddf789ef1"
+  },
+  "crossing_id": "relatte-crossing-v0:243ec7b99b64f1ffe6a8056560d1755c4122a7d565615d460f92f9c81b952d81",
+  "expected": {
+    "schema": "relatte.foundation-assessment/v0",
+    "status": "HOLD",
+    "evidence_level": "E0 UNOBSERVED",
+    "confidence": 0,
+    "reasons": [
+      "EQUIVOCATION"
+    ],
+    "signature_valid_ids": [
+      "relatte-crossing-v0:243ec7b99b64f1ffe6a8056560d1755c4122a7d565615d460f92f9c81b952d81",
+      "relatte-receipt-v0:90a164cdf9935136bc786a906b0ed508795ba245ae580ff84f29dd02dd43e02a",
+      "relatte-receipt-v0:b48f55d91333eddbc4cd5624b1e17c9500239f060677b8a81d509ef45a84f84e"
+    ],
+    "conflict_ids": [
+      "relatte-receipt-v0:90a164cdf9935136bc786a906b0ed508795ba245ae580ff84f29dd02dd43e02a",
+      "relatte-receipt-v0:b48f55d91333eddbc4cd5624b1e17c9500239f060677b8a81d509ef45a84f84e"
+    ],
+    "independence_basis": "NONE",
+    "quorum_kind": "UNOBSERVED",
+    "custody": {
+      "signing_identity": "UNOBSERVED",
+      "distinct_key": "UNOBSERVED",
+      "distinct_process": "UNOBSERVED",
+      "distinct_runtime": "UNOBSERVED",
+      "distinct_machine": "UNOBSERVED",
+      "distinct_custody_domain": "UNOBSERVED",
+      "distinct_administrative_domain": "UNOBSERVED",
+      "distinct_human": "UNOBSERVED",
+      "non_collusion": "UNOBSERVED"
+    },
+    "historically_verified": false,
+    "currently_acceptable": "UNOBSERVED",
+    "admission": "UNOBSERVED",
+    "authority": "UNOBSERVED",
+    "finality": "UNOBSERVED",
+    "survivor_verification": "UNOBSERVED",
+    "trusted_chronology": "UNOBSERVED",
+    "historical_truth": "UNOBSERVED",
+    "binding_identity": "UNOBSERVED"
+  }
+}

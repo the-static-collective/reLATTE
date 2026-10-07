@@ -1,0 +1,75 @@
+[
+  {
+    "id": "cryptographic-root",
+    "depends_on": [],
+    "basis": "P-256/SHA-256 security, correct runtimes and canonicalization; no mathematical proof supplied",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "external-policy-selection",
+    "depends_on": [],
+    "basis": "Receiver independently selects exact policy key and policy receipt pin; inclusion in a bundle supplies no trust",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "external-inventory-selection",
+    "depends_on": [],
+    "basis": "Receiver pins observed inventory, chooses observation scope and retains this choice outside hostile transport",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "honest-local-verifier",
+    "depends_on": [],
+    "basis": "At least one replacement verifier and its execution/configuration are uncompromised",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "durable-public-survival",
+    "depends_on": [],
+    "basis": "Sufficient public records and selected pins remain available; all-record loss cannot be repaired by signatures",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "scope-completeness",
+    "depends_on": [
+      "external-inventory-selection"
+    ],
+    "basis": "Completeness is limited to enumerated observations; global absence of withheld evidence is not established",
+    "class": "ASSUMED"
+  },
+  {
+    "id": "witness-signatures",
+    "depends_on": [
+      "cryptographic-root",
+      "honest-local-verifier"
+    ],
+    "basis": "Recomputed canonical IDs and verified native/WebCrypto signatures",
+    "class": "DERIVED"
+  },
+  {
+    "id": "role-membership",
+    "depends_on": [
+      "external-policy-selection",
+      "witness-signatures"
+    ],
+    "basis": "Policy-bound roles compare normalized curve-point identities, worlds and particulars",
+    "class": "DERIVED"
+  },
+  {
+    "id": "bounded-edge",
+    "depends_on": [
+      "role-membership",
+      "external-inventory-selection",
+      "scope-completeness",
+      "durable-public-survival"
+    ],
+    "basis": "Matching causal and payload bindings, distinct keys, declared quorum, no known conflict within pinned scope",
+    "class": "DERIVED"
+  },
+  {
+    "id": "local-harness-process-death",
+    "depends_on": [],
+    "basis": "Harness subprocess exit and deletion of local directories; physical erasure and remote platform separation remain UNOBSERVED",
+    "class": "OBSERVED"
+  }
+]

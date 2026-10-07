@@ -1,84 +1,21 @@
 # TWO-WITNESS-CUSTODY-002
 
-## Purpose
+FOUNDATION-OF-TRUST-001 corrects the original custody claim. Separate ephemeral CI jobs can be externally observed through platform execution records; public artifacts alone do not demonstrate separate actual machines, key-creation chronology, administrative independence or absence of hidden key export [C06, C07, C26–C28, C36]. All IDs refer to the [claim matrix](FOUNDATION-OF-TRUST-001-CLAIM-MATRIX.md).
 
-Upgrade the two-witness model from **key distinctness** to a stronger, bounded custody witness.
+The existing A → B → C workflow remains a real transport/execution boundary: A creates a source key locally and exports a public crossing; B requires A's artifact, creates its receiver key locally and exports a matching receipt; C possesses only intended public evidence and re-verifies both records [C10, C11, F03]. Private fields, unexpected files, symlinks, duplicate JSON names, mixed runs, identical claimed fingerprints and unsigned runner-metadata substitutions fail with specific reasons [C03, C15, C30].
 
-The experiment uses three separate ephemeral CI runners:
-
-```text
-RUNNER A
-  signs source crossing
-  exports public evidence only
-       |
-       | artifact broker
-       v
-RUNNER B
-  receives A's public carrier
-  generates fresh receiver key
-  signs receiver witness
-  exports public evidence only
-       |
-       | public artifacts
-       v
-RUNNER C
-  possesses neither private key
-  re-verifies both signatures
-  reconstructs corroboration
-  runs hostile mutation checks
-```
-
-## What this can establish
-
-Within one CI run, the proof demonstrates:
-
-- distinct sender and receiver machine fingerprints;
-- receiver execution occurs after sender completion;
-- sender private key never appears in the transported artifact;
-- receiver private key never appears in the transported artifact;
-- source and receiver signatures bind the same handoff;
-- a third process can reconstruct `CORROBORATED` from public evidence alone;
-- third-party tampering of either witness falls to `HOLD`.
-
-## What it cannot establish
-
-This is still deliberately narrower than "two independent humans."
+The signed records now bind job declarations. Changing an unsigned artifact wrapper no longer changes those signed declarations unnoticed. Malicious valid participants can still fabricate different fingerprints from one process, so the artifact-only result is:
 
 ```text
-SEPARATE RUNNERS != SEPARATE HUMANS
-SEPARATE RUNNERS != NON-COLLUSION
-HOST FINGERPRINT != HARDWARE ATTESTATION
-CORROBORATION != TRUTH
-CORROBORATION != ADMISSION
+E3 CORROBORATED-KEYS
+cryptographic independence = DISTINCT_SIGNING_KEYS_ONLY
+machine separation = UNOBSERVED_FROM_SELF_REPORTED_FINGERPRINTS
+receiver job ordering = UNOBSERVED_FROM_ARTIFACTS
+custody/administrative/human separation = UNOBSERVED
 ```
 
-GitHub remains the shared orchestration and artifact-broker environment.
+These are bounded key-attribution and binding conclusions, not historical truth or authority [C03, C08, C10, C12, C25]. C's observed ability to reconstruct records from public artifacts is separate from externally observed facts about how CI scheduled A/B [C24, C36].
 
-The test therefore earns a stronger claim than distinct keys alone:
+Receiver receipt binding to the source crossing establishes a causal reference, but cannot prove B's key was freshly created after A or that a malicious participant never copied a private key through another channel. The intended code path and transported schema can be inspected; universal non-export cannot be inferred [C11, C13, C28].
 
-> **machine-separated, non-transferred signing custody inside one brokered run**
-
-It does not earn social, organizational, or metaphysical independence.
-
-## FatherHand consequence
-
-A founding handoff may now be tested at three evidentiary levels:
-
-```text
-1. SOURCE ONLY
-   CLAIMED
-
-2. SOURCE + MATCHING DISTINCT SIGNING KEY
-   CORROBORATED
-   independence basis:
-   DISTINCT_SIGNING_KEYS_ONLY
-
-3. SOURCE RUNNER + RECEIVER RUNNER + THIRD-PARTY REPLAY
-   CORROBORATED
-   custody evidence:
-   MACHINE-SEPARATED / PRIVATE KEYS NOT TRANSFERRED
-```
-
-The edge remains the witnessed object.
-
-Neither endpoint constitutes the entire relation by itself.
+The earlier stronger prose claiming “machine-separated, non-transferred signing custody inside one brokered run” is superseded by this bounded classification. The signed-machine-spoofing hostile case intentionally succeeds cryptographically and must keep E4/E5/human independence UNOBSERVED [C07, C26–C28].

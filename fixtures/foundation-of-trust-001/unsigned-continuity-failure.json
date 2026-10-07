@@ -1,0 +1,86 @@
+{
+  "records": [
+    {
+      "schema": "relatte.particular-constitution/v0",
+      "world_id": "W",
+      "lineage_root": "L",
+      "inherited_content_ref": "seed",
+      "constitution_nonce": "456e945f-88a7-46c5-97e8-e2ede64935a3",
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "laws": [
+        "COPY != PARTICULAR",
+        "SHARED CONTENT != SHARED IDENTITY",
+        "SHARED ANCESTRY != SHARED STATE"
+      ],
+      "constitution_id": "relatte-particular-constitution-v0:6a0991d5a7e57dca58f8da749561dc423281d57d4d174b489df6142437d7a931",
+      "particular_id": "relatte-particular-v0:1bb7961c11c2b8796eb3aa872cafd27a4331c6028b7a0d43af54ad4f2d9af67b"
+    },
+    {
+      "schema": "relatte.particular-state-surface/v0",
+      "particular_id": "relatte-particular-v0:1bb7961c11c2b8796eb3aa872cafd27a4331c6028b7a0d43af54ad4f2d9af67b",
+      "state_id": "original",
+      "self_surface": "A",
+      "controller_id": "owner",
+      "accessible_event_ids": [
+        "e"
+      ],
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "surface_id": "relatte-particular-state-surface-v0:36f029a5f68748435cee13aa08bbf0b9ae3713d935f3a6740ecfa0bfbd2f5a28"
+    },
+    {
+      "schema": "relatte.particular-state-surface/v0",
+      "particular_id": "relatte-particular-v0:1bb7961c11c2b8796eb3aa872cafd27a4331c6028b7a0d43af54ad4f2d9af67b",
+      "state_id": "impostor",
+      "self_surface": "A",
+      "controller_id": "attacker",
+      "accessible_event_ids": [
+        "e"
+      ],
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "surface_id": "relatte-particular-state-surface-v0:a6299d515f45b24ded1e1d0662b62d91da9e2d04e4a543c602b592a014d84dea"
+    },
+    {
+      "schema": "relatte.particular-state-transition/v0",
+      "particular_id": "relatte-particular-v0:1bb7961c11c2b8796eb3aa872cafd27a4331c6028b7a0d43af54ad4f2d9af67b",
+      "from_surface": {
+        "schema": "relatte.particular-state-surface/v0",
+        "particular_id": "relatte-particular-v0:1bb7961c11c2b8796eb3aa872cafd27a4331c6028b7a0d43af54ad4f2d9af67b",
+        "state_id": "original",
+        "self_surface": "A",
+        "controller_id": "owner",
+        "accessible_event_ids": [
+          "e"
+        ],
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "surface_id": "relatte-particular-state-surface-v0:36f029a5f68748435cee13aa08bbf0b9ae3713d935f3a6740ecfa0bfbd2f5a28"
+      },
+      "to_surface": {
+        "schema": "relatte.particular-state-surface/v0",
+        "particular_id": "relatte-particular-v0:1bb7961c11c2b8796eb3aa872cafd27a4331c6028b7a0d43af54ad4f2d9af67b",
+        "state_id": "impostor",
+        "self_surface": "A",
+        "controller_id": "attacker",
+        "accessible_event_ids": [
+          "e"
+        ],
+        "created_at": "2026-10-07T00:00:00.000Z",
+        "surface_id": "relatte-particular-state-surface-v0:a6299d515f45b24ded1e1d0662b62d91da9e2d04e4a543c602b592a014d84dea"
+      },
+      "continuity_claim": "SAME_PARTICULAR",
+      "authority_transferred": false,
+      "created_at": "2026-10-07T00:00:00.000Z",
+      "laws": [
+        "STATE != PARTICULAR",
+        "CONTROL != IDENTITY",
+        "PARTICULAR POINTER != CONTINUITY PROOF",
+        "NO PARTICULAR CONTINUITY WITHOUT A WITNESSABLE PATH",
+        "PARTICULAR CONTINUITY != AUTHORITY CONTINUITY"
+      ],
+      "transition_id": "relatte-particular-state-transition-v0:1ea343e541989dbbfee25c306a88407705369a213249a715aaee7e827404c7c0"
+    }
+  ],
+  "structural_result": true,
+  "consequential_evidence": "UNOBSERVED",
+  "expected_consequential_status": "HOLD",
+  "expected_reason": "NO_WITNESSED_CONTINUITY_PATH"
+}

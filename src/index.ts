@@ -18,3 +18,4 @@ export * from './roundtrip.ts';
 export * from './material-delivery.ts';
 export * from './particularity.ts';
 export * from './two-witness.ts';
+export * from './foundation-of-trust.ts';

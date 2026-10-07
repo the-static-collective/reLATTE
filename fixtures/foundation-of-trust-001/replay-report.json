@@ -1,0 +1,414 @@
+{
+  "schema": "relatte.foundation-replay-report/v0",
+  "frozen_specimens": [
+    {
+      "specimen": "AB",
+      "primary": {
+        "schema": "relatte.foundation-assessment/v0",
+        "status": "VERIFIED",
+        "evidence_level": "E3 CORROBORATED-KEYS",
+        "confidence": 2,
+        "reasons": [
+          "MATCHING_SIGNED_WITNESSES",
+          "SYBIL_RESISTANCE_UNOBSERVED",
+          "GLOBAL_COMPLETENESS_UNOBSERVED"
+        ],
+        "signature_valid_ids": [
+          "relatte-crossing-v0:7267fa9115a75c37e70ef640654848b2c08d5707730d88d55725d73b89e63d24",
+          "relatte-receipt-v0:85c6493fa08dfe77caa4c66c1e2eb6a8dd93e53abb59292d0302c0a80fa63ee5"
+        ],
+        "conflict_ids": [],
+        "independence_basis": "DISTINCT_SIGNING_KEYS_ONLY",
+        "quorum_kind": "CRYPTOGRAPHIC_KEYS",
+        "custody": {
+          "signing_identity": "OBSERVED",
+          "distinct_key": "OBSERVED",
+          "distinct_process": "UNOBSERVED",
+          "distinct_runtime": "UNOBSERVED",
+          "distinct_machine": "UNOBSERVED",
+          "distinct_custody_domain": "UNOBSERVED",
+          "distinct_administrative_domain": "UNOBSERVED",
+          "distinct_human": "UNOBSERVED",
+          "non_collusion": "UNOBSERVED"
+        },
+        "historically_verified": true,
+        "currently_acceptable": "UNOBSERVED",
+        "admission": "UNOBSERVED",
+        "authority": "UNOBSERVED",
+        "finality": "UNOBSERVED",
+        "survivor_verification": "UNOBSERVED",
+        "trusted_chronology": "UNOBSERVED",
+        "historical_truth": "UNOBSERVED",
+        "binding_identity": "BYTE_IDENTITY",
+        "payload_material": "UNOBSERVED"
+      },
+      "secondary": {
+        "status": "VERIFIED",
+        "evidence_level": "E3 CORROBORATED-KEYS",
+        "independence_basis": "DISTINCT_SIGNING_KEYS_ONLY",
+        "custody_domain": "UNOBSERVED",
+        "canonical_crossing_id": "relatte-crossing-v0:7267fa9115a75c37e70ef640654848b2c08d5707730d88d55725d73b89e63d24"
+      }
+    },
+    {
+      "specimen": "BC2",
+      "primary": {
+        "schema": "relatte.foundation-assessment/v0",
+        "status": "VERIFIED",
+        "evidence_level": "E3 CORROBORATED-KEYS",
+        "confidence": 2,
+        "reasons": [
+          "MATCHING_SIGNED_WITNESSES",
+          "SYBIL_RESISTANCE_UNOBSERVED",
+          "GLOBAL_COMPLETENESS_UNOBSERVED"
+        ],
+        "signature_valid_ids": [
+          "relatte-crossing-v0:e9a6e527391dbe7c265d5b44d5afe27ce61a500701e0125d12e74eba909c91cf",
+          "relatte-receipt-v0:fddcc91f18f5f82d9ea50c9ba0352fd9b099416881998a135cffe241ebf9378b"
+        ],
+        "conflict_ids": [],
+        "independence_basis": "DISTINCT_SIGNING_KEYS_ONLY",
+        "quorum_kind": "CRYPTOGRAPHIC_KEYS",
+        "custody": {
+          "signing_identity": "OBSERVED",
+          "distinct_key": "OBSERVED",
+          "distinct_process": "UNOBSERVED",
+          "distinct_runtime": "UNOBSERVED",
+          "distinct_machine": "UNOBSERVED",
+          "distinct_custody_domain": "UNOBSERVED",
+          "distinct_administrative_domain": "UNOBSERVED",
+          "distinct_human": "UNOBSERVED",
+          "non_collusion": "UNOBSERVED"
+        },
+        "historically_verified": true,
+        "currently_acceptable": "UNOBSERVED",
+        "admission": "UNOBSERVED",
+        "authority": "UNOBSERVED",
+        "finality": "UNOBSERVED",
+        "survivor_verification": "UNOBSERVED",
+        "trusted_chronology": "UNOBSERVED",
+        "historical_truth": "UNOBSERVED",
+        "binding_identity": "BYTE_IDENTITY",
+        "payload_material": "UNOBSERVED"
+      },
+      "secondary": {
+        "status": "VERIFIED",
+        "evidence_level": "E3 CORROBORATED-KEYS",
+        "independence_basis": "DISTINCT_SIGNING_KEYS_ONLY",
+        "custody_domain": "UNOBSERVED",
+        "canonical_crossing_id": "relatte-crossing-v0:e9a6e527391dbe7c265d5b44d5afe27ce61a500701e0125d12e74eba909c91cf"
+      }
+    },
+    {
+      "specimen": "equivocation-source",
+      "result": {
+        "schema": "relatte.foundation-assessment/v0",
+        "status": "HOLD",
+        "evidence_level": "E0 UNOBSERVED",
+        "confidence": 0,
+        "reasons": [
+          "EQUIVOCATION"
+        ],
+        "signature_valid_ids": [
+          "relatte-crossing-v0:9641bd1dd27d208e6decabcfcb97216cc03fe10c3a82f94b0c692f4699dd217a",
+          "relatte-receipt-v0:e7fbf75c298ccc85511aa40dad9267cbf40fac7c073c93905997e9b8bdb2c988",
+          "relatte-crossing-v0:3d068943051aaeb91b0eb11b0f34c5eef1c8601927599d7da0036f7683307c99"
+        ],
+        "conflict_ids": [
+          "relatte-crossing-v0:9641bd1dd27d208e6decabcfcb97216cc03fe10c3a82f94b0c692f4699dd217a",
+          "relatte-crossing-v0:3d068943051aaeb91b0eb11b0f34c5eef1c8601927599d7da0036f7683307c99"
+        ],
+        "independence_basis": "NONE",
+        "quorum_kind": "UNOBSERVED",
+        "custody": {
+          "signing_identity": "UNOBSERVED",
+          "distinct_key": "UNOBSERVED",
+          "distinct_process": "UNOBSERVED",
+          "distinct_runtime": "UNOBSERVED",
+          "distinct_machine": "UNOBSERVED",
+          "distinct_custody_domain": "UNOBSERVED",
+          "distinct_administrative_domain": "UNOBSERVED",
+          "distinct_human": "UNOBSERVED",
+          "non_collusion": "UNOBSERVED"
+        },
+        "historically_verified": false,
+        "currently_acceptable": "UNOBSERVED",
+        "admission": "UNOBSERVED",
+        "authority": "UNOBSERVED",
+        "finality": "UNOBSERVED",
+        "survivor_verification": "UNOBSERVED",
+        "trusted_chronology": "UNOBSERVED",
+        "historical_truth": "UNOBSERVED",
+        "binding_identity": "UNOBSERVED",
+        "payload_material": "UNOBSERVED"
+      }
+    },
+    {
+      "specimen": "equivocation-receiver",
+      "result": {
+        "schema": "relatte.foundation-assessment/v0",
+        "status": "HOLD",
+        "evidence_level": "E0 UNOBSERVED",
+        "confidence": 0,
+        "reasons": [
+          "EQUIVOCATION"
+        ],
+        "signature_valid_ids": [
+          "relatte-crossing-v0:243ec7b99b64f1ffe6a8056560d1755c4122a7d565615d460f92f9c81b952d81",
+          "relatte-receipt-v0:90a164cdf9935136bc786a906b0ed508795ba245ae580ff84f29dd02dd43e02a",
+          "relatte-receipt-v0:b48f55d91333eddbc4cd5624b1e17c9500239f060677b8a81d509ef45a84f84e"
+        ],
+        "conflict_ids": [
+          "relatte-receipt-v0:90a164cdf9935136bc786a906b0ed508795ba245ae580ff84f29dd02dd43e02a",
+          "relatte-receipt-v0:b48f55d91333eddbc4cd5624b1e17c9500239f060677b8a81d509ef45a84f84e"
+        ],
+        "independence_basis": "NONE",
+        "quorum_kind": "UNOBSERVED",
+        "custody": {
+          "signing_identity": "UNOBSERVED",
+          "distinct_key": "UNOBSERVED",
+          "distinct_process": "UNOBSERVED",
+          "distinct_runtime": "UNOBSERVED",
+          "distinct_machine": "UNOBSERVED",
+          "distinct_custody_domain": "UNOBSERVED",
+          "distinct_administrative_domain": "UNOBSERVED",
+          "distinct_human": "UNOBSERVED",
+          "non_collusion": "UNOBSERVED"
+        },
+        "historically_verified": false,
+        "currently_acceptable": "UNOBSERVED",
+        "admission": "UNOBSERVED",
+        "authority": "UNOBSERVED",
+        "finality": "UNOBSERVED",
+        "survivor_verification": "UNOBSERVED",
+        "trusted_chronology": "UNOBSERVED",
+        "historical_truth": "UNOBSERVED",
+        "binding_identity": "UNOBSERVED",
+        "payload_material": "UNOBSERVED"
+      }
+    }
+  ],
+  "repaired_same_key": {
+    "schema": "relatte.two-witness-assessment/v0",
+    "status": "HOLD",
+    "evidence_level": "E0 UNOBSERVED",
+    "historical_truth": "UNOBSERVED",
+    "custody_domain": "UNOBSERVED",
+    "authority": "UNOBSERVED",
+    "admission": "UNOBSERVED",
+    "crossing_id": "relatte-crossing-v0:77a195d5dad3a036fdad11576bc71e5209ce5dc95c53c03c1dca4068629ceabe",
+    "handoff_id": "H",
+    "reasons": [
+      "WITNESS_KEYS_NOT_DISTINCT"
+    ],
+    "independence_basis": "NONE",
+    "laws": [
+      "ONE WITNESS = CLAIM",
+      "TWO MATCHING WITNESSES = CORROBORATED",
+      "WITNESS DISAGREEMENT = HOLD",
+      "SAME KEY != TWO WITNESSES",
+      "DISTINCT KEYS != INDEPENDENT CUSTODY",
+      "CORROBORATION != TRUTH",
+      "CORROBORATION != ADMISSION",
+      "RECEIPT != AUTHORITY"
+    ]
+  },
+  "loss_matrix": [
+    {
+      "deleted": [],
+      "status": "VERIFIED",
+      "evidence_level": "E3 CORROBORATED-KEYS",
+      "confidence": 2,
+      "reasons": [
+        "MATCHING_SIGNED_WITNESSES",
+        "SYBIL_RESISTANCE_UNOBSERVED",
+        "GLOBAL_COMPLETENESS_UNOBSERVED"
+      ]
+    },
+    {
+      "deleted": [
+        "policy"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "POLICY_UNAVAILABLE"
+      ]
+    },
+    {
+      "deleted": [
+        "inventory"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "INVENTORY_UNAVAILABLE"
+      ]
+    },
+    {
+      "deleted": [
+        "policy",
+        "inventory"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "POLICY_UNAVAILABLE"
+      ]
+    },
+    {
+      "deleted": [
+        "source"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "MISSING_REQUIRED_EVIDENCE"
+      ]
+    },
+    {
+      "deleted": [
+        "policy",
+        "source"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "POLICY_UNAVAILABLE"
+      ]
+    },
+    {
+      "deleted": [
+        "inventory",
+        "source"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "INVENTORY_UNAVAILABLE"
+      ]
+    },
+    {
+      "deleted": [
+        "policy",
+        "inventory",
+        "source"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "POLICY_UNAVAILABLE"
+      ]
+    },
+    {
+      "deleted": [
+        "receiver"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "MISSING_REQUIRED_EVIDENCE"
+      ]
+    },
+    {
+      "deleted": [
+        "policy",
+        "receiver"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "POLICY_UNAVAILABLE"
+      ]
+    },
+    {
+      "deleted": [
+        "inventory",
+        "receiver"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "INVENTORY_UNAVAILABLE"
+      ]
+    },
+    {
+      "deleted": [
+        "policy",
+        "inventory",
+        "receiver"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "POLICY_UNAVAILABLE"
+      ]
+    },
+    {
+      "deleted": [
+        "source",
+        "receiver"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "MISSING_REQUIRED_EVIDENCE"
+      ]
+    },
+    {
+      "deleted": [
+        "policy",
+        "source",
+        "receiver"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "POLICY_UNAVAILABLE"
+      ]
+    },
+    {
+      "deleted": [
+        "inventory",
+        "source",
+        "receiver"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "INVENTORY_UNAVAILABLE"
+      ]
+    },
+    {
+      "deleted": [
+        "policy",
+        "inventory",
+        "source",
+        "receiver"
+      ],
+      "status": "HOLD",
+      "evidence_level": "E0 UNOBSERVED",
+      "confidence": 0,
+      "reasons": [
+        "POLICY_UNAVAILABLE"
+      ]
+    }
+  ],
+  "root_selection": "ASSUMED_EXTERNALLY_FOR_REPLAY",
+  "global_absence_of_withheld_conflict": "UNOBSERVED",
+  "stronger_machine_domain_human_claims": "UNOBSERVED"
+}

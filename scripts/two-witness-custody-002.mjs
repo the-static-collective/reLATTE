@@ -5,8 +5,8 @@
  * generating a fresh key that never leaves receiver process memory.
  * A third runner reconstructs the corroboration from public artifacts only.
  *
- * This proves machine/process separation inside one CI run plus non-transfer of
- * private keys. It does NOT prove separate humans, organizations, or non-collusion.
+ * Signatures bind runner declarations. Actual runner separation requires external
+ * platform evidence; public artifacts alone earn distinct keys only.
  */
 import { readFile, writeFile, mkdir, lstat, readdir } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
@@ -20,6 +20,8 @@ import {
   sha256Hex,
   verifyCrossingEnvelope,
   verifyReceipt,
+  canonicalize,
+  parseEvidenceJson,
 } from '../src/index.ts';
 
 const THING_REF = 'sha256:' + '4'.repeat(64);
@@ -42,6 +44,19 @@ async function exists(path) {
   }
 }
 
+
+export async function validateArtifactDirectory(dir, filename) {
+  let parent = resolve(dir);
+  while (true) {
+    const info = await lstat(parent);
+    validate(!info.isSymbolicLink() && info.isDirectory(), 'UNSAFE_ARTIFACT_DIRECTORY');
+    const next = resolve(parent, '..');
+    if (next === parent) break;
+    parent = next;
+  }
+  validate(canonicalize((await readdir(dir)).sort()) === canonicalize([filename]), 'UNEXPECTED_ARTIFACT_FILES');
+}
+
 async function readJson(path) {
   const info = await lstat(path);
   validate(info.isFile() && !info.isSymbolicLink(), 'UNSAFE_ARTIFACT');
@@ -49,9 +64,9 @@ async function readJson(path) {
   const raw = await readFile(path);
   let parsed;
   try {
-    parsed = JSON.parse(raw.toString('utf8'));
-  } catch {
-    throw new Error('MALFORMED_ARTIFACT');
+    parsed = parseEvidenceJson(raw.toString('utf8'));
+  } catch (error) {
+    throw new Error(error.message === 'DUPLICATE_JSON_KEY' ? error.message : 'MALFORMED_ARTIFACT');
   }
   validate(isRecord(parsed), 'ARTIFACT_OBJECT_REQUIRED');
   return parsed;
@@ -111,6 +126,7 @@ async function jobWitness(role) {
 
 function validateJobWitness(value, role) {
   validate(isRecord(value), 'INVALID_JOB_WITNESS');
+  validate(canonicalize(Object.keys(value).sort()) === canonicalize(['machine_fingerprint', 'role', 'run_id']), 'UNEXPECTED_JOB_FIELD');
   validate(value.role === role, 'WRONG_JOB_ROLE');
   validate(
     typeof value.run_id === 'string' &&
@@ -134,7 +150,7 @@ function assertMachineSeparated(sender, receiver) {
   );
 }
 
-async function makeCrossing(keys) {
+async function makeCrossing(keys, job) {
   return sealCrossingEnvelope({
     schema: 'relatte.crossing-envelope/v0',
     protocol_version: '0',
@@ -166,6 +182,7 @@ async function makeCrossing(keys) {
         thing_ref: THING_REF,
       },
       custody_002: {
+        job,
         private_key_exported: false,
         law: 'PRIVATE KEY != PUBLIC WITNESS',
       },
@@ -173,7 +190,7 @@ async function makeCrossing(keys) {
   }, keys);
 }
 
-async function makeReceipt(crossing, keys) {
+async function makeReceipt(crossing, keys, job, sourceJob) {
   const binding = crossing.extensions.two_witness_handoff;
   return sealReceipt({
     schema: 'relatte.receipt/v0',
@@ -199,6 +216,8 @@ async function makeReceipt(crossing, keys) {
         thing_ref: binding.thing_ref,
       },
       custody_002: {
+        job,
+        source_job: sourceJob,
         private_key_exported: false,
         law: 'DISTINCT RUNNER != DISTINCT HUMAN',
       },
@@ -209,7 +228,7 @@ async function makeReceipt(crossing, keys) {
 export async function sender(outputDir) {
   const job = await jobWitness('sender');
   const keys = await generateP256KeyPair();
-  const crossing = await makeCrossing(keys);
+  const crossing = await makeCrossing(keys, job);
   validate(await verifyCrossingEnvelope(crossing), 'SOURCE_SIGNATURE_FAILED');
 
   const artifact = {
@@ -229,12 +248,15 @@ export async function sender(outputDir) {
 }
 
 export async function receiver(sourceDir, outputDir) {
+  await validateArtifactDirectory(sourceDir, 'source-witness.json');
   const source = await readJson(join(sourceDir, 'source-witness.json'));
   validate(
     source.schema === 'relatte.two-witness-custody-source/v0',
     'INVALID_SOURCE_SCHEMA',
   );
+  validate(canonicalize(Object.keys(source).sort()) === canonicalize(['crossing', 'job', 'schema', 'scope']), 'UNEXPECTED_SOURCE_FIELD');
   validateJobWitness(source.job, 'sender');
+  validate(canonicalize(source.job) === canonicalize(source.crossing.extensions?.custody_002?.job ?? null), 'UNSIGNED_SOURCE_JOB_METADATA');
   validate(
     source.scope === 'public-source-witness-only;private-key-never-exported',
     'INVALID_SOURCE_SCOPE',
@@ -250,14 +272,14 @@ export async function receiver(sourceDir, outputDir) {
 
   // Fresh key exists only in this receiver process. It is never serialized.
   const keys = await generateP256KeyPair();
-  const receipt = await makeReceipt(source.crossing, keys);
+  const receipt = await makeReceipt(source.crossing, keys, job, source.job);
   validate(await verifyReceipt(receipt), 'RECEIVER_SIGNATURE_FAILED');
 
   const assessment = await assessTwoWitnessHandoff({
     crossing: source.crossing,
     receiver_receipt: receipt,
   });
-  validate(assessment.status === 'CORROBORATED', 'PAIR_NOT_CORROBORATED');
+  validate(assessment.status === 'CORROBORATED', assessment.reasons.join('|'));
 
   const artifact = {
     schema: 'relatte.two-witness-custody-receiver/v0',
@@ -278,8 +300,10 @@ export async function receiver(sourceDir, outputDir) {
   return artifact;
 }
 
-export async function verify(sourceDir, receiverDir) {
+export async function verify(sourceDir, receiverDir, context = { expected_run_id: process.env.GITHUB_RUN_ID || null }) {
+  await validateArtifactDirectory(sourceDir, 'source-witness.json');
   const source = await readJson(join(sourceDir, 'source-witness.json'));
+  await validateArtifactDirectory(receiverDir, 'receiver-witness.json');
   const receiver = await readJson(join(receiverDir, 'receiver-witness.json'));
   forbidPrivate(source);
   forbidPrivate(receiver);
@@ -292,13 +316,18 @@ export async function verify(sourceDir, receiverDir) {
     receiver.schema === 'relatte.two-witness-custody-receiver/v0',
     'INVALID_RECEIVER_SCHEMA',
   );
+  validate(canonicalize(Object.keys(source).sort()) === canonicalize(['crossing', 'job', 'schema', 'scope']), 'UNEXPECTED_SOURCE_FIELD');
   validateJobWitness(source.job, 'sender');
+  validate(canonicalize(source.job) === canonicalize(source.crossing.extensions?.custody_002?.job ?? null), 'UNSIGNED_SOURCE_JOB_METADATA');
+  validate(canonicalize(Object.keys(receiver).sort()) === canonicalize(['local_assessment', 'receipt', 'receiver_job', 'schema', 'scope', 'source_job']), 'UNEXPECTED_RECEIVER_FIELD');
   validateJobWitness(receiver.source_job, 'sender');
   validateJobWitness(receiver.receiver_job, 'receiver');
   validate(
-    JSON.stringify(source.job) === JSON.stringify(receiver.source_job),
+    canonicalize(source.job) === canonicalize(receiver.source_job),
     'SOURCE_JOB_WITNESS_CHANGED',
   );
+  validate(canonicalize(receiver.receiver_job) === canonicalize(receiver.receipt.extensions?.custody_002?.job ?? null), 'UNSIGNED_RECEIVER_JOB_METADATA');
+  validate(canonicalize(source.job) === canonicalize(receiver.receipt.extensions?.custody_002?.source_job ?? null), 'UNSIGNED_SOURCE_JOB_METADATA');
   assertMachineSeparated(source.job, receiver.receiver_job);
 
   validate(
@@ -309,6 +338,11 @@ export async function verify(sourceDir, receiverDir) {
     await verifyReceipt(receiver.receipt),
     'VERIFIER_REJECTED_RECEIVER',
   );
+  // A historic pair stays attributable, but a live CI run must not accept a
+  // previous run's pair merely because its two signed run labels agree.
+  if (context.expected_run_id !== null) {
+    validate(source.job.run_id === context.expected_run_id, 'CURRENT_RUN_MISMATCH');
+  }
 
   const assessment = await assessTwoWitnessHandoff({
     crossing: source.crossing,
@@ -316,7 +350,7 @@ export async function verify(sourceDir, receiverDir) {
   });
   validate(
     assessment.status === 'CORROBORATED',
-    'VERIFIER_PAIR_NOT_CORROBORATED',
+    assessment.reasons.join('|'),
   );
   validate(
     assessment.independence_basis === 'DISTINCT_SIGNING_KEYS_ONLY',
@@ -353,10 +387,17 @@ export async function verify(sourceDir, receiverDir) {
     status: assessment.status,
     handoff_id: assessment.handoff_id,
     cryptographic_independence_basis: assessment.independence_basis,
+    evidence_level: 'E3 CORROBORATED-KEYS',
+    machine_separation: 'UNOBSERVED_FROM_SELF_REPORTED_FINGERPRINTS',
+    custody_domain_separation: 'UNOBSERVED',
+    receiver_key_created_after_source_witness: 'UNOBSERVED_FROM_ARTIFACTS',
+    private_material_never_copied_elsewhere: 'UNOBSERVED',
+    current_run_acceptability: context.expected_run_id === null ? 'UNOBSERVED' : 'MATCHING_EXTERNALLY_SUPPLIED_RUN_CONTEXT',
     custody_evidence: {
       same_ci_run: true,
       distinct_ephemeral_runner_fingerprints: true,
-      receiver_depended_on_sender_job: true,
+      receiver_signature_causally_binds_source_crossing: true,
+      receiver_depended_on_sender_job: 'UNOBSERVED_FROM_ARTIFACTS',
       source_private_key_in_public_artifact: false,
       receiver_private_key_in_public_artifact: false,
       third_party_reverification_from_public_evidence: true,

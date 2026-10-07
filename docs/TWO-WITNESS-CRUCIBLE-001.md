@@ -1,5 +1,12 @@
 # TWO-WITNESS-CRUCIBLE-001
 
+> FOUNDATION-OF-TRUST-001 repair: same-key JWK metadata must not produce key
+> distinctness. Witness outputs now include E0/E2/E3 evidence levels and explicitly
+> leave truth, custody domains, authority and admission UNOBSERVED. Pair assessment
+> does not discover unseen equivocation or authorize membership; consequential
+> evaluation uses the pinned policy/inventory assessor. See the [claim matrix](FOUNDATION-OF-TRUST-001-CLAIM-MATRIX.md),
+> C02, C03, C14, C16, C22, C25 and C32.
+
 ## Question
 
 Can one handoff survive hostile disagreement without letting a source claim constitute itself?
