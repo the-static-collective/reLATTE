@@ -422,7 +422,7 @@ test('research BAT rejects source provenance commit substitution even when fresh
   const b = await freshBundle();
   const draft = crossingDraft(b.crossing);
   draft.source_history_head = 'f'.repeat(40);
-  draft.extensions.source_commit = draft.source_history_head;
+  draft.extensions.sb001.source_commit = draft.source_history_head;
   b.crossing = await sealCrossingEnvelope(draft, b.sourceKeys);
   await expectRefusal(b, /SB001_SOURCE_COMMIT_SUBSTITUTION|SB001_SOURCE_COMMIT_SPLIT/);
 });
@@ -430,7 +430,7 @@ test('research BAT rejects source provenance commit substitution even when fresh
 test('research BAT rejects source path substitution even when freshly signed', async () => {
   const b = await freshBundle();
   const draft = crossingDraft(b.crossing);
-  draft.extensions.source_path = 'examples/other.json';
+  draft.extensions.sb001.source_path = 'examples/other.json';
   b.crossing = await sealCrossingEnvelope(draft, b.sourceKeys);
   await expectRefusal(b, /SB001_SOURCE_PATH_SUBSTITUTION/);
 });
