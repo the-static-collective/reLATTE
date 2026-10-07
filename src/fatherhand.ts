@@ -979,7 +979,7 @@ export async function delegateOperationalKey(
   validateTimestamp(details.not_before);
   validateTimestamp(details.not_after);
   if (Date.parse(details.not_after) <= Date.parse(details.not_before)) throw new Error('INVALID_DELEGATION_WINDOW');
-  const constraints = assertStringList(details.endpoint_constraints, 'INVALID_ENDPOINT_CONSTRAINTS');
+  const constraints = validateEndpointConstraints(scope, details.endpoint_constraints);
   if (details.replaces_fingerprint !== null && (typeof details.replaces_fingerprint !== 'string' || details.replaces_fingerprint.length === 0)) {
     throw new Error('INVALID_REPLACED_FINGERPRINT');
   }
@@ -1046,7 +1046,7 @@ export async function verifyOperationalDelegation(
     validateTimestamp(statement.created_at);
     validateTimestamp(at);
     if (Date.parse(at) < Date.parse(statement.not_before) || Date.parse(at) > Date.parse(statement.not_after)) return false;
-    assertStringList(statement.endpoint_constraints, 'INVALID_ENDPOINT_CONSTRAINTS');
+    validateEndpointConstraints(requiredScope, statement.endpoint_constraints);
     if (statement.replaces_fingerprint !== null && (typeof statement.replaces_fingerprint !== 'string' || statement.replaces_fingerprint.length === 0)) return false;
     const signer = verifySigningObject(statement.signing, DELEGATION_SIGNING_DOMAIN);
     if (!signer || founderNodeFingerprint(signer.public_key) !== expectedFounderFingerprint) return false;
