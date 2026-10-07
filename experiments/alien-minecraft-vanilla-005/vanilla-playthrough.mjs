@@ -107,6 +107,8 @@ async function main() {
     return response;
   };
 
+  await send('setworldspawn 0 ' + Y + ' 0');
+  await send('forceload add -16 -48 48 16');
   await send('gamerule doDaylightCycle false');
   await send('gamerule doWeatherCycle false');
   await send('gamerule doMobSpawning false');
@@ -115,7 +117,21 @@ async function main() {
   await send('fill -5 64 -40 40 70 12 minecraft:air');
   for (let nibble = 0; nibble < 16; nibble += 1) {
     const x = nibble * 2;
-    await send('fill ' + x + ' ' + Y + ' ' + (QUARRY_Z - QUARRY_DEPTH + 1) + ' ' + x + ' ' + Y + ' ' + QUARRY_Z + ' minecraft:' + WOOL[nibble]);
+    const response = await send('fill ' + x + ' ' + Y + ' ' + (QUARRY_Z - QUARRY_DEPTH + 1) + ' ' + x + ' ' + Y + ' ' + QUARRY_Z + ' minecraft:' + WOOL[nibble]);
+    if (/fail|not loaded|outside|unknown/i.test(String(response))) {
+      throw new Error('QUARRY_FILL_FAILED:' + nibble + ':' + response);
+    }
+  }
+
+  for (let nibble = 0; nibble < 16; nibble += 1) {
+    const target = quarryPos(nibble, 0);
+    const expected = 'minecraft:' + WOOL[nibble];
+    const response = await rcon.send(
+      'execute if block ' + target.x + ' ' + target.y + ' ' + target.z + ' ' + expected + ' run seed'
+    );
+    if (/fail|unknown|not found/i.test(String(response))) {
+      throw new Error('QUARRY_PREVERIFY_FAILED:' + nibble + ':' + response);
+    }
   }
 
   const bot = mineflayer.createBot({
@@ -136,7 +152,7 @@ async function main() {
     bot.pathfinder.setMovements(movements);
 
     await send('tp ' + BOT_NAME + ' 0 ' + Y + ' 0');
-    await sleep(750);
+    await sleep(1500);
 
     const actions = [];
     const mined = new Array(16).fill(0);
