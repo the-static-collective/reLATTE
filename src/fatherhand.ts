@@ -139,6 +139,10 @@ function requireFounderNodePrivateKey(founder: FounderNode): CryptoKey {
   return secret.privateKey;
 }
 
+export function retireFounderNode(founder: FounderNode): void {
+  founderNodeSecrets.delete(founder);
+}
+
 export interface OperationalKey {
   fingerprint: string;
   public_key: PublicJwk;
