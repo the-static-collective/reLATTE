@@ -25,6 +25,7 @@ const DELEGATION_SIGNING_DOMAIN = 'foundernode.delegation-signature/v0';
 const PEER_TRUST_ID_DOMAIN = 'FatherHand-PeerTrust-v0|';
 const PEER_TRUST_SIGNATURE_DOMAIN = 'FatherHand-PeerTrustSignature-v0|';
 const PEER_TRUST_SIGNING_DOMAIN = 'fatherhand.peer-trust-signature/v0';
+const RECOVERY_SHARE_SIGNATURE_DOMAIN = 'FatherHand-RecoveryShareSignature-v0|';
 
 const BASE64URL_RE = /^[A-Za-z0-9_-]+$/;
 const HEX64 = /^[a-f0-9]{64}$/;
@@ -56,6 +57,7 @@ export interface FatherKid {
   schema: 'fatherhand.recovery-share/v0';
   fatherhand_fingerprint: string;
   fatherhand_generation: number;
+  fatherhand_public_key: PublicJwk;
   recovery_set_id: string;
   lineage_id: string;
   share_index: number;
@@ -63,6 +65,7 @@ export interface FatherKid {
   total: number;
   share_bytes: string;
   share_checksum: string;
+  share_signature: string;
   scope: 'RECOVERY_ONLY';
 }
 
@@ -70,10 +73,12 @@ export interface FatherKidBackup {
   schema: 'fatherhand.kid-backup-share/v0';
   fatherhand_fingerprint: string;
   fatherhand_generation: number;
+  fatherhand_public_key: PublicJwk;
   recovery_set_id: string;
   parent_lineage_id: string;
   parent_share_index: number;
   parent_share_checksum: string;
+  parent_share_signature: string;
   parent_threshold: number;
   parent_total: number;
   backup_set_id: string;
