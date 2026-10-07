@@ -1,10 +1,10 @@
-# PAPERCHAIN-SEED-VAULT-001 — Executable Seed Capsule
+# PAPERCHAIN-SEED-VAULT-001 — Executable Seed Capsule + GERMINATION-002
 
-**Scope:** experimental donor profile exercising unmodified reLATTE WEBZ-003 owner primitives. Not a new chain, token, universal registry or release authority. The donor meaning belongs to LemonPRESS; reLATTE carries an opaque artifact and signs the crossing and recipient receipts.
+**Scope:** experimental donor profile exercising existing reLATTE primitives. Not a new chain, token, universal registry or release authority. LemonPRESS owns the creative donor meaning; reLATTE witnesses opaque crossings, local dispositions, lineage and byte custody.
 
-## First-person reproduction with the actual Seed Vault source
+## Slice A — held seed capsule
 
-After checking out this branch and `npm install`, place the original generated manga PNG and the manuscript text anywhere locally, then:
+Run with the actual source PNG and manuscript:
 
 ```bash
 node --experimental-strip-types scripts/paperchain-seed-vault.mjs \
@@ -13,52 +13,137 @@ node --experimental-strip-types scripts/paperchain-seed-vault.mjs \
   /tmp/paperchain-seed-vault-001
 ```
 
-The output directory **must not already exist**. This is a deliberately first-run-only witness so an operator cannot silently overwrite local custody history. Inspect `witness.json`, `seed-manifest.json`, `seed.carrier.json`, `first-panel-candidate.json`, and the `receiver/` journal and held bytes. Preserve receiver private keys locally; do not commit generated `receiver-key.json` or originals.
+The output root must not already exist.
 
 ```text
-SOURCE PNG + MANUSCRIPT (read & SHA-256 at source)
+SOURCE PNG + MANUSCRIPT
         |
-        +-- original raw bytes REMAIN source-local
+        +-- raw source bytes remain source-local
         v
-LEMONPRESS SEED MANIFEST (<64 KiB)
-  |         |                         |
-  |         +-- source image digest   +-- source manuscript digest
-  v
-reLATTE SIGNED CROSSING (P-256)
-  |
-Local Receiver -> RECEIVE -> HOLD
-  |
-WEBZ-003 separate-process delivery of EXACT MANIFEST BYTES
-  |
-PAYLOAD_BYTES_VERIFIED (same receiver key)
-  |
-Cold replay, retained manifest rehashed
-  |
-PANEL CANDIDATE -- still requires creative production and local admission
+CONTENT-ADDRESSED SEED MANIFEST (<64 KiB)
+        |
+        v
+P-256 SIGNED reLATTE CROSSING
+        |
+        v
+RECEIVE -> HOLD
+        |
+        v
+SEPARATE DESTINATION PROCESS
+verifies exact manifest bytes
+        |
+        v
+PAYLOAD_BYTES_VERIFIED
+        |
+        v
+COLD REPLAY
 ```
 
-## Why a manifest, not a manga PNG?
+The source PNG itself is not claimed as destination-custodied material. Current WEBZ-003 custody is bounded to 64 KiB; the generated manga page is materially larger. The manifest therefore names the source image and manuscript digests without pretending their full bytes crossed.
 
-The example generated manga page is approximately 3.4 MB. Current `receiveMaterialDelivery` and LocalReceiver byte custody are bounded to **64 KiB of material bytes**. Claiming the entire PNG crossed would therefore be false.
+## Slice B — GERMINATION-002
 
-This slice creates a compact, content-addressed seed manifest referencing the original image and manuscript hashes. It does **not** transfer, retain, or independently verify the original image at the destination. Actual PNG ownership, decoding, licensing and receipt of complete page bytes remain separate obligations. The script checks the PNG signature and IHDR dimensions but is not a full image decoder.
+Germination requires a separate literal operator action:
 
-The seed itself has a stable content-derived identity from the two source digests. A fresh cryptographically signed crossing carries its own independent identity; those should not be conflated.
+```bash
+node --experimental-strip-types scripts/paperchain-plant.mjs \
+  /tmp/paperchain-seed-vault-001 \
+  /tmp/paperchain-germination-002 \
+  PLANT
+```
 
-## Gates
+Anything except the exact literal `PLANT` fails before a new garden is created.
 
-- Signed crossing is verified against the reLATTE canonical profile.
-- RECEIVED and R3_HOLD are separate signed receiver events.
-- A distinct local Node process reads the actual seed carrier bytes, hashes them against the signed crossing, signs a `PAYLOAD_BYTES_VERIFIED` receipt, and cold-replays the held payload.
-- The output is **HELD**, not **ADMITTED**. A first-panel candidate is only a proposal, with ancestry and an image region; **no new PNG, world, published manga or descendant crossing is generated**.
-- Original file bytes are not copied to GitHub or public output.
-- Both artifacts are referenced as hashes. A digest alone is not image byte custody.
-- One local filesystem is used; the two processes are not two remote peers, identities or administrators.
+The flow is:
 
-## Next earned slice: GERMINATION-002
+```text
+VERIFIED HELD SEED
+      |
+      | explicit PLANT
+      v
+FRESH PLANTING CROSSING
+parents = [held seed crossing]
+      |
+      v
+GARDEN RECEIVE
+      |
+      v
+LOCAL ADMIT
+      |
+      v
+FIELD PROJECTION
+context only; no authority
+      |
+      v
+OWNER-LOCAL CULTURAL UPTAKE
+explicit preserved / varied / introduced / retired
+      |
+      v
+DETERMINISTIC SVG SEEDLING BYTES
+      |
+      v
+FRESH R10 CULTURAL DESCENDANT CROSSING
+      |
+      v
+NURSERY RECEIVE -> HOLD
+      |
+      v
+EXACT CHILD BYTES VERIFIED + RETAINED
+      |
+      v
+COLD REPLAY
+```
 
-In LemonPRESS, produce a real derivative page/scene from the admitted input, with deterministic or attributable variation and source-region witness. Explicitly record author/receiver selection, then create a **fresh** reLATTE signed crossing naming the parent seed and the new descendant's actual byte digest. Workbench/webZ can expose `INSPECT → HOLD → PLANT` while preventing `PLANT` before local authority and material availability. Add a large-byte custody capability through bounded chunk commitments or verified destination-local retrieval rather than weakening WEBZ-003 limits or treating an unverified hash as delivered bytes.
+The generated SVG is intentionally small enough for current exact-byte custody. It is a fresh visual descendant, not a replacement for the manga source pixels. Its lineage names the admitted planting crossing and preserves the held seed ancestry.
 
-**Acceptance test for this next slice:** from a fresh receiver, verify the actual original/derived PNG bytes; force a HOLD/REFUSE decision; require an explicit separate planting action; show fresh child identity and exact parent reference; close/reopen and reconstruct the same chain; reject corrupted media, altered ancestry and silent auto-admission.
+## Why HOLD does not become ADMIT
 
-`SEED != KEY` · `SOURCE IMAGE REF != SOURCE IMAGE CUSTODY` · `HOLD != PLANT` · `ANCESTRY != AUTHORITY`
+The current LocalReceiver records one durable local disposition per crossing. GERMINATION-002 therefore does **not** mutate an earlier HOLD into ADMIT.
+
+Instead:
+
+```text
+held source crossing
+      !=
+fresh planting crossing
+```
+
+The explicit PLANT action creates a new signed consequential crossing. The garden may admit that fresh act while the seedbank's prior HOLD remains historically true.
+
+This keeps the important law executable:
+
+> **HOLD != PLANT**
+
+## Verification gates
+
+The repository test suite verifies:
+
+- exact literal PLANT is required;
+- held parent crossing and held manifest custody must verify first;
+- changed manifest blocks planting;
+- planting crossing has the held seed crossing as parent;
+- garden produces a signed R3_ADMIT receipt;
+- field projection has no authorization or recommendation power;
+- cultural uptake declares its variation explicitly;
+- descendant crossing is freshly signed and verifies as R10 lineage;
+- descendant payload digest matches the actual generated SVG bytes;
+- another world receives the child as a fresh candidate;
+- nursery HOLD does not imply ADMIT;
+- separate-process WEBZ-003 custody reads, hashes and retains exact child bytes;
+- cold replay reconstructs the same nursery custody.
+
+## Still unearned
+
+This work does **not** prove:
+
+- full original PNG byte custody at the receiving seedbank;
+- remote peer-to-peer network delivery;
+- human/legal identity from signing keys;
+- publication or canonical status;
+- fitness, quality or recommendation of the descendant;
+- a webZ browser PLANT control;
+- LemonPRESS owner adoption of this experimental donor profile.
+
+Large media should gain a separately reviewed chunked or destination-retrieval custody profile rather than weakening current byte bounds.
+
+`SEED != KEY` · `SOURCE IMAGE REF != SOURCE IMAGE CUSTODY` · `HOLD != PLANT` · `ANCESTRY != AUTHORITY` · `DESCENDANT != ANCESTOR`
