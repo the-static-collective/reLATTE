@@ -19,7 +19,8 @@ export type PolyglotSubstrate =
   | 'physical-carrier'
   | 'udp-datagram-swarm'
   | 'midi-event-stream'
-  | 'langton-ant-field';
+  | 'langton-ant-field'
+  | 'minecraft-playthrough';
 
 export type LocalDisposition = 'R3_HOLD' | 'R3_ADMIT' | 'R3_REFUSE' | 'RETURN';
 
