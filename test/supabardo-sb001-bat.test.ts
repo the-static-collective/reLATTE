@@ -72,7 +72,16 @@ async function freshBundle(options: {
     audience_policy: { destination: 'world:sb001-b' },
     return_address: 'supabardo:return:sb001',
     created_at: '2026-10-06T23:32:00.000Z',
-    extensions: { specimen: 'SB-001-BAT' },
+    extensions: {
+      sb001: {
+        source_repository: 'the-static-collective/static-os',
+        source_ref: 'experiment/witness-to-world-crossing-001',
+        source_commit: 'c1f3024e267ecf033e03f7707bcb07e784e1f095',
+        source_path: 'examples/world-receipt.independent-contradiction.json',
+        source_blob_sha: '2b317402c4769319220cd6bc3e5d20c3978dbfbf',
+        claim_limit: 'Executable STATIC-OS software occurrence; not a physical boot witness.',
+      },
+    },
   }, sourceKeys);
 
   const release = await sealReceipt({
