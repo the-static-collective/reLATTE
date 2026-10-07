@@ -23,11 +23,7 @@
     "destination_disposition": null,
     "render_authority": false
   },
-  "destination_choices": [
-    "KEEP",
-    "HOLD",
-    "REFUSE"
-  ],
+  "destination_choices": ["KEEP", "HOLD", "REFUSE"],
   "requested_effect": {
     "destination_disposition": "local",
     "automatic_keep": false,
