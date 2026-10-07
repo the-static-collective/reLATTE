@@ -86,6 +86,18 @@ async function waitForSpawn(bot) {
 async function go(bot, pos, radius) {
   await bot.pathfinder.goto(new GoalNear(pos.x, pos.y, pos.z, radius));
 }
+function inventoryCount(bot, name) {
+  return bot.inventory.items()
+    .filter((item) => item.name === name)
+    .reduce((total, item) => total + item.count, 0);
+}
+async function waitForInventoryIncrease(bot, name, before) {
+  for (let attempt = 0; attempt < 50; attempt += 1) {
+    if (inventoryCount(bot, name) > before) return inventoryCount(bot, name);
+    await sleep(100);
+  }
+  throw new Error('ITEM_PICKUP_NOT_OBSERVED:' + name + ':before=' + before + ':after=' + inventoryCount(bot, name));
+}
 
 async function main() {
   const meta = JSON.parse(await readFile(META_PATH, 'utf8'));
@@ -165,9 +177,26 @@ async function main() {
         if (!block || block.name !== WOOL[nibble]) {
           throw new Error('QUARRY_BLOCK_MISMATCH:' + nibble + ':' + occurrence + ':' + (block && block.name));
         }
+        const inventoryBefore = inventoryCount(bot, block.name);
         await bot.dig(block);
+
+        // Vanilla breaking creates an item entity; breaking is not possession.
+        // Move onto the broken cell and require the inventory to actually grow.
+        await bot.pathfinder.goto(new GoalBlock(target.x, target.y, target.z));
+        const inventoryAfter = await waitForInventoryIncrease(
+          bot,
+          block.name,
+          inventoryBefore,
+        );
+
         mined[nibble] += 1;
-        actions.push({ kind: 'mine', block: block.name, at: target });
+        actions.push({
+          kind: 'mine-and-collect',
+          block: block.name,
+          at: target,
+          inventory_before: inventoryBefore,
+          inventory_after: inventoryAfter,
+        });
       }
     }
 
@@ -252,7 +281,7 @@ async function main() {
         bot_protocol_version: bot.version,
         quarry_payload_independent: true,
         quarry_palette_size: 16,
-        mined_blocks: actions.filter((entry) => entry.kind === 'mine').length,
+        mined_blocks: actions.filter((entry) => entry.kind === 'mine-and-collect').length,
         placed_blocks: placed.length,
         server_verified_blocks: serverVerification.length,
         action_transcript_sha256: hash(actionBytes),
