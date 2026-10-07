@@ -8,6 +8,7 @@ import {
   createParticularConstitution,
   createParticularEventWitness,
   createParticularStateSurface,
+  createParticularStateTransition,
   hasCapability,
   hasWitnessableNamePath,
   replayParticularity,
@@ -52,7 +53,29 @@ test('PARTICULARITY-CRUCIBLE-001: false split does not fracture one particular',
     created_at: '2026-10-07T14:03:00.000Z',
   });
 
-  const projection = replayParticularity([p, stateA, eventE, stateB]);
+  const stateTransition = createParticularStateTransition({
+    from_surface: stateA,
+    to_surface: stateB,
+    created_at: '2026-10-07T14:03:30.000Z',
+  });
+
+  const impostor = createParticularStateSurface({
+    particular_id: p.particular_id,
+    state_id: 'state:impostor',
+    self_surface: 'A-looking-copy',
+    controller_id: 'controller:impostor',
+    accessible_event_ids: ['event:e'],
+    created_at: '2026-10-07T14:03:45.000Z',
+  });
+
+  const projection = replayParticularity([
+    p,
+    stateA,
+    eventE,
+    stateB,
+    stateTransition,
+    impostor,
+  ]);
 
   assert.notEqual(stateA.state_id, stateB.state_id);
   assert.notEqual(stateA.self_surface, stateB.self_surface);
@@ -61,6 +84,10 @@ test('PARTICULARITY-CRUCIBLE-001: false split does not fracture one particular',
   assert.equal(
     statesShareParticular(projection, stateA.surface_id, stateB.surface_id),
     true,
+  );
+  assert.equal(
+    statesShareParticular(projection, stateA.surface_id, impostor.surface_id),
+    false,
   );
   assert.equal(stateCanAccessEvent(projection, stateB.surface_id, 'event:e'), false);
   assert.equal(witnessedEventExists(projection, p.particular_id, 'event:e'), true);
@@ -122,6 +149,12 @@ test('PARTICULARITY-CRUCIBLE-001: authority follows an explicit grant, not samen
     created_at: '2026-10-07T14:22:00.000Z',
   });
 
+  const stateTransition = createParticularStateTransition({
+    from_surface: stateA,
+    to_surface: stateB,
+    created_at: '2026-10-07T14:22:30.000Z',
+  });
+
   const grant = createCapabilityGrant({
     capability_id: 'capability:open-door',
     subject: {
@@ -131,7 +164,13 @@ test('PARTICULARITY-CRUCIBLE-001: authority follows an explicit grant, not samen
     created_at: '2026-10-07T14:23:00.000Z',
   });
 
-  const projection = replayParticularity([p, stateA, stateB, grant]);
+  const projection = replayParticularity([
+    p,
+    stateA,
+    stateB,
+    stateTransition,
+    grant,
+  ]);
 
   assert.equal(
     statesShareParticular(projection, stateA.surface_id, stateB.surface_id),
@@ -325,6 +364,11 @@ test('PARTICULARITY-CRUCIBLE-001: cold replay reconstructs the same answers from
     accessible_event_ids: [],
     created_at: '2026-10-07T15:03:00.000Z',
   });
+  const stateTransition = createParticularStateTransition({
+    from_surface: stateA,
+    to_surface: stateB,
+    created_at: '2026-10-07T15:03:30.000Z',
+  });
   const grant = createCapabilityGrant({
     capability_id: 'capability:cold',
     subject: {
@@ -358,6 +402,7 @@ test('PARTICULARITY-CRUCIBLE-001: cold replay reconstructs the same answers from
     stateA,
     event,
     stateB,
+    stateTransition,
     grant,
     transition,
   ];
