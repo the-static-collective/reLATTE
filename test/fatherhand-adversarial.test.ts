@@ -183,6 +183,13 @@ test('peer trust is temporally bounded on both sides of creation', async () => {
   );
 });
 
+test('operational key handles expose public identity only, never raw private CryptoKey fields', async () => {
+  const op = await createOperationalKey();
+  assert.equal(Object.hasOwn(op, 'private_key'), false);
+  assert.equal(Object.hasOwn(op, 'privateKey'), false);
+  assert.doesNotThrow(() => JSON.stringify(op));
+});
+
 test('operational delegations cannot be valid before they were signed or be born already expired', async () => {
   const father = await createFatherHandGenesis();
   const founder = await createFounderNode(
