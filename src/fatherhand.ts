@@ -961,6 +961,9 @@ export async function verifyFatherHandSuccessionSet(
   if (!Array.isArray(values) || values.length === 0) {
     return { valid: false, code: 'EMPTY_SUCCESSION_SET' };
   }
+  if (values.length > 256) {
+    return { valid: false, code: 'SUCCESSION_SET_LIMIT' };
+  }
 
   const statements: Record<string, any>[] = [];
   const seenIds = new Set<string>();
