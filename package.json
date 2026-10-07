@@ -10,7 +10,8 @@
     "verify": "npm run check && npm test && npm run build"
   },
   "dependencies": {
-    "json-canonicalize": "3.0.1"
+    "json-canonicalize": "3.0.1",
+    "shamir-secret-sharing": "0.0.4"
   },
   "devDependencies": {
     "@types/node": "26.1.2",
