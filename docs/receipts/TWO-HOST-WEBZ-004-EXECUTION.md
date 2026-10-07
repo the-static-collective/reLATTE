@@ -2,8 +2,8 @@
 
 **Status:** first machine-separated **brokered** experimental crossing verified. **Not merged, installed, or a direct sovereign HTTPS endpoint.**  
 **Feature PR:** [reLATTE #64](https://github.com/the-static-collective/reLATTE/pull/64).  
-**Exact source revision under verification:** `7333f01739f8b08cc1da49f088c47f50e49efaab`.  
-**Run:** [GitHub Actions 37578491187](https://github.com/the-static-collective/reLATTE/actions/runs/37578491187), 2026-10-07 UTC.
+**Verified functional source revision:** `28c920235abb7f76ed2e8062c0d58fa4ec1572ce` (later documentation changes only).  
+**Run:** [GitHub Actions 37578744438](https://github.com/the-static-collective/reLATTE/actions/runs/37578744438), 2026-10-07 UTC.
 
 ## What actually happened
 
@@ -28,8 +28,8 @@ The exact source and receipt IDs remain visible in the verifier job log and down
 ### CI checks
 
 - Original full reLATTE `npm run verify` job: **119 passing tests, 0 failed**, including the retained WEBZ-003 contracts and TypeScript build.
-- Additional `node --test test/webz-two-host-004.test.mjs`: **7 passing, 0 failed**, covering independently signer-backed two-parcel transfers, independent byte verification, corrupted carrier bytes/signature denial, missing known schema fields, forged signed custody receipt, same-machine/run collision and key-root publication refusal.
-- Sender job **success** → receiver job **success** → verifier job **success**, all for the same exact source revision. An additional independent push run `37578488896` also passed end-to-end.
+- Additional `node --test test/webz-two-host-004.test.mjs`: **9 passing, 0 failed**, covering independently signer-backed two-parcel transfers, independent byte verification, corrupted carrier bytes/signature denial, missing known schema fields, forged signed custody receipt, same-machine/run collision and key-root publication refusal, plus cold retry of a previously verified handoff returning the **identical signed receipts and unchanged receiver journal**; a foreign runner cannot claim the earlier retry.
+- Sender job **success** → receiver job **success** → verifier job **success**, all for the same exact source revision. An additional independent push run `37578748067` also passed end-to-end.
 
 ### Bounded authority and non-claims
 
