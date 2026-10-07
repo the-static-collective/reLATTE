@@ -322,6 +322,8 @@ export function assertPublicArtifactSafe(value: unknown): void {
   const visit = (node: unknown, depth: number): void => {
     if (depth > 64) throw new Error('PUBLIC_ARTIFACT_DEPTH_LIMIT');
     if (!node || typeof node !== 'object') return;
+    if (node instanceof CryptoKey) throw new Error('PRIVATE_KEY_MATERIAL');
+    if (node instanceof ArrayBuffer || ArrayBuffer.isView(node)) throw new Error('NON_JSON_PUBLIC_ARTIFACT');
     const object = node as object;
     if (active.has(object)) throw new Error('CYCLIC_PUBLIC_ARTIFACT');
     active.add(object);
