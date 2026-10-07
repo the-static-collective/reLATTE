@@ -18,7 +18,8 @@ export type PolyglotSubstrate =
   | 'signed-json'
   | 'physical-carrier'
   | 'udp-datagram-swarm'
-  | 'midi-event-stream';
+  | 'midi-event-stream'
+  | 'langton-ant-field';
 
 export type LocalDisposition = 'R3_HOLD' | 'R3_ADMIT' | 'R3_REFUSE' | 'RETURN';
 
