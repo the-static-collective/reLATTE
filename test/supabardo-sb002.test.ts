@@ -189,9 +189,11 @@ test('BAT refuses EXIT rewriting HOLD as KEEP', async () => {
   await assert.rejects(() => verifySb002Bundle(b), /SB002_EXIT_DISPOSITION_DRIFT/);
 });
 
-test('BAT refuses a different proposal wearing the pinned content address', async () => {
+test('BAT refuses a different valid JSON proposal wearing the pinned content address', async () => {
   const b = await freshBundle();
-  b.proposal_bytes = Buffer.from('not the Toaster proposal\n');
+  const proposal = JSON.parse(Buffer.from(b.proposal_bytes).toString('utf8'));
+  proposal.candidate.title = 'SUBSTITUTED PROPOSAL';
+  b.proposal_bytes = Buffer.from(JSON.stringify(proposal) + '\n');
   await assert.rejects(() => verifySb002Bundle(b), /SB002_PROPOSAL_HASH_MISMATCH/);
 });
 
