@@ -26,4 +26,5 @@ export {
   verifyFatherHandSuccessionSet,
   verifyOperationalDelegation,
   verifyPeerTrust,
+  verifyTrustedPeerOperationalKey,
 } from './fatherhand.ts';
