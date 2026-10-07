@@ -65,6 +65,9 @@ export async function runFatherHandKernel(): Promise<Record<string, any>> {
     throw new Error('SUCCESSION_COLD_VERIFY_FAILED');
   }
 
+  // A successor is not complete until it has its own fresh recovery children.
+  const successorRecovery = await issueRecoverySet(succession.successor, 5, 3);
+
   const transport = await createOperationalKey();
   const delegated = await delegateOperationalKey(
     sanctuary,
@@ -146,6 +149,9 @@ export async function runFatherHandKernel(): Promise<Record<string, any>> {
     succession: {
       old_fingerprint: father0.fingerprint,
       new_fingerprint: succession.successor.fingerprint,
+      fresh_recovery_total: successorRecovery.total,
+      fresh_recovery_threshold: successorRecovery.threshold,
+      fresh_recovery_set_issued: successorRecovery.shares.length === 5,
       new_generation: succession.successor.generation,
       statement_id: succession.statement.statement_id,
       old_and_new_signatures_verified: true,
