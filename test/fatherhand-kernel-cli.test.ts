@@ -23,6 +23,9 @@ test('synthetic FatherHand kernel emits public-only network-free witness', () =>
   assert.equal(report.recovery.two_share_recovery_refused, true);
   assert.equal(report.recovery.child_descendants_recovered_one_lineage, true);
   assert.equal(report.succession.old_and_new_signatures_verified, true);
+  assert.equal(report.succession.fresh_recovery_total, 5);
+  assert.equal(report.succession.fresh_recovery_threshold, 3);
+  assert.equal(report.succession.fresh_recovery_set_issued, true);
   assert.equal(report.operational_delegation.verified, true);
   assert.equal(report.peer_trust.verified, true);
   assert.equal(report.peer_trust.tofu_used, false);
