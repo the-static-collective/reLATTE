@@ -204,6 +204,7 @@ test('FounderNode delegates bounded replaceable operational keys and scope is ex
       founder.fingerprint,
       'webz-peer-https',
       '2026-10-08T00:00:00.000Z',
+      founder.founding_statement,
     ),
     true,
   );
@@ -213,6 +214,7 @@ test('FounderNode delegates bounded replaceable operational keys and scope is ex
       founder.fingerprint,
       'relatte-receiver',
       '2026-10-08T00:00:00.000Z',
+      founder.founding_statement,
     ),
     false,
   );
@@ -222,6 +224,41 @@ test('FounderNode delegates bounded replaceable operational keys and scope is ex
       founder.fingerprint,
       'webz-peer-https',
       '2028-01-01T00:00:00.000Z',
+      founder.founding_statement,
+    ),
+    false,
+  );
+
+  const underAuthorized = await createFounderNode(
+    father,
+    'webz:the-static-collective/under-authorized',
+    ['webz-world-identity'],
+  );
+  await assert.rejects(
+    () => delegateOperationalKey(
+      underAuthorized,
+      op.public_key,
+      'webz-peer-https',
+      {
+        serial: 1,
+        not_before: '2026-10-07T00:00:00.000Z',
+        not_after: '2027-10-07T00:00:00.000Z',
+        endpoint_constraints: [],
+        replaces_fingerprint: null,
+      },
+    ),
+    /FOUNDER_SCOPE_NOT_AUTHORIZED/,
+  );
+
+  const strippedFounding = structuredClone(founder.founding_statement);
+  strippedFounding.scopes = ['webz-world-identity'];
+  assert.equal(
+    await verifyOperationalDelegation(
+      statement,
+      founder.fingerprint,
+      'webz-peer-https',
+      '2026-10-08T00:00:00.000Z',
+      strippedFounding,
     ),
     false,
   );
