@@ -15,3 +15,4 @@ export * from './mortality.ts';
 export * from './pulse.ts';
 export * from './organ.ts';
 export * from './roundtrip.ts';
+export * from './material-delivery.ts';
