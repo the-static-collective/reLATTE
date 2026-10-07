@@ -29,6 +29,48 @@ const RECOVERY_SHARE_SIGNATURE_DOMAIN = 'FatherHand-RecoveryShareSignature-v0|';
 
 const BASE64URL_RE = /^[A-Za-z0-9_-]+$/;
 const HEX64 = /^[a-f0-9]{64}$/;
+const WORLD_ID_RE = /^webz:[a-z0-9][a-z0-9_-]{0,63}(?:\/[a-z0-9][a-z0-9_-]{0,63}){1,3}$/;
+const FOUNDER_SCOPE_ALLOWLIST = new Set([
+  'webz-world-identity',
+  'delegate-operational-peer-keys',
+  'delegate-relatte-receiver-key',
+]);
+const PEER_SCOPE_ALLOWLIST = new Set([
+  'webz-peer-auth',
+  'receive-relatte-crossing',
+]);
+
+function validateWorldId(value: unknown, code = 'INVALID_WORLD_ID'): string {
+  if (typeof value !== 'string' || value.length > 256 || !WORLD_ID_RE.test(value)) throw new Error(code);
+  return value;
+}
+
+function validateClosedScopes(value: unknown, allowed: Set<string>, code: string): string[] {
+  const scopes = assertStringArray(value, code);
+  if (scopes.some((scope) => !allowed.has(scope))) throw new Error(code);
+  return scopes;
+}
+
+function validateEndpointConstraints(scope: string, value: unknown): string[] {
+  const constraints = assertStringList(value, 'INVALID_ENDPOINT_CONSTRAINTS');
+  if (scope !== 'webz-peer-https') return constraints;
+  for (const entry of constraints) {
+    let url: URL;
+    try { url = new URL(entry); }
+    catch { throw new Error('INVALID_ENDPOINT_CONSTRAINTS'); }
+    if (
+      url.protocol !== 'https:' ||
+      url.username !== '' ||
+      url.password !== '' ||
+      url.hash !== '' ||
+      url.search !== '' ||
+      url.hostname === '' ||
+      /[\u0000-\u001f\u007f]/.test(entry) ||
+      url.toString() !== entry
+    ) throw new Error('INVALID_ENDPOINT_CONSTRAINTS');
+  }
+  return constraints;
+}
 
 type PublicJwk = { kty: 'EC'; crv: 'P-256'; x: string; y: string };
 
