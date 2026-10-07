@@ -13,7 +13,7 @@ import {
   verifyFatherHandSuccession,
   verifyOperationalDelegation,
   verifyPeerTrust,
-} from '../src/index.ts';
+} from '../src/fatherhand.ts';
 
 export async function runFatherHandKernel(): Promise<Record<string, any>> {
   const father0 = await createFatherHandGenesis();
