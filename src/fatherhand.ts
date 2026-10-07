@@ -54,8 +54,15 @@ export interface FounderNode {
   world_id: string;
   fingerprint: string;
   public_key: PublicJwk;
-  private_key: CryptoKey;
   founding_statement: Record<string, any>;
+}
+
+const founderNodeSecrets = new WeakMap<FounderNode, CryptoKey>();
+
+function requireFounderNodePrivateKey(founder: FounderNode): CryptoKey {
+  const key = founderNodeSecrets.get(founder);
+  if (!key) throw new Error('FOUNDERNODE_PRIVATE_KEY_UNAVAILABLE');
+  return key;
 }
 
 export interface OperationalKey {
@@ -327,13 +334,14 @@ export async function createFounderNode(
     { statement_id: statement.statement_id, ...foundingBody(statement) },
   );
   assertPublicArtifactSafe(statement);
-  return {
+  const founder: FounderNode = {
     world_id: worldId,
     fingerprint: statement.founder_fingerprint,
     public_key: founderPublic,
-    private_key: keys.privateKey,
     founding_statement: statement,
   };
+  founderNodeSecrets.set(founder, keys.privateKey);
+  return founder;
 }
 
 export async function verifyFatherHandFounding(value: unknown): Promise<boolean> {
@@ -906,7 +914,7 @@ export async function delegateOperationalKey(
     canonicalizeDomainValue(DELEGATION_ID_DOMAIN, delegationBody(statement)),
   );
   statement.signing.signature = await sign(
-    founder.private_key,
+    requireFounderNodePrivateKey(founder),
     DELEGATION_SIGNATURE_DOMAIN,
     { statement_id: statement.statement_id, ...delegationBody(statement) },
   );
