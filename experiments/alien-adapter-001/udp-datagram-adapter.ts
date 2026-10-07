@@ -2,7 +2,7 @@ import dgram from 'node:dgram';
 import { randomUUID } from 'node:crypto';
 
 import { sha256Hex } from '../../src/canonical.ts';
-import { makeObservation, type AdapterObservation } from './common.ts';
+import { makeObservation, type AdapterObservation } from '../polyglot-crossing-001/common.ts';
 
 const PACKET_SCHEMA = 'relatte.alien-udp-packet/v0';
 const MAX_CHUNK = 48;
@@ -131,7 +131,7 @@ function parsePacket(value: Uint8Array): UdpPacket {
     sha256Hex(chunk) !== packet.chunk_sha256
   ) throw new Error('UDP_CHUNK_INTEGRITY');
 
-  const unsigned = {
+  const unsigned: Omit<UdpPacket, 'packet_id'> = {
     schema: PACKET_SCHEMA,
     session_id: packet.session_id as string,
     index: packet.index as number,
