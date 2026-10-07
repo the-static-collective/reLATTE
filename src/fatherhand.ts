@@ -358,11 +358,27 @@ export async function verifyFatherHandFounding(value: unknown): Promise<boolean>
   }
 }
 
+function recoveryShareIdentity(share: FatherKid): Record<string, any> {
+  return {
+    schema: share.schema,
+    fatherhand_fingerprint: share.fatherhand_fingerprint,
+    fatherhand_generation: share.fatherhand_generation,
+    fatherhand_public_key: share.fatherhand_public_key,
+    recovery_set_id: share.recovery_set_id,
+    lineage_id: share.lineage_id,
+    share_index: share.share_index,
+    threshold: share.threshold,
+    total: share.total,
+    share_checksum: share.share_checksum,
+    scope: share.scope,
+  };
+}
+
 function recoveryShareRecord(value: unknown): FatherKid {
   const share = exactKeys(value, [
-    'schema', 'fatherhand_fingerprint', 'fatherhand_generation', 'recovery_set_id',
-    'lineage_id', 'share_index', 'threshold', 'total', 'share_bytes',
-    'share_checksum', 'scope',
+    'schema', 'fatherhand_fingerprint', 'fatherhand_generation', 'fatherhand_public_key',
+    'recovery_set_id', 'lineage_id', 'share_index', 'threshold', 'total', 'share_bytes',
+    'share_checksum', 'share_signature', 'scope',
   ], 'INVALID_RECOVERY_SHARE') as unknown as FatherKid;
   if (
     share.schema !== 'fatherhand.recovery-share/v0' ||
@@ -370,17 +386,34 @@ function recoveryShareRecord(value: unknown): FatherKid {
     !Number.isSafeInteger(share.fatherhand_generation) || share.fatherhand_generation < 0 ||
     !/^fatherhand-recovery-v0:[a-f0-9]{32}$/.test(share.recovery_set_id) ||
     !/^fatherkid-v0:[a-f0-9]{32}$/.test(share.lineage_id) ||
-    !Number.isSafeInteger(share.share_index) || share.share_index < 1 ||
+    !Number.isSafeInteger(share.share_index) || share.share_index < 1 || share.share_index > 255 ||
     !Number.isSafeInteger(share.threshold) || share.threshold < 2 ||
     !Number.isSafeInteger(share.total) || share.total < share.threshold || share.total > 255 ||
-    share.share_index > share.total ||
     typeof share.share_bytes !== 'string' ||
     !HEX64.test(share.share_checksum) ||
+    typeof share.share_signature !== 'string' ||
     share.scope !== 'RECOVERY_ONLY'
   ) throw new Error('INVALID_RECOVERY_SHARE');
+  share.fatherhand_public_key = normalizePublicJwk(share.fatherhand_public_key);
+  if (fatherHandFingerprint(share.fatherhand_public_key) !== share.fatherhand_fingerprint) {
+    throw new Error('RECOVERY_SHARE_FATHERHAND_KEY_MISMATCH');
+  }
   const bytes = toBytes(share.share_bytes, 'INVALID_RECOVERY_SHARE_BYTES');
   if (sha256Hex(bytes) !== share.share_checksum) throw new Error('RECOVERY_SHARE_CHECKSUM_MISMATCH');
+  if (bytes[bytes.length - 1] !== share.share_index) throw new Error('RECOVERY_SHARE_COORDINATE_MISMATCH');
   return { ...share };
+}
+
+async function verifiedRecoveryShare(value: unknown): Promise<FatherKid> {
+  const share = recoveryShareRecord(value);
+  const valid = await verify(
+    share.fatherhand_public_key,
+    RECOVERY_SHARE_SIGNATURE_DOMAIN,
+    recoveryShareIdentity(share),
+    share.share_signature,
+  );
+  if (!valid) throw new Error('INVALID_RECOVERY_SHARE_SIGNATURE');
+  return share;
 }
 
 export async function issueRecoverySet(
@@ -399,25 +432,33 @@ export async function issueRecoverySet(
     exported.fill(0);
   }
   const recoverySetId = randomId('fatherhand-recovery-v0:');
-  const shares = pieces.map((bytes, index): FatherKid => {
+  const shares: FatherKid[] = [];
+  for (const bytes of pieces) {
     const copy = new Uint8Array(bytes);
     const share: FatherKid = {
       schema: 'fatherhand.recovery-share/v0',
       fatherhand_fingerprint: father.fingerprint,
       fatherhand_generation: father.generation,
+      fatherhand_public_key: father.public_key,
       recovery_set_id: recoverySetId,
       lineage_id: randomId('fatherkid-v0:'),
-      share_index: index + 1,
+      share_index: copy[copy.length - 1]!,
       threshold,
       total,
       share_bytes: base64url(copy),
       share_checksum: sha256Hex(copy),
+      share_signature: 'pending',
       scope: 'RECOVERY_ONLY',
     };
+    share.share_signature = await sign(
+      father.private_key,
+      RECOVERY_SHARE_SIGNATURE_DOMAIN,
+      recoveryShareIdentity(share),
+    );
+    shares.push(share);
     copy.fill(0);
     bytes.fill(0);
-    return share;
-  });
+  }
   return { schema: 'fatherhand.recovery-set/v0', recovery_set_id: recoverySetId, threshold, total, shares };
 }
 
@@ -449,7 +490,7 @@ export async function reconstructFatherHand(
   expectedFingerprint: string,
 ): Promise<RecoveredFatherHand> {
   if (!Array.isArray(candidates) || candidates.length === 0) throw new Error('RECOVERY_QUORUM_NOT_MET');
-  const shares = candidates.map(recoveryShareRecord);
+  const shares = await Promise.all(candidates.map((candidate) => verifiedRecoveryShare(candidate)));
   const first = shares[0];
   if (shares.length < first.threshold) throw new Error('RECOVERY_QUORUM_NOT_MET');
   if (new Set(shares.map((x) => x.lineage_id)).size !== shares.length) throw new Error('DUPLICATE_RECOVERY_LINEAGE');
