@@ -342,7 +342,7 @@ async function main() {
       },
     };
 
-    await writeFile(OUTPUT_PATH, JSON.stringify(evidence, null, 2) + '\\n');
+    await writeFile(OUTPUT_PATH, JSON.stringify(evidence, null, 2) + '\n');
   } finally {
     try { bot.quit('experiment complete'); } catch {}
     try { await rcon.send('stop'); } catch {}
