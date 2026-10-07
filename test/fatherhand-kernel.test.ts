@@ -60,6 +60,20 @@ test('3-of-5 FatherKids recover exact FatherHand; 1/2 shares, duplicates, mixed 
     /DUPLICATE_RECOVERY_LINEAGE/,
   );
 
+  const relabeled = structuredClone(set.shares[0]);
+  relabeled.lineage_id = 'fatherkid-v0:' + 'f'.repeat(32);
+  await assert.rejects(
+    () => reconstructFatherHand([relabeled, set.shares[1], set.shares[2]], father.fingerprint),
+    /INVALID_RECOVERY_SHARE_SIGNATURE/,
+  );
+
+  const reindexed = structuredClone(set.shares[0]);
+  reindexed.share_index = reindexed.share_index === 255 ? 254 : reindexed.share_index + 1;
+  await assert.rejects(
+    () => reconstructFatherHand([reindexed, set.shares[1], set.shares[2]], father.fingerprint),
+    /RECOVERY_SHARE_COORDINATE_MISMATCH|INVALID_RECOVERY_SHARE_SIGNATURE/,
+  );
+
   const other = await createFatherHandGenesis();
   const otherSet = await issueRecoverySet(other, 5, 3);
   await assert.rejects(
