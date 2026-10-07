@@ -9,6 +9,7 @@ import {
   createOperationalKey,
   delegateOperationalKey,
   issueRecoverySet,
+  retireFounderNode,
   trustPeerFounder,
   verifyFatherHandSuccession,
   verifyFatherHandSuccessionSet,
@@ -285,6 +286,32 @@ test('peer trust is temporally bounded on both sides of creation', async () => {
       '2000-01-01T00:00:00.000Z',
     ),
     false,
+  );
+});
+
+test('retired FounderNode cannot mint another operational delegation', async () => {
+  const father = await createFatherHandGenesis();
+  const founder = await createFounderNode(
+    father,
+    VALID_WORLD,
+    ['webz-world-identity', 'delegate-operational-peer-keys'],
+  );
+  const op = await createOperationalKey();
+  retireFounderNode(founder);
+  await assert.rejects(
+    () => delegateOperationalKey(
+      founder,
+      op.public_key,
+      'webz-peer-https',
+      {
+        serial: 1,
+        not_before: '2026-10-07T00:00:00.000Z',
+        not_after: '2099-01-01T00:00:00.000Z',
+        endpoint_constraints: ['https://sanctuary.example.invalid'],
+        replaces_fingerprint: null,
+      },
+    ),
+    /FOUNDERNODE_PRIVATE_KEY_UNAVAILABLE/,
   );
 });
 
