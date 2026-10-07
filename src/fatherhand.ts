@@ -498,6 +498,8 @@ function recoveryShareRecord(value: unknown): FatherKid {
     !Number.isSafeInteger(share.threshold) || share.threshold < 2 ||
     !Number.isSafeInteger(share.total) || share.total < share.threshold || share.total > 255 ||
     typeof share.share_bytes !== 'string' ||
+    share.share_bytes.length === 0 ||
+    share.share_bytes.length > 1024 ||
     !HEX64.test(share.share_checksum) ||
     typeof share.share_signature !== 'string' ||
     share.scope !== 'RECOVERY_ONLY'
@@ -613,6 +615,7 @@ export async function reconstructFatherHand(
   expectedFingerprint: string,
 ): Promise<RecoveredFatherHand> {
   if (!Array.isArray(candidates) || candidates.length === 0) throw new Error('RECOVERY_QUORUM_NOT_MET');
+  if (candidates.length > 255) throw new Error('RECOVERY_CANDIDATE_LIMIT');
   const shares = await Promise.all(candidates.map((candidate) => verifiedRecoveryShare(candidate)));
   const first = shares[0];
   if (shares.length < first.threshold) throw new Error('RECOVERY_QUORUM_NOT_MET');
@@ -666,6 +669,9 @@ function kidBackupRecord(value: unknown): FatherKidBackup {
     !Number.isSafeInteger(child.threshold) || child.threshold < 2 ||
     !Number.isSafeInteger(child.total) || child.total < child.threshold || child.total > 255 ||
     !HEX64.test(child.parent_share_checksum) || !HEX64.test(child.fragment_checksum) ||
+    typeof child.fragment_bytes !== 'string' ||
+    child.fragment_bytes.length === 0 ||
+    child.fragment_bytes.length > 1024 ||
     typeof child.parent_share_signature !== 'string' ||
     child.scope !== 'KID_BACKUP_ONLY'
   ) throw new Error('INVALID_KID_BACKUP_SHARE');
@@ -727,6 +733,7 @@ export async function createKidBackupSet(
 
 export async function recoverKidShare(candidates: FatherKidBackup[]): Promise<FatherKid> {
   if (!Array.isArray(candidates) || candidates.length === 0) throw new Error('KID_BACKUP_QUORUM_NOT_MET');
+  if (candidates.length > 255) throw new Error('KID_BACKUP_CANDIDATE_LIMIT');
   const shares = candidates.map(kidBackupRecord);
   const first = shares[0]!;
   if (shares.length < first.threshold) throw new Error('KID_BACKUP_QUORUM_NOT_MET');
