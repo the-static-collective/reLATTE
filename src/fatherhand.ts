@@ -529,23 +529,30 @@ export async function reconstructFatherHand(
 
 function kidBackupRecord(value: unknown): FatherKidBackup {
   const child = exactKeys(value, [
-    'schema', 'fatherhand_fingerprint', 'fatherhand_generation', 'recovery_set_id',
-    'parent_lineage_id', 'parent_share_index', 'parent_share_checksum',
-    'parent_threshold', 'parent_total', 'backup_set_id', 'backup_lineage_id',
-    'fragment_index', 'threshold', 'total', 'fragment_bytes', 'fragment_checksum', 'scope',
+    'schema', 'fatherhand_fingerprint', 'fatherhand_generation', 'fatherhand_public_key',
+    'recovery_set_id', 'parent_lineage_id', 'parent_share_index', 'parent_share_checksum',
+    'parent_share_signature', 'parent_threshold', 'parent_total', 'backup_set_id',
+    'backup_lineage_id', 'fragment_index', 'threshold', 'total', 'fragment_bytes',
+    'fragment_checksum', 'scope',
   ], 'INVALID_KID_BACKUP_SHARE') as unknown as FatherKidBackup;
   if (
     child.schema !== 'fatherhand.kid-backup-share/v0' ||
     !/^fatherkid-backup-v0:[a-f0-9]{32}$/.test(child.backup_set_id) ||
     !/^fatherkid-descendant-v0:[a-f0-9]{32}$/.test(child.backup_lineage_id) ||
-    !Number.isSafeInteger(child.fragment_index) || child.fragment_index < 1 ||
+    !Number.isSafeInteger(child.fragment_index) || child.fragment_index < 1 || child.fragment_index > 255 ||
     !Number.isSafeInteger(child.threshold) || child.threshold < 2 ||
-    !Number.isSafeInteger(child.total) || child.total < child.threshold || child.fragment_index > child.total ||
+    !Number.isSafeInteger(child.total) || child.total < child.threshold || child.total > 255 ||
     !HEX64.test(child.parent_share_checksum) || !HEX64.test(child.fragment_checksum) ||
+    typeof child.parent_share_signature !== 'string' ||
     child.scope !== 'KID_BACKUP_ONLY'
   ) throw new Error('INVALID_KID_BACKUP_SHARE');
+  child.fatherhand_public_key = normalizePublicJwk(child.fatherhand_public_key);
+  if (fatherHandFingerprint(child.fatherhand_public_key) !== child.fatherhand_fingerprint) {
+    throw new Error('KID_BACKUP_FATHERHAND_KEY_MISMATCH');
+  }
   const bytes = toBytes(child.fragment_bytes, 'INVALID_KID_BACKUP_BYTES');
   if (sha256Hex(bytes) !== child.fragment_checksum) throw new Error('KID_BACKUP_CHECKSUM_MISMATCH');
+  if (bytes[bytes.length - 1] !== child.fragment_index) throw new Error('KID_BACKUP_COORDINATE_MISMATCH');
   return { ...child };
 }
 
@@ -554,7 +561,7 @@ export async function createKidBackupSet(
   total = 3,
   threshold = 2,
 ): Promise<FatherKidBackup[]> {
-  const parent = recoveryShareRecord(parentValue);
+  const parent = await verifiedRecoveryShare(parentValue);
   if (!Number.isSafeInteger(total) || !Number.isSafeInteger(threshold) || threshold < 2 || total < threshold || total > 255) {
     throw new Error('INVALID_KID_BACKUP_THRESHOLD');
   }
@@ -566,21 +573,23 @@ export async function createKidBackupSet(
     secret.fill(0);
   }
   const backupSetId = randomId('fatherkid-backup-v0:');
-  return pieces.map((piece, index) => {
+  return pieces.map((piece) => {
     const copy = new Uint8Array(piece);
     const result: FatherKidBackup = {
       schema: 'fatherhand.kid-backup-share/v0',
       fatherhand_fingerprint: parent.fatherhand_fingerprint,
       fatherhand_generation: parent.fatherhand_generation,
+      fatherhand_public_key: parent.fatherhand_public_key,
       recovery_set_id: parent.recovery_set_id,
       parent_lineage_id: parent.lineage_id,
       parent_share_index: parent.share_index,
       parent_share_checksum: parent.share_checksum,
+      parent_share_signature: parent.share_signature,
       parent_threshold: parent.threshold,
       parent_total: parent.total,
       backup_set_id: backupSetId,
       backup_lineage_id: randomId('fatherkid-descendant-v0:'),
-      fragment_index: index + 1,
+      fragment_index: copy[copy.length - 1]!,
       threshold,
       total,
       fragment_bytes: base64url(copy),
@@ -596,7 +605,7 @@ export async function createKidBackupSet(
 export async function recoverKidShare(candidates: FatherKidBackup[]): Promise<FatherKid> {
   if (!Array.isArray(candidates) || candidates.length === 0) throw new Error('KID_BACKUP_QUORUM_NOT_MET');
   const shares = candidates.map(kidBackupRecord);
-  const first = shares[0];
+  const first = shares[0]!;
   if (shares.length < first.threshold) throw new Error('KID_BACKUP_QUORUM_NOT_MET');
   if (new Set(shares.map((x) => x.backup_lineage_id)).size !== shares.length) throw new Error('DUPLICATE_KID_BACKUP_LINEAGE');
   if (new Set(shares.map((x) => x.fragment_index)).size !== shares.length) throw new Error('DUPLICATE_KID_BACKUP_INDEX');
@@ -605,10 +614,12 @@ export async function recoverKidShare(candidates: FatherKidBackup[]): Promise<Fa
     if (
       item.backup_set_id !== first.backup_set_id ||
       item.fatherhand_fingerprint !== first.fatherhand_fingerprint ||
+      JSON.stringify(item.fatherhand_public_key) !== JSON.stringify(first.fatherhand_public_key) ||
       item.fatherhand_generation !== first.fatherhand_generation ||
       item.recovery_set_id !== first.recovery_set_id ||
       item.parent_share_index !== first.parent_share_index ||
       item.parent_share_checksum !== first.parent_share_checksum ||
+      item.parent_share_signature !== first.parent_share_signature ||
       item.parent_threshold !== first.parent_threshold ||
       item.parent_total !== first.parent_total ||
       item.threshold !== first.threshold ||
@@ -624,10 +635,11 @@ export async function recoverKidShare(candidates: FatherKidBackup[]): Promise<Fa
   }
   try {
     if (sha256Hex(recovered) !== first.parent_share_checksum) throw new Error('RECOVERED_KID_SHARE_CHECKSUM_MISMATCH');
-    return recoveryShareRecord({
+    return await verifiedRecoveryShare({
       schema: 'fatherhand.recovery-share/v0',
       fatherhand_fingerprint: first.fatherhand_fingerprint,
       fatherhand_generation: first.fatherhand_generation,
+      fatherhand_public_key: first.fatherhand_public_key,
       recovery_set_id: first.recovery_set_id,
       lineage_id: first.parent_lineage_id,
       share_index: first.parent_share_index,
@@ -635,6 +647,7 @@ export async function recoverKidShare(candidates: FatherKidBackup[]): Promise<Fa
       total: first.parent_total,
       share_bytes: base64url(recovered),
       share_checksum: first.parent_share_checksum,
+      share_signature: first.parent_share_signature,
       scope: 'RECOVERY_ONLY',
     });
   } finally {
