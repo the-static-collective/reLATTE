@@ -541,7 +541,7 @@ async function main() {
         bot_was_op: true,
         fixed_blueprint: false,
         generative_grammar: true,
-        bounded_command_surface: ['fill', 'setblock', 'summon'],
+        bounded_command_surface: ['fill', 'setblock'],
       },
     );
 
