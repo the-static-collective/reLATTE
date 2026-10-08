@@ -1,0 +1,32 @@
+{
+  "schema": "relatte.composition-instance-manifest/v0",
+  "experiment": "COMPOSITION-INSTANCE-001",
+  "governing_snapshot": {
+    "core_commit": "f5cb7488bebc1a6e27fd458ad40af9b9b6f9e858",
+    "normative_src_tree": "c0e4d2c59481e0fb2a4bf4bb294f373907fd2b76",
+    "permanent_freeze": false
+  },
+  "lifecycle": {
+    "instance_disposition": "R3_ADMIT",
+    "result_disposition": "R3_HOLD",
+    "distinct_observer_required": true,
+    "self_admission_forbidden": true
+  },
+  "first_runtime": "minecraft-vanilla-26.1.1",
+  "future_runtimes": [
+    "wasm",
+    "container",
+    "qemu",
+    "python",
+    "static-os",
+    "lemonpress"
+  ],
+  "laws": [
+    "INSTANCE ADMISSION != RESULT ADMISSION",
+    "EXECUTION != ADMISSION",
+    "AUTHOR != OBSERVER",
+    "PLAN != OBSERVED STATE",
+    "COMPOSITION != SELF-ADMISSION",
+    "SNAPSHOT != FREEZE"
+  ]
+}
