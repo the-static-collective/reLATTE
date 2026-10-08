@@ -1,4 +1,6 @@
 import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
+import { rconSeedSucceeded } from '../vanilla-worldbuilder-006/server-effect-verifier.mjs';
 import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 
@@ -114,9 +116,9 @@ async function waitForInventoryIncrease(bot, name, before) {
   throw new Error('ITEM_PICKUP_NOT_OBSERVED:' + name + ':before=' + before + ':after=' + inventoryCount(bot, name));
 }
 
-async function main() {
+export async function* vanillaStages(payload = PAYLOAD) {
   const meta = JSON.parse(await readFile(META_PATH, 'utf8'));
-  const frame = framePayload(PAYLOAD);
+  const frame = framePayload(payload);
   const nibbles = toNibbles(frame);
   const counts = new Array(16).fill(0);
   for (const nibble of nibbles) counts[nibble] += 1;
@@ -156,7 +158,7 @@ async function main() {
     const response = await rcon.send(
       'execute if block ' + target.x + ' ' + target.y + ' ' + target.z + ' ' + expected + ' run seed'
     );
-    if (/fail|unknown|not found/i.test(String(response))) {
+    if (!rconSeedSucceeded(response)) {
       throw new Error('QUARRY_PREVERIFY_FAILED:' + nibble + ':' + response);
     }
   }
@@ -180,6 +182,8 @@ async function main() {
 
     await send('tp ' + BOT_NAME + ' 0 ' + Y + ' 0');
     await sleep(1500);
+
+    yield { phase: 'client-connected', bytes: payload, native: { bot: BOT_NAME, version: bot.version, server: meta, preparation: prep } };
 
     const actions = [];
     const mined = new Array(16).fill(0);
@@ -245,6 +249,8 @@ async function main() {
       actions.push({ kind: 'place', block: after.name, at: target });
     }
 
+    yield { phase: 'world-mutated', bytes: payload, native: { actions, placed, action_digest: hash(Buffer.from(JSON.stringify(actions))) } };
+
     const recoveredNibbles = placed.map((name) => {
       const index = WOOL.indexOf(name);
       if (index < 0) throw new Error('UNKNOWN_WALL_BLOCK');
@@ -255,7 +261,9 @@ async function main() {
       recoveredFrame[i] = (recoveredNibbles[i * 2] << 4) | recoveredNibbles[i * 2 + 1];
     }
     const recovered = parseFrame(recoveredFrame);
-    if (!recovered.equals(PAYLOAD)) throw new Error('BOT_RECONSTRUCTION_MISMATCH');
+    if (!recovered.equals(payload)) throw new Error('BOT_RECONSTRUCTION_MISMATCH');
+
+    yield { phase: 'world-observed', bytes: recovered, native: { placed, frame_digest: hash(recoveredFrame) } };
 
     const serverVerification = [];
     for (let index = 0; index < nibbles.length; index += 1) {
@@ -264,7 +272,7 @@ async function main() {
       const response = await rcon.send(
         'execute if block ' + target.x + ' ' + target.y + ' ' + target.z + ' ' + expected + ' run seed'
       );
-      if (/fail|unknown|not found/i.test(String(response))) {
+      if (!rconSeedSucceeded(response)) {
         throw new Error('SERVER_BLOCK_VERIFY_FAILED:' + index + ':' + response);
       }
       serverVerification.push({ index, at: target, expected, response });
@@ -303,58 +311,7 @@ async function main() {
       },
     );
 
-    const hop = await makePolyglotHop({
-      observation,
-      signer: await generateP256KeyPair(),
-      receiver: await generateP256KeyPair(),
-      parent_crossing_id: null,
-      disposition: 'R3_HOLD',
-      hop_index: 11,
-    });
-    verifyHopBinding(hop, PAYLOAD);
-    if (!(await verifyCrossingEnvelope(hop.crossing))) throw new Error('VANILLA_CROSSING_INVALID');
-    if (!(await verifyReceipt(hop.receipt))) throw new Error('VANILLA_RECEIPT_INVALID');
-
-    const evidence = {
-      schema: 'relatte.minecraft-vanilla-005-evidence/v0',
-      frozen_core_sha: FROZEN_CORE_SHA,
-      version: meta,
-      bot: {
-        username: BOT_NAME,
-        version: bot.version,
-        mineflayer_version: require('mineflayer/package.json').version,
-      },
-      payload_utf8: PAYLOAD.toString('utf8'),
-      payload_sha256: hash(PAYLOAD),
-      frame_bytes: frame.length,
-      wool_blocks: nibbles.length,
-      generic_quarry_counts: counts,
-      action_transcript_sha256: hash(actionBytes),
-      final_wall_sha256: hash(wallBytes),
-      server_verified_blocks: serverVerification.length,
-      actions,
-      server_verification: serverVerification,
-      observation: {
-        substrate: observation.substrate,
-        native_id: observation.native_id,
-        content_sha256: observation.content_sha256,
-        native_claims: observation.native_claims,
-      },
-      crossing: hop.crossing,
-      receipt: hop.receipt,
-      claims: {
-        official_vanilla_server_runtime: 'OBSERVED',
-        real_protocol_client_join: 'OBSERVED',
-        in_world_mining: 'OBSERVED',
-        in_world_inventory_use: 'OBSERVED',
-        in_world_block_placement: 'OBSERVED',
-        server_side_final_block_verification: 'OBSERVED',
-        human_player: 'UNOBSERVED',
-        multiplayer_independent_administration: 'UNOBSERVED',
-      },
-    };
-
-    await writeFile(OUTPUT_PATH, JSON.stringify(evidence, null, 2) + '\n');
+    yield { phase: 'server-verified', bytes: recovered, observation, native: { serverVerification, actions, placed, meta, frame_bytes: frame.length, generic_quarry_counts: counts, bot: { username: BOT_NAME, version: bot.version, mineflayer_version: require('mineflayer/package.json').version } } };
   } finally {
     try { bot.quit('experiment complete'); } catch {}
     try { await rcon.send('stop'); } catch {}
@@ -362,7 +319,35 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  process.stderr.write(String(error && (error.stack || error)) + '\\n');
-  process.exitCode = 1;
-});
+async function main() {
+  let result;
+  for await (const stage of vanillaStages()) result = stage;
+  const hop = await makePolyglotHop({ observation: result.observation,
+    signer: await generateP256KeyPair(), receiver: await generateP256KeyPair(),
+    parent_crossing_id: null, disposition: 'R3_HOLD', hop_index: 11 });
+  verifyHopBinding(hop, PAYLOAD);
+  if (!(await verifyCrossingEnvelope(hop.crossing))) throw new Error('VANILLA_CROSSING_INVALID');
+  if (!(await verifyReceipt(hop.receipt))) throw new Error('VANILLA_RECEIPT_INVALID');
+  const { meta, actions, placed, serverVerification } = result.native;
+  const evidence = {
+    schema: 'relatte.minecraft-vanilla-005-evidence/v0', frozen_core_sha: FROZEN_CORE_SHA,
+    version: meta, payload_utf8: PAYLOAD.toString('utf8'), payload_sha256: hash(PAYLOAD),
+    bot: result.native.bot, frame_bytes: result.native.frame_bytes,
+    generic_quarry_counts: result.native.generic_quarry_counts,
+    action_transcript_sha256: result.observation.native_claims.action_transcript_sha256,
+    final_wall_sha256: result.observation.native_claims.final_wall_sha256,
+    wool_blocks: placed.length, server_verified_blocks: serverVerification.length,
+    actions, server_verification: serverVerification,
+    observation: { substrate: result.observation.substrate, native_id: result.observation.native_id,
+      content_sha256: result.observation.content_sha256, native_claims: result.observation.native_claims },
+    crossing: hop.crossing, receipt: hop.receipt,
+    claims: { official_vanilla_server_runtime: 'OBSERVED', real_protocol_client_join: 'OBSERVED',
+      in_world_mining: 'OBSERVED', in_world_inventory_use: 'OBSERVED',
+      in_world_block_placement: 'OBSERVED', server_side_final_block_verification: 'OBSERVED',
+      human_player: 'UNOBSERVED', multiplayer_independent_administration: 'UNOBSERVED' },
+  };
+  await writeFile(OUTPUT_PATH, JSON.stringify(evidence, null, 2) + '\n');
+}
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch(error => { process.stderr.write(String(error.stack || error) + '\n'); process.exitCode = 1; });
+}

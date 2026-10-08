@@ -1,0 +1,65 @@
+{
+  "schema": "relatte.interface-particular.experimental/v0",
+  "interface_id": "interface:22c196aa",
+  "participant_ref": "participant:midi",
+  "plane": "transport",
+  "direction": "bidirectional",
+  "protocol": "in-process/v0",
+  "accepts": [
+    "reconstructed.bytes"
+  ],
+  "emits": [
+    "reconstructed.bytes"
+  ],
+  "operations": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ],
+  "authority": {
+    "observe": true,
+    "propose": true,
+    "authorize": false,
+    "mutate": false
+  },
+  "information": {
+    "capacity": 1048576,
+    "capacity_unit": "payload-bytes",
+    "timing_model": "event ticks",
+    "ordering": "ordered",
+    "delivery": "bounded local observation",
+    "loss_profile": [],
+    "native_dimensions": [
+      "tempo",
+      "note_event_count",
+      "last_tick"
+    ]
+  },
+  "state": {
+    "retention": "transient",
+    "replayable": true
+  },
+  "evidence": {
+    "produces": [
+      "native receipt"
+    ],
+    "verification": [
+      "binding-local verification"
+    ],
+    "source_ref": "alien-midi-002 decodePayloadFromMidi"
+  },
+  "constraints": {
+    "required": [],
+    "forbidden": [
+      "authorize"
+    ]
+  },
+  "live": true,
+  "capabilities": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ]
+}

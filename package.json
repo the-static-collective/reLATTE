@@ -11,13 +11,16 @@
     "trust:mutations": "node --experimental-strip-types scripts/foundation-of-trust-mutations.mjs",
     "trust:replay": "node --experimental-strip-types scripts/foundation-of-trust-replay.mjs",
     "bootstrap:replay": "node --experimental-strip-types scripts/trust-bootstrap-specimen.mjs",
-    "sovereign:replay": "node --experimental-strip-types scripts/sovereign-bootstrap-external-replay.mjs"
+    "sovereign:replay": "node --experimental-strip-types scripts/sovereign-bootstrap-external-replay.mjs",
+    "superspace:test": "node --test experiments/interface-superspace-001/tests/*.test.mjs",
+    "superspace:proof": "node experiments/interface-superspace-001/run.mjs"
   },
   "dependencies": {
     "json-canonicalize": "3.0.1"
   },
   "devDependencies": {
     "@types/node": "26.1.2",
+    "ajv": "8.17.1",
     "typescript": "7.0.2"
   }
 }

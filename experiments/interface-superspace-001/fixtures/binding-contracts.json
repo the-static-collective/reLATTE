@@ -1,0 +1,954 @@
+{
+  "binding:fa10fbca": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:fa10fbca",
+    "source": "interface:a22ebc7d",
+    "destination": "interface:58bfd504",
+    "kind": "transform",
+    "consumes": "request.json",
+    "produces": "process.stdin.json",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "json-object"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:fa10fbca",
+    "verification_ref": "verification:fa10fbca"
+  },
+  "binding:44ec4d63": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:44ec4d63",
+    "source": "interface:58bfd504",
+    "destination": "interface:7e43de3c",
+    "kind": "transform",
+    "consumes": "process.stdin.json",
+    "produces": "bounded.analysis.result",
+    "operation": "observe",
+    "preconditions": [
+      "json-object"
+    ],
+    "postconditions": [
+      "exit-zero",
+      "manifest-result"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": false,
+      "semantics": false,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": false,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": "observe"
+    },
+    "binding_ref": "binding:44ec4d63",
+    "verification_ref": "verification:44ec4d63"
+  },
+  "binding:98185823": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:98185823",
+    "source": "interface:7e43de3c",
+    "destination": "interface:cac6a02c",
+    "kind": "transform",
+    "consumes": "bounded.analysis.result",
+    "produces": "process.stdout.json",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "stdout-json"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": false,
+      "semantics": false,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": false,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:98185823",
+    "verification_ref": "verification:98185823"
+  },
+  "binding:633cb8ea": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:633cb8ea",
+    "source": "interface:cac6a02c",
+    "destination": "interface:4aa9770c",
+    "kind": "transform",
+    "consumes": "process.stdout.json",
+    "produces": "content.addressed.bytes",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "content-addressed",
+      "ordered"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": false,
+      "semantics": false,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": false,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:633cb8ea",
+    "verification_ref": "verification:633cb8ea"
+  },
+  "binding:76f8d4c7": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:76f8d4c7",
+    "source": "interface:4aa9770c",
+    "destination": "interface:7c63c65b",
+    "kind": "transform",
+    "consumes": "content.addressed.bytes",
+    "produces": "adapter.observation",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "observed"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:76f8d4c7",
+    "verification_ref": "verification:76f8d4c7"
+  },
+  "binding:7587669c": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:7587669c",
+    "source": "interface:808b5966",
+    "destination": "interface:a14ff53b",
+    "kind": "transform",
+    "consumes": "payload.bytes",
+    "produces": "indexed.fragments",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "indexed"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:7587669c",
+    "verification_ref": "verification:7587669c"
+  },
+  "binding:6dfa4fbc": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:6dfa4fbc",
+    "source": "interface:a14ff53b",
+    "destination": "interface:6b81689c",
+    "kind": "transform",
+    "consumes": "indexed.fragments",
+    "produces": "sent.datagrams",
+    "operation": "transmit",
+    "preconditions": [
+      "indexed"
+    ],
+    "postconditions": [
+      "unordered",
+      "duplicates"
+    ],
+    "removes": [
+      "ordered"
+    ],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": false,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": true,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": "transmit"
+    },
+    "binding_ref": "binding:6dfa4fbc",
+    "verification_ref": "verification:6dfa4fbc"
+  },
+  "binding:1c346edd": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:1c346edd",
+    "source": "interface:6b81689c",
+    "destination": "interface:496d5e78",
+    "kind": "transform",
+    "consumes": "sent.datagrams",
+    "produces": "received.datagrams",
+    "operation": "receive",
+    "preconditions": [],
+    "postconditions": [
+      "arrivals"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": true,
+      "live_participant": true,
+      "local_state": true,
+      "witness": null,
+      "authority": "receive"
+    },
+    "binding_ref": "binding:1c346edd",
+    "verification_ref": "verification:1c346edd"
+  },
+  "binding:bf022374": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:bf022374",
+    "source": "interface:496d5e78",
+    "destination": "interface:b855e724",
+    "kind": "transform",
+    "consumes": "received.datagrams",
+    "produces": "reassembled.bytes",
+    "operation": "observe",
+    "preconditions": [
+      "indexed",
+      "arrivals"
+    ],
+    "postconditions": [
+      "ordered",
+      "complete"
+    ],
+    "removes": [
+      "unordered"
+    ],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": true,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:bf022374",
+    "verification_ref": "verification:bf022374"
+  },
+  "binding:29590871": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:29590871",
+    "source": "interface:b855e724",
+    "destination": "interface:7c63c65b",
+    "kind": "transform",
+    "consumes": "reassembled.bytes",
+    "produces": "adapter.observation",
+    "operation": "observe",
+    "preconditions": [
+      "complete"
+    ],
+    "postconditions": [
+      "observed"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:29590871",
+    "verification_ref": "verification:29590871"
+  },
+  "binding:87a6d533": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:87a6d533",
+    "source": "interface:808b5966",
+    "destination": "interface:48d87021",
+    "kind": "transform",
+    "consumes": "payload.bytes",
+    "produces": "smf.events",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "ordered",
+      "timed-events"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:87a6d533",
+    "verification_ref": "verification:87a6d533"
+  },
+  "binding:19f077e2": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:19f077e2",
+    "source": "interface:48d87021",
+    "destination": "interface:f541ca2d",
+    "kind": "observe",
+    "consumes": "smf.events",
+    "produces": "observed.smf.events",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "event-evidence"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": true,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:19f077e2",
+    "verification_ref": "verification:19f077e2"
+  },
+  "binding:0614dc14": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:0614dc14",
+    "source": "interface:f541ca2d",
+    "destination": "interface:22c196aa",
+    "kind": "transform",
+    "consumes": "observed.smf.events",
+    "produces": "reconstructed.bytes",
+    "operation": "observe",
+    "preconditions": [
+      "ordered",
+      "timed-events",
+      "event-evidence"
+    ],
+    "postconditions": [
+      "complete"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": true,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:0614dc14",
+    "verification_ref": "verification:0614dc14"
+  },
+  "binding:36ca7a44": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:36ca7a44",
+    "source": "interface:22c196aa",
+    "destination": "interface:7c63c65b",
+    "kind": "transform",
+    "consumes": "reconstructed.bytes",
+    "produces": "adapter.observation",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "observed"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:36ca7a44",
+    "verification_ref": "verification:36ca7a44"
+  },
+  "binding:2c268110": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:2c268110",
+    "source": "interface:808b5966",
+    "destination": "interface:a7bb41d8",
+    "kind": "transform",
+    "consumes": "payload.bytes",
+    "produces": "file.bytes",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "ordered"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": "observe"
+    },
+    "binding_ref": "binding:2c268110",
+    "verification_ref": "verification:2c268110"
+  },
+  "binding:9aa83289": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:9aa83289",
+    "source": "interface:a7bb41d8",
+    "destination": "interface:7c63c65b",
+    "kind": "transform",
+    "consumes": "file.bytes",
+    "produces": "adapter.observation",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "observed"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:9aa83289",
+    "verification_ref": "verification:9aa83289"
+  },
+  "binding:2d4a29ae": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:2d4a29ae",
+    "source": "interface:808b5966",
+    "destination": "interface:3865f52d",
+    "kind": "transform",
+    "consumes": "payload.bytes",
+    "produces": "http.representation",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "ordered",
+      "representation-observed"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": true,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": "transmit"
+    },
+    "binding_ref": "binding:2d4a29ae",
+    "verification_ref": "verification:2d4a29ae"
+  },
+  "binding:62060425": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:62060425",
+    "source": "interface:3865f52d",
+    "destination": "interface:7c63c65b",
+    "kind": "transform",
+    "consumes": "http.representation",
+    "produces": "adapter.observation",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "observed"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:62060425",
+    "verification_ref": "verification:62060425"
+  },
+  "binding:77838ac6": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:77838ac6",
+    "source": "interface:808b5966",
+    "destination": "interface:c5c3029a",
+    "kind": "transform",
+    "consumes": "payload.bytes",
+    "produces": "reduced.bytes",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "ordered",
+      "descendant"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": false,
+      "semantics": false,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [
+      "bytes",
+      "semantics",
+      "source-representation",
+      "reversibility"
+    ],
+    "reversible": false,
+    "loss_cost": 1,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:77838ac6",
+    "verification_ref": "verification:77838ac6"
+  },
+  "binding:f681c659": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:f681c659",
+    "source": "interface:c5c3029a",
+    "destination": "interface:7c63c65b",
+    "kind": "transform",
+    "consumes": "reduced.bytes",
+    "produces": "adapter.observation",
+    "operation": "observe",
+    "preconditions": [],
+    "postconditions": [
+      "observed"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:f681c659",
+    "verification_ref": "verification:f681c659"
+  },
+  "binding:7f0491b8": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:7f0491b8",
+    "source": "interface:7c63c65b",
+    "destination": "interface:e471e59e",
+    "kind": "cross",
+    "consumes": "adapter.observation",
+    "produces": "relatte.observation",
+    "operation": "observe",
+    "preconditions": [
+      "observed"
+    ],
+    "postconditions": [
+      "crossing-verified",
+      "receiver-local"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:7f0491b8",
+    "verification_ref": "verification:7f0491b8"
+  },
+  "binding:412423b6": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:412423b6",
+    "source": "interface:808b5966",
+    "destination": "interface:ec2d7d86",
+    "kind": "transform",
+    "consumes": "payload.bytes",
+    "produces": "client.connected",
+    "operation": "configure",
+    "preconditions": [],
+    "postconditions": [
+      "client-live"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": true,
+      "live_participant": true,
+      "local_state": true,
+      "witness": "server-verifier",
+      "authority": "mutate"
+    },
+    "binding_ref": "binding:412423b6",
+    "verification_ref": "verification:412423b6"
+  },
+  "binding:55cf189f": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:55cf189f",
+    "source": "interface:ec2d7d86",
+    "destination": "interface:380ebcdc",
+    "kind": "transform",
+    "consumes": "client.connected",
+    "produces": "world.mutated",
+    "operation": "mutate",
+    "preconditions": [
+      "client-live"
+    ],
+    "postconditions": [
+      "mutated"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": true,
+      "live_participant": true,
+      "local_state": true,
+      "witness": "server-verifier",
+      "authority": "mutate"
+    },
+    "binding_ref": "binding:55cf189f",
+    "verification_ref": "verification:55cf189f"
+  },
+  "binding:5479360b": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:5479360b",
+    "source": "interface:380ebcdc",
+    "destination": "interface:7371604b",
+    "kind": "transform",
+    "consumes": "world.mutated",
+    "produces": "world.observed",
+    "operation": "observe",
+    "preconditions": [
+      "mutated"
+    ],
+    "postconditions": [
+      "world-observed"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": true,
+      "live_participant": true,
+      "local_state": true,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:5479360b",
+    "verification_ref": "verification:5479360b"
+  },
+  "binding:79d7ee27": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:79d7ee27",
+    "source": "interface:7371604b",
+    "destination": "interface:6e80a889",
+    "kind": "verify",
+    "consumes": "world.observed",
+    "produces": "adapter.observation",
+    "operation": "observe",
+    "preconditions": [
+      "world-observed"
+    ],
+    "postconditions": [
+      "observed",
+      "ordered"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": true,
+      "live_participant": true,
+      "local_state": true,
+      "witness": "server-verifier",
+      "authority": null
+    },
+    "binding_ref": "binding:79d7ee27",
+    "verification_ref": "verification:79d7ee27"
+  },
+  "binding:f156e960": {
+    "schema": "relatte.interface-relation.experimental/v0",
+    "relation_id": "relation:f156e960",
+    "source": "interface:6e80a889",
+    "destination": "interface:e471e59e",
+    "kind": "cross",
+    "consumes": "adapter.observation",
+    "produces": "relatte.observation",
+    "operation": "observe",
+    "preconditions": [
+      "observed"
+    ],
+    "postconditions": [
+      "crossing-verified",
+      "receiver-local"
+    ],
+    "removes": [],
+    "preserves": {
+      "bytes": true,
+      "semantics": true,
+      "ancestry": true,
+      "order": true,
+      "timing": false,
+      "particular_identity": false
+    },
+    "may_lose": [],
+    "reversible": true,
+    "loss_cost": 0,
+    "requires": {
+      "network": false,
+      "live_participant": true,
+      "local_state": false,
+      "witness": null,
+      "authority": null
+    },
+    "binding_ref": "binding:f156e960",
+    "verification_ref": "verification:f156e960"
+  }
+}

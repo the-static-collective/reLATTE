@@ -1,0 +1,18 @@
+{
+  "schema": "ghot.external-adapter-manifest/v0",
+  "adapter_id": "tranchnose.field-lab",
+  "capabilities": [
+    {
+      "capability": "analysis.tranchnose.field-lab",
+      "protocol": "stdin-json/stdout-json-v0",
+      "command": "python3",
+      "args": ["field_lab_adapter.py"],
+      "timeout_seconds": 10,
+      "limits": {
+        "network": false,
+        "arbitrary_shell": false,
+        "writes_only_requested_output_dir": false
+      }
+    }
+  ]
+}

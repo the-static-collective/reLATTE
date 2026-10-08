@@ -1,0 +1,64 @@
+{
+  "schema": "relatte.interface-particular.experimental/v0",
+  "interface_id": "interface:7c63c65b",
+  "participant_ref": "participant:carrier",
+  "plane": "witness",
+  "direction": "output",
+  "protocol": "in-process/v0",
+  "accepts": [
+    "adapter.observation"
+  ],
+  "emits": [
+    "adapter.observation"
+  ],
+  "operations": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ],
+  "authority": {
+    "observe": true,
+    "propose": true,
+    "authorize": false,
+    "mutate": false
+  },
+  "information": {
+    "capacity": 1048576,
+    "capacity_unit": "payload-bytes",
+    "timing_model": "occurrence time",
+    "ordering": "ordered",
+    "delivery": "bounded local observation",
+    "loss_profile": [],
+    "native_dimensions": [
+      "native particular",
+      "content digest"
+    ]
+  },
+  "state": {
+    "retention": "transient",
+    "replayable": true
+  },
+  "evidence": {
+    "produces": [
+      "native receipt"
+    ],
+    "verification": [
+      "binding-local verification"
+    ],
+    "source_ref": "polyglot-crossing-001 common.ts"
+  },
+  "constraints": {
+    "required": [],
+    "forbidden": [
+      "authorize"
+    ]
+  },
+  "live": true,
+  "capabilities": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ]
+}

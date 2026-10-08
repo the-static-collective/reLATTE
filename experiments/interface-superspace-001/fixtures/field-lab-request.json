@@ -1,0 +1,18 @@
+{
+  "experiment": "robotics.r001.body-morphology",
+  "particular_packet": {
+    "packet_id": "interface-superspace:001"
+  },
+  "current_field": {
+    "body": "light_rigid"
+  },
+  "perturbation": {
+    "body": "heavy_compliant"
+  },
+  "declared_invariants": [
+    "controller",
+    "challenge",
+    "dt",
+    "steps"
+  ]
+}

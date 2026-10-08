@@ -1,0 +1,255 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "relatte.interface-particular.experimental/v0"
+    },
+    "interface_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "participant_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "plane": {
+      "enum": [
+        "electronic",
+        "coordination",
+        "field",
+        "body",
+        "environment",
+        "witness",
+        "history",
+        "transport"
+      ]
+    },
+    "direction": {
+      "enum": [
+        "input",
+        "output",
+        "bidirectional"
+      ]
+    },
+    "protocol": {
+      "type": "string",
+      "minLength": 1
+    },
+    "accepts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "emits": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "authority": {
+      "type": "object",
+      "properties": {
+        "observe": {
+          "type": "boolean"
+        },
+        "propose": {
+          "type": "boolean"
+        },
+        "authorize": {
+          "type": "boolean"
+        },
+        "mutate": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "observe",
+        "propose",
+        "authorize",
+        "mutate"
+      ],
+      "additionalProperties": false
+    },
+    "information": {
+      "type": "object",
+      "properties": {
+        "capacity": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "capacity_unit": {
+          "enum": [
+            "payload-bytes"
+          ]
+        },
+        "timing_model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ordering": {
+          "enum": [
+            "ordered",
+            "unordered",
+            "not-applicable"
+          ]
+        },
+        "delivery": {
+          "type": "string",
+          "minLength": 1
+        },
+        "loss_profile": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "native_dimensions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "capacity",
+        "capacity_unit",
+        "timing_model",
+        "ordering",
+        "delivery",
+        "loss_profile",
+        "native_dimensions"
+      ],
+      "additionalProperties": false
+    },
+    "state": {
+      "type": "object",
+      "properties": {
+        "retention": {
+          "enum": [
+            "none",
+            "transient",
+            "persistent",
+            "latent",
+            "relational"
+          ]
+        },
+        "replayable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "retention",
+        "replayable"
+      ],
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "produces": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "verification": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "source_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "produces",
+        "verification",
+        "source_ref"
+      ],
+      "additionalProperties": false
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "forbidden": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "required",
+        "forbidden"
+      ],
+      "additionalProperties": false
+    },
+    "live": {
+      "type": "boolean"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema",
+    "interface_id",
+    "participant_ref",
+    "plane",
+    "direction",
+    "protocol",
+    "accepts",
+    "emits",
+    "operations",
+    "authority",
+    "information",
+    "state",
+    "evidence",
+    "constraints",
+    "live",
+    "capabilities"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,67 @@
+{
+  "schema": "relatte.interface-particular.experimental/v0",
+  "interface_id": "interface:925ccf2a",
+  "participant_ref": "participant:tranchnose",
+  "plane": "coordination",
+  "direction": "input",
+  "protocol": "in-process/v0",
+  "accepts": [
+    "administrative.message"
+  ],
+  "emits": [
+    "administrative.message"
+  ],
+  "operations": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ],
+  "authority": {
+    "observe": true,
+    "propose": true,
+    "authorize": false,
+    "mutate": false
+  },
+  "information": {
+    "capacity": 1048576,
+    "capacity_unit": "payload-bytes",
+    "timing_model": "occurrence time",
+    "ordering": "ordered",
+    "delivery": "bounded local observation",
+    "loss_profile": [],
+    "native_dimensions": [
+      "modeled surface; no live execution binding",
+      "clock_reference",
+      "health_telemetry",
+      "slow_coupling_setting",
+      "topology_reconfiguration"
+    ]
+  },
+  "state": {
+    "retention": "relational",
+    "replayable": true
+  },
+  "evidence": {
+    "produces": [
+      "native receipt"
+    ],
+    "verification": [
+      "binding-local verification"
+    ],
+    "source_ref": "tranchNOSE experiments/robotics/r001_body_state.py / Experiment 001A"
+  },
+  "constraints": {
+    "required": [],
+    "forbidden": [
+      "authorize"
+    ]
+  },
+  "live": false,
+  "capabilities": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ]
+}

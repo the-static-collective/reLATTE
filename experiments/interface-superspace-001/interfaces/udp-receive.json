@@ -1,0 +1,66 @@
+{
+  "schema": "relatte.interface-particular.experimental/v0",
+  "interface_id": "interface:496d5e78",
+  "participant_ref": "participant:udp",
+  "plane": "transport",
+  "direction": "input",
+  "protocol": "udp4",
+  "accepts": [
+    "received.datagrams"
+  ],
+  "emits": [
+    "received.datagrams"
+  ],
+  "operations": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ],
+  "authority": {
+    "observe": true,
+    "propose": true,
+    "authorize": false,
+    "mutate": false
+  },
+  "information": {
+    "capacity": 1048576,
+    "capacity_unit": "payload-bytes",
+    "timing_model": "occurrence time",
+    "ordering": "unordered",
+    "delivery": "unordered, duplicate, no guarantee",
+    "loss_profile": [
+      "packet loss"
+    ],
+    "native_dimensions": [
+      "arrival order",
+      "duplicate arrival"
+    ]
+  },
+  "state": {
+    "retention": "transient",
+    "replayable": false
+  },
+  "evidence": {
+    "produces": [
+      "native receipt"
+    ],
+    "verification": [
+      "binding-local verification"
+    ],
+    "source_ref": "node:dgram / alien-adapter-001"
+  },
+  "constraints": {
+    "required": [],
+    "forbidden": [
+      "authorize"
+    ]
+  },
+  "live": true,
+  "capabilities": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ]
+}

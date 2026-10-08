@@ -1,0 +1,67 @@
+{
+  "schema": "relatte.interface-particular.experimental/v0",
+  "interface_id": "interface:f541ca2d",
+  "participant_ref": "participant:midi",
+  "plane": "transport",
+  "direction": "input",
+  "protocol": "smf0",
+  "accepts": [
+    "observed.smf.events"
+  ],
+  "emits": [
+    "observed.smf.events"
+  ],
+  "operations": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ],
+  "authority": {
+    "observe": true,
+    "propose": true,
+    "authorize": false,
+    "mutate": false
+  },
+  "information": {
+    "capacity": 1048576,
+    "capacity_unit": "payload-bytes",
+    "timing_model": "event ticks",
+    "ordering": "ordered",
+    "delivery": "bounded local observation",
+    "loss_profile": [],
+    "native_dimensions": [
+      "channel",
+      "note",
+      "delta ticks",
+      "division",
+      "tempo"
+    ]
+  },
+  "state": {
+    "retention": "persistent",
+    "replayable": true
+  },
+  "evidence": {
+    "produces": [
+      "native receipt"
+    ],
+    "verification": [
+      "binding-local verification"
+    ],
+    "source_ref": "binary Standard MIDI File"
+  },
+  "constraints": {
+    "required": [],
+    "forbidden": [
+      "authorize"
+    ]
+  },
+  "live": true,
+  "capabilities": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ]
+}
