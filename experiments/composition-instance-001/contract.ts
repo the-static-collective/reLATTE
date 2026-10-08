@@ -8,6 +8,8 @@ import {
   type PolyglotHop,
 } from '../polyglot-crossing-001/common.ts';
 
+export const GOVERNING_CORE_SNAPSHOT_SHA = FROZEN_CORE_SHA;
+
 export const COMPOSITION_INSTANCE_SCHEMA =
   'relatte.composition-instance-spec/v0' as const;
 export const COMPOSITION_RESULT_SCHEMA =
@@ -120,7 +122,7 @@ export function validateCompositionInstanceSpec(
   ) throw new Error('COMPOSITION_OBSERVER_POLICY_INVALID');
 
   if (
-    spec.governing_snapshot.relatte_core_sha !== FROZEN_CORE_SHA ||
+    spec.governing_snapshot.relatte_core_sha !== GOVERNING_CORE_SNAPSHOT_SHA ||
     !/^[a-f0-9]{40}$/.test(spec.governing_snapshot.normative_src_tree)
   ) throw new Error('COMPOSITION_GOVERNING_SNAPSHOT_INVALID');
 
@@ -153,7 +155,7 @@ export function makeCompositionInstanceSpec(args: {
     },
     requested_output_class: args.requested_output_class,
     governing_snapshot: {
-      relatte_core_sha: FROZEN_CORE_SHA,
+      relatte_core_sha: GOVERNING_CORE_SNAPSHOT_SHA,
       normative_src_tree: args.normative_src_tree,
     },
     extensions: structuredClone(args.extensions ?? {}),
