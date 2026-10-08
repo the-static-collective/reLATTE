@@ -305,7 +305,6 @@ async function main() {
     await rcon.send('difficulty peaceful');
     await rcon.send('time set day');
     await rcon.send('weather clear');
-    await rcon.send('op ' + BOT_NAME);
 
     authorBot = mineflayer.createBot({
       host: HOST,
@@ -315,15 +314,44 @@ async function main() {
     });
 
     await waitForSpawn(authorBot);
+
+    // Establish authority only after the actual protocol session exists.
+    // Pre-joining /op can resolve differently across vanilla/offline-mode
+    // profile state; authority must bind to the live author particular.
+    const opResponse = await rcon.send('op ' + BOT_NAME);
     await rcon.send('gamemode creative ' + BOT_NAME);
     await rcon.send('tp ' + BOT_NAME + ' 0 80 0');
     await authorBot.waitForChunksToLoad();
     await sleep(1000);
 
+    // Command-channel preflight: author issues a harmless block mutation;
+    // vanilla server independently witnesses it before composition may start.
+    await rcon.send('scoreboard objectives add relatte_action dummy');
+    const preflightPoint = { x: 47, y: 92, z: 47 };
+    authorBot.chat(
+      '/setblock ' +
+      preflightPoint.x + ' ' +
+      preflightPoint.y + ' ' +
+      preflightPoint.z + ' minecraft:bedrock',
+    );
+    await sleep(COMMAND_DELAY_MS);
+    const preflight = await scoreboardWitness(
+      rcon,
+      '#author_preflight',
+      'execute if block ' +
+        preflightPoint.x + ' ' +
+        preflightPoint.y + ' ' +
+        preflightPoint.z + ' minecraft:bedrock',
+    );
+    if (preflight.score !== 1) {
+      throw new Error(
+        'WORLDBUILDER_AUTHOR_COMMAND_CHANNEL_UNAVAILABLE:' +
+        JSON.stringify({ opResponse, preflight }),
+      );
+    }
+
     const plan = buildWorldPlan({ goal: GOAL, serverSeed });
     validateWorldPlan(plan);
-
-    await rcon.send('scoreboard objectives add relatte_action dummy');
 
     const commandLog = [];
     const actionReceipts = [];
