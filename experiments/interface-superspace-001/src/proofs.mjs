@@ -23,7 +23,7 @@ export async function prove(options={}) {
   const base=request(registry,{bytes,permissions:allPermissions});
   const search=await synthesize(registry,base);
   // The named proofs select from independently synthesized proposals.
-  for(const n of ['udp-send','midi-event-out']) {
+  for(const n of ['udp-send','midi-event-out','filesystem-output']) {
     const plan=search.candidates.find(p=>p.interface_sequence.includes(id(n)));
     if(!plan)throw new Error('MISSING_SYNTHESIZED_PROOF:'+n);
     const result=await runPlan(registry,plan,bytes,options);

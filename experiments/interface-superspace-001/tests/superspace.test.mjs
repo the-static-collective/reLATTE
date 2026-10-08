@@ -157,9 +157,9 @@ test('real founding manifest: discovery is evidence; synthesized bounded process
   assert.deepEqual(result.record.particulars.at(-1).authority,[]);
 });
 test('final hostile question discovers and executes an unnamed route from the full registry',async()=>{
-  const proof=await prove(donors);assert.equal(proof.records.length,5);
+  const proof=await prove(donors);assert.equal(proof.records.length,6);
   assert.equal(proof.records.at(-1).route_id,proof.unprompted_route);
-  assert.ok(!proof.records.slice(0,4).some(r=>r.route_id===proof.unprompted_route));
+  assert.ok(!proof.records.slice(0,-1).some(r=>r.route_id===proof.unprompted_route));
   for(const r of proof.records)assert.equal(r.result,'succeeded');
 });
 test('late registry mutation cannot retain an old plan digest',async()=>{

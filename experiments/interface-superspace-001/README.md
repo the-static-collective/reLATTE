@@ -80,6 +80,7 @@ The runner synthesizes its paths before selecting them:
 | MIDI | Payload → event encoding → event observation → reconstruction → observation → receiver | Real binary SMF0, two channels, note events, delta ticks, tempo, division, native file digest |
 | Vanilla Minecraft | Payload → provisioned client → world mutation → client observation → server verification → receiver | Official jar/version, connection, mined and acquired inventory, placements, action transcript, independent server block queries |
 | Irreversible | Payload → eight-byte projection → observation → receiver | Parent ID, input/output digests, projection specification, lost suffix residual, no recovery claim |
+| Filesystem comparison | Payload → file → observation → receiver | Existing filesystem operation, file-object identity, independently signed crossing |
 | Hostile final question | Source + observable goal + all registered doors, then first previously unexecuted candidate | Additional discovered route; no system hint or named sequence in the query |
 
 The generic `synthesize(registry, request)` API accepts a source interface/state, a goal interface or emitted property, and constraints. It enumerates bounded simple paths; cycles cannot add progress. It returns proposals and per-interface/per-relation blockers with their path prefix. A complete unsuccessful search reports `NO_ROUTE`. A bounded incomplete search reports `SEARCH_LIMIT`, never a proof of impossibility. The planner claims neither exhaustive infinite-state reachability nor optimality.
