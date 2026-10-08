@@ -65,6 +65,8 @@ export interface CompositionInstanceResult {
   observed_state_ref: string;
   observed_state_sha256: string;
   action_trace_ref: string;
+  author_session_id: string;
+  observer_session_id: string;
   candidate_content_sha256: string;
   candidate_byte_length: number;
   result_disposition: 'R3_HOLD';
@@ -267,6 +269,8 @@ export async function finalizeCompositionInstance(args: {
     observed_state_ref: args.runtime_evidence.observed_state_ref,
     observed_state_sha256: args.runtime_evidence.observed_state_sha256,
     action_trace_ref: args.runtime_evidence.action_trace_ref,
+    author_session_id: args.runtime_evidence.author_session_id,
+    observer_session_id: args.runtime_evidence.observer_session_id,
     candidate_content_sha256: sha256Hex(candidateBytes),
     candidate_byte_length: candidateBytes.length,
     result_disposition: 'R3_HOLD',
@@ -294,6 +298,8 @@ export async function finalizeCompositionInstance(args: {
       observed_state_ref: result.observed_state_ref,
       observed_state_sha256: result.observed_state_sha256,
       action_trace_ref: result.action_trace_ref,
+      author_session_id: result.author_session_id,
+      observer_session_id: result.observer_session_id,
       candidate_content_sha256: result.candidate_content_sha256,
       candidate_byte_length: result.candidate_byte_length,
       runtime_claims: result.runtime_claims,
