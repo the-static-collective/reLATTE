@@ -29,6 +29,7 @@ const GOAL = process.env.MC_WORLD_GOAL || 'BUILD A WORLD';
 const META_PATH = process.env.MC_VERSION_META || 'work/worldbuilder/server-version.json';
 const OUTPUT_PATH = process.env.MC_EVIDENCE_OUT || 'work/worldbuilder/evidence.json';
 const MAP_PATH = process.env.MC_MAP_OUT || 'work/worldbuilder/world-map.txt';
+const COMMAND_DELAY_MS = Number(process.env.MC_COMMAND_DELAY_MS || '1100');
 
 function sha(value) {
   return createHash('sha256').update(value).digest('hex');
@@ -162,7 +163,7 @@ async function sendBotCommand(bot, command, log) {
 
   bot.chat(command);
   log.push(command);
-  await sleep(70);
+  await sleep(COMMAND_DELAY_MS);
 }
 
 async function main() {
@@ -208,7 +209,15 @@ async function main() {
       await sendBotCommand(authorBot, operationToCommand(op), commandLog);
     }
 
-    await sleep(2500);
+    const onlinePlayers = String(await rcon.send('list'));
+    if (!onlinePlayers.includes(BOT_NAME)) {
+      throw new Error(
+        'WORLDBUILDER_AUTHOR_NOT_CONNECTED_AFTER_COMPOSITION:' +
+        onlinePlayers,
+      );
+    }
+
+    await sleep(750);
     await rcon.send('save-all flush');
 
     const anchorVerification = [];
@@ -218,8 +227,17 @@ async function main() {
         anchor.at.x + ' ' + anchor.at.y + ' ' + anchor.at.z + ' ' +
         anchor.block + ' run seed';
       const response = await rcon.send(command);
-      if (/fail|unknown|not found/i.test(String(response))) {
-        throw new Error('WORLDBUILDER_ANCHOR_FAILED:' + anchor.role + ':' + response);
+      const responseText = String(response);
+      if (
+        /fail|unknown|not found/i.test(responseText) ||
+        !/-?[0-9]+/.test(responseText)
+      ) {
+        throw new Error(
+          'WORLDBUILDER_ANCHOR_FAILED:' +
+          anchor.role +
+          ':' +
+          responseText,
+        );
       }
       anchorVerification.push({ ...anchor, response });
     }
