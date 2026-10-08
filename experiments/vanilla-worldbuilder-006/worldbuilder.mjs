@@ -154,7 +154,113 @@ function scanWorld(bot) {
   };
 }
 
-async function sendBotCommand(bot, command, log) {
+async function scoreboardWitness(rcon, witness, predicateCommand) {
+  await rcon.send(
+    'scoreboard players set ' + witness + ' relatte_action 0',
+  );
+  await rcon.send(
+    predicateCommand +
+    ' run scoreboard players set ' +
+    witness +
+    ' relatte_action 1',
+  );
+  const response = await rcon.send(
+    'scoreboard players get ' + witness + ' relatte_action',
+  );
+  const numbers = String(response).match(/-?[0-9]+/g) ?? [];
+  return {
+    score: Number(numbers.at(-1)),
+    response: String(response),
+  };
+}
+
+function sampleFillPositions(op) {
+  const mid = {
+    x: Math.trunc((op.from.x + op.to.x) / 2),
+    y: Math.trunc((op.from.y + op.to.y) / 2),
+    z: Math.trunc((op.from.z + op.to.z) / 2),
+  };
+  const unique = new Map();
+  for (const point of [op.from, mid, op.to]) {
+    unique.set(point.x + ',' + point.y + ',' + point.z, point);
+  }
+  return [...unique.values()];
+}
+
+async function verifyOperationEffect(rcon, op, actionIndex) {
+  const receipts = [];
+
+  if (op.kind === 'fill') {
+    const samples = sampleFillPositions(op);
+    for (let sampleIndex = 0; sampleIndex < samples.length; sampleIndex += 1) {
+      const point = samples[sampleIndex];
+      const witness = '#action_' + actionIndex + '_' + sampleIndex;
+      const check = await scoreboardWitness(
+        rcon,
+        witness,
+        'execute if block ' +
+          point.x + ' ' + point.y + ' ' + point.z + ' ' + op.block,
+      );
+      if (check.score !== 1) {
+        throw new Error(
+          'WORLDBUILDER_ACTION_NOT_CONSTITUTED:' +
+          actionIndex +
+          ':fill:' +
+          JSON.stringify({ point, expected: op.block, check }),
+        );
+      }
+      receipts.push({ point, expected: op.block, ...check });
+    }
+    return receipts;
+  }
+
+  if (op.kind === 'setblock') {
+    const witness = '#action_' + actionIndex;
+    const check = await scoreboardWitness(
+      rcon,
+      witness,
+      'execute if block ' +
+        op.at.x + ' ' + op.at.y + ' ' + op.at.z + ' ' + op.block,
+    );
+    if (check.score !== 1) {
+      throw new Error(
+        'WORLDBUILDER_ACTION_NOT_CONSTITUTED:' +
+        actionIndex +
+        ':setblock:' +
+        JSON.stringify({ point: op.at, expected: op.block, check }),
+      );
+    }
+    return [{ point: op.at, expected: op.block, ...check }];
+  }
+
+  if (op.kind === 'summon') {
+    const witness = '#action_' + actionIndex;
+    const check = await scoreboardWitness(
+      rcon,
+      witness,
+      'execute if entity @e[type=' +
+        op.entity +
+        ',x=' + op.at.x +
+        ',y=' + op.at.y +
+        ',z=' + op.at.z +
+        ',distance=..2] ',
+    );
+    if (check.score !== 1) {
+      throw new Error(
+        'WORLDBUILDER_ACTION_NOT_CONSTITUTED:' +
+        actionIndex +
+        ':summon:' +
+        JSON.stringify({ point: op.at, expected: op.entity, check }),
+      );
+    }
+    return [{ point: op.at, expected: op.entity, ...check }];
+  }
+
+  throw new Error('WORLDBUILDER_UNKNOWN_OPERATION_EFFECT');
+}
+
+async function sendBotCommand(bot, rcon, op, actionIndex, log, receipts) {
+  const command = operationToCommand(op);
   if (
     !command.startsWith('/fill ') &&
     !command.startsWith('/setblock ') &&
@@ -162,8 +268,21 @@ async function sendBotCommand(bot, command, log) {
   ) throw new Error('WORLDBUILDER_COMMAND_NOT_ALLOWED:' + command);
 
   bot.chat(command);
-  log.push(command);
   await sleep(COMMAND_DELAY_MS);
+
+  const serverReceipts = await verifyOperationEffect(
+    rcon,
+    op,
+    actionIndex,
+  );
+
+  log.push(command);
+  receipts.push({
+    action_index: actionIndex,
+    command,
+    operation_kind: op.kind,
+    server_receipts: serverReceipts,
+  });
 }
 
 async function main() {
@@ -204,9 +323,20 @@ async function main() {
     const plan = buildWorldPlan({ goal: GOAL, serverSeed });
     validateWorldPlan(plan);
 
+    await rcon.send('scoreboard objectives add relatte_action dummy');
+
     const commandLog = [];
-    for (const op of plan.operations) {
-      await sendBotCommand(authorBot, operationToCommand(op), commandLog);
+    const actionReceipts = [];
+    for (let actionIndex = 0; actionIndex < plan.operations.length; actionIndex += 1) {
+      const op = plan.operations[actionIndex];
+      await sendBotCommand(
+        authorBot,
+        rcon,
+        op,
+        actionIndex,
+        commandLog,
+        actionReceipts,
+      );
     }
 
     const onlinePlayers = String(await rcon.send('list'));
@@ -404,6 +534,7 @@ async function main() {
       },
       plan,
       command_log: commandLog,
+      action_receipts: actionReceipts,
       anchor_verification: anchorVerification,
       scan: {
         field_sha256: scan.field_sha256,
