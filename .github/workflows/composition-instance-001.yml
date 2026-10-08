@@ -104,6 +104,7 @@ jobs:
           spawn-protection=0
           generate-structures=false
           level-type=minecraft:flat
+          level-seed=381654729
           view-distance=8
           simulation-distance=8
           allow-flight=true
@@ -147,6 +148,7 @@ jobs:
           MC_RCON_PASSWORD: relatte-ci
           MC_BOT_NAME: WorldBuilder
           MC_WORLD_GOAL: BUILD A WORLD
+          MC_LEVEL_SEED: "381654729"
           MC_VERSION_META: work/composition-instance/server-version.json
           COMPOSITION_INSTANCE_OUT_DIR: work/composition-instance
           RUNTIME_EVIDENCE_OUT: work/composition-instance/runtime-evidence.json
