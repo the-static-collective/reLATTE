@@ -1,0 +1,3887 @@
+{
+  "schema": "relatte.composition-instance-002-proof.experimental/v0",
+  "tested_sha": "fb7b3f5c21233031fe2d48ff3c9e5f3509221a78",
+  "parents": {
+    "composition": "f34772194e761585ee6d05a48be33f614f6d4c03",
+    "field": "1bdb060130842df2f634831a80f4dc5bb57f630c"
+  },
+  "normative_core_mutations": 0,
+  "instances": [
+    {
+      "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+      "instance_id": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+      "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+      "epoch": "epoch:92606075-42c4-4457-b479-57788a1752b0",
+      "ledger_anchor": {
+        "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b",
+        "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM="
+      },
+      "field_anchor": {
+        "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+        "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU="
+      },
+      "journal": [
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "admitted",
+          "payload": {
+            "epoch": "epoch:92606075-42c4-4457-b479-57788a1752b0",
+            "instance_id": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+            "launch_ref": "sha256:6a7e105139fbb26d5f9bdba37ae2ac4225417ab81c5ee43d1bde5e5cfa1acbce",
+            "parent": null,
+            "runtime_id": "bounded-room-chest/v0",
+            "spec_bytes_base64": "eyJzY2hlbWEiOiJyZWxhdHRlLmNvbXBvc2l0aW9uLWluc3RhbmNlLXNwZWMvdjAiLCJydW50aW1lX2lkIjoiYm91bmRlZC1yb29tLWNoZXN0L3YwIiwiYmFzZV9zbmFwc2hvdF9yZWYiOiJzaGEyNTY6Mzk1ZTM4OTYxNzU3OWY0M2IxNTc4Y2U5OTcyZjk4ZTY0MTY5ZGY0M2RkYzVhNDhhYjI0OWM3M2RlZWZjNjI2MCIsImdvYWwiOiJvcGVuIGNoZXN0LCBvYnNlcnZlIGNvbnRlbnRzLCByZXZlYWwgbWFwIiwiaW5wdXRzIjpbXSwiY2FwYWJpbGl0aWVzIjpbImNvbXBvc2UiLCJvYnNlcnZlIiwicHVibGlzaC1vYnNlcnZhdGlvbiJdLCJsaW1pdHMiOnsicnVudGltZV9hY3Rpb25zIjoyLCJvYnNlcnZhdGlvbnMiOjgsIm5ldHdvcmsiOiJub25lIiwibWVtb3J5X21iIjozMn0sIm9ic2VydmVyX3BvbGljeSI6eyJyZXF1aXJlX2Rpc3RpbmN0X3Nlc3Npb24iOnRydWUsIm1vZGUiOiJmcmVzaC1yZWFkLW9ubHktcHJvY2VzcyJ9LCJyZXF1ZXN0ZWRfb3V0cHV0X2NsYXNzIjoiYm91bmRlZC1yb29tLXN0YXRlIiwiZ292ZXJuaW5nX3NuYXBzaG90Ijp7InJlbGF0dGVfY29yZV9zaGEiOiJmNWNiNzQ4OGJlYmMxYTZlMjdmZDQ1OGFkNDBhZjliOWI2ZjllODU4Iiwibm9ybWF0aXZlX3NyY190cmVlIjoiYzBlNGQyYzU5NDgxZTBmYjJhNGJmNGJiMjk0ZjM3MzkwN2ZkMmI3NiJ9LCJleHRlbnNpb25zIjp7fX0=",
+            "spec_ref": "sha256:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+            "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+          },
+          "previous": null,
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 0,
+          "signature": "/Ago2xaaiOcVnEq6LaxXjVzAPy9ZMtgG+JH5aAdJYNOvmwNc4BDgc4Lm0C4wcamYdnLR2b6VXWkegDCGUSZICQ==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "discovery",
+          "payload": {
+            "histories_ref": "sha256:1d13543a02e279cb400401348784223851946581ae4bb074fdd0af2e8fff56c8",
+            "snapshot": {
+              "authority": [],
+              "door_refs": [
+                {
+                  "descriptor": {
+                    "accepts": [
+                      "payload.bytes"
+                    ],
+                    "authority": {
+                      "authorize": false,
+                      "mutate": false,
+                      "observe": true,
+                      "propose": true
+                    },
+                    "capabilities": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "constraints": {
+                      "forbidden": [
+                        "authorize"
+                      ],
+                      "required": []
+                    },
+                    "direction": "output",
+                    "emits": [
+                      "payload.bytes"
+                    ],
+                    "evidence": {
+                      "produces": [
+                        "native receipt"
+                      ],
+                      "source_ref": "caller-owned bytes",
+                      "verification": [
+                        "binding-local verification"
+                      ]
+                    },
+                    "information": {
+                      "capacity": 1048576,
+                      "capacity_unit": "payload-bytes",
+                      "delivery": "bounded local observation",
+                      "loss_profile": [],
+                      "native_dimensions": [],
+                      "ordering": "ordered",
+                      "timing_model": "occurrence time"
+                    },
+                    "interface_id": "interface:808b5966",
+                    "live": true,
+                    "operations": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "participant_ref": "participant:payload",
+                    "plane": "transport",
+                    "protocol": "in-process/v0",
+                    "schema": "relatte.interface-particular.experimental/v0",
+                    "state": {
+                      "replayable": true,
+                      "retention": "persistent"
+                    }
+                  },
+                  "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3",
+                  "event_ref": "sha256:2433a9cdb782becc21ad5f88d794df5032be6a824a9f893b1aa44386e2f95a12",
+                  "expires_at": 61000,
+                  "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+                  "parents": [],
+                  "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                }
+              ],
+              "excluded": [],
+              "frontiers": [
+                {
+                  "count": 1,
+                  "head": "sha256:797f64ca74432aadfdc7394ce33c0e79bd60b029a4f41630e713244f20ebc3c1",
+                  "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                },
+                {
+                  "count": 2,
+                  "head": "sha256:2433a9cdb782becc21ad5f88d794df5032be6a824a9f893b1aa44386e2f95a12",
+                  "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                }
+              ],
+              "observed_at": 1000,
+              "registry_digest": "sha256:12ac557bfc060a86e11d81c815a3187f85323f468ffcb377a416f497dc9458f5",
+              "relation_refs": [],
+              "schema": "relatte.dynamic-field-view.experimental/v0",
+              "scope": "SELECTED_LOCAL_HISTORIES_ONLY",
+              "view_digest": "sha256:e63a3e1085248b410fabaf1a994d9d71b856218c909b3db5733062d2594c1dc7"
+            }
+          },
+          "previous": "sha256:9c9ce6b3aec9b807144d3c93a80ace90442485e3722912e95035f28f23d22b57",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 1,
+          "signature": "ewBkeimOnVJFYvWnZ/HJX3n24DDcOxtLW2GA+DAdOse0z3zmqZ0NArkOgJ+u2lEWAAZTgVFFGtBQrp1uTT5dAA==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "runtime-event",
+          "payload": {
+            "action": "open-chest",
+            "after": {
+              "agent": "ROOM B",
+              "chest": {
+                "contents": [
+                  "stone",
+                  "map fragment"
+                ],
+                "map_fragment": {
+                  "destination": "ROOM B"
+                },
+                "map_visible": false,
+                "open": true
+              },
+              "edge": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "observations": 0,
+              "rooms": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "transitions": 1
+            },
+            "before": {
+              "agent": "ROOM A",
+              "chest": {
+                "contents": [
+                  "stone",
+                  "map fragment"
+                ],
+                "map_fragment": {
+                  "destination": "ROOM B"
+                },
+                "map_visible": false,
+                "open": false
+              },
+              "edge": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "observations": 0,
+              "rooms": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "transitions": 0
+            },
+            "runtime_id": "bounded-room-chest/v0"
+          },
+          "previous": "sha256:b29309b0bd906182667382b7cb32bb381344cedd8ad5223a75cc3809cff93778",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 2,
+          "signature": "OFIP4ZwPuT04qIBnrMLr7G7BM0gTyHIQ0rC4l6vCchChsqlNOlu1FFpfR5NXX4ob9JS1ad9K6DF5glpBRDG8Bg==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "eligible-interface",
+          "payload": {
+            "descriptor": {
+              "accepts": [
+                "file.bytes"
+              ],
+              "authority": {
+                "authorize": false,
+                "mutate": false,
+                "observe": true,
+                "propose": true
+              },
+              "capabilities": [
+                "observe",
+                "transmit",
+                "receive",
+                "propose"
+              ],
+              "constraints": {
+                "forbidden": [
+                  "authorize"
+                ],
+                "required": []
+              },
+              "direction": "bidirectional",
+              "emits": [
+                "file.bytes"
+              ],
+              "evidence": {
+                "produces": [
+                  "native receipt"
+                ],
+                "source_ref": "polyglot-crossing-001 observeFilesystem",
+                "verification": [
+                  "binding-local verification"
+                ]
+              },
+              "information": {
+                "capacity": 1048576,
+                "capacity_unit": "payload-bytes",
+                "delivery": "bounded local observation",
+                "loss_profile": [],
+                "native_dimensions": [
+                  "path",
+                  "device",
+                  "inode"
+                ],
+                "ordering": "ordered",
+                "timing_model": "occurrence time"
+              },
+              "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+              "live": true,
+              "operations": [
+                "observe",
+                "transmit",
+                "receive",
+                "propose"
+              ],
+              "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+              "plane": "transport",
+              "protocol": "in-process/v0",
+              "schema": "relatte.interface-particular.experimental/v0",
+              "state": {
+                "replayable": true,
+                "retention": "persistent"
+              }
+            },
+            "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+            "parent_interface": null,
+            "runtime_event_ref": "sha256:ef3d478ab82fe3484d6583794564b8603bf32a4b8b2746de530243bfe07fea84",
+            "semantic": "CHEST-OBSERVATION-DOOR"
+          },
+          "previous": "sha256:ef3d478ab82fe3484d6583794564b8603bf32a4b8b2746de530243bfe07fea84",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 3,
+          "signature": "Gd+lsoM4A7hNlllynFax8UDRMo8OEmtkSyHAoBFw4e/C61S7qtKfseyy+/PyvbFJoh5JX4u8ZcelJKZ9ZHjbCA==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "discovery",
+          "payload": {
+            "histories_ref": "sha256:1d13543a02e279cb400401348784223851946581ae4bb074fdd0af2e8fff56c8",
+            "snapshot": {
+              "authority": [],
+              "door_refs": [
+                {
+                  "descriptor": {
+                    "accepts": [
+                      "payload.bytes"
+                    ],
+                    "authority": {
+                      "authorize": false,
+                      "mutate": false,
+                      "observe": true,
+                      "propose": true
+                    },
+                    "capabilities": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "constraints": {
+                      "forbidden": [
+                        "authorize"
+                      ],
+                      "required": []
+                    },
+                    "direction": "output",
+                    "emits": [
+                      "payload.bytes"
+                    ],
+                    "evidence": {
+                      "produces": [
+                        "native receipt"
+                      ],
+                      "source_ref": "caller-owned bytes",
+                      "verification": [
+                        "binding-local verification"
+                      ]
+                    },
+                    "information": {
+                      "capacity": 1048576,
+                      "capacity_unit": "payload-bytes",
+                      "delivery": "bounded local observation",
+                      "loss_profile": [],
+                      "native_dimensions": [],
+                      "ordering": "ordered",
+                      "timing_model": "occurrence time"
+                    },
+                    "interface_id": "interface:808b5966",
+                    "live": true,
+                    "operations": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "participant_ref": "participant:payload",
+                    "plane": "transport",
+                    "protocol": "in-process/v0",
+                    "schema": "relatte.interface-particular.experimental/v0",
+                    "state": {
+                      "replayable": true,
+                      "retention": "persistent"
+                    }
+                  },
+                  "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3",
+                  "event_ref": "sha256:2433a9cdb782becc21ad5f88d794df5032be6a824a9f893b1aa44386e2f95a12",
+                  "expires_at": 61000,
+                  "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+                  "parents": [],
+                  "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                }
+              ],
+              "excluded": [],
+              "frontiers": [
+                {
+                  "count": 1,
+                  "head": "sha256:797f64ca74432aadfdc7394ce33c0e79bd60b029a4f41630e713244f20ebc3c1",
+                  "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                },
+                {
+                  "count": 2,
+                  "head": "sha256:2433a9cdb782becc21ad5f88d794df5032be6a824a9f893b1aa44386e2f95a12",
+                  "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                }
+              ],
+              "observed_at": 1000,
+              "registry_digest": "sha256:12ac557bfc060a86e11d81c815a3187f85323f468ffcb377a416f497dc9458f5",
+              "relation_refs": [],
+              "schema": "relatte.dynamic-field-view.experimental/v0",
+              "scope": "SELECTED_LOCAL_HISTORIES_ONLY",
+              "view_digest": "sha256:e63a3e1085248b410fabaf1a994d9d71b856218c909b3db5733062d2594c1dc7"
+            }
+          },
+          "previous": "sha256:b7dd42afec76c59d8408347ff6be5e2bb54dc4eb00a2b63f6a39ac349d8e3543",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 4,
+          "signature": "xFuDGOAWr8UhYlkyBi8UnUp8gUUfcj61nJrt60Y10mCjKPLQNAPGiF/y5uS36m2bYRhvK7xQod3y9WqM70jbCQ==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "explicit-publication",
+          "payload": {
+            "eligible_ref": "sha256:c98a258e54dda6f664be2d3779e97cc6b3491b0b285e0e81bd0c4ef9012e8c38",
+            "epoch": "epoch:92606075-42c4-4457-b479-57788a1752b0",
+            "field_event_ref": "sha256:d9b3c1b7cbe3ddf72e3b94a49f9afb54d397f28edd06e61bc713b025a4dd5596",
+            "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+            "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+            "parents": [],
+            "runtime_event_ref": "sha256:ef3d478ab82fe3484d6583794564b8603bf32a4b8b2746de530243bfe07fea84",
+            "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+          },
+          "previous": "sha256:bdb5649b348bd0f9ffd0a1a3f380f2e0dd5f1a6e01ab729aae837066e19ed668",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 5,
+          "signature": "7EqMKqZ7TntTmZTiWPafjMsiuymW4YPZQTzGwLZU6VhuhF72Ao05WkbTRq4b0PafhyvtYZbTHfbwkMQao6wnCw==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "discovery",
+          "payload": {
+            "histories_ref": "sha256:e6dfc3ca0a82211a4a6ac0623cd3b392509ad5ace2bd2a529aa0c8e506d22e60",
+            "snapshot": {
+              "authority": [],
+              "door_refs": [
+                {
+                  "descriptor": {
+                    "accepts": [
+                      "payload.bytes"
+                    ],
+                    "authority": {
+                      "authorize": false,
+                      "mutate": false,
+                      "observe": true,
+                      "propose": true
+                    },
+                    "capabilities": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "constraints": {
+                      "forbidden": [
+                        "authorize"
+                      ],
+                      "required": []
+                    },
+                    "direction": "output",
+                    "emits": [
+                      "payload.bytes"
+                    ],
+                    "evidence": {
+                      "produces": [
+                        "native receipt"
+                      ],
+                      "source_ref": "caller-owned bytes",
+                      "verification": [
+                        "binding-local verification"
+                      ]
+                    },
+                    "information": {
+                      "capacity": 1048576,
+                      "capacity_unit": "payload-bytes",
+                      "delivery": "bounded local observation",
+                      "loss_profile": [],
+                      "native_dimensions": [],
+                      "ordering": "ordered",
+                      "timing_model": "occurrence time"
+                    },
+                    "interface_id": "interface:808b5966",
+                    "live": true,
+                    "operations": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "participant_ref": "participant:payload",
+                    "plane": "transport",
+                    "protocol": "in-process/v0",
+                    "schema": "relatte.interface-particular.experimental/v0",
+                    "state": {
+                      "replayable": true,
+                      "retention": "persistent"
+                    }
+                  },
+                  "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3",
+                  "event_ref": "sha256:2433a9cdb782becc21ad5f88d794df5032be6a824a9f893b1aa44386e2f95a12",
+                  "expires_at": 61000,
+                  "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+                  "parents": [],
+                  "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                },
+                {
+                  "descriptor": {
+                    "accepts": [
+                      "file.bytes"
+                    ],
+                    "authority": {
+                      "authorize": false,
+                      "mutate": false,
+                      "observe": true,
+                      "propose": true
+                    },
+                    "capabilities": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "constraints": {
+                      "forbidden": [
+                        "authorize"
+                      ],
+                      "required": []
+                    },
+                    "direction": "bidirectional",
+                    "emits": [
+                      "file.bytes"
+                    ],
+                    "evidence": {
+                      "produces": [
+                        "native receipt"
+                      ],
+                      "source_ref": "polyglot-crossing-001 observeFilesystem",
+                      "verification": [
+                        "binding-local verification"
+                      ]
+                    },
+                    "information": {
+                      "capacity": 1048576,
+                      "capacity_unit": "payload-bytes",
+                      "delivery": "bounded local observation",
+                      "loss_profile": [],
+                      "native_dimensions": [
+                        "path",
+                        "device",
+                        "inode"
+                      ],
+                      "ordering": "ordered",
+                      "timing_model": "occurrence time"
+                    },
+                    "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                    "live": true,
+                    "operations": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+                    "plane": "transport",
+                    "protocol": "in-process/v0",
+                    "schema": "relatte.interface-particular.experimental/v0",
+                    "state": {
+                      "replayable": true,
+                      "retention": "persistent"
+                    }
+                  },
+                  "descriptor_digest": "sha256:2002b2b22f23a33c0a52118483f81eab5f1911ec2d010abe6f090872cb4346cc",
+                  "event_ref": "sha256:d9b3c1b7cbe3ddf72e3b94a49f9afb54d397f28edd06e61bc713b025a4dd5596",
+                  "expires_at": 61000,
+                  "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+                  "parents": [],
+                  "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                }
+              ],
+              "excluded": [],
+              "frontiers": [
+                {
+                  "count": 3,
+                  "head": "sha256:9c8c7081aa5605fe3b3935fe406f831353d5ce49f4f23b6a0982ec75275cc03f",
+                  "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                },
+                {
+                  "count": 2,
+                  "head": "sha256:2433a9cdb782becc21ad5f88d794df5032be6a824a9f893b1aa44386e2f95a12",
+                  "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                }
+              ],
+              "observed_at": 1000,
+              "registry_digest": "sha256:79aab61a8bc469afad31629b51589eb19d9c6bf1fd770909aa8a9d04e727d733",
+              "relation_refs": [
+                {
+                  "descriptor": {
+                    "binding_ref": "binding:2c268110",
+                    "consumes": "payload.bytes",
+                    "destination": "interface:552dd703-9534-4075-a884-33125591fc50",
+                    "kind": "transform",
+                    "loss_cost": 0,
+                    "may_lose": [],
+                    "operation": "observe",
+                    "postconditions": [
+                      "ordered"
+                    ],
+                    "preconditions": [],
+                    "preserves": {
+                      "ancestry": true,
+                      "bytes": true,
+                      "order": true,
+                      "particular_identity": false,
+                      "semantics": true,
+                      "timing": false
+                    },
+                    "produces": "file.bytes",
+                    "relation_id": "relation:986e798e-a8ad-4977-aea4-986531f78ecc",
+                    "removes": [],
+                    "requires": {
+                      "authority": "observe",
+                      "live_participant": true,
+                      "local_state": false,
+                      "network": false,
+                      "witness": null
+                    },
+                    "reversible": true,
+                    "schema": "relatte.interface-relation.experimental/v0",
+                    "source": "interface:808b5966",
+                    "verification_ref": "verification:2c268110"
+                  },
+                  "destination": {
+                    "descriptor_digest": "sha256:2002b2b22f23a33c0a52118483f81eab5f1911ec2d010abe6f090872cb4346cc",
+                    "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                    "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+                    "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                  },
+                  "event_ref": "sha256:9c8c7081aa5605fe3b3935fe406f831353d5ce49f4f23b6a0982ec75275cc03f",
+                  "expires_at": 61000,
+                  "offer_id": "relation-offer:6b2f1e09-d2a5-4258-9949-be9b71685d82",
+                  "source": {
+                    "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3",
+                    "interface_id": "interface:808b5966",
+                    "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+                    "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                  },
+                  "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                }
+              ],
+              "schema": "relatte.dynamic-field-view.experimental/v0",
+              "scope": "SELECTED_LOCAL_HISTORIES_ONLY",
+              "view_digest": "sha256:7e0433f3b2c2c3dc851d5b826293896d9112cfa4d388c9390b6c2f753858bed7"
+            }
+          },
+          "previous": "sha256:978a5aec2746aa017c5a4ce16c0918de6441e16a5a25a59b42f77c215e57bfb3",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 6,
+          "signature": "thqBMPegItwAJq6vot7xpWfXuscISnI52/bTTaYyHhgkMhFNfamai8YqajTuvh/CGsmLzJY5Zkcar1GyhginBg==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "selection",
+          "payload": {
+            "plan_digest": "sha256:54e7241f7c96f93c88c627bfdb09b557ff61cdaa88ad9b405764e374e20378ee",
+            "plan_ref": "sha256:512773c96705d8167d9cde762e18dd4c2a4b9122cad33a7c5f16bcf2aa33230a"
+          },
+          "previous": "sha256:d0b55120447320bb29f6a4e9c16ceced22ba718b685907f85cbfa02f68a96a17",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 7,
+          "signature": "bbUsnyB4i/ME0knRpfRlXoOWR2pxqyZL3ifYUCn6n3lVnKm07LlxW68TvnQ/3IdsK1m8tWS3s6idnqzj3c/ODw==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "authorization",
+          "payload": {
+            "epoch": "epoch:92606075-42c4-4457-b479-57788a1752b0",
+            "grants_ref": "sha256:d4a84b10552fb8a42ab9b09dbf8c3c518d74c038eeab51a7dfd0e43fe6bab461",
+            "plan_digest": "sha256:54e7241f7c96f93c88c627bfdb09b557ff61cdaa88ad9b405764e374e20378ee",
+            "subject": "visitor"
+          },
+          "previous": "sha256:253712b29ae52039fa3dd002da5e085213392ccb2ee3bc4fd70e0dcded6e33fc",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 8,
+          "signature": "xD/tIzv84Assffk+AVRs9h1W5PucejE+/LtxaPU0xJkvKTq5jlTQPCQp2y48RbfPgaHDzPS89e5x1EIJreZMDg==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "runtime-observation",
+          "payload": {
+            "after": {
+              "agent": "ROOM B",
+              "chest": {
+                "contents": [
+                  "stone",
+                  "map fragment"
+                ],
+                "map_fragment": {
+                  "destination": "ROOM B"
+                },
+                "map_visible": false,
+                "open": true
+              },
+              "edge": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "observations": 1,
+              "rooms": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "transitions": 1
+            },
+            "before": {
+              "agent": "ROOM B",
+              "chest": {
+                "contents": [
+                  "stone",
+                  "map fragment"
+                ],
+                "map_fragment": {
+                  "destination": "ROOM B"
+                },
+                "map_visible": false,
+                "open": true
+              },
+              "edge": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "observations": 0,
+              "rooms": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "transitions": 1
+            },
+            "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+            "observation": {
+              "contents": [
+                "stone",
+                "map fragment"
+              ]
+            },
+            "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28"
+          },
+          "previous": "sha256:07789ff70b1fa51fca5b55b26e19545efc344a0d871aad48be9f24f424796ecd",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 9,
+          "signature": "qwNBwqyDUVU1Gyv9gfrjhVOa1kOqIuAxs5gaABQDz1uN3Mi4GldyNxIP8HkWrSAyH3PzSbOCfZ8eyk+XAEI9BQ==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "occurrence",
+          "payload": {
+            "occurrence_ref": "sha256:13cd78408c1f563d282a9f276206212df006c73f62b47765f18042cad1d4f2f4",
+            "plan_ref": "sha256:512773c96705d8167d9cde762e18dd4c2a4b9122cad33a7c5f16bcf2aa33230a",
+            "view_ref": "sha256:adbc4f3f1143f641b701f7f89150b41261c8b60813195f1e3bab07a88483d828"
+          },
+          "previous": "sha256:11325f1db83f584c88efcd86440f4ea148e82324b5649111e18fac1e4b7bb8af",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 10,
+          "signature": "HU1rKIIwOGMVegZDUnXNK+aUmxpWGF1NqN5VaYODb5iyQUrA81tmqNYtCJ3f8vAUlBOVX9flrm8cFJyKmFoXBA==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "runtime-event",
+          "payload": {
+            "action": "reveal-map",
+            "after": {
+              "agent": "ROOM B",
+              "chest": {
+                "contents": [
+                  "stone",
+                  "map fragment"
+                ],
+                "map_fragment": {
+                  "destination": "ROOM B"
+                },
+                "map_visible": true,
+                "open": true
+              },
+              "edge": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "observations": 1,
+              "rooms": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "transitions": 2
+            },
+            "before": {
+              "agent": "ROOM B",
+              "chest": {
+                "contents": [
+                  "stone",
+                  "map fragment"
+                ],
+                "map_fragment": {
+                  "destination": "ROOM B"
+                },
+                "map_visible": false,
+                "open": true
+              },
+              "edge": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "observations": 1,
+              "rooms": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "transitions": 1
+            },
+            "runtime_id": "bounded-room-chest/v0"
+          },
+          "previous": "sha256:b34f198017e536c46ae3174cfd2ec846309e371a9f742f3a0d396a6e76eafabb",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 11,
+          "signature": "MrhT/2cl4XpMXl6uhPk1apsjXhAd48MyDU4m4w+RfXTm/fWK1PZ0KRKErcwgDUnB0ekS4PgT7kmAzbejQ/dLDQ==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "eligible-interface",
+          "payload": {
+            "descriptor": {
+              "accepts": [
+                "file.bytes"
+              ],
+              "authority": {
+                "authorize": false,
+                "mutate": false,
+                "observe": true,
+                "propose": true
+              },
+              "capabilities": [
+                "observe",
+                "transmit",
+                "receive",
+                "propose"
+              ],
+              "constraints": {
+                "forbidden": [
+                  "authorize"
+                ],
+                "required": []
+              },
+              "direction": "bidirectional",
+              "emits": [
+                "file.bytes"
+              ],
+              "evidence": {
+                "produces": [
+                  "native receipt"
+                ],
+                "source_ref": "polyglot-crossing-001 observeFilesystem",
+                "verification": [
+                  "binding-local verification"
+                ]
+              },
+              "information": {
+                "capacity": 1048576,
+                "capacity_unit": "payload-bytes",
+                "delivery": "bounded local observation",
+                "loss_profile": [],
+                "native_dimensions": [
+                  "path",
+                  "device",
+                  "inode"
+                ],
+                "ordering": "ordered",
+                "timing_model": "occurrence time"
+              },
+              "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+              "live": true,
+              "operations": [
+                "observe",
+                "transmit",
+                "receive",
+                "propose"
+              ],
+              "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+              "plane": "transport",
+              "protocol": "in-process/v0",
+              "schema": "relatte.interface-particular.experimental/v0",
+              "state": {
+                "replayable": true,
+                "retention": "persistent"
+              }
+            },
+            "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+            "parent_interface": "interface:552dd703-9534-4075-a884-33125591fc50",
+            "runtime_event_ref": "sha256:18aaf3e4524ad52abca19eb7da8a46bc4cd7bdb6caa12009e1857c4fbaccd998",
+            "semantic": "MAP-FRAGMENT-OBSERVATION-DOOR"
+          },
+          "previous": "sha256:18aaf3e4524ad52abca19eb7da8a46bc4cd7bdb6caa12009e1857c4fbaccd998",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 12,
+          "signature": "CHldeMUmF8eF95EzoZX7iQ1/KPc5pbNpEVk37fvsW4xRL/MRNZHJM+yfL1CiyywDlMXI5Ez8Qwpm5BXjW24RBw==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "explicit-publication",
+          "payload": {
+            "eligible_ref": "sha256:ac1de8cf1c648c740f3f565d21658a03a498e6a3b3dfbfe65f4b72f9825a8d44",
+            "epoch": "epoch:92606075-42c4-4457-b479-57788a1752b0",
+            "field_event_ref": "sha256:6c0f2e7049e9511c765e752ac1cb3c2dbfef50ed08cb525ca75dca4536ba36b2",
+            "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+            "offer_id": "offer:87e5cd90-6e60-40d2-8963-b414949f0af6",
+            "parents": [
+              {
+                "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+                "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+              }
+            ],
+            "runtime_event_ref": "sha256:18aaf3e4524ad52abca19eb7da8a46bc4cd7bdb6caa12009e1857c4fbaccd998",
+            "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+          },
+          "previous": "sha256:9c1a31f9a57c9da1dd72c32ba425c0c2bf324f18d1a79181db7dba4977e50320",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 13,
+          "signature": "QjtQPtm/iwGooT4Lc/8CpbTguNNsFkW+rb0hhJ8oDixdZm8jKnTzwcg/A00hkxpATyMa+3u9Iv+LBUnTDVkrAA==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "discovery",
+          "payload": {
+            "histories_ref": "sha256:27b9a85ceb420f59b21df0bed11054752bae59c13f5e141bf8c322d377b4629b",
+            "snapshot": {
+              "authority": [],
+              "door_refs": [
+                {
+                  "descriptor": {
+                    "accepts": [
+                      "payload.bytes"
+                    ],
+                    "authority": {
+                      "authorize": false,
+                      "mutate": false,
+                      "observe": true,
+                      "propose": true
+                    },
+                    "capabilities": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "constraints": {
+                      "forbidden": [
+                        "authorize"
+                      ],
+                      "required": []
+                    },
+                    "direction": "output",
+                    "emits": [
+                      "payload.bytes"
+                    ],
+                    "evidence": {
+                      "produces": [
+                        "native receipt"
+                      ],
+                      "source_ref": "caller-owned bytes",
+                      "verification": [
+                        "binding-local verification"
+                      ]
+                    },
+                    "information": {
+                      "capacity": 1048576,
+                      "capacity_unit": "payload-bytes",
+                      "delivery": "bounded local observation",
+                      "loss_profile": [],
+                      "native_dimensions": [],
+                      "ordering": "ordered",
+                      "timing_model": "occurrence time"
+                    },
+                    "interface_id": "interface:808b5966",
+                    "live": true,
+                    "operations": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "participant_ref": "participant:payload",
+                    "plane": "transport",
+                    "protocol": "in-process/v0",
+                    "schema": "relatte.interface-particular.experimental/v0",
+                    "state": {
+                      "replayable": true,
+                      "retention": "persistent"
+                    }
+                  },
+                  "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3",
+                  "event_ref": "sha256:2433a9cdb782becc21ad5f88d794df5032be6a824a9f893b1aa44386e2f95a12",
+                  "expires_at": 61000,
+                  "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+                  "parents": [],
+                  "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                },
+                {
+                  "descriptor": {
+                    "accepts": [
+                      "file.bytes"
+                    ],
+                    "authority": {
+                      "authorize": false,
+                      "mutate": false,
+                      "observe": true,
+                      "propose": true
+                    },
+                    "capabilities": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "constraints": {
+                      "forbidden": [
+                        "authorize"
+                      ],
+                      "required": []
+                    },
+                    "direction": "bidirectional",
+                    "emits": [
+                      "file.bytes"
+                    ],
+                    "evidence": {
+                      "produces": [
+                        "native receipt"
+                      ],
+                      "source_ref": "polyglot-crossing-001 observeFilesystem",
+                      "verification": [
+                        "binding-local verification"
+                      ]
+                    },
+                    "information": {
+                      "capacity": 1048576,
+                      "capacity_unit": "payload-bytes",
+                      "delivery": "bounded local observation",
+                      "loss_profile": [],
+                      "native_dimensions": [
+                        "path",
+                        "device",
+                        "inode"
+                      ],
+                      "ordering": "ordered",
+                      "timing_model": "occurrence time"
+                    },
+                    "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                    "live": true,
+                    "operations": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+                    "plane": "transport",
+                    "protocol": "in-process/v0",
+                    "schema": "relatte.interface-particular.experimental/v0",
+                    "state": {
+                      "replayable": true,
+                      "retention": "persistent"
+                    }
+                  },
+                  "descriptor_digest": "sha256:2002b2b22f23a33c0a52118483f81eab5f1911ec2d010abe6f090872cb4346cc",
+                  "event_ref": "sha256:d9b3c1b7cbe3ddf72e3b94a49f9afb54d397f28edd06e61bc713b025a4dd5596",
+                  "expires_at": 61000,
+                  "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+                  "parents": [],
+                  "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                },
+                {
+                  "descriptor": {
+                    "accepts": [
+                      "file.bytes"
+                    ],
+                    "authority": {
+                      "authorize": false,
+                      "mutate": false,
+                      "observe": true,
+                      "propose": true
+                    },
+                    "capabilities": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "constraints": {
+                      "forbidden": [
+                        "authorize"
+                      ],
+                      "required": []
+                    },
+                    "direction": "bidirectional",
+                    "emits": [
+                      "file.bytes"
+                    ],
+                    "evidence": {
+                      "produces": [
+                        "native receipt"
+                      ],
+                      "source_ref": "polyglot-crossing-001 observeFilesystem",
+                      "verification": [
+                        "binding-local verification"
+                      ]
+                    },
+                    "information": {
+                      "capacity": 1048576,
+                      "capacity_unit": "payload-bytes",
+                      "delivery": "bounded local observation",
+                      "loss_profile": [],
+                      "native_dimensions": [
+                        "path",
+                        "device",
+                        "inode"
+                      ],
+                      "ordering": "ordered",
+                      "timing_model": "occurrence time"
+                    },
+                    "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+                    "live": true,
+                    "operations": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+                    "plane": "transport",
+                    "protocol": "in-process/v0",
+                    "schema": "relatte.interface-particular.experimental/v0",
+                    "state": {
+                      "replayable": true,
+                      "retention": "persistent"
+                    }
+                  },
+                  "descriptor_digest": "sha256:50cb95282bc630312b4798ff07faaa04c2eb78ae6add541c243835ae7ad6a06c",
+                  "event_ref": "sha256:6c0f2e7049e9511c765e752ac1cb3c2dbfef50ed08cb525ca75dca4536ba36b2",
+                  "expires_at": 61000,
+                  "offer_id": "offer:87e5cd90-6e60-40d2-8963-b414949f0af6",
+                  "parents": [
+                    {
+                      "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                      "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+                      "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                    }
+                  ],
+                  "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                }
+              ],
+              "excluded": [],
+              "frontiers": [
+                {
+                  "count": 6,
+                  "head": "sha256:de24df16af65cca728f1bf504fc7fe650c9c319e8a62c5504f67a844d9810df6",
+                  "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                },
+                {
+                  "count": 3,
+                  "head": "sha256:04e5360f80ad0abcef11a24bd140dc25a702a4c53840d5fb6a6f79157ded8a98",
+                  "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                }
+              ],
+              "observed_at": 1000,
+              "registry_digest": "sha256:aaf3abba3456fdd1e6212c5cad1d528e4d707143a2d6c70d12ae8f1e1a56c757",
+              "relation_refs": [
+                {
+                  "descriptor": {
+                    "binding_ref": "binding:2c268110",
+                    "consumes": "payload.bytes",
+                    "destination": "interface:552dd703-9534-4075-a884-33125591fc50",
+                    "kind": "transform",
+                    "loss_cost": 0,
+                    "may_lose": [],
+                    "operation": "observe",
+                    "postconditions": [
+                      "ordered"
+                    ],
+                    "preconditions": [],
+                    "preserves": {
+                      "ancestry": true,
+                      "bytes": true,
+                      "order": true,
+                      "particular_identity": false,
+                      "semantics": true,
+                      "timing": false
+                    },
+                    "produces": "file.bytes",
+                    "relation_id": "relation:986e798e-a8ad-4977-aea4-986531f78ecc",
+                    "removes": [],
+                    "requires": {
+                      "authority": "observe",
+                      "live_participant": true,
+                      "local_state": false,
+                      "network": false,
+                      "witness": null
+                    },
+                    "reversible": true,
+                    "schema": "relatte.interface-relation.experimental/v0",
+                    "source": "interface:808b5966",
+                    "verification_ref": "verification:2c268110"
+                  },
+                  "destination": {
+                    "descriptor_digest": "sha256:2002b2b22f23a33c0a52118483f81eab5f1911ec2d010abe6f090872cb4346cc",
+                    "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                    "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+                    "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                  },
+                  "event_ref": "sha256:9c8c7081aa5605fe3b3935fe406f831353d5ce49f4f23b6a0982ec75275cc03f",
+                  "expires_at": 61000,
+                  "offer_id": "relation-offer:6b2f1e09-d2a5-4258-9949-be9b71685d82",
+                  "source": {
+                    "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3",
+                    "interface_id": "interface:808b5966",
+                    "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+                    "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                  },
+                  "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                },
+                {
+                  "descriptor": {
+                    "binding_ref": "binding:2c268110",
+                    "consumes": "payload.bytes",
+                    "destination": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+                    "kind": "transform",
+                    "loss_cost": 0,
+                    "may_lose": [],
+                    "operation": "observe",
+                    "postconditions": [
+                      "ordered"
+                    ],
+                    "preconditions": [],
+                    "preserves": {
+                      "ancestry": true,
+                      "bytes": true,
+                      "order": true,
+                      "particular_identity": false,
+                      "semantics": true,
+                      "timing": false
+                    },
+                    "produces": "file.bytes",
+                    "relation_id": "relation:ed44b3fa-c88f-4e76-aac9-d3d277a9cb2c",
+                    "removes": [],
+                    "requires": {
+                      "authority": "observe",
+                      "live_participant": true,
+                      "local_state": false,
+                      "network": false,
+                      "witness": null
+                    },
+                    "reversible": true,
+                    "schema": "relatte.interface-relation.experimental/v0",
+                    "source": "interface:808b5966",
+                    "verification_ref": "verification:2c268110"
+                  },
+                  "destination": {
+                    "descriptor_digest": "sha256:50cb95282bc630312b4798ff07faaa04c2eb78ae6add541c243835ae7ad6a06c",
+                    "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+                    "offer_id": "offer:87e5cd90-6e60-40d2-8963-b414949f0af6",
+                    "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                  },
+                  "event_ref": "sha256:de24df16af65cca728f1bf504fc7fe650c9c319e8a62c5504f67a844d9810df6",
+                  "expires_at": 61000,
+                  "offer_id": "relation-offer:47b09352-23bb-4064-b509-b5c24e4beb4e",
+                  "source": {
+                    "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3",
+                    "interface_id": "interface:808b5966",
+                    "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+                    "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                  },
+                  "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                }
+              ],
+              "schema": "relatte.dynamic-field-view.experimental/v0",
+              "scope": "SELECTED_LOCAL_HISTORIES_ONLY",
+              "view_digest": "sha256:16ddc34dc447d3b176af69f2fec42235e656fe1f21b1aa27fbe692605180ca33"
+            }
+          },
+          "previous": "sha256:2df6f3d342859cb57a25de14dab7d805aca5e7e295baf34fff83d978cf822aac",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 14,
+          "signature": "5U3q4U8E23gk72wvaFmfL80ukQGdfAfx3y/I328cJcmTbwqPSsuDYj8BgLMLWS4v6FibHXDYz1vRIQ6RgI9rCQ==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "selection",
+          "payload": {
+            "plan_digest": "sha256:eb70fabdc700540f2947afa799cf0f7256972fa9e5cae94b1f18b260d0718a33",
+            "plan_ref": "sha256:8168084adc77ef00c3e6812fb5431b97019802255379439493c133058d2ad099"
+          },
+          "previous": "sha256:a5670e38c29fd709913df39b7c0a0d14792cda01e0f3ac336b55c7505c85fc72",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 15,
+          "signature": "09qs67pdbQzpJhm7dNCacpeBP9K5EVK/khgAKpzhW0bdEfmXQIJ7xjwWcc8SJD9tLlqW9vox38hkYQ9mrrBOBw==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "authorization",
+          "payload": {
+            "epoch": "epoch:92606075-42c4-4457-b479-57788a1752b0",
+            "grants_ref": "sha256:aeab59eec9117bb2314b4514f98f854b95ca8b5e69e5be65122375c5ad85d4fa",
+            "plan_digest": "sha256:eb70fabdc700540f2947afa799cf0f7256972fa9e5cae94b1f18b260d0718a33",
+            "subject": "visitor"
+          },
+          "previous": "sha256:26f56a5420bd3e41bc39ca397a57d79f7b7afe458382749d1e5814319503b269",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 16,
+          "signature": "85SHf+Jya0FocYf3RE3xiobUgxTy+lVvgp5GF1UNN8Nz+pMxxGqC9ceiw7J2ixvkuz4x1PZ2KKFJTrszWJqUBQ==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "runtime-observation",
+          "payload": {
+            "after": {
+              "agent": "ROOM B",
+              "chest": {
+                "contents": [
+                  "stone",
+                  "map fragment"
+                ],
+                "map_fragment": {
+                  "destination": "ROOM B"
+                },
+                "map_visible": true,
+                "open": true
+              },
+              "edge": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "observations": 2,
+              "rooms": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "transitions": 2
+            },
+            "before": {
+              "agent": "ROOM B",
+              "chest": {
+                "contents": [
+                  "stone",
+                  "map fragment"
+                ],
+                "map_fragment": {
+                  "destination": "ROOM B"
+                },
+                "map_visible": true,
+                "open": true
+              },
+              "edge": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "observations": 1,
+              "rooms": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "transitions": 2
+            },
+            "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+            "observation": {
+              "map_fragment": {
+                "destination": "ROOM B"
+              }
+            },
+            "offer_id": "offer:87e5cd90-6e60-40d2-8963-b414949f0af6"
+          },
+          "previous": "sha256:0aee9ced273ec01fa42b632bca2f9516ddb7a0d5be7d9dc9f278f470ae48c971",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 17,
+          "signature": "3gLkYEQBRYxzuqqdZaPAmxKmOp82Uf6B0V1UPUmFBVjOBoQdKoVbgFTe2BySw1AKyaz176SedkgNx8UkeTCGAQ==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "occurrence",
+          "payload": {
+            "occurrence_ref": "sha256:0260f227602b053a3d35b855339a1777032fb19e9a77d4faf7a859a3887fb229",
+            "plan_ref": "sha256:8168084adc77ef00c3e6812fb5431b97019802255379439493c133058d2ad099",
+            "view_ref": "sha256:64c5e8523f5e6d1db1761f4a4ab8b34b528cd5089242e3845bb9b00a60e0d2ed"
+          },
+          "previous": "sha256:3f8481194f761c457e43de1dda97771eca0e29ab2435a8e08179b3c74a0d90ce",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 18,
+          "signature": "Kq9UKAy/LPh+/St/Wmlve9KrC7Q6b20l4BX2YTz6ymZkOJVNSosWW3xnPXE8obdhXpMKiL+6C4fwvx2+g8LaBw==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "observer",
+          "payload": {
+            "action_trace_ref": "sha256:0df65463879ba14c6e9c4c5d194bbb1bef2fe3d2c4a7ddc8c5617a726f2d6114",
+            "author_session_id": "author:a5e06439-b073-4ad5-a0ef-5629803f5d29",
+            "claims": {
+              "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+              "room_state_digest": "sha256:040cfae34b783a86f5e0307cabfd9e1ba2fc16eec7e377ecbf54d39d4fc56fd9",
+              "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+            },
+            "observed_state_ref": "sha256:5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+            "observed_state_sha256": "5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+            "observer_session_id": "observer:e3c7b5cc-919e-400b-8003-37200a14a1a6",
+            "runtime_id": "bounded-room-chest/v0"
+          },
+          "previous": "sha256:5de2d7e20ac81cc660cca53562d3779d2dc930ff84b4310e1a3793e39bec541d",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 19,
+          "signature": "lDVjspbJ+lZQsa/SqU3MbB4dKyTCJBdE7QPqOSV6vOhoh8+EKmTpUdpOimc7N6BK6ZRMJj0gMOOs0TJZayupBQ==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "snapshot",
+          "payload": {
+            "snapshot_ref": "sha256:5d5b25fb3b513ef067cdc94a5b2d7ab04fca52c7586e78ad3442d536d9c62c4a"
+          },
+          "previous": "sha256:4f0dcd9bdded242e76bb87b7c34f9e803fc2f46a7525ed3b38ac71ade9fd40ef",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 20,
+          "signature": "lt/lQf9oC/5mRygFjTGhgOTsHbXlWcmWBO8MHTgiOoE1lu8k+3wNT9nrS2zntCFApCybU1i9talFOhmEHHDXCg==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "candidate",
+          "payload": {
+            "candidate_ref": "sha256:5596610905be644f77d38d2a77185bd10b75a5ed228cf7ab0bc398c48e9945da",
+            "particular_id": "particular:composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d:candidate:5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e"
+          },
+          "previous": "sha256:1b3eefba748b028d947e80a0432a9cbe580b9bca74f375114167f9c56498ab18",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 21,
+          "signature": "ZlM5FMUUbYoEArjskK0+QSJlnWBrzikq6gWWWy8TMEsQp7uN9MUH9eKX4byyMZz2gfzEDkgDKi9VxED7Ty2JCg==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "death-fence",
+          "payload": {
+            "epoch": "epoch:92606075-42c4-4457-b479-57788a1752b0",
+            "field_history_ref": "sha256:6fee30ec53e801fe1d717272afe73153a69d3c903e90df46dc7d46b79285e15b",
+            "retirement": [
+              "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+              "offer:87e5cd90-6e60-40d2-8963-b414949f0af6"
+            ],
+            "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+          },
+          "previous": "sha256:2d98dabcb42560605ad99e523cdc33cc81cf4e660e722f5b2d20df46e1efd56d",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 22,
+          "signature": "FA0ydc0mob2WZ1zzPA0ucK+lu8C+nlUj6Y9pHrUAubSljiWAvtzQyn0v1TiWRZcFsw1owilPl/loAs82wsGqDg==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "terminated",
+          "payload": {
+            "pid": 7140,
+            "signal": "SIGKILL"
+          },
+          "previous": "sha256:c73333f170c33ad1421e51cb60cfc429921ce1ee8ef3a0fa1fabc97b3d0c6011",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 23,
+          "signature": "dyRyYgrdgVgzyGaKuT4cBwJfybb6RjhsRb7UEzeZrgLlO/Foa3ktg5mfDXMR8DM6Y6iDuaJhahdPDi+bxZtpCA==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "cleanup",
+          "payload": {
+            "field_history_ref": "sha256:63bbd02cfc51dc934006590a3436de13be35a6761073551589c2da1c4ada4259"
+          },
+          "previous": "sha256:cf21e5550e58fc803b831937a2cdf752cfa7bd974a60914db4bd58d3d9b9d2e3",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 24,
+          "signature": "t3oiwku5Zg7yooKZ4ZxLeOkyjD3i8dJwMCGGTXAuy0dV3g2WEORZ7aKy0kPiwR5XLJRNVIWoNZgNpHh4azekDQ==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        },
+        {
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "kind": "denial",
+          "payload": {
+            "occurrence_ref": "sha256:a0476f12bcdfad016b743adec4c93757c904aeff1261dce8373753400bf95938",
+            "plan_ref": "sha256:512773c96705d8167d9cde762e18dd4c2a4b9122cad33a7c5f16bcf2aa33230a",
+            "view_ref": "sha256:adbc4f3f1143f641b701f7f89150b41261c8b60813195f1e3bab07a88483d828"
+          },
+          "previous": "sha256:2a1561fb70d12b7b52515750924fb6ba895196aa73b7e397dcf341feee2d717b",
+          "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 25,
+          "signature": "ADgPyoQjocmkRxvf4evrkINVnjHCOUL9lc+cozVI+4dcWVrZEZqr8v6nTTI8P1c7MANLSK+uIsFYgAJX6wm1CQ==",
+          "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b"
+        }
+      ],
+      "field_history": [
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:705c8c84-c545-4780-bada-bfff1488f3a4",
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "seq": 0,
+          "previous": null,
+          "at_ms": 1000,
+          "kind": "genesis",
+          "payload": {
+            "parent": null
+          },
+          "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU=",
+          "signature": "c2ynrtOmVItADEyQnAf74Qq3VTBhuph/LsG5a0JQva7P3TQTGfxEoayTjJwRV4gZC1bSZjIOGbAs9dyAQCy4Dw=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:58877fb7-2808-4e9d-ba62-5b2c9c54668f",
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "seq": 1,
+          "previous": "sha256:797f64ca74432aadfdc7394ce33c0e79bd60b029a4f41630e713244f20ebc3c1",
+          "at_ms": 1000,
+          "kind": "publish",
+          "payload": {
+            "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+            "descriptor": {
+              "schema": "relatte.interface-particular.experimental/v0",
+              "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+              "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+              "plane": "transport",
+              "direction": "bidirectional",
+              "protocol": "in-process/v0",
+              "accepts": [
+                "file.bytes"
+              ],
+              "emits": [
+                "file.bytes"
+              ],
+              "operations": [
+                "observe",
+                "transmit",
+                "receive",
+                "propose"
+              ],
+              "authority": {
+                "observe": true,
+                "propose": true,
+                "authorize": false,
+                "mutate": false
+              },
+              "information": {
+                "capacity": 1048576,
+                "capacity_unit": "payload-bytes",
+                "timing_model": "occurrence time",
+                "ordering": "ordered",
+                "delivery": "bounded local observation",
+                "loss_profile": [],
+                "native_dimensions": [
+                  "path",
+                  "device",
+                  "inode"
+                ]
+              },
+              "state": {
+                "retention": "persistent",
+                "replayable": true
+              },
+              "evidence": {
+                "produces": [
+                  "native receipt"
+                ],
+                "verification": [
+                  "binding-local verification"
+                ],
+                "source_ref": "polyglot-crossing-001 observeFilesystem"
+              },
+              "constraints": {
+                "required": [],
+                "forbidden": [
+                  "authorize"
+                ]
+              },
+              "live": true,
+              "capabilities": [
+                "observe",
+                "transmit",
+                "receive",
+                "propose"
+              ]
+            },
+            "descriptor_digest": "sha256:2002b2b22f23a33c0a52118483f81eab5f1911ec2d010abe6f090872cb4346cc",
+            "expires_at": 61000,
+            "parents": []
+          },
+          "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU=",
+          "signature": "cjxSz7j/tn8wDLQ3QdEi9o+kPs8i3bApYzyebkvCUWk/s+BkY9zvcRxUn74fNjDrqsp1r6vdqDeecg7gPaYPBg=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:1ea6b206-06ee-486d-b16d-45355812463a",
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "seq": 2,
+          "previous": "sha256:d9b3c1b7cbe3ddf72e3b94a49f9afb54d397f28edd06e61bc713b025a4dd5596",
+          "at_ms": 1000,
+          "kind": "relation-publish",
+          "payload": {
+            "offer_id": "relation-offer:6b2f1e09-d2a5-4258-9949-be9b71685d82",
+            "descriptor": {
+              "schema": "relatte.interface-relation.experimental/v0",
+              "relation_id": "relation:986e798e-a8ad-4977-aea4-986531f78ecc",
+              "source": "interface:808b5966",
+              "destination": "interface:552dd703-9534-4075-a884-33125591fc50",
+              "kind": "transform",
+              "consumes": "payload.bytes",
+              "produces": "file.bytes",
+              "operation": "observe",
+              "preconditions": [],
+              "postconditions": [
+                "ordered"
+              ],
+              "removes": [],
+              "preserves": {
+                "bytes": true,
+                "semantics": true,
+                "ancestry": true,
+                "order": true,
+                "timing": false,
+                "particular_identity": false
+              },
+              "may_lose": [],
+              "reversible": true,
+              "loss_cost": 0,
+              "requires": {
+                "network": false,
+                "live_participant": true,
+                "local_state": false,
+                "witness": null,
+                "authority": "observe"
+              },
+              "binding_ref": "binding:2c268110",
+              "verification_ref": "verification:2c268110"
+            },
+            "source": {
+              "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121",
+              "interface_id": "interface:808b5966",
+              "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+              "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3"
+            },
+            "destination": {
+              "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+              "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+              "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+              "descriptor_digest": "sha256:2002b2b22f23a33c0a52118483f81eab5f1911ec2d010abe6f090872cb4346cc"
+            },
+            "expires_at": 61000
+          },
+          "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU=",
+          "signature": "ox0AoPTo1FBKdf5hHYxPdPja5e7TD5h7Wu7tODMvO9zcpa32bYYoaFJEHc/UVn4rljVeMTinBpN9XEUEvz6vBQ=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:53850306-a793-4945-8468-2f85b45ef263",
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "seq": 3,
+          "previous": "sha256:9c8c7081aa5605fe3b3935fe406f831353d5ce49f4f23b6a0982ec75275cc03f",
+          "at_ms": 1000,
+          "kind": "grant",
+          "payload": {
+            "schema": "relatte.dynamic-door-grant.experimental/v0",
+            "grant_id": "grant:ac79648e-c5e0-43f4-8fb2-5dd7c459aae9",
+            "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+            "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+            "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+            "descriptor_digest": "sha256:2002b2b22f23a33c0a52118483f81eab5f1911ec2d010abe6f090872cb4346cc",
+            "subject": "visitor",
+            "operation": "observe",
+            "permission": "observe",
+            "expires_at": 61000,
+            "max_uses": 3,
+            "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU=",
+            "signature": "ShtgX/i0Gd56I8hUWUbYHozg8fyjorwptQxv95fOcNjpVkPfz+SiHYn3dmN/7aMbT4FIyzUjstzuDbiZ50LsBA=="
+          },
+          "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU=",
+          "signature": "6C/Yy2l/JJk32jE/evydcYt8n5lpX9nrgcVBIggZEJXf72C4hBgJ+sR8zdmODSt72+EyG3P0LoYjE388o6L0Ag=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:2d3aa839-f4d5-4e44-af13-1039b171b865",
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "seq": 4,
+          "previous": "sha256:35f9572478f0ca90c4f326106f4e40dafb378c0b6510c5e1b60173864288c5ea",
+          "at_ms": 1000,
+          "kind": "publish",
+          "payload": {
+            "offer_id": "offer:87e5cd90-6e60-40d2-8963-b414949f0af6",
+            "descriptor": {
+              "schema": "relatte.interface-particular.experimental/v0",
+              "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+              "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+              "plane": "transport",
+              "direction": "bidirectional",
+              "protocol": "in-process/v0",
+              "accepts": [
+                "file.bytes"
+              ],
+              "emits": [
+                "file.bytes"
+              ],
+              "operations": [
+                "observe",
+                "transmit",
+                "receive",
+                "propose"
+              ],
+              "authority": {
+                "observe": true,
+                "propose": true,
+                "authorize": false,
+                "mutate": false
+              },
+              "information": {
+                "capacity": 1048576,
+                "capacity_unit": "payload-bytes",
+                "timing_model": "occurrence time",
+                "ordering": "ordered",
+                "delivery": "bounded local observation",
+                "loss_profile": [],
+                "native_dimensions": [
+                  "path",
+                  "device",
+                  "inode"
+                ]
+              },
+              "state": {
+                "retention": "persistent",
+                "replayable": true
+              },
+              "evidence": {
+                "produces": [
+                  "native receipt"
+                ],
+                "verification": [
+                  "binding-local verification"
+                ],
+                "source_ref": "polyglot-crossing-001 observeFilesystem"
+              },
+              "constraints": {
+                "required": [],
+                "forbidden": [
+                  "authorize"
+                ]
+              },
+              "live": true,
+              "capabilities": [
+                "observe",
+                "transmit",
+                "receive",
+                "propose"
+              ]
+            },
+            "descriptor_digest": "sha256:50cb95282bc630312b4798ff07faaa04c2eb78ae6add541c243835ae7ad6a06c",
+            "expires_at": 61000,
+            "parents": [
+              {
+                "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+                "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28"
+              }
+            ]
+          },
+          "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU=",
+          "signature": "deEwUv0Gzzbu84wW4T7IwnRKdH4FM+mBpkhSeBwRZQA8ZTIw/ZpuwdTObEFPbG2cqn/3uV+Poy9ldFlZeoDNDw=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:8e33d831-7c83-408d-bf89-8e01bf2f268e",
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "seq": 5,
+          "previous": "sha256:6c0f2e7049e9511c765e752ac1cb3c2dbfef50ed08cb525ca75dca4536ba36b2",
+          "at_ms": 1000,
+          "kind": "relation-publish",
+          "payload": {
+            "offer_id": "relation-offer:47b09352-23bb-4064-b509-b5c24e4beb4e",
+            "descriptor": {
+              "schema": "relatte.interface-relation.experimental/v0",
+              "relation_id": "relation:ed44b3fa-c88f-4e76-aac9-d3d277a9cb2c",
+              "source": "interface:808b5966",
+              "destination": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+              "kind": "transform",
+              "consumes": "payload.bytes",
+              "produces": "file.bytes",
+              "operation": "observe",
+              "preconditions": [],
+              "postconditions": [
+                "ordered"
+              ],
+              "removes": [],
+              "preserves": {
+                "bytes": true,
+                "semantics": true,
+                "ancestry": true,
+                "order": true,
+                "timing": false,
+                "particular_identity": false
+              },
+              "may_lose": [],
+              "reversible": true,
+              "loss_cost": 0,
+              "requires": {
+                "network": false,
+                "live_participant": true,
+                "local_state": false,
+                "witness": null,
+                "authority": "observe"
+              },
+              "binding_ref": "binding:2c268110",
+              "verification_ref": "verification:2c268110"
+            },
+            "source": {
+              "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121",
+              "interface_id": "interface:808b5966",
+              "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+              "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3"
+            },
+            "destination": {
+              "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+              "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+              "offer_id": "offer:87e5cd90-6e60-40d2-8963-b414949f0af6",
+              "descriptor_digest": "sha256:50cb95282bc630312b4798ff07faaa04c2eb78ae6add541c243835ae7ad6a06c"
+            },
+            "expires_at": 61000
+          },
+          "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU=",
+          "signature": "O3qAyXdciynG7s1V3SB1hggjJPeKGzLZVjYVjzMN7H8J/kGzA9mjIIYNhDcCw9xL6kO317LHPEGAhAu4ecsdAw=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:9f66c17a-a2ad-4e29-8809-2b38d0df5a79",
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "seq": 6,
+          "previous": "sha256:de24df16af65cca728f1bf504fc7fe650c9c319e8a62c5504f67a844d9810df6",
+          "at_ms": 1000,
+          "kind": "grant",
+          "payload": {
+            "schema": "relatte.dynamic-door-grant.experimental/v0",
+            "grant_id": "grant:d5089043-f3a3-47f1-aa8f-68f32196ea12",
+            "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+            "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+            "offer_id": "offer:87e5cd90-6e60-40d2-8963-b414949f0af6",
+            "descriptor_digest": "sha256:50cb95282bc630312b4798ff07faaa04c2eb78ae6add541c243835ae7ad6a06c",
+            "subject": "visitor",
+            "operation": "observe",
+            "permission": "observe",
+            "expires_at": 61000,
+            "max_uses": 1,
+            "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU=",
+            "signature": "VNOagQWWiR1tBGcHR1L7DuopWwfVPeIN1G90NoNq8PClO30qoMLlQIYiWGyPDpsZo3DnMZoWRXbCXTunE9/eBQ=="
+          },
+          "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU=",
+          "signature": "zzRgVQfXxGhzltPyE+aHHihmBCtWhAUxINKTbkuDrytuLWELfik7deej8ktGRGN7uU0eNnfcrp3kIqPlsUBmDw=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:14e80315-1203-4c0a-ba8b-8e0599c31a77",
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "seq": 7,
+          "previous": "sha256:f36d04de1481104d55192345f3cceac953633088cab61fefb0a4da5856c49b59",
+          "at_ms": 1000,
+          "kind": "relation-withdraw",
+          "payload": {
+            "relation_id": "relation:986e798e-a8ad-4977-aea4-986531f78ecc",
+            "offer_id": "relation-offer:6b2f1e09-d2a5-4258-9949-be9b71685d82"
+          },
+          "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU=",
+          "signature": "lYzmVwBsuyUxEBEznxF4+2FEYDzxlYwTqNIfR2IYLAt1adMUD2Dg0LcH7ajGEXAQrFe+UwQ30fCMdz1uQsldAA=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:2bbc6655-d143-4646-a771-2f54944ee5a4",
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "seq": 8,
+          "previous": "sha256:addf28992f8bedfc2b28625664ff43f19f499724c3cf1d150257c8ed6a113e49",
+          "at_ms": 1000,
+          "kind": "relation-withdraw",
+          "payload": {
+            "relation_id": "relation:ed44b3fa-c88f-4e76-aac9-d3d277a9cb2c",
+            "offer_id": "relation-offer:47b09352-23bb-4064-b509-b5c24e4beb4e"
+          },
+          "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU=",
+          "signature": "2fjfDIoHHCT5CONuftapCZ7o3ap7ndxQPZ1VfRdHaCckdHgigAJNxFzSieuBjE3og9r3atZD/4107VpZ54YcCw=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:e93bb9d7-3241-458d-aba7-a967db631741",
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "seq": 9,
+          "previous": "sha256:866edc8d6cc6bf5592f2f8c45cae19965f3e0d4543e8db1022813139e1ef2d17",
+          "at_ms": 1000,
+          "kind": "withdraw",
+          "payload": {
+            "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+            "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28"
+          },
+          "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU=",
+          "signature": "IQQD7L7jCe/WV3MZdN/PVE6niVrQnhJpnAsFBYLgI8lKa2HnBDe/hrOSAAdhr7aD71ZGIlX2z1bPYAXpquyGAg=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:20982a65-3358-496b-b4ba-44a9dbe4bfaa",
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "seq": 10,
+          "previous": "sha256:d119f749d630949674e7c44a987f3374805ded73037636ce7571d787ce22e920",
+          "at_ms": 1000,
+          "kind": "withdraw",
+          "payload": {
+            "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+            "offer_id": "offer:87e5cd90-6e60-40d2-8963-b414949f0af6"
+          },
+          "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU=",
+          "signature": "BgVJ0Ae/JaHEmiahghTJzBhoLeyUvMOpbvHrjWMbnfX5DpU0jWBD31puZscJzfawPqoI1xY4idGST/5xIv0aBQ=="
+        }
+      ]
+    },
+    {
+      "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+      "instance_id": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+      "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+      "epoch": "epoch:93d7c9ed-6520-4a6b-b591-f7583a728bb9",
+      "ledger_anchor": {
+        "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5",
+        "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw="
+      },
+      "field_anchor": {
+        "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+        "public_key": "MCowBQYDK2VwAyEAGBQavc3w0tye1QLG1aPPDfsI3Mx6zyAJ3FCUspFiRN0="
+      },
+      "journal": [
+        {
+          "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+          "kind": "admitted",
+          "payload": {
+            "epoch": "epoch:93d7c9ed-6520-4a6b-b591-f7583a728bb9",
+            "instance_id": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+            "launch_ref": "sha256:30bf98b6b0654b32a13582d2e412b8f3356047b539534f75e14f124d5df3b27b",
+            "parent": {
+              "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+              "snapshot_ref": "sha256:5d5b25fb3b513ef067cdc94a5b2d7ab04fca52c7586e78ad3442d536d9c62c4a",
+              "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+            },
+            "runtime_id": "bounded-room-chest/v0",
+            "spec_bytes_base64": "eyJzY2hlbWEiOiJyZWxhdHRlLmNvbXBvc2l0aW9uLWluc3RhbmNlLXNwZWMvdjAiLCJydW50aW1lX2lkIjoiYm91bmRlZC1yb29tLWNoZXN0L3YwIiwiYmFzZV9zbmFwc2hvdF9yZWYiOiJzaGEyNTY6Mzk1ZTM4OTYxNzU3OWY0M2IxNTc4Y2U5OTcyZjk4ZTY0MTY5ZGY0M2RkYzVhNDhhYjI0OWM3M2RlZWZjNjI2MCIsImdvYWwiOiJvcGVuIGNoZXN0LCBvYnNlcnZlIGNvbnRlbnRzLCByZXZlYWwgbWFwIiwiaW5wdXRzIjpbXSwiY2FwYWJpbGl0aWVzIjpbImNvbXBvc2UiLCJvYnNlcnZlIiwicHVibGlzaC1vYnNlcnZhdGlvbiJdLCJsaW1pdHMiOnsicnVudGltZV9hY3Rpb25zIjoyLCJvYnNlcnZhdGlvbnMiOjgsIm5ldHdvcmsiOiJub25lIiwibWVtb3J5X21iIjozMn0sIm9ic2VydmVyX3BvbGljeSI6eyJyZXF1aXJlX2Rpc3RpbmN0X3Nlc3Npb24iOnRydWUsIm1vZGUiOiJmcmVzaC1yZWFkLW9ubHktcHJvY2VzcyJ9LCJyZXF1ZXN0ZWRfb3V0cHV0X2NsYXNzIjoiYm91bmRlZC1yb29tLXN0YXRlIiwiZ292ZXJuaW5nX3NuYXBzaG90Ijp7InJlbGF0dGVfY29yZV9zaGEiOiJmNWNiNzQ4OGJlYmMxYTZlMjdmZDQ1OGFkNDBhZjliOWI2ZjllODU4Iiwibm9ybWF0aXZlX3NyY190cmVlIjoiYzBlNGQyYzU5NDgxZTBmYjJhNGJmNGJiMjk0ZjM3MzkwN2ZkMmI3NiJ9LCJleHRlbnNpb25zIjp7fX0=",
+            "spec_ref": "sha256:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+            "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b"
+          },
+          "previous": null,
+          "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 0,
+          "signature": "Edd12LoWkWz1fIyEz2BiLAboWvCQfpeVgg8u4xhewbz4zkYjXigIru/pkj27LI8sh2Dh2H51N75fSndZR1IiDQ==",
+          "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5"
+        },
+        {
+          "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+          "kind": "reconstitution",
+          "payload": {
+            "historical_authority": "EVIDENCE_ONLY",
+            "parent_world": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+            "restored_counters": [],
+            "restored_grants": [],
+            "snapshot_ref": "sha256:5d5b25fb3b513ef067cdc94a5b2d7ab04fca52c7586e78ad3442d536d9c62c4a"
+          },
+          "previous": "sha256:f96ce498407371dfa63c6d416ab1234d252bba883a7f9e5c595f940f9a0abf3b",
+          "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 1,
+          "signature": "UU04/DqIbjdeQWo7JM0n90IxyxT8IAvqh5exanWdH46C1Ro1bufL7NeMk1o2iVSC9YnWRCygYHXXnaOxJZD3Aw==",
+          "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5"
+        },
+        {
+          "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+          "kind": "explicit-publication",
+          "payload": {
+            "eligible_ref": "sha256:c98a258e54dda6f664be2d3779e97cc6b3491b0b285e0e81bd0c4ef9012e8c38",
+            "epoch": "epoch:93d7c9ed-6520-4a6b-b591-f7583a728bb9",
+            "field_event_ref": "sha256:8bd8fc0daf0097efb15d526d670f6fe73c8cb9dcdd7ad3faa109e12dcac1efca",
+            "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+            "offer_id": "offer:1841a5ed-be19-459b-b484-5c501f2f5f97",
+            "parents": [
+              {
+                "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+                "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+              }
+            ],
+            "runtime_event_ref": "sha256:ef3d478ab82fe3484d6583794564b8603bf32a4b8b2746de530243bfe07fea84",
+            "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b"
+          },
+          "previous": "sha256:743e6d5adc40ac92b4602b45d39d66759e453e3a90a0c4fbed1908f6fcbe7a81",
+          "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 2,
+          "signature": "GKrn7kHg2qWbRiGmgZ8rW5QzugS+qihTUYAzeOSnIp2OJruJvwKDk87HLUO3+eMz3i0oBfPyqFLJ49AmTVTiAw==",
+          "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5"
+        },
+        {
+          "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+          "kind": "explicit-publication",
+          "payload": {
+            "eligible_ref": "sha256:ac1de8cf1c648c740f3f565d21658a03a498e6a3b3dfbfe65f4b72f9825a8d44",
+            "epoch": "epoch:93d7c9ed-6520-4a6b-b591-f7583a728bb9",
+            "field_event_ref": "sha256:6b34dc011e62333df5aa28ff553753fd26ec63905e7ee334a3c14cdd677efe3d",
+            "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+            "offer_id": "offer:24ce150b-d54a-4827-ad55-c98936ce64ee",
+            "parents": [
+              {
+                "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                "offer_id": "offer:1841a5ed-be19-459b-b484-5c501f2f5f97",
+                "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b"
+              },
+              {
+                "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+                "offer_id": "offer:87e5cd90-6e60-40d2-8963-b414949f0af6",
+                "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+              }
+            ],
+            "runtime_event_ref": "sha256:18aaf3e4524ad52abca19eb7da8a46bc4cd7bdb6caa12009e1857c4fbaccd998",
+            "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b"
+          },
+          "previous": "sha256:faf7f663233b8b5ee6ecdebcd26ebcfcbfd5de2ffd237fdd2c917d199a1a10e1",
+          "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 3,
+          "signature": "GBQqQvE9KYAxP732ZoFwGqGi9zRPnG6xYo8TlLurlVzRPJTDGaZxtOyxxNlEFfRllkg7N0K6GCp9WzqRaKjxCw==",
+          "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5"
+        },
+        {
+          "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+          "kind": "discovery",
+          "payload": {
+            "histories_ref": "sha256:1a9242124bc9bb53c5f914e65caac3070d4986a28a003f940c80ec763648f3f5",
+            "snapshot": {
+              "authority": [],
+              "door_refs": [
+                {
+                  "descriptor": {
+                    "accepts": [
+                      "payload.bytes"
+                    ],
+                    "authority": {
+                      "authorize": false,
+                      "mutate": false,
+                      "observe": true,
+                      "propose": true
+                    },
+                    "capabilities": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "constraints": {
+                      "forbidden": [
+                        "authorize"
+                      ],
+                      "required": []
+                    },
+                    "direction": "output",
+                    "emits": [
+                      "payload.bytes"
+                    ],
+                    "evidence": {
+                      "produces": [
+                        "native receipt"
+                      ],
+                      "source_ref": "caller-owned bytes",
+                      "verification": [
+                        "binding-local verification"
+                      ]
+                    },
+                    "information": {
+                      "capacity": 1048576,
+                      "capacity_unit": "payload-bytes",
+                      "delivery": "bounded local observation",
+                      "loss_profile": [],
+                      "native_dimensions": [],
+                      "ordering": "ordered",
+                      "timing_model": "occurrence time"
+                    },
+                    "interface_id": "interface:808b5966",
+                    "live": true,
+                    "operations": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "participant_ref": "participant:payload",
+                    "plane": "transport",
+                    "protocol": "in-process/v0",
+                    "schema": "relatte.interface-particular.experimental/v0",
+                    "state": {
+                      "replayable": true,
+                      "retention": "persistent"
+                    }
+                  },
+                  "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3",
+                  "event_ref": "sha256:2433a9cdb782becc21ad5f88d794df5032be6a824a9f893b1aa44386e2f95a12",
+                  "expires_at": 61000,
+                  "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+                  "parents": [],
+                  "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                },
+                {
+                  "descriptor": {
+                    "accepts": [
+                      "file.bytes"
+                    ],
+                    "authority": {
+                      "authorize": false,
+                      "mutate": false,
+                      "observe": true,
+                      "propose": true
+                    },
+                    "capabilities": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "constraints": {
+                      "forbidden": [
+                        "authorize"
+                      ],
+                      "required": []
+                    },
+                    "direction": "bidirectional",
+                    "emits": [
+                      "file.bytes"
+                    ],
+                    "evidence": {
+                      "produces": [
+                        "native receipt"
+                      ],
+                      "source_ref": "polyglot-crossing-001 observeFilesystem",
+                      "verification": [
+                        "binding-local verification"
+                      ]
+                    },
+                    "information": {
+                      "capacity": 1048576,
+                      "capacity_unit": "payload-bytes",
+                      "delivery": "bounded local observation",
+                      "loss_profile": [],
+                      "native_dimensions": [
+                        "path",
+                        "device",
+                        "inode"
+                      ],
+                      "ordering": "ordered",
+                      "timing_model": "occurrence time"
+                    },
+                    "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                    "live": true,
+                    "operations": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+                    "plane": "transport",
+                    "protocol": "in-process/v0",
+                    "schema": "relatte.interface-particular.experimental/v0",
+                    "state": {
+                      "replayable": true,
+                      "retention": "persistent"
+                    }
+                  },
+                  "descriptor_digest": "sha256:2002b2b22f23a33c0a52118483f81eab5f1911ec2d010abe6f090872cb4346cc",
+                  "event_ref": "sha256:8bd8fc0daf0097efb15d526d670f6fe73c8cb9dcdd7ad3faa109e12dcac1efca",
+                  "expires_at": 61000,
+                  "offer_id": "offer:1841a5ed-be19-459b-b484-5c501f2f5f97",
+                  "parents": [
+                    {
+                      "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                      "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+                      "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                    }
+                  ],
+                  "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b"
+                },
+                {
+                  "descriptor": {
+                    "accepts": [
+                      "file.bytes"
+                    ],
+                    "authority": {
+                      "authorize": false,
+                      "mutate": false,
+                      "observe": true,
+                      "propose": true
+                    },
+                    "capabilities": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "constraints": {
+                      "forbidden": [
+                        "authorize"
+                      ],
+                      "required": []
+                    },
+                    "direction": "bidirectional",
+                    "emits": [
+                      "file.bytes"
+                    ],
+                    "evidence": {
+                      "produces": [
+                        "native receipt"
+                      ],
+                      "source_ref": "polyglot-crossing-001 observeFilesystem",
+                      "verification": [
+                        "binding-local verification"
+                      ]
+                    },
+                    "information": {
+                      "capacity": 1048576,
+                      "capacity_unit": "payload-bytes",
+                      "delivery": "bounded local observation",
+                      "loss_profile": [],
+                      "native_dimensions": [
+                        "path",
+                        "device",
+                        "inode"
+                      ],
+                      "ordering": "ordered",
+                      "timing_model": "occurrence time"
+                    },
+                    "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+                    "live": true,
+                    "operations": [
+                      "observe",
+                      "transmit",
+                      "receive",
+                      "propose"
+                    ],
+                    "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+                    "plane": "transport",
+                    "protocol": "in-process/v0",
+                    "schema": "relatte.interface-particular.experimental/v0",
+                    "state": {
+                      "replayable": true,
+                      "retention": "persistent"
+                    }
+                  },
+                  "descriptor_digest": "sha256:50cb95282bc630312b4798ff07faaa04c2eb78ae6add541c243835ae7ad6a06c",
+                  "event_ref": "sha256:6b34dc011e62333df5aa28ff553753fd26ec63905e7ee334a3c14cdd677efe3d",
+                  "expires_at": 61000,
+                  "offer_id": "offer:24ce150b-d54a-4827-ad55-c98936ce64ee",
+                  "parents": [
+                    {
+                      "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                      "offer_id": "offer:1841a5ed-be19-459b-b484-5c501f2f5f97",
+                      "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b"
+                    },
+                    {
+                      "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+                      "offer_id": "offer:87e5cd90-6e60-40d2-8963-b414949f0af6",
+                      "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+                    }
+                  ],
+                  "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b"
+                }
+              ],
+              "excluded": [],
+              "frontiers": [
+                {
+                  "count": 4,
+                  "head": "sha256:c2209f4a1e190ead0984c4690dd43c9488772636fc6a8a12659f99dc1d19dee1",
+                  "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b"
+                },
+                {
+                  "count": 4,
+                  "head": "sha256:7830b8b95ee60e3da8b96f6c206c0c58d6c24913aa74af8423536029135b00c3",
+                  "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                }
+              ],
+              "observed_at": 1000,
+              "registry_digest": "sha256:5a9de735b786eea700a336a32bc7bc0d314272a2c4b61d47e5e0b2fb09f90432",
+              "relation_refs": [
+                {
+                  "descriptor": {
+                    "binding_ref": "binding:2c268110",
+                    "consumes": "payload.bytes",
+                    "destination": "interface:552dd703-9534-4075-a884-33125591fc50",
+                    "kind": "transform",
+                    "loss_cost": 0,
+                    "may_lose": [],
+                    "operation": "observe",
+                    "postconditions": [
+                      "ordered"
+                    ],
+                    "preconditions": [],
+                    "preserves": {
+                      "ancestry": true,
+                      "bytes": true,
+                      "order": true,
+                      "particular_identity": false,
+                      "semantics": true,
+                      "timing": false
+                    },
+                    "produces": "file.bytes",
+                    "relation_id": "relation:6dbca995-b600-4275-bdda-404390808f12",
+                    "removes": [],
+                    "requires": {
+                      "authority": "observe",
+                      "live_participant": true,
+                      "local_state": false,
+                      "network": false,
+                      "witness": null
+                    },
+                    "reversible": true,
+                    "schema": "relatte.interface-relation.experimental/v0",
+                    "source": "interface:808b5966",
+                    "verification_ref": "verification:2c268110"
+                  },
+                  "destination": {
+                    "descriptor_digest": "sha256:2002b2b22f23a33c0a52118483f81eab5f1911ec2d010abe6f090872cb4346cc",
+                    "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                    "offer_id": "offer:1841a5ed-be19-459b-b484-5c501f2f5f97",
+                    "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b"
+                  },
+                  "event_ref": "sha256:c2209f4a1e190ead0984c4690dd43c9488772636fc6a8a12659f99dc1d19dee1",
+                  "expires_at": 61000,
+                  "offer_id": "relation-offer:77847ece-e9b7-4664-afea-0021182d7972",
+                  "source": {
+                    "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3",
+                    "interface_id": "interface:808b5966",
+                    "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+                    "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121"
+                  },
+                  "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b"
+                }
+              ],
+              "schema": "relatte.dynamic-field-view.experimental/v0",
+              "scope": "SELECTED_LOCAL_HISTORIES_ONLY",
+              "view_digest": "sha256:26d4b3cad559949851275a755c1e305e5c5634e266985c82d94c9d84fad7dcff"
+            }
+          },
+          "previous": "sha256:1b819486c7c7f35d2abd590f5b254f249f5bce8d0f766f7ca5f7023e01a58b2e",
+          "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 4,
+          "signature": "TgSrzWUUDEJU1OlR40b5X+E4N5UilAH5CUDmp6JE9w/wIILNX0rlm7wbuQwJEewb0tYpMit+FPzHRs7VC0bNDQ==",
+          "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5"
+        },
+        {
+          "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+          "kind": "selection",
+          "payload": {
+            "plan_digest": "sha256:92e144ef009014164f4f81c0c7485dd330c6836290f44821a093fd49c91c9a95",
+            "plan_ref": "sha256:da89bc6d3ee2d358cda61ab0465dc9c3adeda9e3508e91927258c4d320ab3993"
+          },
+          "previous": "sha256:bea23cc6649e694ac672ae5b87a3f5fddc32d9b005c76fe31b1f2bebe5902d6b",
+          "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 5,
+          "signature": "43byI3j5LZczJJ2BJjZEHz7Mkpb0xeGHR5/fqyqNMzqy6oo9iybeNYE1EeFxWZaAH0AZpL17Zt8k/av1TAycAQ==",
+          "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5"
+        },
+        {
+          "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+          "kind": "occurrence",
+          "payload": {
+            "occurrence_ref": "sha256:01ad94ff55d6ba8b31c2933cea1969bee80419c29468dc1b81d122e0b51d5328",
+            "plan_ref": "sha256:da89bc6d3ee2d358cda61ab0465dc9c3adeda9e3508e91927258c4d320ab3993",
+            "view_ref": "sha256:4734db7515d81779dae127648596a0f395ff2a9cb672e7454d6b0574c1505454"
+          },
+          "previous": "sha256:60947347408295182fe9d84f6c8b8687e3e906ec835cf7056e91626758740934",
+          "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 6,
+          "signature": "gpSsWhdoRY7EaMapBGw67QMZbXWFc5HvHF1B8keM89KeL0rSOu+ukrqUjvYmzzRXSfpb7Q6Gt/LnGfRBKgo/BA==",
+          "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5"
+        },
+        {
+          "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+          "kind": "authorization",
+          "payload": {
+            "epoch": "epoch:93d7c9ed-6520-4a6b-b591-f7583a728bb9",
+            "grants_ref": "sha256:23e09f9b9b42b6425e25c36865e966dd94d09d4d7dc85e7bb8c15065441024ef",
+            "plan_digest": "sha256:92e144ef009014164f4f81c0c7485dd330c6836290f44821a093fd49c91c9a95",
+            "subject": "visitor"
+          },
+          "previous": "sha256:719f81601623d91fd7d087a6efb33a5dfaa785e66c2dab80fff7cb2acda7c243",
+          "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 7,
+          "signature": "9BWVkEriGW/YJUP2ftxatysfpN0i3niW9Aeuo9b5cp1qamYOOcFAxrvnT1RtQYx3MDSLWpzWovASp4eoGhKzDA==",
+          "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5"
+        },
+        {
+          "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+          "kind": "runtime-observation",
+          "payload": {
+            "after": {
+              "agent": "ROOM B",
+              "chest": {
+                "contents": [
+                  "stone",
+                  "map fragment"
+                ],
+                "map_fragment": {
+                  "destination": "ROOM B"
+                },
+                "map_visible": true,
+                "open": true
+              },
+              "edge": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "observations": 3,
+              "rooms": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "transitions": 2
+            },
+            "before": {
+              "agent": "ROOM B",
+              "chest": {
+                "contents": [
+                  "stone",
+                  "map fragment"
+                ],
+                "map_fragment": {
+                  "destination": "ROOM B"
+                },
+                "map_visible": true,
+                "open": true
+              },
+              "edge": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "observations": 2,
+              "rooms": [
+                "ROOM A",
+                "ROOM B"
+              ],
+              "transitions": 2
+            },
+            "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+            "observation": {
+              "contents": [
+                "stone",
+                "map fragment"
+              ]
+            },
+            "offer_id": "offer:1841a5ed-be19-459b-b484-5c501f2f5f97"
+          },
+          "previous": "sha256:4df7cd9c0c1adea34ca77e701b920ae427ddf4b9cf9da72d4ee4235e5f6e6c3e",
+          "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 8,
+          "signature": "82NnhAh2aYK02PYBcwocHYpks6g0X4kckvqEHNqT6X3RdJEGTJRD8Xx3F+BmvzRVgKvp8iW6XEZGDw+MwUfbBQ==",
+          "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5"
+        },
+        {
+          "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+          "kind": "occurrence",
+          "payload": {
+            "occurrence_ref": "sha256:195a0862353063035d702f67e97c76c4d2446c5bd7ecde707932c58b8a307c6f",
+            "plan_ref": "sha256:da89bc6d3ee2d358cda61ab0465dc9c3adeda9e3508e91927258c4d320ab3993",
+            "view_ref": "sha256:4734db7515d81779dae127648596a0f395ff2a9cb672e7454d6b0574c1505454"
+          },
+          "previous": "sha256:96a1bccec61eb39897467fcabab994fc4c9eb63903df86274ba129d9c66501e4",
+          "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 9,
+          "signature": "IXLpPM6GiGZC7x309eAXOVFabseqNSEdrPVeNjy2ZtUp6L1UA9ADKElxUQgobbbfjZ5Oz/wCQ4f/1+NRh5WEBw==",
+          "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5"
+        },
+        {
+          "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+          "kind": "death-fence",
+          "payload": {
+            "epoch": "epoch:93d7c9ed-6520-4a6b-b591-f7583a728bb9",
+            "field_history_ref": "sha256:d558f4a086ed1eae7a8b50f5e1be1046bfe6f16d1da1f2a9c2f1193696552514",
+            "retirement": [
+              "offer:1841a5ed-be19-459b-b484-5c501f2f5f97",
+              "offer:24ce150b-d54a-4827-ad55-c98936ce64ee"
+            ],
+            "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b"
+          },
+          "previous": "sha256:50a7a0b09a85eed5ebe011446c9764ebc5db8d0d7845b6f643c9ce693dc73c1b",
+          "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 10,
+          "signature": "M1YveKPSUZg3MhMOAwR4iUpmnHmu4xt8d+UgayW3UBQS7BN0+RqtXU9ShlfJarP4UZZandqMjEByWwhHUw8IAw==",
+          "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5"
+        },
+        {
+          "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+          "kind": "terminated",
+          "payload": {
+            "pid": 7161,
+            "signal": "SIGKILL"
+          },
+          "previous": "sha256:80bc1fb5b61230b1f044cd1e90520fbac39691e4f8e0c0999a78a607b5e34595",
+          "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 11,
+          "signature": "bTLTmkj+nPo5fjQFyP1pgW+qNsMWEFeQq3M1ME/tHOtvdyXs9UnVtmjMqzA1Hk66zLEfSq8hKYWOt6eoryFbDg==",
+          "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5"
+        },
+        {
+          "incarnation_id": "incarnation:da8548bb-5e29-4000-a6a4-bb56d9ae8d80",
+          "kind": "cleanup",
+          "payload": {
+            "field_history_ref": "sha256:c903eff578b483934fc5cddef23e968056c573185b8c9ed1de737d8441ffebd1"
+          },
+          "previous": "sha256:9273c8c698b66debf82e59edd3b122ae37848f4a7928f8d4419c9cac783c07ee",
+          "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 12,
+          "signature": "+DVYHAC3YN/1oc4U2LL97ek3EccPZdgnwcDjNvDrei/wqn7GkyHZywnapuXqZMSVuhG3xb08SE3uDyAePA8TBA==",
+          "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5"
+        }
+      ],
+      "field_history": [
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:fd8e3b7b-3899-4586-93b5-91bf8357a551",
+          "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+          "seq": 0,
+          "previous": null,
+          "at_ms": 1000,
+          "kind": "genesis",
+          "payload": {
+            "parent": null
+          },
+          "public_key": "MCowBQYDK2VwAyEAGBQavc3w0tye1QLG1aPPDfsI3Mx6zyAJ3FCUspFiRN0=",
+          "signature": "9Y7OhT4rgphSEHJKuToO4zZZrkMauj3thvLh4LFY7OAQSEeI6Rs1dApY/BdGCqN0wyJKSJPyfZhbwarkTY3dDQ=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:8af08345-e7fc-4c0a-934a-f6c1b4e67748",
+          "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+          "seq": 1,
+          "previous": "sha256:685e8be5d41a3cbd6d6636458decf315572cd828d2e13a54a0e520a521beaef1",
+          "at_ms": 1000,
+          "kind": "publish",
+          "payload": {
+            "offer_id": "offer:1841a5ed-be19-459b-b484-5c501f2f5f97",
+            "descriptor": {
+              "schema": "relatte.interface-particular.experimental/v0",
+              "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+              "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+              "plane": "transport",
+              "direction": "bidirectional",
+              "protocol": "in-process/v0",
+              "accepts": [
+                "file.bytes"
+              ],
+              "emits": [
+                "file.bytes"
+              ],
+              "operations": [
+                "observe",
+                "transmit",
+                "receive",
+                "propose"
+              ],
+              "authority": {
+                "observe": true,
+                "propose": true,
+                "authorize": false,
+                "mutate": false
+              },
+              "information": {
+                "capacity": 1048576,
+                "capacity_unit": "payload-bytes",
+                "timing_model": "occurrence time",
+                "ordering": "ordered",
+                "delivery": "bounded local observation",
+                "loss_profile": [],
+                "native_dimensions": [
+                  "path",
+                  "device",
+                  "inode"
+                ]
+              },
+              "state": {
+                "retention": "persistent",
+                "replayable": true
+              },
+              "evidence": {
+                "produces": [
+                  "native receipt"
+                ],
+                "verification": [
+                  "binding-local verification"
+                ],
+                "source_ref": "polyglot-crossing-001 observeFilesystem"
+              },
+              "constraints": {
+                "required": [],
+                "forbidden": [
+                  "authorize"
+                ]
+              },
+              "live": true,
+              "capabilities": [
+                "observe",
+                "transmit",
+                "receive",
+                "propose"
+              ]
+            },
+            "descriptor_digest": "sha256:2002b2b22f23a33c0a52118483f81eab5f1911ec2d010abe6f090872cb4346cc",
+            "expires_at": 61000,
+            "parents": [
+              {
+                "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+                "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28"
+              }
+            ]
+          },
+          "public_key": "MCowBQYDK2VwAyEAGBQavc3w0tye1QLG1aPPDfsI3Mx6zyAJ3FCUspFiRN0=",
+          "signature": "xnyPZuIG/78zDGrnopeNYOPy6K/MYTj4JTMa/INdHEj8JmsBtPpbdjGYQbscj1kUvPfbKfRiXRo5bO0Mfa8ABg=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:fab451ee-e29b-4125-a416-d63b42a323e5",
+          "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+          "seq": 2,
+          "previous": "sha256:8bd8fc0daf0097efb15d526d670f6fe73c8cb9dcdd7ad3faa109e12dcac1efca",
+          "at_ms": 1000,
+          "kind": "publish",
+          "payload": {
+            "offer_id": "offer:24ce150b-d54a-4827-ad55-c98936ce64ee",
+            "descriptor": {
+              "schema": "relatte.interface-particular.experimental/v0",
+              "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+              "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+              "plane": "transport",
+              "direction": "bidirectional",
+              "protocol": "in-process/v0",
+              "accepts": [
+                "file.bytes"
+              ],
+              "emits": [
+                "file.bytes"
+              ],
+              "operations": [
+                "observe",
+                "transmit",
+                "receive",
+                "propose"
+              ],
+              "authority": {
+                "observe": true,
+                "propose": true,
+                "authorize": false,
+                "mutate": false
+              },
+              "information": {
+                "capacity": 1048576,
+                "capacity_unit": "payload-bytes",
+                "timing_model": "occurrence time",
+                "ordering": "ordered",
+                "delivery": "bounded local observation",
+                "loss_profile": [],
+                "native_dimensions": [
+                  "path",
+                  "device",
+                  "inode"
+                ]
+              },
+              "state": {
+                "retention": "persistent",
+                "replayable": true
+              },
+              "evidence": {
+                "produces": [
+                  "native receipt"
+                ],
+                "verification": [
+                  "binding-local verification"
+                ],
+                "source_ref": "polyglot-crossing-001 observeFilesystem"
+              },
+              "constraints": {
+                "required": [],
+                "forbidden": [
+                  "authorize"
+                ]
+              },
+              "live": true,
+              "capabilities": [
+                "observe",
+                "transmit",
+                "receive",
+                "propose"
+              ]
+            },
+            "descriptor_digest": "sha256:50cb95282bc630312b4798ff07faaa04c2eb78ae6add541c243835ae7ad6a06c",
+            "expires_at": 61000,
+            "parents": [
+              {
+                "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+                "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+                "offer_id": "offer:1841a5ed-be19-459b-b484-5c501f2f5f97"
+              },
+              {
+                "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+                "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+                "offer_id": "offer:87e5cd90-6e60-40d2-8963-b414949f0af6"
+              }
+            ]
+          },
+          "public_key": "MCowBQYDK2VwAyEAGBQavc3w0tye1QLG1aPPDfsI3Mx6zyAJ3FCUspFiRN0=",
+          "signature": "bsbqQY5x26dJx7fr3oOHS/ltGpK/dsje88N5BpslWfpMp7LT0d9W/lQB6GZlzF9exM/poflHMEgCk1Ok3N40BA=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:a1a78338-9cad-4dbf-bb2f-b91b489005ee",
+          "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+          "seq": 3,
+          "previous": "sha256:6b34dc011e62333df5aa28ff553753fd26ec63905e7ee334a3c14cdd677efe3d",
+          "at_ms": 1000,
+          "kind": "relation-publish",
+          "payload": {
+            "offer_id": "relation-offer:77847ece-e9b7-4664-afea-0021182d7972",
+            "descriptor": {
+              "schema": "relatte.interface-relation.experimental/v0",
+              "relation_id": "relation:6dbca995-b600-4275-bdda-404390808f12",
+              "source": "interface:808b5966",
+              "destination": "interface:552dd703-9534-4075-a884-33125591fc50",
+              "kind": "transform",
+              "consumes": "payload.bytes",
+              "produces": "file.bytes",
+              "operation": "observe",
+              "preconditions": [],
+              "postconditions": [
+                "ordered"
+              ],
+              "removes": [],
+              "preserves": {
+                "bytes": true,
+                "semantics": true,
+                "ancestry": true,
+                "order": true,
+                "timing": false,
+                "particular_identity": false
+              },
+              "may_lose": [],
+              "reversible": true,
+              "loss_cost": 0,
+              "requires": {
+                "network": false,
+                "live_participant": true,
+                "local_state": false,
+                "witness": null,
+                "authority": "observe"
+              },
+              "binding_ref": "binding:2c268110",
+              "verification_ref": "verification:2c268110"
+            },
+            "source": {
+              "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121",
+              "interface_id": "interface:808b5966",
+              "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+              "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3"
+            },
+            "destination": {
+              "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+              "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+              "offer_id": "offer:1841a5ed-be19-459b-b484-5c501f2f5f97",
+              "descriptor_digest": "sha256:2002b2b22f23a33c0a52118483f81eab5f1911ec2d010abe6f090872cb4346cc"
+            },
+            "expires_at": 61000
+          },
+          "public_key": "MCowBQYDK2VwAyEAGBQavc3w0tye1QLG1aPPDfsI3Mx6zyAJ3FCUspFiRN0=",
+          "signature": "izTxzqXFogibzDTltUJZvnd3d1gCt/EoKG1DSM8SmUm8ZtxH8ZTNnCJTm2JU1xjgoYBO23kMsB71/moXshczBA=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:8ed1d8aa-58d4-4028-a1d9-a8a77d33e306",
+          "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+          "seq": 4,
+          "previous": "sha256:c2209f4a1e190ead0984c4690dd43c9488772636fc6a8a12659f99dc1d19dee1",
+          "at_ms": 1000,
+          "kind": "grant",
+          "payload": {
+            "schema": "relatte.dynamic-door-grant.experimental/v0",
+            "grant_id": "grant:1f30342c-790a-4718-9f89-4098d7a7705f",
+            "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+            "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+            "offer_id": "offer:1841a5ed-be19-459b-b484-5c501f2f5f97",
+            "descriptor_digest": "sha256:2002b2b22f23a33c0a52118483f81eab5f1911ec2d010abe6f090872cb4346cc",
+            "subject": "visitor",
+            "operation": "observe",
+            "permission": "observe",
+            "expires_at": 61000,
+            "max_uses": 1,
+            "public_key": "MCowBQYDK2VwAyEAGBQavc3w0tye1QLG1aPPDfsI3Mx6zyAJ3FCUspFiRN0=",
+            "signature": "BIGTwhcfFWkqT7iC9IjNRucrb+deftCzUU8nXYTMnMTzm9IP+zbH+QAC3DnCP/dI1+cfeoHZv3AdAryat9z/BQ=="
+          },
+          "public_key": "MCowBQYDK2VwAyEAGBQavc3w0tye1QLG1aPPDfsI3Mx6zyAJ3FCUspFiRN0=",
+          "signature": "kENtsiU3kGdyzbwoCMmDZ6BuNBDb+xyNFMPzaqlLsjTQZUXPF5b/ECDL2t4x2INg2zOTJTzNhe4ZrHAR64eSBw=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:275f6d63-a85a-467e-82c4-096be58930fc",
+          "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+          "seq": 5,
+          "previous": "sha256:462959fc42436048f9adbc9353063175515d34efbf2a6d8eb115b9e92ea5902c",
+          "at_ms": 1000,
+          "kind": "relation-withdraw",
+          "payload": {
+            "relation_id": "relation:6dbca995-b600-4275-bdda-404390808f12",
+            "offer_id": "relation-offer:77847ece-e9b7-4664-afea-0021182d7972"
+          },
+          "public_key": "MCowBQYDK2VwAyEAGBQavc3w0tye1QLG1aPPDfsI3Mx6zyAJ3FCUspFiRN0=",
+          "signature": "S+VMtCuCZbSVCwtKvOz4XYBFSHPa3xu5eI/i99XZZ1fcMxOQogUHrzJ5vfrVhuq+XjpF2c4qyrlcWQHusMJoBw=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:36dc3a5f-53a6-4937-a9e3-fd355642d204",
+          "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+          "seq": 6,
+          "previous": "sha256:245006c18c113381bbc2edbe9434b3538720c6ef35fc26ac92a521ddbd251bbb",
+          "at_ms": 1000,
+          "kind": "withdraw",
+          "payload": {
+            "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+            "offer_id": "offer:1841a5ed-be19-459b-b484-5c501f2f5f97"
+          },
+          "public_key": "MCowBQYDK2VwAyEAGBQavc3w0tye1QLG1aPPDfsI3Mx6zyAJ3FCUspFiRN0=",
+          "signature": "u8FfAcUu95uBohRl0tRMmlGCrlqqYEGkH6UMxjEoaPd0avLt4NdJ35jCc2hBMl2TnOVgSC1s1NF3p4IiGP6rBA=="
+        },
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:c8e33b69-036c-423d-9938-3bb9c3ea1321",
+          "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+          "seq": 7,
+          "previous": "sha256:75c81a6cad2a242881e89a9c7eb4815aa6c79104e482343530cd561d22b5fbec",
+          "at_ms": 1000,
+          "kind": "withdraw",
+          "payload": {
+            "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+            "offer_id": "offer:24ce150b-d54a-4827-ad55-c98936ce64ee"
+          },
+          "public_key": "MCowBQYDK2VwAyEAGBQavc3w0tye1QLG1aPPDfsI3Mx6zyAJ3FCUspFiRN0=",
+          "signature": "Y+HrA6wqBJHO4nRYsPIKTIeieJ8nX82DmuF/YUS/7VDJi8go66giV+vVpwR04NkDJNj+uL1DPijTS32bh0GMBg=="
+        }
+      ]
+    },
+    {
+      "incarnation_id": "incarnation:ed01d426-93aa-4eb4-8234-56b065d41c23",
+      "instance_id": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+      "world_id": "world:cd20b6eb659f244a415f4dcf32d93d3ec44642f1dba3fec1cddf46922eb97269",
+      "epoch": "epoch:91d76ac8-b6db-4743-8b76-2378fce76f2a",
+      "ledger_anchor": {
+        "world_id": "world:c9a8fe1234d063144121da1b07521319388ef4decc3debbc8285b91858e1d56e",
+        "public_key": "MCowBQYDK2VwAyEAocBUJnTprgUHQbV4G3k77ouJSRMxe1FwVBc634Ormng="
+      },
+      "field_anchor": {
+        "world_id": "world:cd20b6eb659f244a415f4dcf32d93d3ec44642f1dba3fec1cddf46922eb97269",
+        "public_key": "MCowBQYDK2VwAyEADv1r8Pl7AhV6avNOrt5DbjHEREzrRj8+T+sbRllckAE="
+      },
+      "journal": [
+        {
+          "incarnation_id": "incarnation:ed01d426-93aa-4eb4-8234-56b065d41c23",
+          "kind": "admitted",
+          "payload": {
+            "epoch": "epoch:91d76ac8-b6db-4743-8b76-2378fce76f2a",
+            "instance_id": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+            "launch_ref": "sha256:9a26815345573e5467e13b99f393ce5260a03c92ec11c8a897a12f63c7c03e4a",
+            "parent": null,
+            "runtime_id": "bounded-room-chest/v0",
+            "spec_bytes_base64": "eyJzY2hlbWEiOiJyZWxhdHRlLmNvbXBvc2l0aW9uLWluc3RhbmNlLXNwZWMvdjAiLCJydW50aW1lX2lkIjoiYm91bmRlZC1yb29tLWNoZXN0L3YwIiwiYmFzZV9zbmFwc2hvdF9yZWYiOiJzaGEyNTY6Mzk1ZTM4OTYxNzU3OWY0M2IxNTc4Y2U5OTcyZjk4ZTY0MTY5ZGY0M2RkYzVhNDhhYjI0OWM3M2RlZWZjNjI2MCIsImdvYWwiOiJvcGVuIGNoZXN0LCBvYnNlcnZlIGNvbnRlbnRzLCByZXZlYWwgbWFwIiwiaW5wdXRzIjpbXSwiY2FwYWJpbGl0aWVzIjpbImNvbXBvc2UiLCJvYnNlcnZlIiwicHVibGlzaC1vYnNlcnZhdGlvbiJdLCJsaW1pdHMiOnsicnVudGltZV9hY3Rpb25zIjoyLCJvYnNlcnZhdGlvbnMiOjgsIm5ldHdvcmsiOiJub25lIiwibWVtb3J5X21iIjozMn0sIm9ic2VydmVyX3BvbGljeSI6eyJyZXF1aXJlX2Rpc3RpbmN0X3Nlc3Npb24iOnRydWUsIm1vZGUiOiJmcmVzaC1yZWFkLW9ubHktcHJvY2VzcyJ9LCJyZXF1ZXN0ZWRfb3V0cHV0X2NsYXNzIjoiYm91bmRlZC1yb29tLXN0YXRlIiwiZ292ZXJuaW5nX3NuYXBzaG90Ijp7InJlbGF0dGVfY29yZV9zaGEiOiJmNWNiNzQ4OGJlYmMxYTZlMjdmZDQ1OGFkNDBhZjliOWI2ZjllODU4Iiwibm9ybWF0aXZlX3NyY190cmVlIjoiYzBlNGQyYzU5NDgxZTBmYjJhNGJmNGJiMjk0ZjM3MzkwN2ZkMmI3NiJ9LCJleHRlbnNpb25zIjp7fX0=",
+            "spec_ref": "sha256:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+            "world_id": "world:cd20b6eb659f244a415f4dcf32d93d3ec44642f1dba3fec1cddf46922eb97269"
+          },
+          "previous": null,
+          "public_key": "MCowBQYDK2VwAyEAocBUJnTprgUHQbV4G3k77ouJSRMxe1FwVBc634Ormng=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 0,
+          "signature": "IQdcHkG4q68j1aFnx4Gl2f5OvFNJrtptbkX4metIlOLKYI1+XYjW/luo8sygHhXxpMAhdyjmClFl8UoXu+MwBw==",
+          "world_id": "world:c9a8fe1234d063144121da1b07521319388ef4decc3debbc8285b91858e1d56e"
+        },
+        {
+          "incarnation_id": "incarnation:ed01d426-93aa-4eb4-8234-56b065d41c23",
+          "kind": "recognition",
+          "payload": {
+            "authority": [],
+            "candidate_particulars": [
+              "particular:composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d:candidate:5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e"
+            ],
+            "historical_world": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+            "observer_instance": "incarnation:ed01d426-93aa-4eb4-8234-56b065d41c23",
+            "parent": null,
+            "same_live_authority": false
+          },
+          "previous": "sha256:d7cbe15d4ae5ac1904f3a8293ae9032291caf0c84a93ebc6766b625bc948e6d4",
+          "public_key": "MCowBQYDK2VwAyEAocBUJnTprgUHQbV4G3k77ouJSRMxe1FwVBc634Ormng=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 1,
+          "signature": "Ig0cjTJdZfi/rq/cZDfMjvV6qxwCDZix2eSDqjRL3bRAiBC5KcTOuqLjlLMUL3blFeO3WWEiAcke5mEnjG68DQ==",
+          "world_id": "world:c9a8fe1234d063144121da1b07521319388ef4decc3debbc8285b91858e1d56e"
+        },
+        {
+          "incarnation_id": "incarnation:ed01d426-93aa-4eb4-8234-56b065d41c23",
+          "kind": "recognition",
+          "payload": {
+            "authority": [],
+            "candidate_particulars": [],
+            "historical_world": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+            "observer_instance": "incarnation:ed01d426-93aa-4eb4-8234-56b065d41c23",
+            "parent": {
+              "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+              "snapshot_ref": "sha256:5d5b25fb3b513ef067cdc94a5b2d7ab04fca52c7586e78ad3442d536d9c62c4a",
+              "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+            },
+            "same_live_authority": false
+          },
+          "previous": "sha256:5f47d39549c0ff1e399236d8f960f3834ee59399a88ada0ee9169f2a023abea1",
+          "public_key": "MCowBQYDK2VwAyEAocBUJnTprgUHQbV4G3k77ouJSRMxe1FwVBc634Ormng=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 2,
+          "signature": "KW3P5A2Jt5K0Srzqguwqu/84AeaZpLPhddSnL+N5U9JnwxcaTO64kJAQhffUubuxHIbh7nTxQhyHkYQCGeCBCg==",
+          "world_id": "world:c9a8fe1234d063144121da1b07521319388ef4decc3debbc8285b91858e1d56e"
+        },
+        {
+          "incarnation_id": "incarnation:ed01d426-93aa-4eb4-8234-56b065d41c23",
+          "kind": "death-fence",
+          "payload": {
+            "epoch": "epoch:91d76ac8-b6db-4743-8b76-2378fce76f2a",
+            "field_history_ref": "sha256:677a7e4b6550e93e3d2c05d33c40679ed99c985bc4772b7949aa42c0059b2f93",
+            "retirement": [],
+            "world_id": "world:cd20b6eb659f244a415f4dcf32d93d3ec44642f1dba3fec1cddf46922eb97269"
+          },
+          "previous": "sha256:b19a1ebc707dbab7b60e96437a15b8e05a53b46eb5fc5ec30294df1817a76e6d",
+          "public_key": "MCowBQYDK2VwAyEAocBUJnTprgUHQbV4G3k77ouJSRMxe1FwVBc634Ormng=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 3,
+          "signature": "5VbRKjw8P+qou5NVYoG6q7WoO9XkKwA8Z7uc5EI8mBXewDd5gmLrYrtM8CfzZBtSWUdrVJyWREoBeBEI5DDNCA==",
+          "world_id": "world:c9a8fe1234d063144121da1b07521319388ef4decc3debbc8285b91858e1d56e"
+        },
+        {
+          "incarnation_id": "incarnation:ed01d426-93aa-4eb4-8234-56b065d41c23",
+          "kind": "terminated",
+          "payload": {
+            "pid": 7154,
+            "signal": "SIGKILL"
+          },
+          "previous": "sha256:10b7b285ceca66bcbd03bbdae446ef4d036595ad56f5e057040107c150068692",
+          "public_key": "MCowBQYDK2VwAyEAocBUJnTprgUHQbV4G3k77ouJSRMxe1FwVBc634Ormng=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 4,
+          "signature": "6W/UOfY0rAWnc+y+yjsCnJ2HAyqtPlWmiV30mTzmAJYLqn3fxT418bM4a3jrMJ7MjDCgmdVvTrny7pYabLe8Aw==",
+          "world_id": "world:c9a8fe1234d063144121da1b07521319388ef4decc3debbc8285b91858e1d56e"
+        },
+        {
+          "incarnation_id": "incarnation:ed01d426-93aa-4eb4-8234-56b065d41c23",
+          "kind": "cleanup",
+          "payload": {
+            "field_history_ref": "sha256:677a7e4b6550e93e3d2c05d33c40679ed99c985bc4772b7949aa42c0059b2f93"
+          },
+          "previous": "sha256:6cbf968b8725ebd71300fb14bed6c2c269724069b26f24e6ba76fe4a6625565e",
+          "public_key": "MCowBQYDK2VwAyEAocBUJnTprgUHQbV4G3k77ouJSRMxe1FwVBc634Ormng=",
+          "schema": "relatte.composition-field-bridge.experimental/v0",
+          "seq": 5,
+          "signature": "TOZz/fHeMyBW4KlzxcW+bbzHQATLgNDDPIGGBK8m9OApfjwwN/SvUCCNTDpP7UQf41n/VyyQfW77SKDkNSygCg==",
+          "world_id": "world:c9a8fe1234d063144121da1b07521319388ef4decc3debbc8285b91858e1d56e"
+        }
+      ],
+      "field_history": [
+        {
+          "schema": "relatte.dynamic-field-event.experimental/v0",
+          "event_id": "event:8f64ff48-1121-4e26-9ebe-5d671c524b32",
+          "world_id": "world:cd20b6eb659f244a415f4dcf32d93d3ec44642f1dba3fec1cddf46922eb97269",
+          "seq": 0,
+          "previous": null,
+          "at_ms": 1000,
+          "kind": "genesis",
+          "payload": {
+            "parent": null
+          },
+          "public_key": "MCowBQYDK2VwAyEADv1r8Pl7AhV6avNOrt5DbjHEREzrRj8+T+sbRllckAE=",
+          "signature": "hhKj++0Ex5OK9nq8W8uQQsnnEI0I6G0o+t57zk3WJ62DhR0a/N9u7icWYfx3MoglXRxVFfWijmMwSnjiWUxhCg=="
+        }
+      ]
+    }
+  ],
+  "source_anchor": {
+    "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121",
+    "public_key": "MCowBQYDK2VwAyEAcQgUP18GNcgpyHbmmnlEDtrS/JitcrW/kA2Qf+NkBus="
+  },
+  "source_history": [
+    {
+      "schema": "relatte.dynamic-field-event.experimental/v0",
+      "event_id": "event:efd8d9c5-547f-4130-be13-e5160b5cff6f",
+      "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121",
+      "seq": 0,
+      "previous": null,
+      "at_ms": 1000,
+      "kind": "genesis",
+      "payload": {
+        "parent": null
+      },
+      "public_key": "MCowBQYDK2VwAyEAcQgUP18GNcgpyHbmmnlEDtrS/JitcrW/kA2Qf+NkBus=",
+      "signature": "SCprE9jn29pP8fZI8uwnEnB7pB5Fg0H6iryGixmQjRU9WP4i11Ef44soItwO8suCGo8mTfICf0dqXrtrGcqvBA=="
+    },
+    {
+      "schema": "relatte.dynamic-field-event.experimental/v0",
+      "event_id": "event:69255f89-7f81-42e8-81a4-5eb77601ad01",
+      "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121",
+      "seq": 1,
+      "previous": "sha256:9f1d8d4b866ff3e61fe6c52486f09e5b388974bfc4a8ddf8fb74e699cea23da5",
+      "at_ms": 1000,
+      "kind": "publish",
+      "payload": {
+        "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+        "descriptor": {
+          "schema": "relatte.interface-particular.experimental/v0",
+          "interface_id": "interface:808b5966",
+          "participant_ref": "participant:payload",
+          "plane": "transport",
+          "direction": "output",
+          "protocol": "in-process/v0",
+          "accepts": [
+            "payload.bytes"
+          ],
+          "emits": [
+            "payload.bytes"
+          ],
+          "operations": [
+            "observe",
+            "transmit",
+            "receive",
+            "propose"
+          ],
+          "authority": {
+            "observe": true,
+            "propose": true,
+            "authorize": false,
+            "mutate": false
+          },
+          "information": {
+            "capacity": 1048576,
+            "capacity_unit": "payload-bytes",
+            "timing_model": "occurrence time",
+            "ordering": "ordered",
+            "delivery": "bounded local observation",
+            "loss_profile": [],
+            "native_dimensions": []
+          },
+          "state": {
+            "retention": "persistent",
+            "replayable": true
+          },
+          "evidence": {
+            "produces": [
+              "native receipt"
+            ],
+            "verification": [
+              "binding-local verification"
+            ],
+            "source_ref": "caller-owned bytes"
+          },
+          "constraints": {
+            "required": [],
+            "forbidden": [
+              "authorize"
+            ]
+          },
+          "live": true,
+          "capabilities": [
+            "observe",
+            "transmit",
+            "receive",
+            "propose"
+          ]
+        },
+        "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3",
+        "expires_at": 61000,
+        "parents": []
+      },
+      "public_key": "MCowBQYDK2VwAyEAcQgUP18GNcgpyHbmmnlEDtrS/JitcrW/kA2Qf+NkBus=",
+      "signature": "OIcs0n3EB/gEkOAOE5yg2mZvhaM4/PemGPm78KKW4phODAU2dzCUG2XpAV/xFYnhLJ2Hjv23EgBNIAIV0WWMDg=="
+    },
+    {
+      "schema": "relatte.dynamic-field-event.experimental/v0",
+      "event_id": "event:6f49b169-8f91-46f4-8826-6202856e90ac",
+      "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121",
+      "seq": 2,
+      "previous": "sha256:2433a9cdb782becc21ad5f88d794df5032be6a824a9f893b1aa44386e2f95a12",
+      "at_ms": 1000,
+      "kind": "grant",
+      "payload": {
+        "schema": "relatte.dynamic-door-grant.experimental/v0",
+        "grant_id": "grant:7b3b5cca-2af7-40fb-aec5-0633c9d1d19b",
+        "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121",
+        "interface_id": "interface:808b5966",
+        "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+        "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3",
+        "subject": "visitor",
+        "operation": "observe",
+        "permission": "observe",
+        "expires_at": 61000,
+        "max_uses": 3,
+        "public_key": "MCowBQYDK2VwAyEAcQgUP18GNcgpyHbmmnlEDtrS/JitcrW/kA2Qf+NkBus=",
+        "signature": "qvnmaOQA9QPixCUhnf5+r6CCnVm1YwpePVzo+BydqBKP2iLIw+PTCiYEtAbc3eAFmpX8o234YmOm1Msbds5RDQ=="
+      },
+      "public_key": "MCowBQYDK2VwAyEAcQgUP18GNcgpyHbmmnlEDtrS/JitcrW/kA2Qf+NkBus=",
+      "signature": "isTX/ia3i2Xw84MKCsBWv6G2s4+RV5MLpz8z/E8oP4tDGJ0yE7T/X0Hn0svcwNd57AP5GuDDMsmr+T6Z8DBMDg=="
+    },
+    {
+      "schema": "relatte.dynamic-field-event.experimental/v0",
+      "event_id": "event:1dfaf540-fec4-4bf4-81b2-9c1fbca9e051",
+      "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121",
+      "seq": 3,
+      "previous": "sha256:04e5360f80ad0abcef11a24bd140dc25a702a4c53840d5fb6a6f79157ded8a98",
+      "at_ms": 1000,
+      "kind": "grant",
+      "payload": {
+        "schema": "relatte.dynamic-door-grant.experimental/v0",
+        "grant_id": "grant:5eaba06f-704d-44ab-a2c3-5ed5ab2ecd2d",
+        "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121",
+        "interface_id": "interface:808b5966",
+        "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+        "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3",
+        "subject": "visitor",
+        "operation": "observe",
+        "permission": "observe",
+        "expires_at": 61000,
+        "max_uses": 1,
+        "public_key": "MCowBQYDK2VwAyEAcQgUP18GNcgpyHbmmnlEDtrS/JitcrW/kA2Qf+NkBus=",
+        "signature": "lorPdxl+12JqOpZuVsTBsHRVT2bz6TogMe8n6BomnFQwcZ24d22zoWJC8Ke545ICA1VSCyu4rWZm1CfEEjj6DQ=="
+      },
+      "public_key": "MCowBQYDK2VwAyEAcQgUP18GNcgpyHbmmnlEDtrS/JitcrW/kA2Qf+NkBus=",
+      "signature": "2ABzLO2LLqN9L2jj+HGWJwWSJl99waWMUu5NxS4MZdSBdwAxg/tUzHD32YyXhvuqgffrWxJ9ZxlKO3IkR1+BAQ=="
+    },
+    {
+      "schema": "relatte.dynamic-field-event.experimental/v0",
+      "event_id": "event:5ee2ae53-d070-4d93-ad2c-4f2ae3079c7b",
+      "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121",
+      "seq": 4,
+      "previous": "sha256:7830b8b95ee60e3da8b96f6c206c0c58d6c24913aa74af8423536029135b00c3",
+      "at_ms": 1000,
+      "kind": "grant",
+      "payload": {
+        "schema": "relatte.dynamic-door-grant.experimental/v0",
+        "grant_id": "grant:1b9c086c-75d7-4ff4-a0f7-f71d6a58ecbb",
+        "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121",
+        "interface_id": "interface:808b5966",
+        "offer_id": "offer:01bfb3e5-4005-492f-985c-9fd05c56aabc",
+        "descriptor_digest": "sha256:27e710eb35fb98e461660b921ececf1c5444e54598250270045a2caaab1dacb3",
+        "subject": "visitor",
+        "operation": "observe",
+        "permission": "observe",
+        "expires_at": 61000,
+        "max_uses": 1,
+        "public_key": "MCowBQYDK2VwAyEAcQgUP18GNcgpyHbmmnlEDtrS/JitcrW/kA2Qf+NkBus=",
+        "signature": "kE6Rn/4M9O+p42wrobC9JpEjXojvcjsixSaeJL0EuHMOaQvmQkX+l83Y8z9ywHq/Znt8tWcgQuaVaAI+3wjPAA=="
+      },
+      "public_key": "MCowBQYDK2VwAyEAcQgUP18GNcgpyHbmmnlEDtrS/JitcrW/kA2Qf+NkBus=",
+      "signature": "5yaH4wHQTL4y/apJq0G7p+0duZreUO+Tr8XpKt9CNXRKG04k9A321LIB60juk4Tn6rnVhyXeO0zEWWviCJ/CBQ=="
+    }
+  ],
+  "checkpoint": {
+    "snapshot_ref": "sha256:5d5b25fb3b513ef067cdc94a5b2d7ab04fca52c7586e78ad3442d536d9c62c4a",
+    "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+    "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+    "ledger_anchor": {
+      "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b",
+      "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM="
+    },
+    "body": {
+      "schema": "relatte.composition-field-snapshot.experimental/v0",
+      "instance_id": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+      "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+      "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+      "epoch": "epoch:92606075-42c4-4457-b479-57788a1752b0",
+      "spec": {
+        "schema": "relatte.composition-instance-spec/v0",
+        "runtime_id": "bounded-room-chest/v0",
+        "base_snapshot_ref": "sha256:395e389617579f43b1578ce9972f98e64169df43ddc5a48ab249c73deefc6260",
+        "goal": "open chest, observe contents, reveal map",
+        "inputs": [],
+        "capabilities": [
+          "compose",
+          "observe",
+          "publish-observation"
+        ],
+        "limits": {
+          "runtime_actions": 2,
+          "observations": 8,
+          "network": "none",
+          "memory_mb": 32
+        },
+        "observer_policy": {
+          "require_distinct_session": true,
+          "mode": "fresh-read-only-process"
+        },
+        "requested_output_class": "bounded-room-state",
+        "governing_snapshot": {
+          "relatte_core_sha": "f5cb7488bebc1a6e27fd458ad40af9b9b6f9e858",
+          "normative_src_tree": "c0e4d2c59481e0fb2a4bf4bb294f373907fd2b76"
+        },
+        "extensions": {}
+      },
+      "governing_snapshot": {
+        "relatte_core_sha": "f5cb7488bebc1a6e27fd458ad40af9b9b6f9e858",
+        "normative_src_tree": "c0e4d2c59481e0fb2a4bf4bb294f373907fd2b76"
+      },
+      "runtime_state": {
+        "rooms": [
+          "ROOM A",
+          "ROOM B"
+        ],
+        "edge": [
+          "ROOM A",
+          "ROOM B"
+        ],
+        "agent": "ROOM B",
+        "chest": {
+          "open": true,
+          "map_visible": true,
+          "contents": [
+            "stone",
+            "map fragment"
+          ],
+          "map_fragment": {
+            "destination": "ROOM B"
+          }
+        },
+        "transitions": 2,
+        "observations": 2
+      },
+      "runtime_snapshot_ref": "sha256:5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+      "trace_ref": "sha256:8d494f2f818d2ac698fd8e12131a7b7ac2b394cdb5e857adcc0d47338b2c17a7",
+      "eligible": [
+        {
+          "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+          "semantic": "CHEST-OBSERVATION-DOOR",
+          "descriptor": {
+            "schema": "relatte.interface-particular.experimental/v0",
+            "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+            "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+            "plane": "transport",
+            "direction": "bidirectional",
+            "protocol": "in-process/v0",
+            "accepts": [
+              "file.bytes"
+            ],
+            "emits": [
+              "file.bytes"
+            ],
+            "operations": [
+              "observe",
+              "transmit",
+              "receive",
+              "propose"
+            ],
+            "authority": {
+              "observe": true,
+              "propose": true,
+              "authorize": false,
+              "mutate": false
+            },
+            "information": {
+              "capacity": 1048576,
+              "capacity_unit": "payload-bytes",
+              "timing_model": "occurrence time",
+              "ordering": "ordered",
+              "delivery": "bounded local observation",
+              "loss_profile": [],
+              "native_dimensions": [
+                "path",
+                "device",
+                "inode"
+              ]
+            },
+            "state": {
+              "retention": "persistent",
+              "replayable": true
+            },
+            "evidence": {
+              "produces": [
+                "native receipt"
+              ],
+              "verification": [
+                "binding-local verification"
+              ],
+              "source_ref": "polyglot-crossing-001 observeFilesystem"
+            },
+            "constraints": {
+              "required": [],
+              "forbidden": [
+                "authorize"
+              ]
+            },
+            "live": true,
+            "capabilities": [
+              "observe",
+              "transmit",
+              "receive",
+              "propose"
+            ]
+          },
+          "runtime_event_ref": "sha256:ef3d478ab82fe3484d6583794564b8603bf32a4b8b2746de530243bfe07fea84",
+          "parent_interface": null
+        },
+        {
+          "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+          "semantic": "MAP-FRAGMENT-OBSERVATION-DOOR",
+          "descriptor": {
+            "schema": "relatte.interface-particular.experimental/v0",
+            "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+            "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+            "plane": "transport",
+            "direction": "bidirectional",
+            "protocol": "in-process/v0",
+            "accepts": [
+              "file.bytes"
+            ],
+            "emits": [
+              "file.bytes"
+            ],
+            "operations": [
+              "observe",
+              "transmit",
+              "receive",
+              "propose"
+            ],
+            "authority": {
+              "observe": true,
+              "propose": true,
+              "authorize": false,
+              "mutate": false
+            },
+            "information": {
+              "capacity": 1048576,
+              "capacity_unit": "payload-bytes",
+              "timing_model": "occurrence time",
+              "ordering": "ordered",
+              "delivery": "bounded local observation",
+              "loss_profile": [],
+              "native_dimensions": [
+                "path",
+                "device",
+                "inode"
+              ]
+            },
+            "state": {
+              "retention": "persistent",
+              "replayable": true
+            },
+            "evidence": {
+              "produces": [
+                "native receipt"
+              ],
+              "verification": [
+                "binding-local verification"
+              ],
+              "source_ref": "polyglot-crossing-001 observeFilesystem"
+            },
+            "constraints": {
+              "required": [],
+              "forbidden": [
+                "authorize"
+              ]
+            },
+            "live": true,
+            "capabilities": [
+              "observe",
+              "transmit",
+              "receive",
+              "propose"
+            ]
+          },
+          "runtime_event_ref": "sha256:18aaf3e4524ad52abca19eb7da8a46bc4cd7bdb6caa12009e1857c4fbaccd998",
+          "parent_interface": "interface:552dd703-9534-4075-a884-33125591fc50"
+        }
+      ],
+      "doors": [
+        {
+          "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28",
+          "descriptor": {
+            "schema": "relatte.interface-particular.experimental/v0",
+            "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+            "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+            "plane": "transport",
+            "direction": "bidirectional",
+            "protocol": "in-process/v0",
+            "accepts": [
+              "file.bytes"
+            ],
+            "emits": [
+              "file.bytes"
+            ],
+            "operations": [
+              "observe",
+              "transmit",
+              "receive",
+              "propose"
+            ],
+            "authority": {
+              "observe": true,
+              "propose": true,
+              "authorize": false,
+              "mutate": false
+            },
+            "information": {
+              "capacity": 1048576,
+              "capacity_unit": "payload-bytes",
+              "timing_model": "occurrence time",
+              "ordering": "ordered",
+              "delivery": "bounded local observation",
+              "loss_profile": [],
+              "native_dimensions": [
+                "path",
+                "device",
+                "inode"
+              ]
+            },
+            "state": {
+              "retention": "persistent",
+              "replayable": true
+            },
+            "evidence": {
+              "produces": [
+                "native receipt"
+              ],
+              "verification": [
+                "binding-local verification"
+              ],
+              "source_ref": "polyglot-crossing-001 observeFilesystem"
+            },
+            "constraints": {
+              "required": [],
+              "forbidden": [
+                "authorize"
+              ]
+            },
+            "live": true,
+            "capabilities": [
+              "observe",
+              "transmit",
+              "receive",
+              "propose"
+            ]
+          },
+          "descriptor_digest": "sha256:2002b2b22f23a33c0a52118483f81eab5f1911ec2d010abe6f090872cb4346cc",
+          "expires_at": 61000,
+          "parents": [],
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "event_ref": "sha256:d9b3c1b7cbe3ddf72e3b94a49f9afb54d397f28edd06e61bc713b025a4dd5596"
+        },
+        {
+          "offer_id": "offer:87e5cd90-6e60-40d2-8963-b414949f0af6",
+          "descriptor": {
+            "schema": "relatte.interface-particular.experimental/v0",
+            "interface_id": "interface:eb1d970e-82b5-4570-acd1-bbeda03222cf",
+            "participant_ref": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+            "plane": "transport",
+            "direction": "bidirectional",
+            "protocol": "in-process/v0",
+            "accepts": [
+              "file.bytes"
+            ],
+            "emits": [
+              "file.bytes"
+            ],
+            "operations": [
+              "observe",
+              "transmit",
+              "receive",
+              "propose"
+            ],
+            "authority": {
+              "observe": true,
+              "propose": true,
+              "authorize": false,
+              "mutate": false
+            },
+            "information": {
+              "capacity": 1048576,
+              "capacity_unit": "payload-bytes",
+              "timing_model": "occurrence time",
+              "ordering": "ordered",
+              "delivery": "bounded local observation",
+              "loss_profile": [],
+              "native_dimensions": [
+                "path",
+                "device",
+                "inode"
+              ]
+            },
+            "state": {
+              "retention": "persistent",
+              "replayable": true
+            },
+            "evidence": {
+              "produces": [
+                "native receipt"
+              ],
+              "verification": [
+                "binding-local verification"
+              ],
+              "source_ref": "polyglot-crossing-001 observeFilesystem"
+            },
+            "constraints": {
+              "required": [],
+              "forbidden": [
+                "authorize"
+              ]
+            },
+            "live": true,
+            "capabilities": [
+              "observe",
+              "transmit",
+              "receive",
+              "propose"
+            ]
+          },
+          "descriptor_digest": "sha256:50cb95282bc630312b4798ff07faaa04c2eb78ae6add541c243835ae7ad6a06c",
+          "expires_at": 61000,
+          "parents": [
+            {
+              "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+              "interface_id": "interface:552dd703-9534-4075-a884-33125591fc50",
+              "offer_id": "offer:720aa418-f84e-4b60-bc38-c3ccaaa85c28"
+            }
+          ],
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "event_ref": "sha256:6c0f2e7049e9511c765e752ac1cb3c2dbfef50ed08cb525ca75dca4536ba36b2"
+        }
+      ],
+      "field_history_ref": "sha256:6fee30ec53e801fe1d717272afe73153a69d3c903e90df46dc7d46b79285e15b",
+      "owner_frontier": "sha256:f36d04de1481104d55192345f3cceac953633088cab61fefb0a4da5856c49b59",
+      "candidate_ancestry": {
+        "launch_crossing_id": "relatte-crossing-v0:17a5ff540d50e6e25864b9df976f8e13896626ce84dc42a6719cf5c79ac0aa0e",
+        "candidate_refs": []
+      },
+      "observer_evidence": {
+        "runtime_id": "bounded-room-chest/v0",
+        "author_session_id": "author:a5e06439-b073-4ad5-a0ef-5629803f5d29",
+        "observer_session_id": "observer:e3c7b5cc-919e-400b-8003-37200a14a1a6",
+        "observed_state_ref": "sha256:5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+        "observed_state_sha256": "5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+        "action_trace_ref": "sha256:0df65463879ba14c6e9c4c5d194bbb1bef2fe3d2c4a7ddc8c5617a726f2d6114",
+        "claims": {
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "room_state_digest": "sha256:040cfae34b783a86f5e0307cabfd9e1ba2fc16eec7e377ecbf54d39d4fc56fd9"
+        }
+      },
+      "authorization_history": "EVIDENCE_ONLY",
+      "live_authority": [],
+      "grant_counters": []
+    }
+  },
+  "produced": {
+    "candidate_ref": "sha256:5596610905be644f77d38d2a77185bd10b75a5ed228cf7ab0bc398c48e9945da",
+    "candidate": {
+      "particular_id": "particular:composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d:candidate:5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+      "content_ref": "sha256:139556869740bd0cdc1018bb7f65f48a4795e2a6d54f1b685efecc849684bdba",
+      "result": {
+        "schema": "relatte.composition-instance-result/v0",
+        "instance_id": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+        "launch_crossing_id": "relatte-crossing-v0:17a5ff540d50e6e25864b9df976f8e13896626ce84dc42a6719cf5c79ac0aa0e",
+        "runtime_id": "bounded-room-chest/v0",
+        "observed_state_ref": "sha256:5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+        "observed_state_sha256": "5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+        "action_trace_ref": "sha256:0df65463879ba14c6e9c4c5d194bbb1bef2fe3d2c4a7ddc8c5617a726f2d6114",
+        "author_session_id": "author:a5e06439-b073-4ad5-a0ef-5629803f5d29",
+        "observer_session_id": "observer:e3c7b5cc-919e-400b-8003-37200a14a1a6",
+        "candidate_content_sha256": "5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+        "candidate_byte_length": 223,
+        "result_disposition": "R3_HOLD",
+        "runtime_claims": {
+          "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+          "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+          "room_state_digest": "sha256:040cfae34b783a86f5e0307cabfd9e1ba2fc16eec7e377ecbf54d39d4fc56fd9"
+        },
+        "laws": [
+          "EXECUTION != ADMISSION",
+          "AUTHOR != OBSERVER",
+          "PLAN != OBSERVED STATE",
+          "OUTPUT != ADMISSION",
+          "INSTANCE DEATH != CANDIDATE DEATH",
+          "COMPOSITION != SELF-ADMISSION"
+        ]
+      },
+      "result_bytes_base64": "eyJzY2hlbWEiOiJyZWxhdHRlLmNvbXBvc2l0aW9uLWluc3RhbmNlLXJlc3VsdC92MCIsImluc3RhbmNlX2lkIjoiY29tcG9zaXRpb24taW5zdGFuY2UtdjA6NGM4NmY4NDgxYWRjNTY2OTkyZGVhNmNiYThlZWRjZjBjYzgzMDA4NDhkNTQ5ZmM0N2JjN2FjYjc3MTg5NTg1ZCIsImxhdW5jaF9jcm9zc2luZ19pZCI6InJlbGF0dGUtY3Jvc3NpbmctdjA6MTdhNWZmNTQwZDUwZTZlMjU4NjRiOWRmOTc2ZjhlMTM4OTY2MjZjZTg0ZGM0MmE2NzE5Y2Y1Yzc5YWMwYWEwZSIsInJ1bnRpbWVfaWQiOiJib3VuZGVkLXJvb20tY2hlc3QvdjAiLCJvYnNlcnZlZF9zdGF0ZV9yZWYiOiJzaGEyNTY6NTM2MmFjNmYyMTVkNDYzN2Y2MjQyNTYwYWNlN2Q2YzE3MmYxOWZiMjY5OTUwNWJmYTNiM2U5ZmRjMDczOWI2ZSIsIm9ic2VydmVkX3N0YXRlX3NoYTI1NiI6IjUzNjJhYzZmMjE1ZDQ2MzdmNjI0MjU2MGFjZTdkNmMxNzJmMTlmYjI2OTk1MDViZmEzYjNlOWZkYzA3MzliNmUiLCJhY3Rpb25fdHJhY2VfcmVmIjoic2hhMjU2OjBkZjY1NDYzODc5YmExNGM2ZTljNGM1ZDE5NGJiYjFiZWYyZmUzZDJjNGE3ZGRjOGM1NjE3YTcyNmYyZDYxMTQiLCJhdXRob3Jfc2Vzc2lvbl9pZCI6ImF1dGhvcjphNWUwNjQzOS1iMDczLTRhZDUtYTBlZi01NjI5ODAzZjVkMjkiLCJvYnNlcnZlcl9zZXNzaW9uX2lkIjoib2JzZXJ2ZXI6ZTNjN2I1Y2MtOTE5ZS00MDBiLTgwMDMtMzcyMDBhMTRhMWE2IiwiY2FuZGlkYXRlX2NvbnRlbnRfc2hhMjU2IjoiNTM2MmFjNmYyMTVkNDYzN2Y2MjQyNTYwYWNlN2Q2YzE3MmYxOWZiMjY5OTUwNWJmYTNiM2U5ZmRjMDczOWI2ZSIsImNhbmRpZGF0ZV9ieXRlX2xlbmd0aCI6MjIzLCJyZXN1bHRfZGlzcG9zaXRpb24iOiJSM19IT0xEIiwicnVudGltZV9jbGFpbXMiOnsid29ybGRfaWQiOiJ3b3JsZDoyMThiODM0MDUxNDk3NWI3MGY5ZTBmMDIyMjkyZmNiMzAyNzVlMmQ5YWFkOWNlYTI1MmU2ZmEyNTIwZmU2OWRlIiwiaW5jYXJuYXRpb25faWQiOiJpbmNhcm5hdGlvbjpkODNjMjA1OC0wYWMyLTRjOGMtOTJlNS1iNWQyZTU3OWQ4MDYiLCJyb29tX3N0YXRlX2RpZ2VzdCI6InNoYTI1NjowNDBjZmFlMzRiNzgzYTg2ZjVlMDMwN2NhYmZkOWUxYmEyZmMxNmVlYzdlMzc3ZWNiZjU0ZDM5ZDRmYzU2ZmQ5In0sImxhd3MiOlsiRVhFQ1VUSU9OICE9IEFETUlTU0lPTiIsIkFVVEhPUiAhPSBPQlNFUlZFUiIsIlBMQU4gIT0gT0JTRVJWRUQgU1RBVEUiLCJPVVRQVVQgIT0gQURNSVNTSU9OIiwiSU5TVEFOQ0UgREVBVEggIT0gQ0FORElEQVRFIERFQVRIIiwiQ09NUE9TSVRJT04gIT0gU0VMRi1BRE1JU1NJT04iXX0=",
+      "result_ref": "sha256:3dad92a73c0d73ce516d3b19121e8d34ab859d57ff0fab3b8cde18728507d733",
+      "crossing": {
+        "schema": "relatte.crossing-envelope/v0",
+        "protocol_version": "0",
+        "source_particular": "particular:composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d:candidate:5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+        "source_world": "polyglot:composition-instance",
+        "source_history_head": null,
+        "parents": [
+          "relatte-crossing-v0:17a5ff540d50e6e25864b9df976f8e13896626ce84dc42a6719cf5c79ac0aa0e"
+        ],
+        "declared_kind": "POLYGLOT_ADAPTER_ARTIFACT",
+        "payload_refs": [
+          {
+            "address": "sha256:3dad92a73c0d73ce516d3b19121e8d34ab859d57ff0fab3b8cde18728507d733",
+            "role": "observed-substrate-bytes",
+            "media_type": "application/vnd.relatte.composition-result+json"
+          }
+        ],
+        "requested_effect": {
+          "kind": "candidate-ingress",
+          "authority": "receiver-local"
+        },
+        "capability_ref": null,
+        "privacy_policy": null,
+        "audience_policy": null,
+        "return_address": "relatte:return:polyglot",
+        "created_at": "2026-10-07T00:00:41.000Z",
+        "extensions": {
+          "polyglot_crossing_001": {
+            "frozen_core_sha": "f5cb7488bebc1a6e27fd458ad40af9b9b6f9e858",
+            "adapter_only": true,
+            "substrate": "composition-instance",
+            "native_id": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d:candidate:5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+            "native_claims": {
+              "phase": "CANDIDATE",
+              "runtime_id": "bounded-room-chest/v0",
+              "instance_id": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d",
+              "observed_state_ref": "sha256:5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+              "observed_state_sha256": "5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+              "action_trace_ref": "sha256:0df65463879ba14c6e9c4c5d194bbb1bef2fe3d2c4a7ddc8c5617a726f2d6114",
+              "author_session_id": "author:a5e06439-b073-4ad5-a0ef-5629803f5d29",
+              "observer_session_id": "observer:e3c7b5cc-919e-400b-8003-37200a14a1a6",
+              "candidate_content_sha256": "5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+              "candidate_byte_length": 223,
+              "runtime_claims": {
+                "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+                "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+                "room_state_digest": "sha256:040cfae34b783a86f5e0307cabfd9e1ba2fc16eec7e377ecbf54d39d4fc56fd9"
+              },
+              "laws": [
+                "EXECUTION != ADMISSION",
+                "AUTHOR != OBSERVER",
+                "PLAN != OBSERVED STATE",
+                "OUTPUT != ADMISSION",
+                "INSTANCE DEATH != CANDIDATE DEATH",
+                "COMPOSITION != SELF-ADMISSION"
+              ]
+            },
+            "content_sha256": "3dad92a73c0d73ce516d3b19121e8d34ab859d57ff0fab3b8cde18728507d733",
+            "byte_length": 1304,
+            "laws": [
+              "INTERNAL MODEL != CROSSING MODEL",
+              "CONTENT IDENTITY != PARTICULAR IDENTITY",
+              "ADAPTER CLAIM != CORE AUTHORITY"
+            ]
+          }
+        },
+        "crossing_id": "relatte-crossing-v0:6174e949e770a5f9de9a664395fd2ebb44bd3abc7ea1352fe56db8743888714d",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "_qEydCuOOO_lDPLlZzYtegqCGGlFSn5Aq85Fdch_uVk",
+            "y": "UTyO3AEI2fLcgssUYi6ncm6SPm8_Fjd35qBoJTOhtdQ"
+          },
+          "signature": "H_8gxVyNH2g6Rcon3tLYXfHMANk2DNpvW_w4vtftyRmfrHeD5hlwEoFwnkd-YAdrutv-5ki8ZeM-YGv_I2oHMQ",
+          "domain": "relatte.crossing-signature/v0"
+        }
+      },
+      "receipt": {
+        "schema": "relatte.receipt/v0",
+        "crossing_id": "relatte-crossing-v0:6174e949e770a5f9de9a664395fd2ebb44bd3abc7ea1352fe56db8743888714d",
+        "world_id": "polyglot:receiver:composition-instance",
+        "receiver_particular": "receiver:composition-instance",
+        "kind": "R3_HOLD",
+        "semantic_effect": "local-only",
+        "contract_ref": null,
+        "pre_state_ref": null,
+        "post_state_ref": null,
+        "descendant_refs": [],
+        "residual_refs": [],
+        "note": "Substrate-local disposition; does not propagate authority.",
+        "created_at": "2026-10-07T00:01:41.000Z",
+        "extensions": {
+          "polyglot_crossing_001": {
+            "substrate": "composition-instance",
+            "native_id": "composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d:candidate:5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e",
+            "content_sha256": "3dad92a73c0d73ce516d3b19121e8d34ab859d57ff0fab3b8cde18728507d733",
+            "disposition": "R3_HOLD",
+            "authority_scope": "THIS_RECEIVER_ONLY"
+          }
+        },
+        "receipt_id": "relatte-receipt-v0:6d39d4b08d5d8ddcda76a00f2933936d4fcd8df35b8cfcb96f37b15bb8e84c58",
+        "signing": {
+          "algorithm": "ECDSA-P256-SHA256",
+          "public_key": {
+            "kty": "EC",
+            "crv": "P-256",
+            "x": "oxDQ5j9wGg6COnwURi7YHRiiN7gs56KnJhReZQReEFg",
+            "y": "3zTB1t43Xrm0e1KQA1r-7poPJl2h_gBstdDGyHOdvfY"
+          },
+          "signature": "zc9HuCpjO-FG-B6UsV5trVDsEhWDsTxk69-0FjkbRaudeuOIV9H9Gf9SYVqsHpfrxX_OnB6eF29N7pvClmEtrA",
+          "domain": "relatte.receipt-signature/v0"
+        }
+      },
+      "producer_world": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+      "producer_incarnation": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806"
+    }
+  },
+  "candidate_receipts": [
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-crossing-v0:6174e949e770a5f9de9a664395fd2ebb44bd3abc7ea1352fe56db8743888714d",
+      "world_id": "receiver-world:01fac51c-32c4-4b64-8c64-4453a05584aa",
+      "receiver_particular": "independent-receiver:9c7fff9b-b195-4102-a34a-df68b3ab03af",
+      "kind": "R3_HOLD",
+      "semantic_effect": "local-only",
+      "contract_ref": null,
+      "pre_state_ref": null,
+      "post_state_ref": null,
+      "descendant_refs": [],
+      "residual_refs": [],
+      "note": "Substrate-local disposition; does not propagate authority.",
+      "created_at": "2026-10-07T00:01:41.000Z",
+      "extensions": {
+        "candidate_ref": "sha256:5596610905be644f77d38d2a77185bd10b75a5ed228cf7ab0bc398c48e9945da",
+        "authority_scope": "THIS_RECEIVER_ONLY"
+      },
+      "receipt_id": "relatte-receipt-v0:1f8a08df228e36c4584e5026038eb9562127beb82185c70cfbcf311a74e1fb43",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "ZUp2TKRgN1Reh8Ql90GCPNx82cFqk2vO3UXFjg2ondI",
+          "y": "r3rDEOCESrBwkYSE27az5Yj2YarHnoJ04LBAwH7dxiY"
+        },
+        "signature": "mt99BKNsFbA4nkSQsCKpSmQCVIWJzxIWJSIYSzaaG3Hvki-HCD_MRDBlxGcOsa2gl7-9HuvdKCoLZ8BnyPQsuA",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-crossing-v0:6174e949e770a5f9de9a664395fd2ebb44bd3abc7ea1352fe56db8743888714d",
+      "world_id": "receiver-world:5e87bff0-ac60-4ce1-9598-3b9e84bd0b46",
+      "receiver_particular": "independent-receiver:a67a6184-d67f-4a0f-88ff-a9b42ec2e515",
+      "kind": "R3_REFUSE",
+      "semantic_effect": "local-only",
+      "contract_ref": null,
+      "pre_state_ref": null,
+      "post_state_ref": null,
+      "descendant_refs": [],
+      "residual_refs": [],
+      "note": "Substrate-local disposition; does not propagate authority.",
+      "created_at": "2026-10-07T00:01:41.000Z",
+      "extensions": {
+        "candidate_ref": "sha256:5596610905be644f77d38d2a77185bd10b75a5ed228cf7ab0bc398c48e9945da",
+        "authority_scope": "THIS_RECEIVER_ONLY"
+      },
+      "receipt_id": "relatte-receipt-v0:c2048018935a18bfc1e5d33a7423ae30e5a3ec09ed6bff00695108186f3fec39",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "a0B2LIscfnFjcSd2XvJY3EMgkLk_rrzmCNqlddvx_WQ",
+          "y": "gM8Fs91SYXarK1j52QzpNOPe2tZG6VGeBsp7afSukh0"
+        },
+        "signature": "ex4C2YfqRxVU6NP_GZoB1qbGSLB8fvV75EdD0cSK-or1rSRybsYzQxwoxepIeYQlLzSvVI-7Msv6g54TuAi1ag",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    },
+    {
+      "schema": "relatte.receipt/v0",
+      "crossing_id": "relatte-crossing-v0:6174e949e770a5f9de9a664395fd2ebb44bd3abc7ea1352fe56db8743888714d",
+      "world_id": "receiver-world:27ee5761-e464-4d57-b86b-fc7f46c3ef5e",
+      "receiver_particular": "independent-receiver:d24d5b24-50a6-42b3-ba2a-e6af9be7cebe",
+      "kind": "R3_ADMIT",
+      "semantic_effect": "local-only",
+      "contract_ref": null,
+      "pre_state_ref": null,
+      "post_state_ref": null,
+      "descendant_refs": [],
+      "residual_refs": [],
+      "note": "Substrate-local disposition; does not propagate authority.",
+      "created_at": "2026-10-07T00:01:41.000Z",
+      "extensions": {
+        "candidate_ref": "sha256:5596610905be644f77d38d2a77185bd10b75a5ed228cf7ab0bc398c48e9945da",
+        "authority_scope": "THIS_RECEIVER_ONLY"
+      },
+      "receipt_id": "relatte-receipt-v0:130ccd7ca0f4f3d88e9561d1253d4d79d1023276b23b8d63b9a158d332dfc0ee",
+      "signing": {
+        "algorithm": "ECDSA-P256-SHA256",
+        "public_key": {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "pE4ACzyCJjkfr1AsABhOx_B2akmttoLtlraTRHJkRfY",
+          "y": "rJse32ReKApIP5h4zxFn_VzFfDy9u8xQqkGpgeu4D-4"
+        },
+        "signature": "kiId86kt4yu-xkqfFWHhO8fWxz2YKwzQpih8cwMlbjXteOY66MHyo1AjG3Ky__3dg7xi_IZNMPaF8YAwkuea5g",
+        "domain": "relatte.receipt-signature/v0"
+      }
+    }
+  ],
+  "recognition": [
+    {
+      "observer_instance": "incarnation:ed01d426-93aa-4eb4-8234-56b065d41c23",
+      "historical_world": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+      "parent": null,
+      "same_live_authority": false,
+      "authority": [],
+      "candidate_particulars": [
+        "particular:composition-instance-v0:4c86f8481adc566992dea6cba8eedcf0cc8300848d549fc47bc7acb77189585d:candidate:5362ac6f215d4637f6242560ace7d6c172f19fb2699505bfa3b3e9fdc0739b6e"
+      ]
+    },
+    {
+      "observer_instance": "incarnation:ed01d426-93aa-4eb4-8234-56b065d41c23",
+      "historical_world": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+      "parent": {
+        "incarnation_id": "incarnation:d83c2058-0ac2-4c8c-92e5-b5d2e579d806",
+        "snapshot_ref": "sha256:5d5b25fb3b513ef067cdc94a5b2d7ab04fca52c7586e78ad3442d536d9c62c4a",
+        "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de"
+      },
+      "same_live_authority": false,
+      "authority": [],
+      "candidate_particulars": []
+    }
+  ],
+  "milestones": [
+    "admit",
+    "runtime-event",
+    "eligible-not-routable",
+    "explicit-publication",
+    "discover-select-authorize-execute",
+    "fork-publish-execute",
+    "snapshot",
+    "observe-candidate-hold",
+    "terminal-death",
+    "stale-denial",
+    "candidate-survival",
+    "fresh-reconstitution",
+    "historical-grant-denial",
+    "fresh-grants-execute",
+    "cross-instance-recognition"
+  ],
+  "historical_prefix_ref": "sha256:aa6c8b5aa805b8e58563c044968ca8e062112e3a6e860ba783d06176d3835da9",
+  "public_key": "MCowBQYDK2VwAyEApK1FHv7Botfa7pB24REJhZyd5n33bwy/VWPHPMujdZ4=",
+  "signature": "O8CYVpGdY7VSecTnUSTcymJNgDREB7jnuV27Foc0dLj0bxMiYaQe0jzEdewyUot8VmkbICmtUgVUpPEW8JqLCA=="
+}
