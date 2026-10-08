@@ -35,7 +35,7 @@ async function opened(value = spec()) {
   });
 }
 
-test('COMPOSITION-INSTANCE-001: normative src tree remains frozen snapshot', () => {
+test('COMPOSITION-INSTANCE-001: governing src snapshot remains exactly addressable', () => {
   const current = execFileSync('git', ['rev-parse', 'HEAD:src'], {
     encoding: 'utf8',
   }).trim();
