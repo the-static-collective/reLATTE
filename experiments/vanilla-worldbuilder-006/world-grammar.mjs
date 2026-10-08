@@ -298,12 +298,6 @@ export function buildWorldPlan({ goal, serverSeed }) {
   ops.push(setblock(0, 65 + coreHeight, 0, palette.light));
   anchors.push({ at: { x: 0, y: 65 + coreHeight, z: 0 }, block: palette.light, role: 'world-heart' });
 
-  // Small inhabited signal: passive entities only.
-  const animals = ['minecraft:cow', 'minecraft:sheep', 'minecraft:pig'];
-  for (let i = 0; i < 3; i += 1) {
-    ops.push(summon(choose(rand, animals), int(rand, -8, 8), 65, int(rand, -8, 8)));
-  }
-
   for (const op of ops) assertOperation(op);
 
   const planBody = {
