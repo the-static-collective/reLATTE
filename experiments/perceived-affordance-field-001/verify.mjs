@@ -98,8 +98,25 @@ export async function verifyProof(proof) {
   assert.equal(proof.occurrences.length, 4);
   assert.equal(proof.occurrences.filter((x) => x.outcome === "succeeded").length, 2);
   assert.equal(proof.occurrences.filter((x) => x.outcome !== "succeeded").length, 2);
+  assert.equal(proof.old_ref.world_id, proof.new_ref.world_id);
   assert.equal(proof.old_ref.interface_id, proof.new_ref.interface_id);
   assert.notEqual(proof.old_ref.offer_id, proof.new_ref.offer_id);
+  const signedOwnerHistory = complete.get(proof.old_ref.world_id);
+  assert.ok(signedOwnerHistory, "old owner history absent");
+  const withdrawal = signedOwnerHistory.findIndex((e) =>
+    e.kind === "withdraw" && e.payload.interface_id === proof.old_ref.interface_id &&
+    e.payload.offer_id === proof.old_ref.offer_id);
+  const reconstitution = signedOwnerHistory.findIndex((e) =>
+    e.kind === "reconstitute" &&
+    e.payload.descriptor.interface_id === proof.new_ref.interface_id &&
+    e.payload.offer_id === proof.new_ref.offer_id &&
+    e.payload.parents.some((p) => p.offer_id === proof.old_ref.offer_id));
+  assert.ok(withdrawal >= 0 && reconstitution > withdrawal,
+    "signed owner transition does not establish withdrawal and fresh incarnation");
+  const historicalPlan = plans.get(proof.occurrences[2].plan_id);
+  assert.ok(historicalPlan?.doors.some((d) => d.offer_id === proof.old_ref.offer_id));
+  assert.equal(proof.occurrences[2].record.operation_tickets.length, 0);
+  assert.equal(proof.occurrences[3].record.operation_tickets.length, 0);
   return {
     verified_occurrences: occurrences.size,
     successful_routes: 2, owner_denials: 2,
