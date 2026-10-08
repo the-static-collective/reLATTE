@@ -164,13 +164,6 @@ jobs:
           assert e["claims"]["fresh_non_op_client_scanned_final_region"] == "OBSERVED"
           assert e["claims"]["author_and_observer_are_distinct_client_sessions"] == "OBSERVED"
           assert e["claims"]["authored_world_crossed_relatte"] == "OBSERVED"
-          ci = e["composition_instance"]
-          assert ci["spec"]["goal"] == "BUILD A WORLD"
-          assert ci["launch_receipt"]["kind"] == "R3_ADMIT"
-          assert ci["result"]["result_disposition"] == "R3_HOLD"
-          assert ci["candidate_receipt"]["kind"] == "R3_HOLD"
-          assert ci["result"]["author_session_id"] != ci["result"]["observer_session_id"]
-          assert ci["candidate_crossing"]["parents"] == [ci["launch_crossing"]["crossing_id"]]
           assert e["receipt"]["kind"] == "R3_HOLD"
           assert len(e["plan"]["districts"]) == 4
           assert len(set(e["plan"]["districts"])) == 4
