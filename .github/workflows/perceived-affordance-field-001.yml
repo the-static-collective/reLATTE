@@ -1,0 +1,63 @@
+name: PERCEIVED-AFFORDANCE-FIELD-001
+on:
+  push:
+    branches: [experiment/perceived-affordance-field-001]
+  pull_request:
+    paths:
+      - 'experiments/perceived-affordance-field-001/**'
+      - '.github/workflows/perceived-affordance-field-001.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  two-observer-owner-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/tranchNOSE
+          ref: 670ca60012929b51e66b8bac7d0c9b85a4f95d7b
+          path: work/donors/tranchNOSE
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/GHoT
+          ref: e35dd470384d864b7b0b629a68dad570875a7df0
+          path: work/donors/GHoT
+          persist-credentials: false
+      - run: npm ci
+      - name: Hostile observer cases and inherited runtime suites
+        env:
+          TRANCHNOSE_ROOT: work/donors/tranchNOSE
+          GHOT_ROOT: work/donors/GHoT
+        run: |
+          node --test experiments/perceived-affordance-field-001/tests/*.test.mjs
+          node --test experiments/composition-instance-002/tests/*.test.mjs
+          node --test test/composition-instance-001.test.ts experiments/dynamic-interface-field-001/tests/*.test.mjs experiments/interface-superspace-001/tests/*.test.mjs
+          npm run verify
+      - name: Generate real route occurrences and verify twice from disk
+        run: |
+          node experiments/perceived-affordance-field-001/run.mjs
+          node experiments/perceived-affordance-field-001/verify.mjs
+          node experiments/perceived-affordance-field-001/verify.mjs
+          git diff --exit-code f34772194e761585ee6d05a48be33f614f6d4c03 -- src spec schemas experiments/composition-instance-001
+          git diff --exit-code 1bdb060130842df2f634831a80f4dc5bb57f630c -- experiments/dynamic-interface-field-001 experiments/interface-superspace-001
+      - name: Preserve proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: perceived-affordance-field-001-proof
+          path: work/perceived-affordance-field-001/proof.json
+          if-no-files-found: warn
+          retention-days: 14
