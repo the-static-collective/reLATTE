@@ -1,0 +1,62 @@
+name: COMPOSITION-INSTANCE-002
+on:
+  push:
+    branches: [experiment/composition-instance-002]
+  pull_request:
+    paths:
+      - 'experiments/composition-instance-002/**'
+      - 'fixtures/composition-instance-002/**'
+      - '.github/workflows/composition-instance-002.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  composition-field-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/tranchNOSE
+          ref: 670ca60012929b51e66b8bac7d0c9b85a4f95d7b
+          path: work/donors/tranchNOSE
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/GHoT
+          ref: e35dd470384d864b7b0b629a68dad570875a7df0
+          path: work/donors/GHoT
+          persist-credentials: false
+      - run: npm ci
+      - name: Bridge hostile cases and unchanged parents
+        env:
+          TRANCHNOSE_ROOT: work/donors/tranchNOSE
+          GHOT_ROOT: work/donors/GHoT
+        run: |
+          node --test experiments/composition-instance-002/tests/*.test.mjs
+          node --test test/composition-instance-001.test.ts experiments/dynamic-interface-field-001/tests/*.test.mjs experiments/interface-superspace-001/tests/*.test.mjs
+          npm run verify
+      - name: Execute, kill, reconstitute; then independently cold-verify
+        run: |
+          node experiments/composition-instance-002/specimen.mjs
+          node experiments/composition-instance-002/verify.mjs
+          node experiments/composition-instance-002/verify.mjs
+          node experiments/composition-instance-002/verify.mjs fixtures/composition-instance-002
+          git diff --exit-code f34772194e761585ee6d05a48be33f614f6d4c03 -- src spec schemas experiments/composition-instance-001
+          git diff --exit-code 1bdb060130842df2f634831a80f4dc5bb57f630c -- experiments/dynamic-interface-field-001 experiments/interface-superspace-001
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: composition-instance-002-signed-evidence
+          path: work/composition-instance-002/
+          retention-days: 14
