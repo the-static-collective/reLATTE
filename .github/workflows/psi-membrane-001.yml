@@ -1,0 +1,62 @@
+name: PSI-MEMBRANE-001
+on:
+  push:
+    branches: [experiment/psi-membrane-001]
+  pull_request:
+    paths:
+      - 'experiments/psi-membrane-001/**'
+      - 'fixtures/psi-membrane-001/**'
+      - '.github/workflows/psi-membrane-001.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  history-cut-entailment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/tranchNOSE
+          ref: 670ca60012929b51e66b8bac7d0c9b85a4f95d7b
+          path: work/donors/tranchNOSE
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/GHoT
+          ref: e35dd470384d864b7b0b629a68dad570875a7df0
+          path: work/donors/GHoT
+          persist-credentials: false
+      - run: npm ci
+      - name: Membrane attacks, archived fixture and unchanged parent suites
+        env:
+          TRANCHNOSE_ROOT: work/donors/tranchNOSE
+          GHOT_ROOT: work/donors/GHoT
+        run: |
+          node --test experiments/psi-membrane-001/tests/*.test.mjs
+          node --test test/composition-instance-001.test.ts experiments/composition-instance-002/tests/*.test.mjs experiments/dynamic-interface-field-001/tests/*.test.mjs experiments/interface-superspace-001/tests/*.test.mjs
+          npm run verify
+      - name: Derive, encounter change, execute lawfully or deny; independently cold-verify
+        run: |
+          node experiments/psi-membrane-001/specimen.mjs
+          node experiments/psi-membrane-001/verify.mjs
+          git diff --exit-code 21e7d7a7413507b3b9301354f51f7f98d89d2eee -- src spec schemas experiments/composition-instance-001 experiments/composition-instance-002 experiments/dynamic-interface-field-001 experiments/interface-superspace-001
+      - name: Archive literal signed evidence
+        if: always()
+        run: tar -czf work/psi-membrane-001-evidence.tar.gz -C work psi-membrane-001
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: psi-membrane-001-signed-evidence
+          path: work/psi-membrane-001-evidence.tar.gz
+          retention-days: 14

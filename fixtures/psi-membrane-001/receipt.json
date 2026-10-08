@@ -1,0 +1,103 @@
+{
+  "schema": "relatte.psi-membrane-receipt.experimental/v0",
+  "parent": "21e7d7a7413507b3b9301354f51f7f98d89d2eee",
+  "archive_sha256": "1c409a60feafd2b6d02404c22db98eb8e182d7780a056c4e000d80d2c5fa70e3",
+  "proof_bytes_sha256": "ff6eec6b9191d0ce183b71127f40d34a71e0c43615b757c28c93abdfbaa68e1c",
+  "roots_bytes_sha256": "5fbe2740e7f1d4a2f1d39dd45f7a211e107741ddd3bd73669d9a28d088aceef0",
+  "verification": {
+    "verified": true,
+    "history_cut_contexts": 16,
+    "entailment_witnesses": 23,
+    "native_occurrences": 4,
+    "denials_before_native_effect": 3,
+    "owner_tickets": 8,
+    "live_authority_restored": 0,
+    "replay_side_effects": 0,
+    "normative_core_mutations": 0
+  },
+  "h0": {
+    "schema": "relatte.experimental-entailment-witness/v0",
+    "observer_ref": "observer:local",
+    "policy_id": "sha256:1365edc4bc3263764de39b2dc11c3f2de89e203dd53719ae0684ca1a945d491f",
+    "context_id": "sha256:47833366dac39df389ac612f7ef27bb55c42185010823e27dea04f40729d701e",
+    "history_cut_refs": [
+      "sha256:53b9e80c598af6f8f0bea276f035bb79aa9339f16eb66697fcbf5c8ac2a626de",
+      "sha256:98548ba37ba889baa67c48081af846c78fa06910f8352049c49487c8f1d6e3f7",
+      "sha256:07358ed7a3a468a9fc15cca5981c525195cab5b5af7dd157678ea3a57e3a7859"
+    ],
+    "frontier_digest": "sha256:8e2140f3c1a608c86c03f4001c9e8a17619f5b556eab6448918e0f3df7dfac0d",
+    "assertion_digest": "sha256:311e3ea0982620c33962b71be4c106ec54f5bf4de10cb13b4a6d9a9c83f6b589",
+    "term_ref": "sha256:04b79bc14b511cdec8ce9379d10e54415a5f0636e501c727d522ddec9f2eea06",
+    "condition": {
+      "kind": "affords",
+      "observer_ref": "observer:local",
+      "term_ref": "sha256:04b79bc14b511cdec8ce9379d10e54415a5f0636e501c727d522ddec9f2eea06",
+      "operation": "inspect"
+    },
+    "result": "ENTAILED",
+    "reason": "FIXED_SUPPORTED_RULE",
+    "referents": [
+      {
+        "world_id": "world:05bb2d1b0693c281ce1a4bf37f7ee90fcf7af5b280bd0bcfe4536d548e989275",
+        "interface_id": "interface:a7bb41d8",
+        "offer_id": "offer:4eeed76f-23f8-4574-8178-eec7ad3bc3ef",
+        "incarnation_id": "offer:4eeed76f-23f8-4574-8178-eec7ad3bc3ef"
+      }
+    ],
+    "support_refs": [
+      "sha256:8d3459969146affdf370c5bdb60307e1580199d5b450c3ba9a1f77624d468fa5",
+      "sha256:f5383788eb1871bb275e7fd717acf6dd8380c592abe0a4376f00c06b15f687ac"
+    ],
+    "assertion_refs": [
+      "sha256:6ed8b5dd522d9c074877dba01531712124eab21892895ad0dc2cc94cee38cc61",
+      "sha256:cfc9902e03182ec9ede12282c2002ec51c434e7735a3cf9895da4b24563c771a",
+      "sha256:d7c1cbd416a095a3c8df3153a7abae814416114fdf5d0ed5d03aa4234d85d5be"
+    ],
+    "created_at": "1970-01-01T00:00:01.000Z",
+    "rule": "affords/v0",
+    "authority": [],
+    "semantic_effect": "none",
+    "witness_id": "sha256:e196695178aebf6c3582eb58f2e428013f66f045a0d06a170134dcd3c7687266"
+  },
+  "h1": {
+    "schema": "relatte.experimental-entailment-witness/v0",
+    "observer_ref": "observer:local",
+    "policy_id": "sha256:1365edc4bc3263764de39b2dc11c3f2de89e203dd53719ae0684ca1a945d491f",
+    "context_id": "sha256:fd63b5eb3b64358d742ee12a597b583233cdfd03043cee7f396157dccfd36e62",
+    "history_cut_refs": [
+      "sha256:53b9e80c598af6f8f0bea276f035bb79aa9339f16eb66697fcbf5c8ac2a626de",
+      "sha256:d8c585781cdb3b1e28536a677ad246abaa9d68fa4b26ba6ae1a5b415f2481368",
+      "sha256:98548ba37ba889baa67c48081af846c78fa06910f8352049c49487c8f1d6e3f7"
+    ],
+    "frontier_digest": "sha256:aebd7144b38e3faab5e4dea7f1591f46f65694fe7f524b7e71e15f4f41f0d951",
+    "assertion_digest": "sha256:be121cf853f70bc08cefda6285903f592de3469befcada52ee79bc0c67108b93",
+    "term_ref": "sha256:04b79bc14b511cdec8ce9379d10e54415a5f0636e501c727d522ddec9f2eea06",
+    "condition": {
+      "kind": "affords",
+      "observer_ref": "observer:local",
+      "term_ref": "sha256:04b79bc14b511cdec8ce9379d10e54415a5f0636e501c727d522ddec9f2eea06",
+      "operation": "inspect"
+    },
+    "result": "NOT_ENTAILED",
+    "reason": "LIVE_REFERENT_ABSENT",
+    "referents": [],
+    "support_refs": [],
+    "assertion_refs": [],
+    "created_at": "1970-01-01T00:00:01.001Z",
+    "rule": "affords/v0",
+    "authority": [],
+    "semantic_effect": "none",
+    "witness_id": "sha256:f86a05a8a53d40b980c0b019cf9cfb8225f2c422114ef000afed19e8b371d9e8"
+  },
+  "claims": {
+    "historical_entailment_survives": true,
+    "historical_entailment_is_not_current_affordance": true,
+    "delay_sensitive_death_and_withdrawal": true,
+    "same_surface_different_history_and_crossing_ancestry": true,
+    "connectivity_is_directed_not_implicitly_transitive": true,
+    "composite_context_is_selected_not_global": true
+  },
+  "authority": [],
+  "semantic_effect": "none",
+  "signature": "UNSIGNED_DERIVED_RECEIPT"
+}
