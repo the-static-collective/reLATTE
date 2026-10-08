@@ -1,0 +1,42 @@
+{
+  "schema": "relatte.translate-through-spec/v0",
+  "source_world": "world:lemonpress",
+  "source_particular": "particular:the-last-stop-moved:issue-cut-001:text-layer",
+  "source_history_head": "lemonpress:translation-relay-001",
+  "source_ref": {
+    "address": "sha256:c14ec41badbdcddde6cc5006141e3181fe0917a86c67b1a85568d9b22e10051f",
+    "media_type": "application/pdf"
+  },
+  "route": [
+    {
+      "stage_id": "source-en",
+      "domain": "language",
+      "representation": "en",
+      "role": "source",
+      "policy_ref": null
+    },
+    {
+      "stage_id": "through-ja",
+      "domain": "language",
+      "representation": "ja",
+      "role": "through",
+      "policy_ref": "lemonpress:japanese-edition-profile-001"
+    },
+    {
+      "stage_id": "return-en",
+      "domain": "language",
+      "representation": "en",
+      "role": "return",
+      "policy_ref": "lemonpress:return-voice:drift-preserving"
+    }
+  ],
+  "policy": {
+    "preserve_intermediates": true,
+    "require_stage_receipts": true,
+    "semantic_equivalence_claim": "none",
+    "route_change": "new-operation",
+    "outputs_are_descendants": true
+  },
+  "return_address": "relatte:return:lemonpress:the-last-stop-moved",
+  "created_at": "2026-10-08T00:22:00.000Z"
+}
