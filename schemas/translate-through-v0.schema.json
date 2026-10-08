@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://the-static-collective.github.io/reLATTE/schemas/translate-through-v0.schema.json",
+  "title": "TranslateThroughV0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "operation_id",
+    "source_ref",
+    "route",
+    "policy",
+    "laws"
+  ],
+  "properties": {
+    "schema": {
+      "const": "relatte.translate-through/v0"
+    },
+    "operation_id": {
+      "type": "string",
+      "pattern": "^relatte-translate-through-v0:[0-9a-f]{64}$"
+    },
+    "source_ref": {
+      "$ref": "#/$defs/sourceRef"
+    },
+    "route": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "$ref": "#/$defs/stage"
+      }
+    },
+    "policy": {
+      "$ref": "#/$defs/policy"
+    },
+    "laws": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "address",
+        "media_type"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "minLength": 1
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_id",
+        "domain",
+        "representation",
+        "role",
+        "policy_ref"
+      ],
+      "properties": {
+        "stage_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "domain": {
+          "type": "string",
+          "minLength": 1
+        },
+        "representation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "enum": [
+            "source",
+            "through",
+            "target",
+            "return"
+          ]
+        },
+        "policy_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preserve_intermediates",
+        "require_stage_receipts",
+        "semantic_equivalence_claim",
+        "route_change",
+        "outputs_are_descendants"
+      ],
+      "properties": {
+        "preserve_intermediates": {
+          "const": true
+        },
+        "require_stage_receipts": {
+          "const": true
+        },
+        "semantic_equivalence_claim": {
+          "const": "none"
+        },
+        "route_change": {
+          "const": "new-operation"
+        },
+        "outputs_are_descendants": {
+          "const": true
+        }
+      }
+    }
+  }
+}
