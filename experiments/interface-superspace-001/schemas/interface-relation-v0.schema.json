@@ -1,0 +1,176 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "relatte.interface-relation.experimental/v0"
+    },
+    "relation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "destination": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "enum": [
+        "transport",
+        "transform",
+        "observe",
+        "verify",
+        "cross"
+      ]
+    },
+    "consumes": {
+      "type": "string",
+      "minLength": 1
+    },
+    "produces": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operation": {
+      "type": "string",
+      "minLength": 1
+    },
+    "preconditions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "postconditions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "removes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "preserves": {
+      "type": "object",
+      "properties": {
+        "bytes": {
+          "type": "boolean"
+        },
+        "semantics": {
+          "type": "boolean"
+        },
+        "ancestry": {
+          "type": "boolean"
+        },
+        "order": {
+          "type": "boolean"
+        },
+        "timing": {
+          "type": "boolean"
+        },
+        "particular_identity": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "bytes",
+        "semantics",
+        "ancestry",
+        "order",
+        "timing",
+        "particular_identity"
+      ],
+      "additionalProperties": false
+    },
+    "may_lose": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "reversible": {
+      "type": "boolean"
+    },
+    "loss_cost": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "requires": {
+      "type": "object",
+      "properties": {
+        "network": {
+          "type": "boolean"
+        },
+        "live_participant": {
+          "type": "boolean"
+        },
+        "local_state": {
+          "type": "boolean"
+        },
+        "witness": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "authority": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "network",
+        "live_participant",
+        "local_state",
+        "witness",
+        "authority"
+      ],
+      "additionalProperties": false
+    },
+    "binding_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verification_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema",
+    "relation_id",
+    "source",
+    "destination",
+    "kind",
+    "consumes",
+    "produces",
+    "operation",
+    "preconditions",
+    "postconditions",
+    "removes",
+    "preserves",
+    "may_lose",
+    "reversible",
+    "loss_cost",
+    "requires",
+    "binding_ref",
+    "verification_ref"
+  ],
+  "additionalProperties": false
+}

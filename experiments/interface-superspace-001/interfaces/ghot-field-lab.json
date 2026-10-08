@@ -1,0 +1,64 @@
+{
+  "schema": "relatte.interface-particular.experimental/v0",
+  "interface_id": "interface:7e43de3c",
+  "participant_ref": "participant:ghot",
+  "plane": "electronic",
+  "direction": "bidirectional",
+  "protocol": "stdin-json/stdout-json-v0",
+  "accepts": [
+    "bounded.analysis.result"
+  ],
+  "emits": [
+    "bounded.analysis.result"
+  ],
+  "operations": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ],
+  "authority": {
+    "observe": true,
+    "propose": true,
+    "authorize": false,
+    "mutate": false
+  },
+  "information": {
+    "capacity": 1048576,
+    "capacity_unit": "payload-bytes",
+    "timing_model": "occurrence time",
+    "ordering": "ordered",
+    "delivery": "bounded local observation",
+    "loss_profile": [],
+    "native_dimensions": [
+      "exit status",
+      "manifest capability",
+      "declared invariants"
+    ]
+  },
+  "state": {
+    "retention": "transient",
+    "replayable": true
+  },
+  "evidence": {
+    "produces": [
+      "native receipt"
+    ],
+    "verification": [
+      "binding-local verification"
+    ],
+    "source_ref": "tranchNOSE integrations/ghot/adapter-manifest.json"
+  },
+  "constraints": {
+    "required": [],
+    "forbidden": [
+      "authorize",
+      "network",
+      "arbitrary_shell"
+    ]
+  },
+  "live": true,
+  "capabilities": [
+    "analysis.tranchnose.field-lab"
+  ]
+}

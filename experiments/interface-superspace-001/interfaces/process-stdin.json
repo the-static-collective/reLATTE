@@ -1,0 +1,63 @@
+{
+  "schema": "relatte.interface-particular.experimental/v0",
+  "interface_id": "interface:58bfd504",
+  "participant_ref": "participant:process",
+  "plane": "electronic",
+  "direction": "input",
+  "protocol": "stdin-json/stdout-json-v0",
+  "accepts": [
+    "process.stdin.json"
+  ],
+  "emits": [
+    "process.stdin.json"
+  ],
+  "operations": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ],
+  "authority": {
+    "observe": true,
+    "propose": true,
+    "authorize": false,
+    "mutate": false
+  },
+  "information": {
+    "capacity": 1048576,
+    "capacity_unit": "payload-bytes",
+    "timing_model": "occurrence time",
+    "ordering": "ordered",
+    "delivery": "bounded local observation",
+    "loss_profile": [],
+    "native_dimensions": []
+  },
+  "state": {
+    "retention": "transient",
+    "replayable": true
+  },
+  "evidence": {
+    "produces": [
+      "native receipt"
+    ],
+    "verification": [
+      "binding-local verification"
+    ],
+    "source_ref": "GHoT ghot/external_adapters.py"
+  },
+  "constraints": {
+    "required": [],
+    "forbidden": [
+      "authorize",
+      "network",
+      "arbitrary_shell"
+    ]
+  },
+  "live": true,
+  "capabilities": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ]
+}

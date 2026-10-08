@@ -1,0 +1,64 @@
+{
+  "schema": "relatte.interface-particular.experimental/v0",
+  "interface_id": "interface:6e80a889",
+  "participant_ref": "participant:minecraft",
+  "plane": "witness",
+  "direction": "output",
+  "protocol": "rcon",
+  "accepts": [
+    "adapter.observation"
+  ],
+  "emits": [
+    "adapter.observation"
+  ],
+  "operations": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ],
+  "authority": {
+    "observe": true,
+    "propose": true,
+    "authorize": false,
+    "mutate": false
+  },
+  "information": {
+    "capacity": 255,
+    "capacity_unit": "payload-bytes",
+    "timing_model": "occurrence time",
+    "ordering": "ordered",
+    "delivery": "bounded local observation",
+    "loss_profile": [],
+    "native_dimensions": [
+      "server block witness",
+      "official jar SHA1"
+    ]
+  },
+  "state": {
+    "retention": "persistent",
+    "replayable": false
+  },
+  "evidence": {
+    "produces": [
+      "native receipt"
+    ],
+    "verification": [
+      "binding-local verification"
+    ],
+    "source_ref": "alien-minecraft-vanilla-005 vanillaStages"
+  },
+  "constraints": {
+    "required": [],
+    "forbidden": [
+      "authorize"
+    ]
+  },
+  "live": true,
+  "capabilities": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ]
+}

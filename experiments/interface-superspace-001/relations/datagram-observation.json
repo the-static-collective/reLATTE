@@ -1,0 +1,37 @@
+{
+  "schema": "relatte.interface-relation.experimental/v0",
+  "relation_id": "relation:29590871",
+  "source": "interface:b855e724",
+  "destination": "interface:7c63c65b",
+  "kind": "transform",
+  "consumes": "reassembled.bytes",
+  "produces": "adapter.observation",
+  "operation": "observe",
+  "preconditions": [
+    "complete"
+  ],
+  "postconditions": [
+    "observed"
+  ],
+  "removes": [],
+  "preserves": {
+    "bytes": true,
+    "semantics": true,
+    "ancestry": true,
+    "order": true,
+    "timing": false,
+    "particular_identity": false
+  },
+  "may_lose": [],
+  "reversible": true,
+  "loss_cost": 0,
+  "requires": {
+    "network": false,
+    "live_participant": true,
+    "local_state": false,
+    "witness": null,
+    "authority": null
+  },
+  "binding_ref": "binding:29590871",
+  "verification_ref": "verification:29590871"
+}

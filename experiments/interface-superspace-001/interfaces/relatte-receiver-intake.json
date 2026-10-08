@@ -1,0 +1,64 @@
+{
+  "schema": "relatte.interface-particular.experimental/v0",
+  "interface_id": "interface:e471e59e",
+  "participant_ref": "participant:relatte",
+  "plane": "witness",
+  "direction": "input",
+  "protocol": "in-process/v0",
+  "accepts": [
+    "relatte.observation"
+  ],
+  "emits": [
+    "relatte.observation"
+  ],
+  "operations": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ],
+  "authority": {
+    "observe": true,
+    "propose": true,
+    "authorize": false,
+    "mutate": false
+  },
+  "information": {
+    "capacity": 1048576,
+    "capacity_unit": "payload-bytes",
+    "timing_model": "occurrence time",
+    "ordering": "ordered",
+    "delivery": "bounded local observation",
+    "loss_profile": [],
+    "native_dimensions": [
+      "crossing",
+      "receiver-local receipt"
+    ]
+  },
+  "state": {
+    "retention": "persistent",
+    "replayable": true
+  },
+  "evidence": {
+    "produces": [
+      "native receipt"
+    ],
+    "verification": [
+      "binding-local verification"
+    ],
+    "source_ref": "frozen core CrossingEnvelopeV0 + ReceiptV0"
+  },
+  "constraints": {
+    "required": [],
+    "forbidden": [
+      "authorize"
+    ]
+  },
+  "live": true,
+  "capabilities": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ]
+}
