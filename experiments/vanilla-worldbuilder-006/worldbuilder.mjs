@@ -3,13 +3,17 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 
 import { buildWorldPlan, operationToCommand, validateWorldPlan, WORLD_BOUNDS } from './world-grammar.mjs';
-import { FROZEN_CORE_SHA } from '../polyglot-crossing-001/common.ts';
-import { generateP256KeyPair } from '../../src/protocol.ts';
 import {
-  finalizeCompositionInstance,
-  makeCompositionInstanceSpec,
-  openCompositionInstance,
-} from '../composition-instance-001/contract.ts';
+  FROZEN_CORE_SHA,
+  makeObservation,
+  makePolyglotHop,
+  verifyHopBinding,
+} from '../polyglot-crossing-001/common.ts';
+import {
+  generateP256KeyPair,
+  verifyCrossingEnvelope,
+  verifyReceipt,
+} from '../../src/protocol.ts';
 
 const require = createRequire(import.meta.url);
 const mineflayer = require('mineflayer');
@@ -147,42 +151,6 @@ async function main() {
     const seedResponse = await rcon.send('seed');
     const serverSeed = parseSeedResponse(seedResponse);
 
-    const instanceSpec = makeCompositionInstanceSpec({
-      runtime_id: 'minecraft-vanilla-26.1.1',
-      base_snapshot_ref:
-        'minecraft-server:sha1:' + meta.server_sha1 + ':seed:' + String(serverSeed),
-      goal: GOAL,
-      capabilities: [
-        'minecraft.operator',
-        'minecraft.creative',
-        'minecraft.command.fill',
-        'minecraft.command.setblock',
-        'minecraft.command.summon',
-      ],
-      limits: {
-        world_bounds: WORLD_BOUNDS,
-        command_surface: ['fill', 'setblock', 'summon'],
-        network: 'localhost-only',
-        runtime: 'official-unmodified-mojang-server',
-      },
-      observer_mode: 'fresh-non-op-protocol-client',
-      requested_output_class: 'minecraft-authored-world-state',
-      normative_src_tree: 'c0e4d2c59481e0fb2a4bf4bb294f373907fd2b76',
-      extensions: {
-        minecraft_version: meta.id,
-        server_jar_sha1: meta.server_sha1,
-        fixed_blueprint: false,
-        generative_grammar: true,
-      },
-    });
-
-    const openedInstance = await openCompositionInstance({
-      spec: instanceSpec,
-      signer: await generateP256KeyPair(),
-      receiver: await generateP256KeyPair(),
-      hop_index: 12,
-    });
-
     await rcon.send('gamerule doDaylightCycle false');
     await rcon.send('gamerule doWeatherCycle false');
     await rcon.send('gamerule doMobSpawning false');
@@ -265,52 +233,47 @@ async function main() {
       anchors: plan.anchors,
     }), 'utf8');
 
-    const actionTraceSha256 = sha(Buffer.from(JSON.stringify(commandLog), 'utf8'));
-    const authorSessionId =
-      'minecraft-session:author:' + BOT_NAME + ':' + authorProtocolVersion;
-    const observerSessionId =
-      'minecraft-session:observer:' + observerName + ':' + observerBot.version;
-
-    const finalizedInstance = await finalizeCompositionInstance({
-      opened: openedInstance,
-      spec: instanceSpec,
-      runtime_evidence: {
-        runtime_id: instanceSpec.runtime_id,
-        author_session_id: authorSessionId,
-        observer_session_id: observerSessionId,
-        observed_state_ref: 'sha256:' + scan.field_sha256,
-        observed_state_sha256: scan.field_sha256,
-        action_trace_ref: 'sha256:' + actionTraceSha256,
-        claims: {
-          identity_model: 'official vanilla server + bounded composition instance',
-          minecraft_version: meta.id,
-          server_jar_sha1: meta.server_sha1,
-          goal: GOAL,
-          server_seed: String(serverSeed),
-          plan_sha256: plan.plan_sha256,
-          field_sha256: scan.field_sha256,
-          palette: plan.palette.name,
-          districts: plan.districts,
-          operation_count: plan.operations.length,
-          command_count: commandLog.length,
-          anchor_count: plan.anchors.length,
-          non_air_blocks: scan.non_air_blocks,
-          actual_mojang_runtime: true,
-          author_was_op: true,
-          observer_was_op: false,
-          fixed_blueprint: false,
-          generative_grammar: true,
-          bounded_command_surface: ['fill', 'setblock', 'summon'],
-        },
+    const observation = makeObservation(
+      'minecraft-vanilla-authored-world',
+      'minecraft-vanilla-authored-world:' +
+        meta.id +
+        ':plan:' + plan.plan_sha256 +
+        ':field:' + scan.field_sha256,
+      worldDescriptor,
+      'application/x-minecraft-vanilla-authored-world',
+      {
+        identity_model: 'official vanilla server + autonomous bounded operator-authored region',
+        minecraft_version: meta.id,
+        server_jar_sha1: meta.server_sha1,
+        goal: GOAL,
+        server_seed: String(serverSeed),
+        plan_sha256: plan.plan_sha256,
+        field_sha256: scan.field_sha256,
+        palette: plan.palette.name,
+        districts: plan.districts,
+        operation_count: plan.operations.length,
+        command_count: commandLog.length,
+        anchor_count: plan.anchors.length,
+        non_air_blocks: scan.non_air_blocks,
+        actual_mojang_runtime: true,
+        bot_was_op: true,
+        fixed_blueprint: false,
+        generative_grammar: true,
+        bounded_command_surface: ['fill', 'setblock', 'summon'],
       },
-      candidate_bytes: worldDescriptor,
+    );
+
+    const hop = await makePolyglotHop({
+      observation,
       signer: await generateP256KeyPair(),
       receiver: await generateP256KeyPair(),
-      hop_index: 13,
+      parent_crossing_id: null,
+      disposition: 'R3_HOLD',
+      hop_index: 12,
     });
-
-    const hop = finalizedInstance.candidate;
-    const observation = hop.observation;
+    verifyHopBinding(hop, worldDescriptor);
+    if (!(await verifyCrossingEnvelope(hop.crossing))) throw new Error('WORLDBUILDER_CROSSING_INVALID');
+    if (!(await verifyReceipt(hop.receipt))) throw new Error('WORLDBUILDER_RECEIPT_INVALID');
 
     const evidence = {
       schema: 'relatte.vanilla-worldbuilder-006-evidence/v0',
@@ -320,7 +283,7 @@ async function main() {
       server_seed: String(serverSeed),
       bot: {
         username: BOT_NAME,
-        version: authorProtocolVersion,
+        version: bot.version,
         mineflayer_version: require('mineflayer/package.json').version,
         author_protocol_version: authorProtocolVersion,
         observer_protocol_version: observerBot.version,
@@ -338,15 +301,6 @@ async function main() {
         histogram: scan.histogram,
       },
       top_down_map: scan.top_down,
-      composition_instance: {
-        spec: instanceSpec,
-        instance_id: openedInstance.instance_id,
-        launch_crossing: openedInstance.launch.crossing,
-        launch_receipt: openedInstance.launch.receipt,
-        result: finalizedInstance.result,
-        candidate_crossing: finalizedInstance.candidate.crossing,
-        candidate_receipt: finalizedInstance.candidate.receipt,
-      },
       observation: {
         substrate: observation.substrate,
         native_id: observation.native_id,
@@ -365,8 +319,6 @@ async function main() {
         server_verified_anchor_blocks: 'OBSERVED',
         fresh_non_op_client_scanned_final_region: 'OBSERVED',
         author_and_observer_are_distinct_client_sessions: 'OBSERVED',
-        composition_instance_admitted: 'OBSERVED',
-        candidate_forced_to_hold: 'OBSERVED',
         authored_world_crossed_relatte: 'OBSERVED',
         human_blueprint: 'REFUTED_FOR_EXACT_COORDINATE_PLAN',
         open_ended_general_intelligence: 'UNOBSERVED',
