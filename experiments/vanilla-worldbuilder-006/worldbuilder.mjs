@@ -84,6 +84,34 @@ function symbolFor(blockName) {
   return '#';
 }
 
+async function waitForObserverAnchors(bot, anchors, timeoutMs = 15000) {
+  const started = Date.now();
+  let last = [];
+
+  while (Date.now() - started < timeoutMs) {
+    last = anchors.map((anchor) => {
+      const block = bot.blockAt(
+        new Vec3(anchor.at.x, anchor.at.y, anchor.at.z),
+      );
+      return {
+        role: anchor.role,
+        expected: anchor.block.replace(/^minecraft:/, ''),
+        observed: block?.name ?? null,
+      };
+    });
+
+    if (
+      last.every((entry) => entry.observed === entry.expected)
+    ) return last;
+
+    await sleep(250);
+  }
+
+  throw new Error(
+    'WORLDBUILDER_OBSERVER_SYNC_TIMEOUT:' + JSON.stringify(last),
+  );
+}
+
 function scanWorld(bot) {
   const rows = [];
   const histogram = {};
@@ -214,7 +242,7 @@ async function main() {
     await waitForSpawn(observerBot);
     await rcon.send('tp ' + observerName + ' 0 80 0');
     await observerBot.waitForChunksToLoad();
-    await sleep(1500);
+    await waitForObserverAnchors(observerBot, plan.anchors);
 
     const scan = scanWorld(observerBot);
     if (scan.non_air_blocks === 0) {
