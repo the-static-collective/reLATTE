@@ -145,7 +145,8 @@ async function main() {
     password: RCON_PASSWORD,
   });
 
-  let bot;
+  let authorBot;
+  let observerBot;
   try {
     const seedResponse = await rcon.send('seed');
     const serverSeed = parseSeedResponse(seedResponse);
@@ -158,17 +159,17 @@ async function main() {
     await rcon.send('weather clear');
     await rcon.send('op ' + BOT_NAME);
 
-    bot = mineflayer.createBot({
+    authorBot = mineflayer.createBot({
       host: HOST,
       port: PORT,
       username: BOT_NAME,
       auth: 'offline',
     });
 
-    await waitForSpawn(bot);
+    await waitForSpawn(authorBot);
     await rcon.send('gamemode creative ' + BOT_NAME);
     await rcon.send('tp ' + BOT_NAME + ' 0 80 0');
-    await bot.waitForChunksToLoad();
+    await authorBot.waitForChunksToLoad();
     await sleep(1000);
 
     const plan = buildWorldPlan({ goal: GOAL, serverSeed });
@@ -176,14 +177,11 @@ async function main() {
 
     const commandLog = [];
     for (const op of plan.operations) {
-      await sendBotCommand(bot, operationToCommand(op), commandLog);
+      await sendBotCommand(authorBot, operationToCommand(op), commandLog);
     }
 
     await sleep(2500);
     await rcon.send('save-all flush');
-    await rcon.send('tp ' + BOT_NAME + ' 0 80 0');
-    await bot.waitForChunksToLoad();
-    await sleep(1000);
 
     const anchorVerification = [];
     for (const anchor of plan.anchors) {
@@ -198,7 +196,30 @@ async function main() {
       anchorVerification.push({ ...anchor, response });
     }
 
-    const scan = scanWorld(bot);
+    // Do not trust the author client's own cached world view. Disconnect it,
+    // then reconstruct observed reality from a fresh, non-OP client.
+    const authorProtocolVersion = authorBot.version;
+    authorBot.quit('authorship complete');
+    authorBot = undefined;
+    await rcon.send('deop ' + BOT_NAME);
+    await sleep(500);
+
+    const observerName = BOT_NAME + 'Observer';
+    observerBot = mineflayer.createBot({
+      host: HOST,
+      port: PORT,
+      username: observerName,
+      auth: 'offline',
+    });
+    await waitForSpawn(observerBot);
+    await rcon.send('tp ' + observerName + ' 0 80 0');
+    await observerBot.waitForChunksToLoad();
+    await sleep(1500);
+
+    const scan = scanWorld(observerBot);
+    if (scan.non_air_blocks === 0) {
+      throw new Error('WORLDBUILDER_FRESH_OBSERVER_SAW_EMPTY_WORLD');
+    }
     await writeFile(MAP_PATH, scan.top_down);
 
     const worldDescriptor = Buffer.from(JSON.stringify({
@@ -264,8 +285,12 @@ async function main() {
         username: BOT_NAME,
         version: bot.version,
         mineflayer_version: require('mineflayer/package.json').version,
+        author_protocol_version: authorProtocolVersion,
+        observer_protocol_version: observerBot.version,
         operator: true,
         gamemode: 'creative',
+        fresh_observer_username: observerName,
+        fresh_observer_operator: false,
       },
       plan,
       command_log: commandLog,
@@ -292,7 +317,8 @@ async function main() {
         bounded_autonomous_world_plan: 'OBSERVED',
         bot_issued_world_commands: 'OBSERVED',
         server_verified_anchor_blocks: 'OBSERVED',
-        client_scanned_final_region: 'OBSERVED',
+        fresh_non_op_client_scanned_final_region: 'OBSERVED',
+        author_and_observer_are_distinct_client_sessions: 'OBSERVED',
         authored_world_crossed_relatte: 'OBSERVED',
         human_blueprint: 'REFUTED_FOR_EXACT_COORDINATE_PLAN',
         open_ended_general_intelligence: 'UNOBSERVED',
@@ -317,8 +343,11 @@ async function main() {
     }, null, 2) + '\n');
     process.stdout.write('\nTOP-DOWN WORLD MAP\n' + scan.top_down + '\n');
   } finally {
-    if (bot) {
-      try { bot.quit('world complete'); } catch {}
+    if (authorBot) {
+      try { authorBot.quit('world complete'); } catch {}
+    }
+    if (observerBot) {
+      try { observerBot.quit('observation complete'); } catch {}
     }
     try { await rcon.send('stop'); } catch {}
     rcon.end();
