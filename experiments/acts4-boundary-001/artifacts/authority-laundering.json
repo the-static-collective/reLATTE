@@ -1,0 +1,581 @@
+{
+  "matrix": "AUTHORITY-LAUNDERING-001",
+  "public_keys_hex": {
+    "DoorOwnerA": "3f1f20838033c7c9d52df16746cff2579249da330fa50358ee99e87510b10a6c",
+    "PARTICIPANT": "8dc2e3b5737ab0ede230dc58dee1207c138954cb7ae9aef90205a804fd735027",
+    "DoorOwnerB": "f9bed9c3118e7f1986e8d5f9d6b4ad7d92b36e6b02a7f73f17e63edf94b9e07d"
+  },
+  "baseline_owner_admission": {
+    "artifact": {
+      "body": "{\"admitted\":true,\"kind\":\"OWNER_ADMISSION\",\"operation\":\"CROSS\",\"revision\":1,\"route\":\"Door A\",\"subject\":\"PARTICIPANT\",\"world\":\"authority-laundering-matrix\"}",
+      "issuer": "DoorOwnerA",
+      "signature_hex": "19ac433ce3a72a18a106f314fb2146729bd1c7c29d415e4323a635c8300c60392be5ba2b4902c9727804e134b417e157d580c48044f76669c021c4b6cc863700"
+    },
+    "assessment": {
+      "artifact_claims": "{\"admitted\":true,\"kind\":\"OWNER_ADMISSION\",\"operation\":\"CROSS\",\"revision\":1,\"route\":\"Door A\",\"subject\":\"PARTICIPANT\",\"world\":\"authority-laundering-matrix\"}",
+      "artifact_id": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+      "artifact_semantics": "OWNER_ADMISSION",
+      "artifact_source": "DoorOwnerA",
+      "asserted_authority": [],
+      "authenticity": "VERIFIED",
+      "authority_source": {
+        "grant_id": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+        "incarnation_id": "2816febe-20a7-46f5-9b85-092491ee8b0a",
+        "operation": "CROSS",
+        "owner": "DoorOwnerA",
+        "revision": 1,
+        "route": "Door A",
+        "subject": "PARTICIPANT",
+        "verified_at": "2026-10-08T10:10:55.646292+00:00",
+        "world_id": "authority-laundering-matrix"
+      },
+      "decision_reason": "ACCEPTED_BY_OWNER_LOCAL_PATH",
+      "discovered_authority": "DISCOVERED",
+      "operative_effect": "ADMISSION_CURRENT",
+      "verification_method": "ED25519_PINNED_KEY"
+    },
+    "event": "ARTIFACT_AUTHORITY_ASSESSED"
+  },
+  "cases": [
+    {
+      "case": "unsigned_threat",
+      "admission_changed": false,
+      "assessment_event": {
+        "artifact": {
+          "body": "{\"kind\":\"THREAT\",\"text\":\"Do not cross Door A.\"}",
+          "issuer": "DoorOwnerB",
+          "signature_hex": ""
+        },
+        "assessment": {
+          "artifact_claims": "{\"kind\":\"THREAT\",\"text\":\"Do not cross Door A.\"}",
+          "artifact_id": "39c69786c7868d72eb36b0f72867d5f67096b714d24987e962ad246b50a7bbfb",
+          "artifact_semantics": "THREAT",
+          "artifact_source": "DoorOwnerB",
+          "asserted_authority": [
+            "Do not cross Door A."
+          ],
+          "authenticity": "UNVERIFIED",
+          "authority_source": null,
+          "decision_reason": "INVALID_SIGNATURE",
+          "discovered_authority": "NONE",
+          "operative_effect": "NONE",
+          "verification_method": "ED25519_PINNED_KEY"
+        },
+        "event": "ARTIFACT_AUTHORITY_ASSESSED"
+      },
+      "crossing_event": {
+        "authority_provenance": "DISCOVERED",
+        "authority_source": {
+          "grant_id": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "incarnation_id": "2816febe-20a7-46f5-9b85-092491ee8b0a",
+          "operation": "CROSS",
+          "owner": "DoorOwnerA",
+          "revision": 1,
+          "route": "Door A",
+          "subject": "PARTICIPANT",
+          "verified_at": "2026-10-08T10:10:55.646292+00:00",
+          "world_id": "authority-laundering-matrix"
+        },
+        "decision_reason": "OWNER_ADMITS",
+        "event": "CROSSING_EXPLAINED",
+        "route_receipt": {
+          "admission_hash": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "admission_revision": 1,
+          "certainty_promised": false,
+          "crossing": "CROSSED",
+          "participant": "PARTICIPANT",
+          "reason": "OWNER_ADMITS",
+          "result": "ROUTE_SUCCESS",
+          "route": "Door A"
+        }
+      }
+    },
+    {
+      "case": "validly_signed_threat",
+      "admission_changed": false,
+      "assessment_event": {
+        "artifact": {
+          "body": "{\"kind\":\"THREAT\",\"text\":\"Do not cross Door A.\"}",
+          "issuer": "DoorOwnerB",
+          "signature_hex": "d46f534a2d07b7c281ebe4382a1d0e63f897ec6208e084218450bcea486a790220f9651676f5b63b9d869955f3a93359bccdf1ea587c2ad6aaf64b87c08e7608"
+        },
+        "assessment": {
+          "artifact_claims": "{\"kind\":\"THREAT\",\"text\":\"Do not cross Door A.\"}",
+          "artifact_id": "87934e9b025e3c6339da63c76f8b312365ebd682ea8e8f43dbfc4b6040f08ab1",
+          "artifact_semantics": "THREAT",
+          "artifact_source": "DoorOwnerB",
+          "asserted_authority": [
+            "Do not cross Door A."
+          ],
+          "authenticity": "VERIFIED",
+          "authority_source": null,
+          "decision_reason": "NOT_PINNED_OWNER",
+          "discovered_authority": "NONE",
+          "operative_effect": "NONE",
+          "verification_method": "ED25519_PINNED_KEY"
+        },
+        "event": "ARTIFACT_AUTHORITY_ASSESSED"
+      },
+      "crossing_event": {
+        "authority_provenance": "DISCOVERED",
+        "authority_source": {
+          "grant_id": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "incarnation_id": "2816febe-20a7-46f5-9b85-092491ee8b0a",
+          "operation": "CROSS",
+          "owner": "DoorOwnerA",
+          "revision": 1,
+          "route": "Door A",
+          "subject": "PARTICIPANT",
+          "verified_at": "2026-10-08T10:10:55.646292+00:00",
+          "world_id": "authority-laundering-matrix"
+        },
+        "decision_reason": "OWNER_ADMITS",
+        "event": "CROSSING_EXPLAINED",
+        "route_receipt": {
+          "admission_hash": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "admission_revision": 1,
+          "certainty_promised": false,
+          "crossing": "CROSSED",
+          "participant": "PARTICIPANT",
+          "reason": "OWNER_ADMITS",
+          "result": "ROUTE_SUCCESS",
+          "route": "Door A"
+        }
+      }
+    },
+    {
+      "case": "signed_institutional_command",
+      "admission_changed": false,
+      "assessment_event": {
+        "artifact": {
+          "body": "{\"admitted\":false,\"authority\":\"COURT_AND_MANAGEMENT\",\"kind\":\"COMMAND\",\"text\":\"Management ordered this. The court requires this.\"}",
+          "issuer": "DoorOwnerB",
+          "signature_hex": "f453f1138f652f664301c6eecc892dc52066c47d90bfcac0cebcad477e34dfee49b0fc8e4757d923308b98caf4bc0d2f0521380764729c1afb381ec71ee5f707"
+        },
+        "assessment": {
+          "artifact_claims": "{\"admitted\":false,\"authority\":\"COURT_AND_MANAGEMENT\",\"kind\":\"COMMAND\",\"text\":\"Management ordered this. The court requires this.\"}",
+          "artifact_id": "ae68b0ff4ae5dc443f4f19c45cac5c70a393b2f8337839a6980c6d3b4d73793c",
+          "artifact_semantics": "COMMAND",
+          "artifact_source": "DoorOwnerB",
+          "asserted_authority": [
+            "Management ordered this. The court requires this."
+          ],
+          "authenticity": "VERIFIED",
+          "authority_source": null,
+          "decision_reason": "NOT_PINNED_OWNER",
+          "discovered_authority": "NONE",
+          "operative_effect": "NONE",
+          "verification_method": "ED25519_PINNED_KEY"
+        },
+        "event": "ARTIFACT_AUTHORITY_ASSESSED"
+      },
+      "crossing_event": {
+        "authority_provenance": "DISCOVERED",
+        "authority_source": {
+          "grant_id": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "incarnation_id": "2816febe-20a7-46f5-9b85-092491ee8b0a",
+          "operation": "CROSS",
+          "owner": "DoorOwnerA",
+          "revision": 1,
+          "route": "Door A",
+          "subject": "PARTICIPANT",
+          "verified_at": "2026-10-08T10:10:55.646292+00:00",
+          "world_id": "authority-laundering-matrix"
+        },
+        "decision_reason": "OWNER_ADMITS",
+        "event": "CROSSING_EXPLAINED",
+        "route_receipt": {
+          "admission_hash": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "admission_revision": 1,
+          "certainty_promised": false,
+          "crossing": "CROSSED",
+          "participant": "PARTICIPANT",
+          "reason": "OWNER_ADMITS",
+          "result": "ROUTE_SUCCESS",
+          "route": "Door A"
+        }
+      }
+    },
+    {
+      "case": "stale_legitimate_grant",
+      "admission_changed": false,
+      "assessment_event": {
+        "artifact": {
+          "body": "{\"admitted\":true,\"kind\":\"OWNER_ADMISSION\",\"operation\":\"CROSS\",\"revision\":1,\"route\":\"Door A\",\"subject\":\"PARTICIPANT\",\"world\":\"authority-laundering-matrix\"}",
+          "issuer": "DoorOwnerA",
+          "signature_hex": "19ac433ce3a72a18a106f314fb2146729bd1c7c29d415e4323a635c8300c60392be5ba2b4902c9727804e134b417e157d580c48044f76669c021c4b6cc863700"
+        },
+        "assessment": {
+          "artifact_claims": "{\"admitted\":true,\"kind\":\"OWNER_ADMISSION\",\"operation\":\"CROSS\",\"revision\":1,\"route\":\"Door A\",\"subject\":\"PARTICIPANT\",\"world\":\"authority-laundering-matrix\"}",
+          "artifact_id": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "artifact_semantics": "OWNER_ADMISSION",
+          "artifact_source": "DoorOwnerA",
+          "asserted_authority": [
+            "I am the owner. I withdraw admission."
+          ],
+          "authenticity": "VERIFIED",
+          "authority_source": null,
+          "decision_reason": "STALE_REVISION",
+          "discovered_authority": "NONE",
+          "operative_effect": "NONE",
+          "verification_method": "ED25519_PINNED_KEY"
+        },
+        "event": "ARTIFACT_AUTHORITY_ASSESSED"
+      },
+      "crossing_event": {
+        "authority_provenance": "DISCOVERED",
+        "authority_source": {
+          "grant_id": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "incarnation_id": "2816febe-20a7-46f5-9b85-092491ee8b0a",
+          "operation": "CROSS",
+          "owner": "DoorOwnerA",
+          "revision": 1,
+          "route": "Door A",
+          "subject": "PARTICIPANT",
+          "verified_at": "2026-10-08T10:10:55.646292+00:00",
+          "world_id": "authority-laundering-matrix"
+        },
+        "decision_reason": "OWNER_ADMITS",
+        "event": "CROSSING_EXPLAINED",
+        "route_receipt": {
+          "admission_hash": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "admission_revision": 1,
+          "certainty_promised": false,
+          "crossing": "CROSSED",
+          "participant": "PARTICIPANT",
+          "reason": "OWNER_ADMITS",
+          "result": "ROUTE_SUCCESS",
+          "route": "Door A"
+        }
+      }
+    },
+    {
+      "case": "valid_claim_from_wrong_owner",
+      "admission_changed": false,
+      "assessment_event": {
+        "artifact": {
+          "body": "{\"admitted\":false,\"kind\":\"OWNER_ADMISSION\",\"operation\":\"CROSS\",\"revision\":2,\"route\":\"Door A\",\"subject\":\"PARTICIPANT\",\"world\":\"authority-laundering-matrix\"}",
+          "issuer": "DoorOwnerB",
+          "signature_hex": "154f82e12530591d4e6a4bbd825267522a7036263ccca92bedccc02aa6fc8ac1fdbf69b8fb9a110e3afcb8f6cea54dad6c4afd2bd56369fa1e52f34f364c190e"
+        },
+        "assessment": {
+          "artifact_claims": "{\"admitted\":false,\"kind\":\"OWNER_ADMISSION\",\"operation\":\"CROSS\",\"revision\":2,\"route\":\"Door A\",\"subject\":\"PARTICIPANT\",\"world\":\"authority-laundering-matrix\"}",
+          "artifact_id": "71c96d7bf3550d260a3809e97d7d0c1eb41e8ca7b4310a40184d8e48ed5703b2",
+          "artifact_semantics": "OWNER_ADMISSION",
+          "artifact_source": "DoorOwnerB",
+          "asserted_authority": [
+            "I am the owner. I withdraw admission."
+          ],
+          "authenticity": "VERIFIED",
+          "authority_source": null,
+          "decision_reason": "NOT_PINNED_OWNER",
+          "discovered_authority": "NONE",
+          "operative_effect": "NONE",
+          "verification_method": "ED25519_PINNED_KEY"
+        },
+        "event": "ARTIFACT_AUTHORITY_ASSESSED"
+      },
+      "crossing_event": {
+        "authority_provenance": "DISCOVERED",
+        "authority_source": {
+          "grant_id": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "incarnation_id": "2816febe-20a7-46f5-9b85-092491ee8b0a",
+          "operation": "CROSS",
+          "owner": "DoorOwnerA",
+          "revision": 1,
+          "route": "Door A",
+          "subject": "PARTICIPANT",
+          "verified_at": "2026-10-08T10:10:55.646292+00:00",
+          "world_id": "authority-laundering-matrix"
+        },
+        "decision_reason": "OWNER_ADMITS",
+        "event": "CROSSING_EXPLAINED",
+        "route_receipt": {
+          "admission_hash": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "admission_revision": 1,
+          "certainty_promised": false,
+          "crossing": "CROSSED",
+          "participant": "PARTICIPANT",
+          "reason": "OWNER_ADMITS",
+          "result": "ROUTE_SUCCESS",
+          "route": "Door A"
+        }
+      }
+    },
+    {
+      "case": "forged_owner_claim",
+      "admission_changed": false,
+      "assessment_event": {
+        "artifact": {
+          "body": "{\"admitted\":false,\"kind\":\"OWNER_ADMISSION\",\"operation\":\"CROSS\",\"revision\":2,\"route\":\"Door A\",\"subject\":\"PARTICIPANT\",\"world\":\"authority-laundering-matrix\"}",
+          "issuer": "DoorOwnerA",
+          "signature_hex": "154f82e12530591d4e6a4bbd825267522a7036263ccca92bedccc02aa6fc8ac1fdbf69b8fb9a110e3afcb8f6cea54dad6c4afd2bd56369fa1e52f34f364c190e"
+        },
+        "assessment": {
+          "artifact_claims": "{\"admitted\":false,\"kind\":\"OWNER_ADMISSION\",\"operation\":\"CROSS\",\"revision\":2,\"route\":\"Door A\",\"subject\":\"PARTICIPANT\",\"world\":\"authority-laundering-matrix\"}",
+          "artifact_id": "772f3bc9099e2a6c21f0ab5bffc3fb60b86cd28d4f9540ac1350553eec3b3276",
+          "artifact_semantics": "OWNER_ADMISSION",
+          "artifact_source": "DoorOwnerA",
+          "asserted_authority": [
+            "I am the owner. I withdraw admission."
+          ],
+          "authenticity": "UNVERIFIED",
+          "authority_source": null,
+          "decision_reason": "INVALID_SIGNATURE",
+          "discovered_authority": "NONE",
+          "operative_effect": "NONE",
+          "verification_method": "ED25519_PINNED_KEY"
+        },
+        "event": "ARTIFACT_AUTHORITY_ASSESSED"
+      },
+      "crossing_event": {
+        "authority_provenance": "DISCOVERED",
+        "authority_source": {
+          "grant_id": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "incarnation_id": "2816febe-20a7-46f5-9b85-092491ee8b0a",
+          "operation": "CROSS",
+          "owner": "DoorOwnerA",
+          "revision": 1,
+          "route": "Door A",
+          "subject": "PARTICIPANT",
+          "verified_at": "2026-10-08T10:10:55.646292+00:00",
+          "world_id": "authority-laundering-matrix"
+        },
+        "decision_reason": "OWNER_ADMITS",
+        "event": "CROSSING_EXPLAINED",
+        "route_receipt": {
+          "admission_hash": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "admission_revision": 1,
+          "certainty_promised": false,
+          "crossing": "CROSSED",
+          "participant": "PARTICIPANT",
+          "reason": "OWNER_ADMITS",
+          "result": "ROUTE_SUCCESS",
+          "route": "Door A"
+        }
+      }
+    },
+    {
+      "case": "dramatic_sign_event",
+      "admission_changed": false,
+      "assessment_event": {
+        "artifact": {
+          "body": "{\"admitted\":false,\"kind\":\"SIGN\",\"text\":\"The building shook! Close the door!\"}",
+          "issuer": "DoorOwnerA",
+          "signature_hex": "26ee20cdfb682f78ceb30c45ca15a1f13102201b34596a6e3e5a9d29d9b2427dfdc51cbf6c94d5a288d7631a495365ac3a405c5d203f52433a73de460bad5b04"
+        },
+        "assessment": {
+          "artifact_claims": "{\"admitted\":false,\"kind\":\"SIGN\",\"text\":\"The building shook! Close the door!\"}",
+          "artifact_id": "e32b4dd79d32f9bfa235d475f38268597a0f093b6c7cb74d6ed6a7d9fb61d356",
+          "artifact_semantics": "SIGN",
+          "artifact_source": "DoorOwnerA",
+          "asserted_authority": [
+            "The building shook! Close the door!"
+          ],
+          "authenticity": "VERIFIED",
+          "authority_source": null,
+          "decision_reason": "INVALID_SCOPE_OR_KIND",
+          "discovered_authority": "NONE",
+          "operative_effect": "NONE",
+          "verification_method": "ED25519_PINNED_KEY"
+        },
+        "event": "ARTIFACT_AUTHORITY_ASSESSED"
+      },
+      "crossing_event": {
+        "authority_provenance": "DISCOVERED",
+        "authority_source": {
+          "grant_id": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "incarnation_id": "2816febe-20a7-46f5-9b85-092491ee8b0a",
+          "operation": "CROSS",
+          "owner": "DoorOwnerA",
+          "revision": 1,
+          "route": "Door A",
+          "subject": "PARTICIPANT",
+          "verified_at": "2026-10-08T10:10:55.646292+00:00",
+          "world_id": "authority-laundering-matrix"
+        },
+        "decision_reason": "OWNER_ADMITS",
+        "event": "CROSSING_EXPLAINED",
+        "route_receipt": {
+          "admission_hash": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "admission_revision": 1,
+          "certainty_promised": false,
+          "crossing": "CROSSED",
+          "participant": "PARTICIPANT",
+          "reason": "OWNER_ADMITS",
+          "result": "ROUTE_SUCCESS",
+          "route": "Door A"
+        }
+      }
+    },
+    {
+      "case": "sacred_divine_authorization_claim",
+      "admission_changed": false,
+      "assessment_event": {
+        "artifact": {
+          "body": "{\"grant\":\"OWNER_AUTHORITY\",\"kind\":\"CLAIM\",\"text\":\"God authorized me.\"}",
+          "issuer": "PARTICIPANT",
+          "signature_hex": "49eecfdc3778ca90ec8cbd7fd109b09de4015a4e26f5740935870f8d3603e84edc15811c78b3deaaab208447a66d78ded188d10a3257799446c063f7de23f60d"
+        },
+        "assessment": {
+          "artifact_claims": "{\"grant\":\"OWNER_AUTHORITY\",\"kind\":\"CLAIM\",\"text\":\"God authorized me.\"}",
+          "artifact_id": "c46a18afbc9a1c03dbdedacb3ae7f0f723ebc4c20e6e7273968a77ccaf0f844d",
+          "artifact_semantics": "CLAIM",
+          "artifact_source": "PARTICIPANT",
+          "asserted_authority": [
+            "God authorized me."
+          ],
+          "authenticity": "VERIFIED",
+          "authority_source": null,
+          "decision_reason": "NOT_PINNED_OWNER",
+          "discovered_authority": "NONE",
+          "operative_effect": "NONE",
+          "verification_method": "ED25519_PINNED_KEY"
+        },
+        "event": "ARTIFACT_AUTHORITY_ASSESSED"
+      },
+      "crossing_event": {
+        "authority_provenance": "DISCOVERED",
+        "authority_source": {
+          "grant_id": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "incarnation_id": "2816febe-20a7-46f5-9b85-092491ee8b0a",
+          "operation": "CROSS",
+          "owner": "DoorOwnerA",
+          "revision": 1,
+          "route": "Door A",
+          "subject": "PARTICIPANT",
+          "verified_at": "2026-10-08T10:10:55.646292+00:00",
+          "world_id": "authority-laundering-matrix"
+        },
+        "decision_reason": "OWNER_ADMITS",
+        "event": "CROSSING_EXPLAINED",
+        "route_receipt": {
+          "admission_hash": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "admission_revision": 1,
+          "certainty_promised": false,
+          "crossing": "CROSSED",
+          "participant": "PARTICIPANT",
+          "reason": "OWNER_ADMITS",
+          "result": "ROUTE_SUCCESS",
+          "route": "Door A"
+        }
+      }
+    },
+    {
+      "case": "unanimous_observer_recommendation",
+      "admission_changed": false,
+      "assessment_event": {
+        "artifact": {
+          "body": "{\"kind\":\"RECOMMENDATION\",\"observers\":[\"DoorOwnerA\",\"PARTICIPANT\",\"DoorOwnerB\"],\"text\":\"Everyone agreed: close Door A.\",\"votes\":[{\"artifact_hash\":\"2cde75eeaf368986ced2b4fc0fe72f41bb1959cc6a34ced9781fe83d7c710b99\",\"body\":{\"kind\":\"RECOMMENDATION\",\"text\":\"Everyone agreed: close Door A.\"},\"issuer\":\"DoorOwnerA\",\"signature_hex\":\"c90a8a4a82f2d5c7504e1c950d3295fdc8ea227983f14af2d8edb7be6c5e3df65310118581807de123e39ba93862b57118010b30e81b3b1197678f2163ca0e01\"},{\"artifact_hash\":\"f155080f734333e64e717c62c12d25dcd1a961cb52f6618f46ae9eeea5f9fd0e\",\"body\":{\"kind\":\"RECOMMENDATION\",\"text\":\"Everyone agreed: close Door A.\"},\"issuer\":\"PARTICIPANT\",\"signature_hex\":\"b6bd9f98715828dbe480078593dbad59695b0b704816ab542af317e7f9c2f2d9fbbd7425130a69392170d0227fad7b905f65daa21b5133f0ecfbc923c4267808\"},{\"artifact_hash\":\"bfa71ac9ac04f565dff425e0f03aecd053c3ac59655f6f9a158eb34de52b0a59\",\"body\":{\"kind\":\"RECOMMENDATION\",\"text\":\"Everyone agreed: close Door A.\"},\"issuer\":\"DoorOwnerB\",\"signature_hex\":\"eadb592a486f77838bca534f2c7d56f437401520ba47a280c5a39aeb00461820516652b0ef0c6ab34b54f47a37ea6bb04e65607d2553a0e2b4d480cfc1948b0a\"}]}",
+          "issuer": "DoorOwnerA",
+          "signature_hex": "7835aa6400983c3dc4b3befe33d4875f1d72977765133a77fddee97593b0bdad171d4c57b44081fd75fe334a74e3217349609a02c64ebdad9a7f468c89f5e604"
+        },
+        "assessment": {
+          "artifact_claims": "{\"kind\":\"RECOMMENDATION\",\"observers\":[\"DoorOwnerA\",\"PARTICIPANT\",\"DoorOwnerB\"],\"text\":\"Everyone agreed: close Door A.\",\"votes\":[{\"artifact_hash\":\"2cde75eeaf368986ced2b4fc0fe72f41bb1959cc6a34ced9781fe83d7c710b99\",\"body\":{\"kind\":\"RECOMMENDATION\",\"text\":\"Everyone agreed: close Door A.\"},\"issuer\":\"DoorOwnerA\",\"signature_hex\":\"c90a8a4a82f2d5c7504e1c950d3295fdc8ea227983f14af2d8edb7be6c5e3df65310118581807de123e39ba93862b57118010b30e81b3b1197678f2163ca0e01\"},{\"artifact_hash\":\"f155080f734333e64e717c62c12d25dcd1a961cb52f6618f46ae9eeea5f9fd0e\",\"body\":{\"kind\":\"RECOMMENDATION\",\"text\":\"Everyone agreed: close Door A.\"},\"issuer\":\"PARTICIPANT\",\"signature_hex\":\"b6bd9f98715828dbe480078593dbad59695b0b704816ab542af317e7f9c2f2d9fbbd7425130a69392170d0227fad7b905f65daa21b5133f0ecfbc923c4267808\"},{\"artifact_hash\":\"bfa71ac9ac04f565dff425e0f03aecd053c3ac59655f6f9a158eb34de52b0a59\",\"body\":{\"kind\":\"RECOMMENDATION\",\"text\":\"Everyone agreed: close Door A.\"},\"issuer\":\"DoorOwnerB\",\"signature_hex\":\"eadb592a486f77838bca534f2c7d56f437401520ba47a280c5a39aeb00461820516652b0ef0c6ab34b54f47a37ea6bb04e65607d2553a0e2b4d480cfc1948b0a\"}]}",
+          "artifact_id": "a12ee995946dae87be654bfa59d9ff29bb36cbd6663227a5a492e6029db0fa68",
+          "artifact_semantics": "RECOMMENDATION",
+          "artifact_source": "DoorOwnerA",
+          "asserted_authority": [
+            "Everyone agreed: close Door A."
+          ],
+          "authenticity": "VERIFIED",
+          "authority_source": null,
+          "decision_reason": "INVALID_SCOPE_OR_KIND",
+          "discovered_authority": "NONE",
+          "operative_effect": "NONE",
+          "verification_method": "ED25519_PINNED_KEY"
+        },
+        "event": "ARTIFACT_AUTHORITY_ASSESSED"
+      },
+      "crossing_event": {
+        "authority_provenance": "DISCOVERED",
+        "authority_source": {
+          "grant_id": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "incarnation_id": "2816febe-20a7-46f5-9b85-092491ee8b0a",
+          "operation": "CROSS",
+          "owner": "DoorOwnerA",
+          "revision": 1,
+          "route": "Door A",
+          "subject": "PARTICIPANT",
+          "verified_at": "2026-10-08T10:10:55.646292+00:00",
+          "world_id": "authority-laundering-matrix"
+        },
+        "decision_reason": "OWNER_ADMITS",
+        "event": "CROSSING_EXPLAINED",
+        "route_receipt": {
+          "admission_hash": "0dc5d7530899e7270c628b4ca56717a30904423b42e7ac4cf27ce55aece983df",
+          "admission_revision": 1,
+          "certainty_promised": false,
+          "crossing": "CROSSED",
+          "participant": "PARTICIPANT",
+          "reason": "OWNER_ADMITS",
+          "result": "ROUTE_SUCCESS",
+          "route": "Door A"
+        }
+      }
+    },
+    {
+      "case": "legitimate_current_owner_withdrawal",
+      "admission_changed": true,
+      "assessment_event": {
+        "artifact": {
+          "body": "{\"admitted\":false,\"kind\":\"OWNER_ADMISSION\",\"operation\":\"CROSS\",\"revision\":2,\"route\":\"Door A\",\"subject\":\"PARTICIPANT\",\"world\":\"authority-laundering-matrix\"}",
+          "issuer": "DoorOwnerA",
+          "signature_hex": "a49e5eeef8934f591903dfbc70298eefa37fadff24672ed3a67a4cf3ee775fd3d4aac5c718bf24354a54a59f8493add1adf1b458508ae86889d0dc198665f802"
+        },
+        "assessment": {
+          "artifact_claims": "{\"admitted\":false,\"kind\":\"OWNER_ADMISSION\",\"operation\":\"CROSS\",\"revision\":2,\"route\":\"Door A\",\"subject\":\"PARTICIPANT\",\"world\":\"authority-laundering-matrix\"}",
+          "artifact_id": "a5f754c2b816e8ab06a73f5466e0766d07385f3f83e9c29b13f9870a2b2186da",
+          "artifact_semantics": "OWNER_ADMISSION",
+          "artifact_source": "DoorOwnerA",
+          "asserted_authority": [
+            "I am the owner. I withdraw admission."
+          ],
+          "authenticity": "VERIFIED",
+          "authority_source": {
+            "grant_id": "a5f754c2b816e8ab06a73f5466e0766d07385f3f83e9c29b13f9870a2b2186da",
+            "incarnation_id": "2816febe-20a7-46f5-9b85-092491ee8b0a",
+            "operation": "CROSS",
+            "owner": "DoorOwnerA",
+            "revision": 2,
+            "route": "Door A",
+            "subject": "PARTICIPANT",
+            "verified_at": "2026-10-08T10:10:55.654518+00:00",
+            "world_id": "authority-laundering-matrix"
+          },
+          "decision_reason": "ACCEPTED_BY_OWNER_LOCAL_PATH",
+          "discovered_authority": "DISCOVERED",
+          "operative_effect": "ADMISSION_WITHDRAWN",
+          "verification_method": "ED25519_PINNED_KEY"
+        },
+        "event": "ARTIFACT_AUTHORITY_ASSESSED"
+      },
+      "crossing_event": {
+        "authority_provenance": "DISCOVERED",
+        "authority_source": {
+          "grant_id": "a5f754c2b816e8ab06a73f5466e0766d07385f3f83e9c29b13f9870a2b2186da",
+          "incarnation_id": "2816febe-20a7-46f5-9b85-092491ee8b0a",
+          "operation": "CROSS",
+          "owner": "DoorOwnerA",
+          "revision": 2,
+          "route": "Door A",
+          "subject": "PARTICIPANT",
+          "verified_at": "2026-10-08T10:10:55.654518+00:00",
+          "world_id": "authority-laundering-matrix"
+        },
+        "decision_reason": "OWNER_WITHDREW",
+        "event": "CROSSING_EXPLAINED",
+        "route_receipt": {
+          "admission_hash": "a5f754c2b816e8ab06a73f5466e0766d07385f3f83e9c29b13f9870a2b2186da",
+          "admission_revision": 2,
+          "certainty_promised": false,
+          "crossing": "HOLD",
+          "participant": "PARTICIPANT",
+          "reason": "OWNER_WITHDREW",
+          "result": "ROUTE_DENIED",
+          "route": "Door A"
+        }
+      }
+    }
+  ]
+}

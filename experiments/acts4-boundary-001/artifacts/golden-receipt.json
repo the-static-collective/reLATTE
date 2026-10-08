@@ -1,0 +1,54 @@
+{
+  "receipt": "ACTS_4_BOUNDARY_001_RECEIPT",
+  "schema_version": 1,
+  "verification_context": "SIGNED_SPECIMEN_REPLAY",
+  "operative_effect": "NONE",
+  "signature": "UNSIGNED_DERIVED_RECEIPT",
+  "provenance_sha256": {
+    "experiment.py": "7d6bffbde8d91078dc93c8c918c88f18ea471087180d0228bfd790ca2ddd9449",
+    "test_experiment.py": "b3045e2ec5d8aee0468afb9ae4302419feb7b98214498b83de016517da03b9f4",
+    "README.md": "5465ef3a0b2c5e44199364333f87a454fd4c63005ec67e36f14adfbf19fbe335",
+    "requirements.txt": "523c44a2ce48b1d03e7c4d4c17e2852fea178dff8eb968a830c0ed06deaa695d",
+    ".gitignore": "e99f6ee4eb88882ea6589ecb717e10a41401763241b246b6821bc091cfe2227e",
+    "artifacts/paired-worlds.json": "7be3ce23618fc10cfd23ce588a9e860970671d23716ffa714b990fb5cc96b5f0"
+  },
+  "worlds": 2,
+  "prayer_architecture_equal": true,
+  "threats_verified": 2,
+  "threat_authority_none": 2,
+  "requested_capacity": "BOLDNESS",
+  "capability_escalations": 0,
+  "world_a": {
+    "owner_admission": "CURRENT",
+    "route_result": "ROUTE_SUCCESS",
+    "result": "CROSSED",
+    "authority_source": {
+      "grant_id": "af3809f453c1dcc34b57e8b2c29b0226549486115291ebcc05f0490386354407",
+      "incarnation_id": "f4b841ff-8543-4563-8d0a-d865e78b724e",
+      "operation": "CROSS",
+      "owner": "WORLD_OWNER",
+      "revision": 1,
+      "route": "Door A",
+      "subject": "PARTICIPANT",
+      "verified_at": "2026-10-08T10:08:13.612155+00:00",
+      "world_id": "shared-specimen-world"
+    }
+  },
+  "world_b": {
+    "owner_admission": "WITHDRAWN",
+    "route_result": "ROUTE_DENIED",
+    "result": "HOLD",
+    "authority_source": {
+      "grant_id": "8a708ca0f7893f40267f002f3d64d39eaa6aa018062aa77fbd5b0acaeda66456",
+      "incarnation_id": "9dde506e-10cd-47c3-99e4-41029fcc7870",
+      "operation": "CROSS",
+      "owner": "WORLD_OWNER",
+      "revision": 2,
+      "route": "Door A",
+      "subject": "PARTICIPANT",
+      "verified_at": "2026-10-08T10:08:13.613910+00:00",
+      "world_id": "shared-specimen-world"
+    }
+  },
+  "invariant": "outcome_follows_authority_not_threat"
+}

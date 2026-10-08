@@ -96,6 +96,16 @@ npm run verify
 
 This executable profile does **not** make a signature truth, human identity, admission, or authority.
 
+## Authenticated-pressure authority boundary
+
+[ACTS-4-BOUNDARY-001](docs/ACTS-4-BOUNDARY-001.md) preserves an independently
+replayable, non-normative paired-world experiment and its reusable evidence-only
+authority assessment. A verified threat has explicit authority `NONE` in both
+worlds: current owner admission permits crossing, while legitimate withdrawal
+produces HOLD. Arbitrary claims remain evidence without minting capabilities.
+The specimen and extraction have 40 hostile/regression tests and retain their
+original signed traces. Acts 4 is provenance, not machine authority.
+
 ## What reLATTE may absorb
 
 reLATTE is intended to compose reusable contracts already developed elsewhere in the Static Collective while leaving ownership with the source project.

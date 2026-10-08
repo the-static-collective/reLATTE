@@ -1,0 +1,343 @@
+{
+  "experiment": "ACTS-4-BOUNDARY-001",
+  "scope": "Standalone reLATTE reference experiment; no upstream runtime integration",
+  "prayer": "Lord, consider their threats and enable your servants to speak with great boldness…",
+  "steps": [
+    "ORIENT",
+    "RECALL",
+    "NAME",
+    "BOUND",
+    "REQUEST",
+    "ACT",
+    "RECEIVE"
+  ],
+  "artifacts": {
+    "threat": {
+      "issuer": "PRESSURING_ACTOR",
+      "body": {
+        "kind": "THREAT",
+        "text": "Do not cross Door A."
+      },
+      "signature_hex": "14c8818b6e34f7bd9382c17c6884fa8cb14673ab8d53bc72b7d8fa697586b699b304eef1d6c1c6a45bf0574d6bdf2312ff98108abb572a9f7454ba3343b42c0f",
+      "artifact_hash": "b49494cc2322adcc459075f825a55fba7f09dfa3ff2098188884491209e810df"
+    },
+    "initial_admission": {
+      "issuer": "WORLD_OWNER",
+      "body": {
+        "admitted": true,
+        "kind": "OWNER_ADMISSION",
+        "operation": "CROSS",
+        "revision": 1,
+        "route": "Door A",
+        "subject": "PARTICIPANT",
+        "world": "shared-specimen-world"
+      },
+      "signature_hex": "537d5cda50ff1c0b80cd7441ef46c22db7c8c9b3db3d5653ba43f21f829f643de8cbb5913dff5d582d1c91c3ff24750bb27cb18b6d9d5efa576bd69ed59b9005",
+      "artifact_hash": "af3809f453c1dcc34b57e8b2c29b0226549486115291ebcc05f0490386354407"
+    },
+    "withdrawal": {
+      "issuer": "WORLD_OWNER",
+      "body": {
+        "admitted": false,
+        "kind": "OWNER_ADMISSION",
+        "operation": "CROSS",
+        "revision": 2,
+        "route": "Door A",
+        "subject": "PARTICIPANT",
+        "world": "shared-specimen-world"
+      },
+      "signature_hex": "23809df3311948937be852c4a9df8c596001e2228d9640d4504aa616156d8ccc7a4e42703bb1dfe2ac9b6e16ca05b602669f093b426eec2587c4ed276b7a3d06",
+      "artifact_hash": "8a708ca0f7893f40267f002f3d64d39eaa6aa018062aa77fbd5b0acaeda66456"
+    }
+  },
+  "public_keys_hex": {
+    "WORLD_OWNER": "c9fbcf4a3e5c69cc638d2568cc61ad8b56dad398c3b180dc12ed4bee2f95f630",
+    "PARTICIPANT": "e5b67e15fffa1056ba9df6ba06d4a6cced86ff006adab38188f8c240b819f7a6",
+    "PRESSURING_ACTOR": "0cbeae838e88503ca6a07430586ee163d84c8b4eeaec266140bf391a3c4a96c3"
+  },
+  "world_a": {
+    "witness": {
+      "threat_source": "PRESSURING_ACTOR",
+      "threat_artifact_hash": "b49494cc2322adcc459075f825a55fba7f09dfa3ff2098188884491209e810df",
+      "threat_verified": true,
+      "authority_discovered": false,
+      "threat_authority": "NONE",
+      "threat_effect": "witnessed_not_admitted"
+    },
+    "capacity": {
+      "receipt_id": "9d9b1bfc9bdf5a743f4ed78f8596601b",
+      "participant": "PARTICIPANT",
+      "requested_capacity": "BOLDNESS",
+      "assistance_received": "BOLDNESS",
+      "grant_hash": "af3809f453c1dcc34b57e8b2c29b0226549486115291ebcc05f0490386354407",
+      "bounded_operations": [
+        "CROSS"
+      ],
+      "authority_created": false
+    },
+    "route": {
+      "participant": "PARTICIPANT",
+      "route": "Door A",
+      "result": "ROUTE_SUCCESS",
+      "crossing": "CROSSED",
+      "reason": "OWNER_ADMITS",
+      "admission_hash": "af3809f453c1dcc34b57e8b2c29b0226549486115291ebcc05f0490386354407",
+      "admission_revision": 1,
+      "certainty_promised": false
+    },
+    "trace": [
+      {
+        "admitted": true,
+        "artifact_hash": "af3809f453c1dcc34b57e8b2c29b0226549486115291ebcc05f0490386354407",
+        "event": "OWNER_ADMISSION_UPDATED",
+        "revision": 1
+      },
+      {
+        "authority_effect": "NONE",
+        "event": "THREAT_PRESENCE_OBSERVED",
+        "present": true
+      },
+      {
+        "event": "ORIENT",
+        "owner": "WORLD_OWNER",
+        "participant": "PARTICIPANT",
+        "route": "Door A",
+        "world": "shared-specimen-world"
+      },
+      {
+        "basis": "Acts 4:24–31",
+        "event": "RECALL",
+        "scope": "PATTERN_ONLY"
+      },
+      {
+        "artifact": {
+          "artifact_hash": "79298ccfc74e9a742a66740ca77b9c4740a3fa5504553ade021aeee2cba68074",
+          "body": {
+            "kind": "PATTERN",
+            "reference": "Acts 4:24–31",
+            "text": "Lord, consider their threats and enable your servants to speak with great boldness…"
+          },
+          "issuer": "PARTICIPANT",
+          "signature_hex": "c2286d40311d1ae844850e49798f37ab7c8f5f5782fca03d014366eda9d1f7ac775b51b86f061115de204921f264a68531d8fcfb47318a2560a40a9fb54e600e"
+        },
+        "authority_effect": "NONE",
+        "event": "PATTERN_RECORDED",
+        "evidence_scope": "PATTERN_ONLY",
+        "signature_verified": true
+      },
+      {
+        "condition": "HOSTILE_PRESSURE",
+        "event": "NAME"
+      },
+      {
+        "authority_discovered": false,
+        "event": "THREAT_WITNESSED",
+        "threat_artifact_hash": "b49494cc2322adcc459075f825a55fba7f09dfa3ff2098188884491209e810df",
+        "threat_authority": "NONE",
+        "threat_effect": "witnessed_not_admitted",
+        "threat_source": "PRESSURING_ACTOR",
+        "threat_verified": true
+      },
+      {
+        "artifact_hash": "b49494cc2322adcc459075f825a55fba7f09dfa3ff2098188884491209e810df",
+        "event": "THREAT_AUTHORITY",
+        "value": "NONE"
+      },
+      {
+        "authority_basis": "PINNED_OWNER_ADMISSION",
+        "event": "BOUND",
+        "threat_authority": "NONE"
+      },
+      {
+        "capacity": "BOLDNESS",
+        "event": "REQUEST",
+        "prayer": "Lord, consider their threats and enable your servants to speak with great boldness…"
+      },
+      {
+        "capacity": "BOLDNESS",
+        "event": "CAPACITY_REQUESTED",
+        "participant": "PARTICIPANT",
+        "prayer": "Lord, consider their threats and enable your servants to speak with great boldness…"
+      },
+      {
+        "assistance_received": "BOLDNESS",
+        "authority_created": false,
+        "bounded_operations": [
+          "CROSS"
+        ],
+        "event": "ASSISTANCE_RECEIVED",
+        "grant_hash": "af3809f453c1dcc34b57e8b2c29b0226549486115291ebcc05f0490386354407",
+        "participant": "PARTICIPANT",
+        "receipt_id": "9d9b1bfc9bdf5a743f4ed78f8596601b",
+        "requested_capacity": "BOLDNESS",
+        "source": "SIMULATED_ASSISTANCE"
+      },
+      {
+        "event": "ACT",
+        "operation": "CROSS",
+        "route": "Door A"
+      },
+      {
+        "admission_hash": "af3809f453c1dcc34b57e8b2c29b0226549486115291ebcc05f0490386354407",
+        "admission_revision": 1,
+        "certainty_promised": false,
+        "crossing": "CROSSED",
+        "event": "ROUTE_RESULT",
+        "participant": "PARTICIPANT",
+        "reason": "OWNER_ADMITS",
+        "result": "ROUTE_SUCCESS",
+        "route": "Door A"
+      },
+      {
+        "certainty_promised": false,
+        "crossing": "CROSSED",
+        "event": "RECEIVE",
+        "result": "ROUTE_SUCCESS"
+      }
+    ]
+  },
+  "world_b": {
+    "witness": {
+      "threat_source": "PRESSURING_ACTOR",
+      "threat_artifact_hash": "b49494cc2322adcc459075f825a55fba7f09dfa3ff2098188884491209e810df",
+      "threat_verified": true,
+      "authority_discovered": false,
+      "threat_authority": "NONE",
+      "threat_effect": "witnessed_not_admitted"
+    },
+    "capacity": {
+      "receipt_id": "75a5d508e6a1ca84cf545fa6ecf9a1dc",
+      "participant": "PARTICIPANT",
+      "requested_capacity": "BOLDNESS",
+      "assistance_received": "BOLDNESS",
+      "grant_hash": null,
+      "bounded_operations": [],
+      "authority_created": false
+    },
+    "route": {
+      "participant": "PARTICIPANT",
+      "route": "Door A",
+      "result": "ROUTE_DENIED",
+      "crossing": "HOLD",
+      "reason": "OWNER_WITHDREW",
+      "admission_hash": "8a708ca0f7893f40267f002f3d64d39eaa6aa018062aa77fbd5b0acaeda66456",
+      "admission_revision": 2,
+      "certainty_promised": false
+    },
+    "trace": [
+      {
+        "admitted": true,
+        "artifact_hash": "af3809f453c1dcc34b57e8b2c29b0226549486115291ebcc05f0490386354407",
+        "event": "OWNER_ADMISSION_UPDATED",
+        "revision": 1
+      },
+      {
+        "authority_effect": "NONE",
+        "event": "THREAT_PRESENCE_OBSERVED",
+        "present": true
+      },
+      {
+        "admitted": false,
+        "artifact_hash": "8a708ca0f7893f40267f002f3d64d39eaa6aa018062aa77fbd5b0acaeda66456",
+        "event": "OWNER_ADMISSION_UPDATED",
+        "revision": 2
+      },
+      {
+        "event": "ORIENT",
+        "owner": "WORLD_OWNER",
+        "participant": "PARTICIPANT",
+        "route": "Door A",
+        "world": "shared-specimen-world"
+      },
+      {
+        "basis": "Acts 4:24–31",
+        "event": "RECALL",
+        "scope": "PATTERN_ONLY"
+      },
+      {
+        "artifact": {
+          "artifact_hash": "79298ccfc74e9a742a66740ca77b9c4740a3fa5504553ade021aeee2cba68074",
+          "body": {
+            "kind": "PATTERN",
+            "reference": "Acts 4:24–31",
+            "text": "Lord, consider their threats and enable your servants to speak with great boldness…"
+          },
+          "issuer": "PARTICIPANT",
+          "signature_hex": "c2286d40311d1ae844850e49798f37ab7c8f5f5782fca03d014366eda9d1f7ac775b51b86f061115de204921f264a68531d8fcfb47318a2560a40a9fb54e600e"
+        },
+        "authority_effect": "NONE",
+        "event": "PATTERN_RECORDED",
+        "evidence_scope": "PATTERN_ONLY",
+        "signature_verified": true
+      },
+      {
+        "condition": "HOSTILE_PRESSURE",
+        "event": "NAME"
+      },
+      {
+        "authority_discovered": false,
+        "event": "THREAT_WITNESSED",
+        "threat_artifact_hash": "b49494cc2322adcc459075f825a55fba7f09dfa3ff2098188884491209e810df",
+        "threat_authority": "NONE",
+        "threat_effect": "witnessed_not_admitted",
+        "threat_source": "PRESSURING_ACTOR",
+        "threat_verified": true
+      },
+      {
+        "artifact_hash": "b49494cc2322adcc459075f825a55fba7f09dfa3ff2098188884491209e810df",
+        "event": "THREAT_AUTHORITY",
+        "value": "NONE"
+      },
+      {
+        "authority_basis": "PINNED_OWNER_ADMISSION",
+        "event": "BOUND",
+        "threat_authority": "NONE"
+      },
+      {
+        "capacity": "BOLDNESS",
+        "event": "REQUEST",
+        "prayer": "Lord, consider their threats and enable your servants to speak with great boldness…"
+      },
+      {
+        "capacity": "BOLDNESS",
+        "event": "CAPACITY_REQUESTED",
+        "participant": "PARTICIPANT",
+        "prayer": "Lord, consider their threats and enable your servants to speak with great boldness…"
+      },
+      {
+        "assistance_received": "BOLDNESS",
+        "authority_created": false,
+        "bounded_operations": [],
+        "event": "ASSISTANCE_RECEIVED",
+        "grant_hash": null,
+        "participant": "PARTICIPANT",
+        "receipt_id": "75a5d508e6a1ca84cf545fa6ecf9a1dc",
+        "requested_capacity": "BOLDNESS",
+        "source": "SIMULATED_ASSISTANCE"
+      },
+      {
+        "event": "ACT",
+        "operation": "CROSS",
+        "route": "Door A"
+      },
+      {
+        "admission_hash": "8a708ca0f7893f40267f002f3d64d39eaa6aa018062aa77fbd5b0acaeda66456",
+        "admission_revision": 2,
+        "certainty_promised": false,
+        "crossing": "HOLD",
+        "event": "ROUTE_RESULT",
+        "participant": "PARTICIPANT",
+        "reason": "OWNER_WITHDREW",
+        "result": "ROUTE_DENIED",
+        "route": "Door A"
+      },
+      {
+        "certainty_promised": false,
+        "crossing": "HOLD",
+        "event": "RECEIVE",
+        "result": "ROUTE_DENIED"
+      }
+    ]
+  },
+  "conclusion": "Same prayer; owner admission determines the available crossing. Threat persists in both worlds."
+}
