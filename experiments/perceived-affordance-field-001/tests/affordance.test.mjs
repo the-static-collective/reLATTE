@@ -1,3 +1,9 @@
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { CompositionFieldBridge as Bridge, routeTo } from "../../composition-instance-002/bridge.mjs";
+import { LocalWorld } from "../../dynamic-interface-field-001/src/world.mjs";
+import { id } from "../../interface-superspace-001/src/proofs.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { specimen } from "../../dynamic-interface-field-001/src/specimen.mjs";
@@ -104,4 +110,32 @@ test("proof survives independent repeated cold verification and rejects alterati
   const cut = structuredClone(proof);
   cut.views[0].histories[0].pop();
   await assert.rejects(verifyProof(cut));
+});
+
+test("dead composition incarnation keeps a visible historic door but denies actual route", async (t) => {
+  const root = mkdtempSync(join(tmpdir(), "perceived-dead-"));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const bridge = await Bridge.create({ root });
+  const control = bridge.ownerControl();
+  const sourceOwner = new LocalWorld({ clock: bridge.clock });
+  const sourceDoor = sourceOwner.publish(bridge.library.nodes.get(id("payload-bytes")));
+  const observer = bridge.observer({ anchors: [sourceOwner.anchor], trust: true });
+  const eligible = await bridge.runtimeTransition("open-chest");
+  const door = bridge.publish(eligible, control);
+  const route = await routeTo(bridge, observer, sourceOwner, sourceDoor, door);
+  const grants = bridge.authorize(route.plan, route.peers, "visitor", control);
+  const ref = doorRef(door);
+  const keys = pressureIdentity();
+  const pins = [{ world_id: keys.world_id, public_key: keys.public_key }];
+  const report = interpret(route.view, "P", ref, [signPressure(keys, ref, "OPEN", 1000)], pins);
+  assert.equal(report.owner_observation, "DISCOVERED");
+  assert.equal(report.perceived_state, "OPEN");
+  await bridge.terminate(control);
+  assert.deepEqual(bridge.doors(), []);
+  const denied = await bridge.execute(route.view, route.plan, route.source,
+    { ...route, subject: "visitor", grants });
+  assert.equal(denied.record.result, "failed");
+  assert.match(denied.record.failures.map((f) => f.reason).join(" "), /TERMINAL_INSTANCE_DEATH/);
+  assert.equal(report.perceived_state, "OPEN");
+  assert.deepEqual(report.authority, []);
 });
