@@ -140,7 +140,7 @@ jobs:
           MC_EVIDENCE_OUT: work/worldbuilder/evidence.json
           MC_MAP_OUT: work/worldbuilder/world-map.txt
         run: |
-          node --experimental-strip-types             experiments/vanilla-worldbuilder-006/worldbuilder-v3.mjs
+          node --experimental-strip-types             experiments/vanilla-worldbuilder-006/worldbuilder-v4.mjs
 
       - name: Verify authored-world evidence and frozen core
         run: |
