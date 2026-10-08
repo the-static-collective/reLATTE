@@ -613,7 +613,7 @@ async function main() {
       server_seed: String(serverSeed),
       bot: {
         username: BOT_NAME,
-        version: bot.version,
+        version: authorProtocolVersion,
         mineflayer_version: require('mineflayer/package.json').version,
         author_protocol_version: authorProtocolVersion,
         observer_protocol_version: observerBot.version,
