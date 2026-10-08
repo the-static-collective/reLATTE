@@ -13,7 +13,6 @@ import {
 
 const execFileAsync = promisify(execFile);
 const require = createRequire(import.meta.url);
-const { Rcon } = require('rcon-client');
 
 const META_PATH =
   process.env.MC_VERSION_META ?? 'work/composition-instance/server-version.json';
@@ -29,10 +28,9 @@ const COMPOSITION_EVIDENCE =
   process.env.COMPOSITION_EVIDENCE_OUT ??
   OUT_DIR + '/composition-evidence.json';
 
-const HOST = process.env.MC_HOST ?? '127.0.0.1';
-const RCON_PORT = Number(process.env.MC_RCON_PORT ?? '25575');
-const RCON_PASSWORD = process.env.MC_RCON_PASSWORD ?? 'relatte-ci';
 const GOAL = process.env.MC_WORLD_GOAL ?? 'BUILD A WORLD';
+const PROVISIONED_SEED =
+  process.env.MC_LEVEL_SEED ?? '381654729';
 
 function sha256Hex(value) {
   return createHash('sha256').update(value).digest('hex');
@@ -63,23 +61,10 @@ function worldCandidate(runtimeEvidence) {
   return Buffer.from(JSON.stringify(body), 'utf8');
 }
 
-async function queryServerSeed() {
-  const rcon = await Rcon.connect({
-    host: HOST,
-    port: RCON_PORT,
-    password: RCON_PASSWORD,
-  });
-  try {
-    return parseSeedResponse(await rcon.send('seed'));
-  } finally {
-    rcon.end();
-  }
-}
-
 async function main() {
   await mkdir(OUT_DIR, { recursive: true });
   const meta = JSON.parse(await readFile(META_PATH, 'utf8'));
-  const serverSeed = await queryServerSeed();
+  const serverSeed = String(PROVISIONED_SEED);
 
   const spec = makeCompositionInstanceSpec({
     runtime_id: 'minecraft-vanilla-worldbuilder-006',
@@ -156,6 +141,10 @@ async function main() {
   const runtimeEvidence = JSON.parse(
     await readFile(RUNTIME_EVIDENCE, 'utf8'),
   );
+
+  if (String(runtimeEvidence.server_seed) !== serverSeed) {
+    throw new Error('COMPOSITION_RUNTIME_SEED_MISMATCH');
+  }
 
   if (
     runtimeEvidence.claims?.official_vanilla_server_runtime !== 'OBSERVED' ||
