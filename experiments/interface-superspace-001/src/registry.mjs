@@ -49,6 +49,9 @@ export async function buildRegistry({ interfaces, relations, contracts, surfaces
     if (r.removes.includes('ordered') && r.preserves.order) throw new Error('INFORMATION_WIDENING');
     const expected = contracts[r.binding_ref];
     if (!expected || canonical(behavior(r)) !== canonical(behavior(expected))) throw new Error('UNATTESTED_RELATION:' + r.relation_id);
+    const expectedSource = surfaces.find(i => i.interface_id === expected.source);
+    const expectedDestination = surfaces.find(i => i.interface_id === expected.destination);
+    if (!expectedSource || !expectedDestination || canonical(surfaceBehavior(a)) !== canonical(surfaceBehavior(expectedSource)) || canonical(surfaceBehavior(b)) !== canonical(surfaceBehavior(expectedDestination))) throw new Error('ENDPOINT_BINDING_MISMATCH:' + r.relation_id);
     edges.set(r.relation_id, structuredClone(r));
   }
   const data = { interfaces: [...nodes.values()].sort((a,b) => a.interface_id.localeCompare(b.interface_id)), relations: [...edges.values()].sort((a,b) => a.relation_id.localeCompare(b.relation_id)) };

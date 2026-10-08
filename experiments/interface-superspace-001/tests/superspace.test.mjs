@@ -194,3 +194,9 @@ test('signed crossing snapshots survive later execution receipts and JSON persis
   assert.ok(await verifyCrossing({...persisted,bytes}));
   assert.equal(persisted.crossing.extensions.interface_superspace_001.ancestry.length,p.relation_sequence.length-1);
 });
+test('type-compatible crosswiring cannot relabel file evidence as a server witness',async()=>{
+  const data=input(),r=data.relations.find(r=>r.source===id('filesystem-output'));
+  // Both destinations accept adapter.observation; actual particulars still differ.
+  r.destination=id('minecraft-server-verify');
+  await assert.rejects(buildRegistry(data),/ENDPOINT_BINDING_MISMATCH/);
+});
