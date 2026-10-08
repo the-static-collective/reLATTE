@@ -161,7 +161,8 @@ jobs:
           assert e["claims"]["bot_operator_privilege"] == "OBSERVED"
           assert e["claims"]["bounded_autonomous_world_plan"] == "OBSERVED"
           assert e["claims"]["bot_issued_world_commands"] == "OBSERVED"
-          assert e["claims"]["client_scanned_final_region"] == "OBSERVED"
+          assert e["claims"]["fresh_non_op_client_scanned_final_region"] == "OBSERVED"
+          assert e["claims"]["author_and_observer_are_distinct_client_sessions"] == "OBSERVED"
           assert e["claims"]["authored_world_crossed_relatte"] == "OBSERVED"
           assert e["receipt"]["kind"] == "R3_HOLD"
           assert len(e["plan"]["districts"]) == 4
