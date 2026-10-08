@@ -73,6 +73,13 @@ The first slice is:
 - [Roadmap](docs/ROADMAP.md)
 - [Early Source Packet — authority, replay, witness, sovereign histories](docs/research/EARLY-SOURCE-PACKET.md)
 
+Current non-normative pressure tests include:
+
+- [Slice 003 — The Group Does Not Own the Member](slices/003-the-group-does-not-own-the-member.md)
+- [Groups, Administration, and Cloud Coordination — Early Source Packet](docs/research/GROUPS-ADMINISTRATION-CLOUD-SOURCE-PACKET.md)
+
+These pressure tests do not promote new shared protocol primitives or alter the v0 schemas.
+
 It proposes that the stable nonfungible object is not a coin or token but a **particular consequential relation/crossing**.
 
 ## Current executable edge
