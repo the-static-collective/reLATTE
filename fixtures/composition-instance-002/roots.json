@@ -1,0 +1,35 @@
+{
+  "proof_key": "MCowBQYDK2VwAyEApK1FHv7Botfa7pB24REJhZyd5n33bwy/VWPHPMujdZ4=",
+  "ledgers": [
+    {
+      "world_id": "world:4c1986ce6582c45c46f89a89d3fe57e84e61d7d28ad918705d805958d9bbef0b",
+      "public_key": "MCowBQYDK2VwAyEAzfk7PkLwZDK3NDOJNs2eYIMZKIc4CY9YsH+WbU5sQLM="
+    },
+    {
+      "world_id": "world:0b3dd3ecb49940295a9d59da3c937ae578c9029ec82f669becca1836054246d5",
+      "public_key": "MCowBQYDK2VwAyEAPwpylajx/SYsEPAEL1rL4aIWbRowyfvsinTogk3y0gw="
+    },
+    {
+      "world_id": "world:c9a8fe1234d063144121da1b07521319388ef4decc3debbc8285b91858e1d56e",
+      "public_key": "MCowBQYDK2VwAyEAocBUJnTprgUHQbV4G3k77ouJSRMxe1FwVBc634Ormng="
+    }
+  ],
+  "fields": [
+    {
+      "world_id": "world:88a5dc9d62913f13705305796f7018129f70e2743d7bf3f0911cc413efe2c121",
+      "public_key": "MCowBQYDK2VwAyEAcQgUP18GNcgpyHbmmnlEDtrS/JitcrW/kA2Qf+NkBus="
+    },
+    {
+      "world_id": "world:218b8340514975b70f9e0f022292fcb30275e2d9aad9cea252e6fa2520fe69de",
+      "public_key": "MCowBQYDK2VwAyEArA8WsqFg9vHa0Rcc4vtsYIjsstjxb6jYF4G6QiGI9nU="
+    },
+    {
+      "world_id": "world:6506087b58a232047c933cc203523f89e59171c75add4687fccc13af703e585b",
+      "public_key": "MCowBQYDK2VwAyEAGBQavc3w0tye1QLG1aPPDfsI3Mx6zyAJ3FCUspFiRN0="
+    },
+    {
+      "world_id": "world:cd20b6eb659f244a415f4dcf32d93d3ec44642f1dba3fec1cddf46922eb97269",
+      "public_key": "MCowBQYDK2VwAyEADv1r8Pl7AhV6avNOrt5DbjHEREzrRj8+T+sbRllckAE="
+    }
+  ]
+}

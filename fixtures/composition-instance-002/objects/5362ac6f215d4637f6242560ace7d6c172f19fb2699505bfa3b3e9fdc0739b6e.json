@@ -1,0 +1,1 @@
+{"rooms":["ROOM A","ROOM B"],"edge":["ROOM A","ROOM B"],"agent":"ROOM B","chest":{"open":true,"map_visible":true,"contents":["stone","map fragment"],"map_fragment":{"destination":"ROOM B"}},"transitions":2,"observations":2}
