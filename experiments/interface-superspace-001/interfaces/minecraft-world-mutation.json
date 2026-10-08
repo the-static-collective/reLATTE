@@ -1,0 +1,68 @@
+{
+  "schema": "relatte.interface-particular.experimental/v0",
+  "interface_id": "interface:380ebcdc",
+  "participant_ref": "participant:minecraft",
+  "plane": "environment",
+  "direction": "bidirectional",
+  "protocol": "minecraft-client",
+  "accepts": [
+    "world.mutated"
+  ],
+  "emits": [
+    "world.mutated"
+  ],
+  "operations": [
+    "observe",
+    "transmit",
+    "receive",
+    "configure",
+    "mutate"
+  ],
+  "authority": {
+    "observe": true,
+    "propose": true,
+    "authorize": false,
+    "mutate": true
+  },
+  "information": {
+    "capacity": 255,
+    "capacity_unit": "payload-bytes",
+    "timing_model": "occurrence time",
+    "ordering": "ordered",
+    "delivery": "bounded local observation",
+    "loss_profile": [],
+    "native_dimensions": [
+      "mining",
+      "inventory change",
+      "placement",
+      "action transcript"
+    ]
+  },
+  "state": {
+    "retention": "persistent",
+    "replayable": false
+  },
+  "evidence": {
+    "produces": [
+      "native receipt"
+    ],
+    "verification": [
+      "binding-local verification"
+    ],
+    "source_ref": "alien-minecraft-vanilla-005 vanillaStages"
+  },
+  "constraints": {
+    "required": [],
+    "forbidden": [
+      "authorize"
+    ]
+  },
+  "live": true,
+  "capabilities": [
+    "observe",
+    "transmit",
+    "receive",
+    "configure",
+    "mutate"
+  ]
+}

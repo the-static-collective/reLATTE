@@ -1,0 +1,1938 @@
+[
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:7c63c65b",
+    "participant_ref": "participant:carrier",
+    "plane": "witness",
+    "direction": "output",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "adapter.observation"
+    ],
+    "emits": [
+      "adapter.observation"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "native particular",
+        "content digest"
+      ]
+    },
+    "state": {
+      "retention": "transient",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "polyglot-crossing-001 common.ts"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:4aa9770c",
+    "participant_ref": "participant:content",
+    "plane": "history",
+    "direction": "output",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "content.addressed.bytes"
+    ],
+    "emits": [
+      "content.addressed.bytes"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "receipt sha256",
+        "receipt text"
+      ]
+    },
+    "state": {
+      "retention": "persistent",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "tranchNOSE integrations/ghot/field_lab_adapter.py"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:a7bb41d8",
+    "participant_ref": "participant:filesystem",
+    "plane": "transport",
+    "direction": "bidirectional",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "file.bytes"
+    ],
+    "emits": [
+      "file.bytes"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "path",
+        "device",
+        "inode"
+      ]
+    },
+    "state": {
+      "retention": "persistent",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "polyglot-crossing-001 observeFilesystem"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:7e43de3c",
+    "participant_ref": "participant:ghot",
+    "plane": "electronic",
+    "direction": "bidirectional",
+    "protocol": "stdin-json/stdout-json-v0",
+    "accepts": [
+      "bounded.analysis.result"
+    ],
+    "emits": [
+      "bounded.analysis.result"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "exit status",
+        "manifest capability",
+        "declared invariants"
+      ]
+    },
+    "state": {
+      "retention": "transient",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "tranchNOSE integrations/ghot/adapter-manifest.json"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize",
+        "network",
+        "arbitrary_shell"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "analysis.tranchnose.field-lab"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:3865f52d",
+    "participant_ref": "participant:http",
+    "plane": "transport",
+    "direction": "bidirectional",
+    "protocol": "http",
+    "accepts": [
+      "http.representation"
+    ],
+    "emits": [
+      "http.representation"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "request",
+        "response",
+        "status",
+        "ETag",
+        "transport ACK"
+      ]
+    },
+    "state": {
+      "retention": "transient",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "polyglot-crossing-001 observeHttp"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:a22ebc7d",
+    "participant_ref": "participant:json",
+    "plane": "electronic",
+    "direction": "bidirectional",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "request.json"
+    ],
+    "emits": [
+      "request.json"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": []
+    },
+    "state": {
+      "retention": "transient",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "TranchNOSE FIELD_LAB_001.md request"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:f541ca2d",
+    "participant_ref": "participant:midi",
+    "plane": "transport",
+    "direction": "input",
+    "protocol": "smf0",
+    "accepts": [
+      "observed.smf.events"
+    ],
+    "emits": [
+      "observed.smf.events"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "event ticks",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "channel",
+        "note",
+        "delta ticks",
+        "division",
+        "tempo"
+      ]
+    },
+    "state": {
+      "retention": "persistent",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "binary Standard MIDI File"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:48d87021",
+    "participant_ref": "participant:midi",
+    "plane": "transport",
+    "direction": "output",
+    "protocol": "smf0",
+    "accepts": [
+      "smf.events"
+    ],
+    "emits": [
+      "smf.events"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "event ticks",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "channel",
+        "note",
+        "delta ticks",
+        "division",
+        "tempo"
+      ]
+    },
+    "state": {
+      "retention": "persistent",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "alien-midi-002 encodePayloadAsMidi"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:22c196aa",
+    "participant_ref": "participant:midi",
+    "plane": "transport",
+    "direction": "bidirectional",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "reconstructed.bytes"
+    ],
+    "emits": [
+      "reconstructed.bytes"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "event ticks",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "tempo",
+        "note_event_count",
+        "last_tick"
+      ]
+    },
+    "state": {
+      "retention": "transient",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "alien-midi-002 decodePayloadFromMidi"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:ec2d7d86",
+    "participant_ref": "participant:minecraft",
+    "plane": "electronic",
+    "direction": "input",
+    "protocol": "minecraft-client",
+    "accepts": [
+      "client.connected"
+    ],
+    "emits": [
+      "client.connected"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "configure",
+      "mutate"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": true
+    },
+    "information": {
+      "capacity": 255,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "connection",
+        "movement",
+        "inventory"
+      ]
+    },
+    "state": {
+      "retention": "relational",
+      "replayable": false
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "alien-minecraft-vanilla-005 vanillaStages"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "configure",
+      "mutate"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:7371604b",
+    "participant_ref": "participant:minecraft",
+    "plane": "witness",
+    "direction": "output",
+    "protocol": "minecraft-client",
+    "accepts": [
+      "world.observed"
+    ],
+    "emits": [
+      "world.observed"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 255,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "client wall observation"
+      ]
+    },
+    "state": {
+      "retention": "transient",
+      "replayable": false
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "alien-minecraft-vanilla-005 vanillaStages"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:6e80a889",
+    "participant_ref": "participant:minecraft",
+    "plane": "witness",
+    "direction": "output",
+    "protocol": "rcon",
+    "accepts": [
+      "adapter.observation"
+    ],
+    "emits": [
+      "adapter.observation"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 255,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "server block witness",
+        "official jar SHA1"
+      ]
+    },
+    "state": {
+      "retention": "persistent",
+      "replayable": false
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "alien-minecraft-vanilla-005 vanillaStages"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:380ebcdc",
+    "participant_ref": "participant:minecraft",
+    "plane": "environment",
+    "direction": "bidirectional",
+    "protocol": "minecraft-client",
+    "accepts": [
+      "world.mutated"
+    ],
+    "emits": [
+      "world.mutated"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "configure",
+      "mutate"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": true
+    },
+    "information": {
+      "capacity": 255,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "mining",
+        "inventory change",
+        "placement",
+        "action transcript"
+      ]
+    },
+    "state": {
+      "retention": "persistent",
+      "replayable": false
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "alien-minecraft-vanilla-005 vanillaStages"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "configure",
+      "mutate"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:808b5966",
+    "participant_ref": "participant:payload",
+    "plane": "transport",
+    "direction": "output",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "payload.bytes"
+    ],
+    "emits": [
+      "payload.bytes"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": []
+    },
+    "state": {
+      "retention": "persistent",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "caller-owned bytes"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:58bfd504",
+    "participant_ref": "participant:process",
+    "plane": "electronic",
+    "direction": "input",
+    "protocol": "stdin-json/stdout-json-v0",
+    "accepts": [
+      "process.stdin.json"
+    ],
+    "emits": [
+      "process.stdin.json"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": []
+    },
+    "state": {
+      "retention": "transient",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "GHoT ghot/external_adapters.py"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize",
+        "network",
+        "arbitrary_shell"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:cac6a02c",
+    "participant_ref": "participant:process",
+    "plane": "electronic",
+    "direction": "output",
+    "protocol": "stdin-json/stdout-json-v0",
+    "accepts": [
+      "process.stdout.json"
+    ],
+    "emits": [
+      "process.stdout.json"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": []
+    },
+    "state": {
+      "retention": "transient",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "GHoT ghot/external_adapters.py"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize",
+        "network",
+        "arbitrary_shell"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:c5c3029a",
+    "participant_ref": "participant:reduced",
+    "plane": "history",
+    "direction": "bidirectional",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "reduced.bytes"
+    ],
+    "emits": [
+      "reduced.bytes"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "parent",
+        "projection specification"
+      ]
+    },
+    "state": {
+      "retention": "persistent",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "experimental irreversible prefix projection"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:e471e59e",
+    "participant_ref": "participant:relatte",
+    "plane": "witness",
+    "direction": "input",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "relatte.observation"
+    ],
+    "emits": [
+      "relatte.observation"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "crossing",
+        "receiver-local receipt"
+      ]
+    },
+    "state": {
+      "retention": "persistent",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "frozen core CrossingEnvelopeV0 + ReceiptV0"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:a7e3a1de",
+    "participant_ref": "participant:tranchnose",
+    "plane": "body",
+    "direction": "bidirectional",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "body.response"
+    ],
+    "emits": [
+      "body.response"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "modeled surface; no live execution binding"
+      ]
+    },
+    "state": {
+      "retention": "latent",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "tranchNOSE experiments/robotics/r001_body_state.py / Experiment 001A"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": false,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:55ec3a38",
+    "participant_ref": "participant:tranchnose",
+    "plane": "electronic",
+    "direction": "output",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "controller.output"
+    ],
+    "emits": [
+      "controller.output"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "modeled surface; no live execution binding"
+      ]
+    },
+    "state": {
+      "retention": "persistent",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "tranchNOSE experiments/robotics/r001_body_state.py / Experiment 001A"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": false,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:925ccf2a",
+    "participant_ref": "participant:tranchnose",
+    "plane": "coordination",
+    "direction": "input",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "administrative.message"
+    ],
+    "emits": [
+      "administrative.message"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "modeled surface; no live execution binding",
+        "clock_reference",
+        "health_telemetry",
+        "slow_coupling_setting",
+        "topology_reconfiguration"
+      ]
+    },
+    "state": {
+      "retention": "relational",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "tranchNOSE experiments/robotics/r001_body_state.py / Experiment 001A"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": false,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:ba22861c",
+    "participant_ref": "participant:tranchnose",
+    "plane": "field",
+    "direction": "input",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "field.input"
+    ],
+    "emits": [
+      "field.input"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "modeled surface; no live execution binding"
+      ]
+    },
+    "state": {
+      "retention": "relational",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "tranchNOSE experiments/robotics/r001_body_state.py / Experiment 001A"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": false,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:8ea74e35",
+    "participant_ref": "participant:tranchnose",
+    "plane": "history",
+    "direction": "output",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "attributable.history"
+    ],
+    "emits": [
+      "attributable.history"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "modeled surface; no live execution binding"
+      ]
+    },
+    "state": {
+      "retention": "persistent",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "tranchNOSE experiments/robotics/r001_body_state.py / Experiment 001A"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": false,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:e84e745a",
+    "participant_ref": "participant:tranchnose",
+    "plane": "body",
+    "direction": "output",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "latent.operative"
+    ],
+    "emits": [
+      "latent.operative"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "modeled surface; no live execution binding"
+      ]
+    },
+    "state": {
+      "retention": "latent",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "tranchNOSE experiments/robotics/r001_body_state.py / Experiment 001A"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": false,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:97d01180",
+    "participant_ref": "participant:tranchnose",
+    "plane": "witness",
+    "direction": "output",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "sensor.trajectory"
+    ],
+    "emits": [
+      "sensor.trajectory"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "modeled surface; no live execution binding"
+      ]
+    },
+    "state": {
+      "retention": "transient",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "tranchNOSE experiments/robotics/r001_body_state.py / Experiment 001A"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": false,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:188c15d2",
+    "participant_ref": "participant:tranchnose",
+    "plane": "coordination",
+    "direction": "input",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "topology.configuration"
+    ],
+    "emits": [
+      "topology.configuration"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "bounded local observation",
+      "loss_profile": [],
+      "native_dimensions": [
+        "modeled surface; no live execution binding"
+      ]
+    },
+    "state": {
+      "retention": "relational",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "tranchNOSE experiments/robotics/r001_body_state.py / Experiment 001A"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": false,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:a14ff53b",
+    "participant_ref": "participant:udp",
+    "plane": "transport",
+    "direction": "bidirectional",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "indexed.fragments"
+    ],
+    "emits": [
+      "indexed.fragments"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "unordered, duplicate, no guarantee",
+      "loss_profile": [
+        "packet loss"
+      ],
+      "native_dimensions": [
+        "session",
+        "index",
+        "count",
+        "48-byte chunk"
+      ]
+    },
+    "state": {
+      "retention": "transient",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "alien-adapter-001 makeUdpPackets"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:b855e724",
+    "participant_ref": "participant:udp",
+    "plane": "transport",
+    "direction": "bidirectional",
+    "protocol": "in-process/v0",
+    "accepts": [
+      "reassembled.bytes"
+    ],
+    "emits": [
+      "reassembled.bytes"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "ordered",
+      "delivery": "unordered, duplicate, no guarantee",
+      "loss_profile": [
+        "packet loss"
+      ],
+      "native_dimensions": [
+        "packet identities",
+        "duplicate count"
+      ]
+    },
+    "state": {
+      "retention": "transient",
+      "replayable": true
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "alien-adapter-001 reassembleUdpPackets"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:496d5e78",
+    "participant_ref": "participant:udp",
+    "plane": "transport",
+    "direction": "input",
+    "protocol": "udp4",
+    "accepts": [
+      "received.datagrams"
+    ],
+    "emits": [
+      "received.datagrams"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "unordered",
+      "delivery": "unordered, duplicate, no guarantee",
+      "loss_profile": [
+        "packet loss"
+      ],
+      "native_dimensions": [
+        "arrival order",
+        "duplicate arrival"
+      ]
+    },
+    "state": {
+      "retention": "transient",
+      "replayable": false
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "node:dgram / alien-adapter-001"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  },
+  {
+    "schema": "relatte.interface-particular.experimental/v0",
+    "interface_id": "interface:6b81689c",
+    "participant_ref": "participant:udp",
+    "plane": "transport",
+    "direction": "output",
+    "protocol": "udp4",
+    "accepts": [
+      "sent.datagrams"
+    ],
+    "emits": [
+      "sent.datagrams"
+    ],
+    "operations": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ],
+    "authority": {
+      "observe": true,
+      "propose": true,
+      "authorize": false,
+      "mutate": false
+    },
+    "information": {
+      "capacity": 1048576,
+      "capacity_unit": "payload-bytes",
+      "timing_model": "occurrence time",
+      "ordering": "unordered",
+      "delivery": "unordered, duplicate, no guarantee",
+      "loss_profile": [
+        "packet loss"
+      ],
+      "native_dimensions": [
+        "sender port",
+        "receiver port",
+        "session"
+      ]
+    },
+    "state": {
+      "retention": "none",
+      "replayable": false
+    },
+    "evidence": {
+      "produces": [
+        "native receipt"
+      ],
+      "verification": [
+        "binding-local verification"
+      ],
+      "source_ref": "node:dgram / alien-adapter-001"
+    },
+    "constraints": {
+      "required": [],
+      "forbidden": [
+        "authorize"
+      ]
+    },
+    "live": true,
+    "capabilities": [
+      "observe",
+      "transmit",
+      "receive",
+      "propose"
+    ]
+  }
+]

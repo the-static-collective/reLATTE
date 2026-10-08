@@ -1,0 +1,58 @@
+name: DYNAMIC-INTERFACE-FIELD-001
+on:
+  push:
+    branches: [experiment/dynamic-interface-field-001]
+  pull_request:
+    paths:
+      - "experiments/dynamic-interface-field-001/**"
+      - ".github/workflows/dynamic-interface-field-001.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dynamic-field:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/tranchNOSE
+          ref: 670ca60012929b51e66b8bac7d0c9b85a4f95d7b
+          path: work/donors/tranchNOSE
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/GHoT
+          ref: e35dd470384d864b7b0b629a68dad570875a7df0
+          path: work/donors/GHoT
+          persist-credentials: false
+      - run: npm ci
+      - name: Lifecycle attacks, inherited superspace and repository checks
+        env:
+          TRANCHNOSE_ROOT: work/donors/tranchNOSE
+          GHOT_ROOT: work/donors/GHoT
+        run: |
+          node --test experiments/dynamic-interface-field-001/tests/*.test.mjs
+          npm run superspace:test
+          npm run verify
+      - name: Execute the changing field and independently verify recorded evidence
+        run: |
+          node experiments/dynamic-interface-field-001/run.mjs
+          node experiments/dynamic-interface-field-001/verify-run.mjs work/dynamic-interface-field-001/proofs.json
+      - name: Preserve signed histories, proposals and observed occurrences
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dynamic-interface-field-001-evidence
+          path: work/dynamic-interface-field-001/
+          retention-days: 14

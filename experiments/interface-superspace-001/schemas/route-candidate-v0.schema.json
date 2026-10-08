@@ -1,0 +1,298 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "relatte.route-candidate.experimental/v0"
+    },
+    "route_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_interface": {
+      "type": "string",
+      "minLength": 1
+    },
+    "destination_goal": {
+      "type": "object",
+      "properties": {
+        "interface_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "emits": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "interface_id",
+        "emits"
+      ],
+      "additionalProperties": false
+    },
+    "interface_sequence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "relation_sequence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "constraints_considered": {
+      "type": "object",
+      "properties": {
+        "network": {
+          "type": "boolean"
+        },
+        "preserve_ancestry": {
+          "type": "boolean"
+        },
+        "mutation_authority": {
+          "type": "boolean"
+        },
+        "loss_budget": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ordering": {
+          "enum": [
+            "any",
+            "ordered"
+          ]
+        },
+        "reversible": {
+          "type": "boolean"
+        },
+        "witnesses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "local_state": {
+          "type": "boolean"
+        },
+        "max_depth": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128
+        },
+        "max_candidates": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128
+        }
+      },
+      "required": [
+        "network",
+        "preserve_ancestry",
+        "mutation_authority",
+        "loss_budget",
+        "ordering",
+        "reversible",
+        "witnesses",
+        "permissions",
+        "local_state",
+        "max_depth",
+        "max_candidates"
+      ],
+      "additionalProperties": false
+    },
+    "constraints_satisfied": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "constraints_rejected": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "planner_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "registry_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "request": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "type": "object",
+          "properties": {
+            "representation": {
+              "type": "string",
+              "minLength": 1
+            },
+            "facts": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "byte_length": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "representation",
+            "facts",
+            "byte_length"
+          ],
+          "additionalProperties": false
+        },
+        "goal": {
+          "type": "object",
+          "properties": {
+            "interface_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "emits": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "interface_id",
+            "emits"
+          ],
+          "additionalProperties": false
+        },
+        "constraints": {
+          "type": "object",
+          "properties": {
+            "network": {
+              "type": "boolean"
+            },
+            "preserve_ancestry": {
+              "type": "boolean"
+            },
+            "mutation_authority": {
+              "type": "boolean"
+            },
+            "loss_budget": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ordering": {
+              "enum": [
+                "any",
+                "ordered"
+              ]
+            },
+            "reversible": {
+              "type": "boolean"
+            },
+            "witnesses": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "permissions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            },
+            "local_state": {
+              "type": "boolean"
+            },
+            "max_depth": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 128
+            },
+            "max_candidates": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 128
+            }
+          },
+          "required": [
+            "network",
+            "preserve_ancestry",
+            "mutation_authority",
+            "loss_budget",
+            "ordering",
+            "reversible",
+            "witnesses",
+            "permissions",
+            "local_state",
+            "max_depth",
+            "max_candidates"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "from",
+        "state",
+        "goal",
+        "constraints"
+      ],
+      "additionalProperties": false
+    },
+    "plan_digest": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema",
+    "route_id",
+    "source_interface",
+    "destination_goal",
+    "interface_sequence",
+    "relation_sequence",
+    "constraints_considered",
+    "constraints_satisfied",
+    "constraints_rejected",
+    "planner_version",
+    "registry_digest",
+    "request",
+    "plan_digest"
+  ],
+  "additionalProperties": false
+}

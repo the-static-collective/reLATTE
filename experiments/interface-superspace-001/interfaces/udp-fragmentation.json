@@ -1,0 +1,68 @@
+{
+  "schema": "relatte.interface-particular.experimental/v0",
+  "interface_id": "interface:a14ff53b",
+  "participant_ref": "participant:udp",
+  "plane": "transport",
+  "direction": "bidirectional",
+  "protocol": "in-process/v0",
+  "accepts": [
+    "indexed.fragments"
+  ],
+  "emits": [
+    "indexed.fragments"
+  ],
+  "operations": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ],
+  "authority": {
+    "observe": true,
+    "propose": true,
+    "authorize": false,
+    "mutate": false
+  },
+  "information": {
+    "capacity": 1048576,
+    "capacity_unit": "payload-bytes",
+    "timing_model": "occurrence time",
+    "ordering": "ordered",
+    "delivery": "unordered, duplicate, no guarantee",
+    "loss_profile": [
+      "packet loss"
+    ],
+    "native_dimensions": [
+      "session",
+      "index",
+      "count",
+      "48-byte chunk"
+    ]
+  },
+  "state": {
+    "retention": "transient",
+    "replayable": true
+  },
+  "evidence": {
+    "produces": [
+      "native receipt"
+    ],
+    "verification": [
+      "binding-local verification"
+    ],
+    "source_ref": "alien-adapter-001 makeUdpPackets"
+  },
+  "constraints": {
+    "required": [],
+    "forbidden": [
+      "authorize"
+    ]
+  },
+  "live": true,
+  "capabilities": [
+    "observe",
+    "transmit",
+    "receive",
+    "propose"
+  ]
+}
