@@ -1,6 +1,6 @@
 # PERCEIVED-AFFORDANCE-FIELD-001 — misleading pressure without authority mutation
 
-Status: experimental contract, not yet executable. Branch is stacked on COMPOSITION-INSTANCE-002 (#79) at `21e7d7a`. No normative-core changes.
+Status: executable experiment-local observer lens with two-observer route proof and cold verifier. Draft PR #83 remains stacked on COMPOSITION-INSTANCE-002 (#79). No normative-core changes. Exact tested SHA and CI results are tracked in the PR.
 
 ## Question
 
@@ -81,3 +81,36 @@ An experiment-local observer projection is preferred over a shared authoritative
 ## Codex implementation prompt
 
 Implement this contract on this branch, retaining the scope and test gates above. First inspect the exact #79, #78, and #76 interfaces rather than inventing call signatures. Keep the smallest removable experiment-local diff, generate signed trace fixtures from actual execution, run both fresh and cold verifiers and the parent suites, and open a *draft* PR stacked on #79. Do not merge. Record tested head SHA, passing test counts, limitations and any unsatisfied acceptance criteria.
+
+## Executable implementation
+
+The contract is implemented without changing field ownership or creating a global authority service:
+
+- `lens.mjs` — separate FieldObserver instances, authenticated non-owner pressure, observer-specific interpreted affordances, reorientation and refusal to turn perception into grants.
+- `run.mjs` — creates signed owner histories, independently selected views, a false closure, a successful independent observer route, a reorientation route, a false opening after owner withdrawal, and a denied stale-incarnation route.
+- `verify.mjs` — cold read-only reconstruction of selected history prefixes, signatures, view projections, pressure interpretations, plans, actual dynamic occurrences, grant/ticket ancestry, and signed withdrawal/reconstitution.
+- `tests/affordance.test.mjs` — adversarial fixtures including conflicting pressure, tampering, missing history, no inherited grant, stale owner gates, and COMPOSITION-INSTANCE-002 terminal-death fencing.
+- `.github/workflows/perceived-affordance-field-001.yml` — runs new and inherited tests, repository verification, reproducible proof generation, repeated cold verification, and artifact upload.
+
+### Reproduction
+
+From the repository root, with dependencies installed and Node.js 24:
+
+```sh
+node --test experiments/perceived-affordance-field-001/tests/*.test.mjs
+node experiments/perceived-affordance-field-001/run.mjs
+node experiments/perceived-affordance-field-001/verify.mjs
+node experiments/perceived-affordance-field-001/verify.mjs
+```
+
+The proof is written to `work/perceived-affordance-field-001/proof.json`. It includes actual signed owner histories and gate tickets, independently derived observer view records, signed pressure, candidate plans, and resulting occurrences. Fresh runs create new identities and occurrence IDs; the same archived proof must verify deterministically on repeated cold reads. The CLI verifier never executes a crossing.
+
+### Limits and provenance
+
+- The runnable proof exercises ordinary withdrawal and reconstitution. The separate integration test exercises actual terminal death from #79; it is not misleadingly counted among the proof JSON's four occurrences.
+- Owner world histories, pressure and operation tickets carry signatures. The runner's local failure records are content-sealed, not additional owner-signed denials. A failure reason is not a free-standing owner authorization statement.
+- `UNEXAMINED` (owner excluded from selected histories) is not `NONE` (an absent door in a verified selected history). Unreadable or contradictory evidence is rejected rather than guessed into either status.
+- Perceived opening/closure is not a cross-world truth claim. A signed actor is only known as the holder of that key; signing grants no jurisdiction over the door.
+- New interfaces, public APIs, semantic pressure parsers, persisted observer identities, cross-host deployment and a playable Minecraft consumer are deliberately out of scope.
+- CI proves these fixtures and inherited code paths, not that all distributed or human perceptual effects have been demonstrated. No merge or normative promotion is implied.
+
