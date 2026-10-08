@@ -17,6 +17,7 @@ import {
 
 const require = createRequire(import.meta.url);
 const mineflayer = require('mineflayer');
+const { Vec3 } = require('vec3');
 const { Rcon } = require('rcon-client');
 
 const HOST = process.env.MC_HOST || '127.0.0.1';
@@ -92,7 +93,7 @@ function scanWorld(bot) {
     for (let x = WORLD_BOUNDS.minX; x <= WORLD_BOUNDS.maxX; x += 1) {
       let highest = null;
       for (let y = WORLD_BOUNDS.minY; y <= WORLD_BOUNDS.maxY; y += 1) {
-        const block = bot.blockAt({ x, y, z });
+        const block = bot.blockAt(new Vec3(x, y, z));
         if (!block) throw new Error('WORLDBUILDER_SCAN_CHUNK_MISSING:' + x + ',' + y + ',' + z);
         if (block.name === 'air' || block.name === 'cave_air' || block.name === 'void_air') continue;
         const line = x + ',' + y + ',' + z + '=' + block.name;
