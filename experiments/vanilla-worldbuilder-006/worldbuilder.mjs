@@ -204,7 +204,7 @@ async function main() {
     await rcon.send('deop ' + BOT_NAME);
     await sleep(500);
 
-    const observerName = BOT_NAME + 'Observer';
+    const observerName = 'WorldObserver';
     observerBot = mineflayer.createBot({
       host: HOST,
       port: PORT,
