@@ -1,0 +1,51 @@
+{
+  "schema": "relatte.crossing-envelope/v0",
+  "protocol_version": "0",
+  "source_particular": "static-os:world-receipt:world-001",
+  "source_world": "static-os:experiment/witness-to-world-crossing-001",
+  "source_history_head": "c1f3024e267ecf033e03f7707bcb07e784e1f095",
+  "parents": [],
+  "declared_kind": "STATIC_OS_WHOLE_BODY_PARTICULAR",
+  "payload_refs": [
+    {
+      "address": "sha256:56376cad6f1c5f9b3bc671876dddeaf8ad63c90b2f162a11383b68561f51a82f",
+      "role": "whole-body",
+      "media_type": "application/json"
+    }
+  ],
+  "requested_effect": {
+    "destination_disposition": "local"
+  },
+  "capability_ref": null,
+  "privacy_policy": {
+    "field": "bounded",
+    "retention": "decay-after-export"
+  },
+  "audience_policy": {
+    "destination": "world:sb001-b"
+  },
+  "return_address": "supabardo:return:sb001",
+  "created_at": "2026-10-06T23:32:00.000Z",
+  "extensions": {
+    "sb001": {
+      "source_repository": "the-static-collective/static-os",
+      "source_ref": "experiment/witness-to-world-crossing-001",
+      "source_commit": "c1f3024e267ecf033e03f7707bcb07e784e1f095",
+      "source_path": "examples/world-receipt.independent-contradiction.json",
+      "source_blob_sha": "2b317402c4769319220cd6bc3e5d20c3978dbfbf",
+      "claim_limit": "Executable STATIC-OS software occurrence; not a physical boot witness."
+    }
+  },
+  "crossing_id": "relatte-crossing-v0:337e3ecbe4810e88a517d40ba414cdebb7ee1e35a2aa3d028037af0a29b2db26",
+  "signing": {
+    "algorithm": "ECDSA-P256-SHA256",
+    "public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "uWIKZcZ1FwKgJQh3SdHvtyGooTrFvw0PEBCLRqvpzXQ",
+      "y": "a1oZXoMpO-7XYQFuyTce1r8PmJhXbicSGOpUHdfQLqY"
+    },
+    "domain": "relatte.crossing-signature/v0",
+    "signature": "W18lOKJ7DRsovRvXakxzZtSoOu92-u1_6phQKoOSYhSQfm6MI1iE2U9C6eG0INxAFTtRlnPq_BKOIBV3Pc_yHg"
+  }
+}

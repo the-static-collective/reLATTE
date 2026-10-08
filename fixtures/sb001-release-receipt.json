@@ -1,0 +1,38 @@
+{
+  "schema": "relatte.receipt/v0",
+  "crossing_id": "relatte-crossing-v0:337e3ecbe4810e88a517d40ba414cdebb7ee1e35a2aa3d028037af0a29b2db26",
+  "world_id": "static-os:experiment/witness-to-world-crossing-001",
+  "receiver_particular": "static-os:world-receipt:world-001",
+  "kind": "SB001_RELEASE",
+  "semantic_effect": "crossing-released",
+  "contract_ref": "supabardo:sb001/v0",
+  "pre_state_ref": "sha256:56376cad6f1c5f9b3bc671876dddeaf8ad63c90b2f162a11383b68561f51a82f",
+  "post_state_ref": "relatte-crossing-v0:337e3ecbe4810e88a517d40ba414cdebb7ee1e35a2aa3d028037af0a29b2db26",
+  "descendant_refs": [],
+  "residual_refs": [
+    "sha256:56376cad6f1c5f9b3bc671876dddeaf8ad63c90b2f162a11383b68561f51a82f"
+  ],
+  "note": "source released this particular for crossing X; retained source bytes do not negate release",
+  "created_at": "2026-10-06T23:33:00.000Z",
+  "extensions": {
+    "supabardo": {
+      "laws": [
+        "RELEASE != ERASURE",
+        "COPY != SECOND AUTHORITY"
+      ],
+      "source_bytes_may_remain": true
+    }
+  },
+  "receipt_id": "relatte-receipt-v0:cc2f84e36cf7b46ac0d8bb4d942e24f34b2a94de7879aa7ac05a5c1b2cd800c7",
+  "signing": {
+    "algorithm": "ECDSA-P256-SHA256",
+    "public_key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "uWIKZcZ1FwKgJQh3SdHvtyGooTrFvw0PEBCLRqvpzXQ",
+      "y": "a1oZXoMpO-7XYQFuyTce1r8PmJhXbicSGOpUHdfQLqY"
+    },
+    "domain": "relatte.receipt-signature/v0",
+    "signature": "nT3uKzgqTha3gRoBt_MQ9iTWoMXJqjNHvCPHJJsU5sgzyyvDf2vaWtHOGLigg1JJjjc_i_g5IjY-MK5jutZCsg"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "supabardo.sb001-evidence-manifest/v0",
+  "body": {
+    "schema": "supabardo.sb001-evidence-set/v0",
+    "specimen": "SB-001",
+    "particular_sha256": "56376cad6f1c5f9b3bc671876dddeaf8ad63c90b2f162a11383b68561f51a82f",
+    "crossing_id": "relatte-crossing-v0:337e3ecbe4810e88a517d40ba414cdebb7ee1e35a2aa3d028037af0a29b2db26",
+    "release_receipt_id": "relatte-receipt-v0:cc2f84e36cf7b46ac0d8bb4d942e24f34b2a94de7879aa7ac05a5c1b2cd800c7",
+    "unresolved_receipt_id": "relatte-receipt-v0:43e847ecfa5b3f1f70d6867dccfc2739ae84eafb620b8b545bf9247c10532693",
+    "disposition_receipt_id": "relatte-receipt-v0:9ac46374aeec3516b06ec0560756066ce0349eac42c5e51bfb17203fbdf2fb20",
+    "exit_receipt_id": "relatte-receipt-v0:c29bb41ebe554cfda48a33a50eb65125c33640b58817ac3a5f3c28d753564066",
+    "source_key_sha256": "3c76e2c36be1ba26b180c697edf93f55964f13bc98ec3566e79d2ede519a5fd8",
+    "bardo_key_sha256": "fdc38f9bc3286db0dfa8cecdb9f8ff4784fbdc14894644ae3a8b8890d330685c",
+    "destination_key_sha256": "c09bebb8ff29b1cc850f06500c2d450c411770c806aff0ea44b5072aa13fcb87",
+    "causal_chain": [
+      "crossing_id -> release.post_state_ref",
+      "release.receipt_id -> unresolved.pre_state_ref",
+      "unresolved.receipt_id -> disposition.extensions.local_receiver.supabardo_unresolved_receipt_id",
+      "unresolved.receipt_id -> exit.pre_state_ref",
+      "disposition.receipt_id -> exit.post_state_ref"
+    ],
+    "claim_limit": "Integrity commitment only; does not elevate any signer, receipt, or timestamp into universal authority."
+  },
+  "evidence_set_id": "sb001-evidence-v0:cbb5e16c8209e1978d1cc1910c4b5128fa58bdab1bb9bbd7d4112ebd0f6c5174"
+}
