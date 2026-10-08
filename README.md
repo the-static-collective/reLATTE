@@ -428,3 +428,20 @@ Daily Slice       Haunted Toaster
 The shared substrate is forbidden from learning either donor family's semantics.
 
 > **EDGE ADAPTER != CORE EXCEPTION**
+
+
+## translate.through 001
+
+[TRANSLATE.THROUGH 001](spec/TRANSLATE-THROUGH-001.md) makes a declared route through representations a signed first-class crossing attachment:
+
+```text
+source -> through -> target / return
+```
+
+Each completed stage may produce its own addressable descendant and signed stage receipt. A route receipt preserves completed intermediates even when a later stage is held, refused, or fails.
+
+The substrate records passage without claiming semantic equivalence:
+
+> **THROUGH != TO**  
+> **INTERMEDIATE != TEMPORARY**  
+> **RECEIPT != SEMANTIC EQUIVALENCE**

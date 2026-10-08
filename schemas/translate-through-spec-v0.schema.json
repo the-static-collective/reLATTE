@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://the-static-collective.github.io/reLATTE/schemas/translate-through-spec-v0.schema.json",
+  "title": "TranslateThroughSpecV0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "source_world",
+    "source_particular",
+    "source_history_head",
+    "source_ref",
+    "route",
+    "policy",
+    "return_address",
+    "created_at"
+  ],
+  "properties": {
+    "schema": {
+      "const": "relatte.translate-through-spec/v0"
+    },
+    "source_world": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_particular": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_history_head": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_ref": {
+      "$ref": "translate-through-v0.schema.json#/$defs/sourceRef"
+    },
+    "route": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "$ref": "translate-through-v0.schema.json#/$defs/stage"
+      }
+    },
+    "policy": {
+      "$ref": "translate-through-v0.schema.json#/$defs/policy"
+    },
+    "return_address": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
