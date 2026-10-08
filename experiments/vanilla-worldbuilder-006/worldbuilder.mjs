@@ -232,17 +232,55 @@ async function main() {
     await rcon.send('deop ' + BOT_NAME);
     await sleep(500);
 
-    const observerName = 'WorldObserver';
-    observerBot = mineflayer.createBot({
-      host: HOST,
-      port: PORT,
-      username: observerName,
-      auth: 'offline',
-    });
-    await waitForSpawn(observerBot);
-    await rcon.send('tp ' + observerName + ' 0 80 0');
-    await observerBot.waitForChunksToLoad();
-    await waitForObserverAnchors(observerBot, plan.anchors);
+    await rcon.send('setworldspawn 0 80 0');
+    const observerAttempts = [];
+    let observerName = null;
+
+    for (let attempt = 1; attempt <= 3; attempt += 1) {
+      const candidateName = 'WorldObserver' + attempt;
+      const candidate = mineflayer.createBot({
+        host: HOST,
+        port: PORT,
+        username: candidateName,
+        auth: 'offline',
+      });
+
+      try {
+        await waitForSpawn(candidate);
+        await rcon.send('tp ' + candidateName + ' 0 80 0');
+        await candidate.waitForChunksToLoad();
+        const anchorsSeen = await waitForObserverAnchors(
+          candidate,
+          plan.anchors,
+        );
+
+        observerAttempts.push({
+          attempt,
+          username: candidateName,
+          result: 'CONVERGED',
+          anchors: anchorsSeen,
+        });
+        observerBot = candidate;
+        observerName = candidateName;
+        break;
+      } catch (error) {
+        observerAttempts.push({
+          attempt,
+          username: candidateName,
+          result: 'FAILED',
+          error: String(error?.message ?? error),
+        });
+        try { candidate.quit('observer retry'); } catch {}
+        await sleep(500);
+      }
+    }
+
+    if (!observerBot || !observerName) {
+      throw new Error(
+        'WORLDBUILDER_NO_OBSERVER_CONVERGED:' +
+        JSON.stringify(observerAttempts),
+      );
+    }
 
     const scan = scanWorld(observerBot);
     if (scan.non_air_blocks === 0) {
@@ -319,6 +357,7 @@ async function main() {
         gamemode: 'creative',
         fresh_observer_username: observerName,
         fresh_observer_operator: false,
+        observer_attempts: observerAttempts,
       },
       plan,
       command_log: commandLog,
@@ -347,6 +386,7 @@ async function main() {
         server_verified_anchor_blocks: 'OBSERVED',
         fresh_non_op_client_scanned_final_region: 'OBSERVED',
         author_and_observer_are_distinct_client_sessions: 'OBSERVED',
+        observer_failure_does_not_imply_world_absence: 'OBSERVED',
         authored_world_crossed_relatte: 'OBSERVED',
         human_blueprint: 'REFUTED_FOR_EXACT_COORDINATE_PLAN',
         open_ended_general_intelligence: 'UNOBSERVED',
