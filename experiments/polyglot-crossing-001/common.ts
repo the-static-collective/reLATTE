@@ -22,7 +22,8 @@ export type PolyglotSubstrate =
   | 'langton-ant-field'
   | 'minecraft-playthrough'
   | 'minecraft-vanilla-server'
-  | 'minecraft-vanilla-authored-world';
+  | 'minecraft-vanilla-authored-world'
+  | 'composition-instance';
 
 export type LocalDisposition = 'R3_HOLD' | 'R3_ADMIT' | 'R3_REFUSE' | 'RETURN';
 

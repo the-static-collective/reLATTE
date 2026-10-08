@@ -29,6 +29,7 @@ const GOAL = process.env.MC_WORLD_GOAL || 'BUILD A WORLD';
 const META_PATH = process.env.MC_VERSION_META || 'work/worldbuilder/server-version.json';
 const OUTPUT_PATH = process.env.MC_EVIDENCE_OUT || 'work/worldbuilder/evidence.json';
 const MAP_PATH = process.env.MC_MAP_OUT || 'work/worldbuilder/world-map.txt';
+const COMMAND_DELAY_MS = Number(process.env.MC_COMMAND_DELAY_MS || '1100');
 
 function sha(value) {
   return createHash('sha256').update(value).digest('hex');
@@ -84,24 +85,87 @@ function symbolFor(blockName) {
   return '#';
 }
 
-function scanWorld(bot) {
+async function waitForObserverAnchors(bot, anchors, timeoutMs = 15000) {
+  const started = Date.now();
+  let last = [];
+
+  while (Date.now() - started < timeoutMs) {
+    last = anchors.map((anchor) => {
+      const block = bot.blockAt(
+        new Vec3(anchor.at.x, anchor.at.y, anchor.at.z),
+      );
+      return {
+        role: anchor.role,
+        expected: anchor.block.replace(/^minecraft:/, ''),
+        observed: block?.name ?? null,
+      };
+    });
+
+    if (
+      last.every((entry) => entry.observed === entry.expected)
+    ) return last;
+
+    await sleep(250);
+  }
+
+  throw new Error(
+    'WORLDBUILDER_OBSERVER_SYNC_TIMEOUT:' + JSON.stringify(last),
+  );
+}
+
+async function scanWorld(bot, rcon, observerName) {
   const rows = [];
   const histogram = {};
   const columns = new Map();
 
-  for (let z = WORLD_BOUNDS.minZ; z <= WORLD_BOUNDS.maxZ; z += 1) {
-    for (let x = WORLD_BOUNDS.minX; x <= WORLD_BOUNDS.maxX; x += 1) {
-      let highest = null;
-      for (let y = WORLD_BOUNDS.minY; y <= WORLD_BOUNDS.maxY; y += 1) {
-        const block = bot.blockAt(new Vec3(x, y, z));
-        if (!block) throw new Error('WORLDBUILDER_SCAN_CHUNK_MISSING:' + x + ',' + y + ',' + z);
-        if (block.name === 'air' || block.name === 'cave_air' || block.name === 'void_air') continue;
-        const line = x + ',' + y + ',' + z + '=' + block.name;
-        rows.push(line);
-        histogram[block.name] = (histogram[block.name] || 0) + 1;
-        highest = block.name;
+  const minChunkX = Math.floor(WORLD_BOUNDS.minX / 16);
+  const maxChunkX = Math.floor(WORLD_BOUNDS.maxX / 16);
+  const minChunkZ = Math.floor(WORLD_BOUNDS.minZ / 16);
+  const maxChunkZ = Math.floor(WORLD_BOUNDS.maxZ / 16);
+
+  for (let chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ += 1) {
+    for (let chunkX = minChunkX; chunkX <= maxChunkX; chunkX += 1) {
+      const centerX = chunkX * 16 + 8;
+      const centerZ = chunkZ * 16 + 8;
+
+      // Observation is allowed to move the observer, but not alter world state.
+      await rcon.send(
+        'tp ' + observerName + ' ' + centerX + ' 80 ' + centerZ,
+      );
+      await bot.waitForChunksToLoad();
+      await sleep(250);
+
+      const xStart = Math.max(WORLD_BOUNDS.minX, chunkX * 16);
+      const xEnd = Math.min(WORLD_BOUNDS.maxX, chunkX * 16 + 15);
+      const zStart = Math.max(WORLD_BOUNDS.minZ, chunkZ * 16);
+      const zEnd = Math.min(WORLD_BOUNDS.maxZ, chunkZ * 16 + 15);
+
+      for (let z = zStart; z <= zEnd; z += 1) {
+        for (let x = xStart; x <= xEnd; x += 1) {
+          let highest = null;
+          for (let y = WORLD_BOUNDS.minY; y <= WORLD_BOUNDS.maxY; y += 1) {
+            const block = bot.blockAt(new Vec3(x, y, z));
+            if (!block) {
+              throw new Error(
+                'WORLDBUILDER_SCAN_CHUNK_MISSING:' +
+                x + ',' + y + ',' + z +
+                ':chunk=' + chunkX + ',' + chunkZ,
+              );
+            }
+            if (
+              block.name === 'air' ||
+              block.name === 'cave_air' ||
+              block.name === 'void_air'
+            ) continue;
+
+            const line = x + ',' + y + ',' + z + '=' + block.name;
+            rows.push(line);
+            histogram[block.name] = (histogram[block.name] || 0) + 1;
+            highest = block.name;
+          }
+          columns.set(x + ',' + z, highest);
+        }
       }
-      columns.set(x + ',' + z, highest);
     }
   }
 
@@ -122,10 +186,140 @@ function scanWorld(bot) {
     non_air_blocks: rows.length,
     histogram,
     top_down: map.join('\n') + '\n',
+    observed_chunks: {
+      min_chunk_x: minChunkX,
+      max_chunk_x: maxChunkX,
+      min_chunk_z: minChunkZ,
+      max_chunk_z: maxChunkZ,
+      count:
+        (maxChunkX - minChunkX + 1) *
+        (maxChunkZ - minChunkZ + 1),
+    },
   };
 }
 
-async function sendBotCommand(bot, command, log) {
+async function scoreboardWitness(rcon, witness, predicateCommand) {
+  await rcon.send(
+    'scoreboard players set ' + witness + ' relatte_action 0',
+  );
+  await rcon.send(
+    predicateCommand +
+    ' run scoreboard players set ' +
+    witness +
+    ' relatte_action 1',
+  );
+  const response = await rcon.send(
+    'scoreboard players get ' + witness + ' relatte_action',
+  );
+  const numbers = String(response).match(/-?[0-9]+/g) ?? [];
+  return {
+    score: Number(numbers.at(-1)),
+    response: String(response),
+  };
+}
+
+function sampleFillPositions(op) {
+  const mid = {
+    x: Math.trunc((op.from.x + op.to.x) / 2),
+    y: Math.trunc((op.from.y + op.to.y) / 2),
+    z: Math.trunc((op.from.z + op.to.z) / 2),
+  };
+  const unique = new Map();
+  for (const point of [op.from, mid, op.to]) {
+    unique.set(point.x + ',' + point.y + ',' + point.z, point);
+  }
+  return [...unique.values()];
+}
+
+async function verifyOperationEffect(rcon, op, actionIndex) {
+  const receipts = [];
+
+  if (op.kind === 'fill') {
+    const samples = sampleFillPositions(op);
+    for (let sampleIndex = 0; sampleIndex < samples.length; sampleIndex += 1) {
+      const point = samples[sampleIndex];
+      const witness = '#action_' + actionIndex + '_' + sampleIndex;
+      const check = await scoreboardWitness(
+        rcon,
+        witness,
+        'execute if block ' +
+          point.x + ' ' + point.y + ' ' + point.z + ' ' + op.block,
+      );
+      if (check.score !== 1) {
+        throw new Error(
+          'WORLDBUILDER_ACTION_NOT_CONSTITUTED:' +
+          actionIndex +
+          ':fill:' +
+          JSON.stringify({ point, expected: op.block, check }),
+        );
+      }
+      receipts.push({ point, expected: op.block, ...check });
+    }
+    return receipts;
+  }
+
+  if (op.kind === 'setblock') {
+    const witness = '#action_' + actionIndex;
+    const check = await scoreboardWitness(
+      rcon,
+      witness,
+      'execute if block ' +
+        op.at.x + ' ' + op.at.y + ' ' + op.at.z + ' ' + op.block,
+    );
+    if (check.score !== 1) {
+      throw new Error(
+        'WORLDBUILDER_ACTION_NOT_CONSTITUTED:' +
+        actionIndex +
+        ':setblock:' +
+        JSON.stringify({ point: op.at, expected: op.block, check }),
+      );
+    }
+    return [{ point: op.at, expected: op.block, ...check }];
+  }
+
+  if (op.kind === 'summon') {
+    const witness = '#action_' + actionIndex;
+    const tag = 'relatte_action_' + actionIndex;
+    const check = await scoreboardWitness(
+      rcon,
+      witness,
+      'execute if entity @e[tag=' + tag + ',limit=1] ',
+    );
+    if (check.score !== 1) {
+      throw new Error(
+        'WORLDBUILDER_ACTION_NOT_CONSTITUTED:' +
+        actionIndex +
+        ':summon:' +
+        JSON.stringify({
+          point: op.at,
+          expected: op.entity,
+          tag,
+          check,
+        }),
+      );
+    }
+    return [{
+      point: op.at,
+      expected: op.entity,
+      entity_tag: tag,
+      ...check,
+    }];
+  }
+
+  throw new Error('WORLDBUILDER_UNKNOWN_OPERATION_EFFECT');
+}
+
+async function sendBotCommand(bot, rcon, op, actionIndex, log, receipts) {
+  const command =
+    op.kind === 'summon'
+      ? '/summon ' +
+        op.entity + ' ' +
+        op.at.x + ' ' +
+        op.at.y + ' ' +
+        op.at.z +
+        ' {Tags:["relatte_action_' + actionIndex + '"]}'
+      : operationToCommand(op);
+
   if (
     !command.startsWith('/fill ') &&
     !command.startsWith('/setblock ') &&
@@ -133,8 +327,21 @@ async function sendBotCommand(bot, command, log) {
   ) throw new Error('WORLDBUILDER_COMMAND_NOT_ALLOWED:' + command);
 
   bot.chat(command);
+  await sleep(COMMAND_DELAY_MS);
+
+  const serverReceipts = await verifyOperationEffect(
+    rcon,
+    op,
+    actionIndex,
+  );
+
   log.push(command);
-  await sleep(70);
+  receipts.push({
+    action_index: actionIndex,
+    command,
+    operation_kind: op.kind,
+    server_receipts: serverReceipts,
+  });
 }
 
 async function main() {
@@ -157,7 +364,6 @@ async function main() {
     await rcon.send('difficulty peaceful');
     await rcon.send('time set day');
     await rcon.send('weather clear');
-    await rcon.send('op ' + BOT_NAME);
 
     authorBot = mineflayer.createBot({
       host: HOST,
@@ -167,34 +373,74 @@ async function main() {
     });
 
     await waitForSpawn(authorBot);
+
+    // Establish authority only after the actual protocol session exists.
+    // Pre-joining /op can resolve differently across vanilla/offline-mode
+    // profile state; authority must bind to the live author particular.
+    const opResponse = await rcon.send('op ' + BOT_NAME);
     await rcon.send('gamemode creative ' + BOT_NAME);
     await rcon.send('tp ' + BOT_NAME + ' 0 80 0');
     await authorBot.waitForChunksToLoad();
     await sleep(1000);
 
+    // Command-channel preflight: author issues a harmless block mutation;
+    // vanilla server independently witnesses it before composition may start.
+    await rcon.send('scoreboard objectives add relatte_action dummy');
+    const preflightPoint = { x: 47, y: 92, z: 47 };
+    authorBot.chat(
+      '/setblock ' +
+      preflightPoint.x + ' ' +
+      preflightPoint.y + ' ' +
+      preflightPoint.z + ' minecraft:bedrock',
+    );
+    await sleep(COMMAND_DELAY_MS);
+    const preflight = await scoreboardWitness(
+      rcon,
+      '#author_preflight',
+      'execute if block ' +
+        preflightPoint.x + ' ' +
+        preflightPoint.y + ' ' +
+        preflightPoint.z + ' minecraft:bedrock',
+    );
+    if (preflight.score !== 1) {
+      throw new Error(
+        'WORLDBUILDER_AUTHOR_COMMAND_CHANNEL_UNAVAILABLE:' +
+        JSON.stringify({ opResponse, preflight }),
+      );
+    }
+
     const plan = buildWorldPlan({ goal: GOAL, serverSeed });
     validateWorldPlan(plan);
 
     const commandLog = [];
-    for (const op of plan.operations) {
-      await sendBotCommand(authorBot, operationToCommand(op), commandLog);
+    const actionReceipts = [];
+    for (let actionIndex = 0; actionIndex < plan.operations.length; actionIndex += 1) {
+      const op = plan.operations[actionIndex];
+      await sendBotCommand(
+        authorBot,
+        rcon,
+        op,
+        actionIndex,
+        commandLog,
+        actionReceipts,
+      );
     }
 
-    await sleep(2500);
+    const onlinePlayers = String(await rcon.send('list'));
+    if (!onlinePlayers.includes(BOT_NAME)) {
+      throw new Error(
+        'WORLDBUILDER_AUTHOR_NOT_CONNECTED_AFTER_COMPOSITION:' +
+        onlinePlayers,
+      );
+    }
+
+    await sleep(750);
     await rcon.send('save-all flush');
 
+    // Anchor verification is deliberately deferred until after a fresh
+    // observer has reconstructed the world. Author completion is not evidence
+    // that the resulting vanilla state survived physics and chunk propagation.
     const anchorVerification = [];
-    for (const anchor of plan.anchors) {
-      const command =
-        'execute if block ' +
-        anchor.at.x + ' ' + anchor.at.y + ' ' + anchor.at.z + ' ' +
-        anchor.block + ' run seed';
-      const response = await rcon.send(command);
-      if (/fail|unknown|not found/i.test(String(response))) {
-        throw new Error('WORLDBUILDER_ANCHOR_FAILED:' + anchor.role + ':' + response);
-      }
-      anchorVerification.push({ ...anchor, response });
-    }
 
     // Do not trust the author client's own cached world view. Disconnect it,
     // then reconstruct observed reality from a fresh, non-OP client.
@@ -204,19 +450,103 @@ async function main() {
     await rcon.send('deop ' + BOT_NAME);
     await sleep(500);
 
-    const observerName = 'WorldObserver';
-    observerBot = mineflayer.createBot({
-      host: HOST,
-      port: PORT,
-      username: observerName,
-      auth: 'offline',
-    });
-    await waitForSpawn(observerBot);
-    await rcon.send('tp ' + observerName + ' 0 80 0');
-    await observerBot.waitForChunksToLoad();
-    await sleep(1500);
+    await rcon.send('setworldspawn 0 80 0');
+    const observerAttempts = [];
+    let observerName = null;
 
-    const scan = scanWorld(observerBot);
+    for (let attempt = 1; attempt <= 3; attempt += 1) {
+      const candidateName = 'WorldObserver' + attempt;
+      const candidate = mineflayer.createBot({
+        host: HOST,
+        port: PORT,
+        username: candidateName,
+        auth: 'offline',
+      });
+
+      try {
+        await waitForSpawn(candidate);
+        await rcon.send('tp ' + candidateName + ' 0 80 0');
+        await candidate.waitForChunksToLoad();
+        const anchorsSeen = await waitForObserverAnchors(
+          candidate,
+          plan.anchors,
+        );
+
+        observerAttempts.push({
+          attempt,
+          username: candidateName,
+          result: 'CONVERGED',
+          anchors: anchorsSeen,
+        });
+        observerBot = candidate;
+        observerName = candidateName;
+        break;
+      } catch (error) {
+        observerAttempts.push({
+          attempt,
+          username: candidateName,
+          result: 'FAILED',
+          error: String(error?.message ?? error),
+        });
+        try { candidate.quit('observer retry'); } catch {}
+        await sleep(500);
+      }
+    }
+
+    if (!observerBot || !observerName) {
+      throw new Error(
+        'WORLDBUILDER_NO_OBSERVER_CONVERGED:' +
+        JSON.stringify(observerAttempts),
+      );
+    }
+
+    // Second witness: after the fresh client has observed every anchor, ask
+    // the vanilla server itself to independently attest to the same blocks.
+    await rcon.send('scoreboard objectives add relatte_anchor dummy');
+    for (let anchorIndex = 0; anchorIndex < plan.anchors.length; anchorIndex += 1) {
+      const anchor = plan.anchors[anchorIndex];
+      const witness = '#anchor_' + anchorIndex;
+      await rcon.send(
+        'scoreboard players set ' + witness + ' relatte_anchor 0',
+      );
+      await rcon.send(
+        'execute if block ' +
+        anchor.at.x + ' ' + anchor.at.y + ' ' + anchor.at.z + ' ' +
+        anchor.block +
+        ' run scoreboard players set ' +
+        witness +
+        ' relatte_anchor 1',
+      );
+      const response = await rcon.send(
+        'scoreboard players get ' + witness + ' relatte_anchor',
+      );
+      const numbers = String(response).match(/-?[0-9]+/g) ?? [];
+      const score = Number(numbers.at(-1));
+      if (score !== 1) {
+        throw new Error(
+          'WORLDBUILDER_SERVER_ANCHOR_DISAGREES_WITH_OBSERVER:' +
+          anchor.role +
+          ':score=' + String(score) +
+          ':response=' + String(response),
+        );
+      }
+      const observed = observerBot.blockAt(
+        new Vec3(anchor.at.x, anchor.at.y, anchor.at.z),
+      );
+      anchorVerification.push({
+        ...anchor,
+        witness,
+        score,
+        response,
+        observer_block: observed?.name ?? null,
+      });
+    }
+
+    const scan = await scanWorld(
+      observerBot,
+      rcon,
+      observerName,
+    );
     if (scan.non_air_blocks === 0) {
       throw new Error('WORLDBUILDER_FRESH_OBSERVER_SAW_EMPTY_WORLD');
     }
@@ -259,7 +589,7 @@ async function main() {
         bot_was_op: true,
         fixed_blueprint: false,
         generative_grammar: true,
-        bounded_command_surface: ['fill', 'setblock', 'summon'],
+        bounded_command_surface: ['fill', 'setblock'],
       },
     );
 
@@ -283,7 +613,7 @@ async function main() {
       server_seed: String(serverSeed),
       bot: {
         username: BOT_NAME,
-        version: bot.version,
+        version: authorProtocolVersion,
         mineflayer_version: require('mineflayer/package.json').version,
         author_protocol_version: authorProtocolVersion,
         observer_protocol_version: observerBot.version,
@@ -291,14 +621,17 @@ async function main() {
         gamemode: 'creative',
         fresh_observer_username: observerName,
         fresh_observer_operator: false,
+        observer_attempts: observerAttempts,
       },
       plan,
       command_log: commandLog,
+      action_receipts: actionReceipts,
       anchor_verification: anchorVerification,
       scan: {
         field_sha256: scan.field_sha256,
         non_air_blocks: scan.non_air_blocks,
         histogram: scan.histogram,
+        observed_chunks: scan.observed_chunks,
       },
       top_down_map: scan.top_down,
       observation: {
@@ -319,6 +652,7 @@ async function main() {
         server_verified_anchor_blocks: 'OBSERVED',
         fresh_non_op_client_scanned_final_region: 'OBSERVED',
         author_and_observer_are_distinct_client_sessions: 'OBSERVED',
+        observer_failure_does_not_imply_world_absence: 'OBSERVED',
         authored_world_crossed_relatte: 'OBSERVED',
         human_blueprint: 'REFUTED_FOR_EXACT_COORDINATE_PLAN',
         open_ended_general_intelligence: 'UNOBSERVED',

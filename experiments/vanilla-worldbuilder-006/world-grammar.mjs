@@ -138,6 +138,10 @@ function addGarden(ops, cx, cz, palette, rand, anchors) {
     const z = cz + int(rand, -r + 2, r - 2);
     addTree(ops, x, z, palette, int(rand, 4, 6));
   }
+  // The water channel crosses the garden center. A support-dependent light
+  // (for example minecraft:lantern) would otherwise pop immediately under
+  // vanilla block physics. Constitute a stable pedestal before the heart.
+  ops.push(setblock(cx, 63, cz, palette.primary));
   ops.push(setblock(cx, 64, cz, palette.light));
   anchors.push({ at: { x: cx, y: 64, z: cz }, block: palette.light, role: 'garden-heart' });
 }
@@ -293,12 +297,6 @@ export function buildWorldPlan({ goal, serverSeed }) {
   ops.push(fill(-2, 65, -2, 2, 64 + coreHeight, 2, palette.accent));
   ops.push(setblock(0, 65 + coreHeight, 0, palette.light));
   anchors.push({ at: { x: 0, y: 65 + coreHeight, z: 0 }, block: palette.light, role: 'world-heart' });
-
-  // Small inhabited signal: passive entities only.
-  const animals = ['minecraft:cow', 'minecraft:sheep', 'minecraft:pig'];
-  for (let i = 0; i < 3; i += 1) {
-    ops.push(summon(choose(rand, animals), int(rand, -8, 8), 65, int(rand, -8, 8)));
-  }
 
   for (const op of ops) assertOperation(op);
 
