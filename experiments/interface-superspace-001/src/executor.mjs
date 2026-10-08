@@ -6,7 +6,7 @@ export async function execute(registry, plan, source, environment) {
   await verifyPlan(registry, plan);
   const execution_id = occurrence('execution');
   const record = { schema: 'relatte.route-execution.experimental/v0', execution_id, route_id: plan.route_id, plan_digest: plan.plan_digest, actual_interfaces_traversed: [plan.source_interface], actual_relation_receipts: [], native_particular_refs: [], crossing_refs: [], result: 'failed', residuals: [], failures: [], source: {}, particulars: [] };
-  const first = { particular_id: occurrence('particular'), interface_id: plan.source_interface, parent: null, content_digest: byteDigest(source.bytes), native_ref: source.native_ref, authority: [], transformation: null };
+  const first = { particular_id: source.particular_id ?? occurrence('particular'), interface_id: plan.source_interface, parent: null, content_digest: byteDigest(source.bytes), native_ref: source.native_ref, authority: [], transformation: null };
   record.source = first; record.native_particular_refs.push(source.native_ref);
   let current = source, particular = first;
   let state = { representation: plan.request.state.representation, facts: plan.request.state.facts, loss: 0 };

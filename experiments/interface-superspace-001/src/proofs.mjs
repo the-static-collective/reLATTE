@@ -11,7 +11,7 @@ export function request(registry, { from=id('payload-bytes'), representation='pa
 }
 export function permissions(registry) { return registry.relations.filter(r=>r.requires.authority).map(r=>r.destination+'/'+r.requires.authority); }
 export async function runPlan(registry, plan, bytes, options={}) {
-  const source={bytes:Buffer.from(bytes),native_ref:occurrence('source'),value:Buffer.from(bytes)};
+  const source={bytes:Buffer.from(bytes),native_ref:options.sourceParticular?.native_ref??occurrence('source'),particular_id:options.sourceParticular?.particular_id,value:Buffer.from(bytes)};
   const environment=createEnvironment(registry,{...options,grants:options.grants??plan.request.constraints.permissions,witnesses:plan.request.constraints.witnesses,network:plan.request.constraints.network});
   const result=await execute(registry,plan,source,environment);verifyExecution(plan,result.record);
   if(result.record.result!=='succeeded')throw new Error(JSON.stringify(result.record.failures));
@@ -19,6 +19,7 @@ export async function runPlan(registry, plan, bytes, options={}) {
 }
 export async function prove(options={}) {
   const registry=await loadRegistry(),bytes=Buffer.from('Existing doors; particulars keep their journeys. '.repeat(3));
+  const shared={...options,sourceParticular:{particular_id:occurrence('particular'),native_ref:occurrence('source')}};
   const allPermissions=permissions(registry),records=[],plans=[],crossings=[];
   const base=request(registry,{bytes,permissions:allPermissions});
   const search=await synthesize(registry,base);
@@ -26,7 +27,7 @@ export async function prove(options={}) {
   for(const n of ['udp-send','midi-event-out','filesystem-output']) {
     const plan=search.candidates.find(p=>p.interface_sequence.includes(id(n)));
     if(!plan)throw new Error('MISSING_SYNTHESIZED_PROOF:'+n);
-    const result=await runPlan(registry,plan,bytes,options);
+    const result=await runPlan(registry,plan,bytes,shared);
     plans.push(plan);records.push(result.record);crossings.push({execution_id:result.record.execution_id,crossing:result.artifact.crossing,receipt:result.artifact.receipt});
   }
   const reqBytes=Buffer.from(JSON.stringify(await readJSON('fixtures/field-lab-request.json')));
@@ -38,13 +39,13 @@ export async function prove(options={}) {
   plans.push(candidate);records.push(field.record);crossings.push({execution_id:field.record.execution_id,crossing:field.artifact.crossing,receipt:field.artifact.receipt});
   const lossy=request(registry,{bytes,permissions:allPermissions,network:false,loss_budget:1});
   const descendantPlan=(await synthesize(registry,lossy)).candidates.find(p=>p.interface_sequence.includes(id('reduced-rendering')));
-  const descendant=await runPlan(registry,descendantPlan,bytes,options);
+  const descendant=await runPlan(registry,descendantPlan,bytes,shared);
   plans.push(descendantPlan);records.push(descendant.record);crossings.push({execution_id:descendant.record.execution_id,crossing:descendant.artifact.crossing,receipt:descendant.artifact.receipt});
   // Hostile final question: only a source, consequence, all interfaces, and constraints.
   // Selection takes the first discovered route not previously exercised; no system hint.
   const unexplored=(await synthesize(registry,base)).candidates.find(p=>!plans.some(q=>q.route_id===p.route_id));
   if(!unexplored)throw new Error('NO_UNPROMPTED_ROUTE');
-  plans.push(unexplored);const extra=await runPlan(registry,unexplored,bytes,options);records.push(extra.record);crossings.push({execution_id:extra.record.execution_id,crossing:extra.artifact.crossing,receipt:extra.artifact.receipt});
+  plans.push(unexplored);const extra=await runPlan(registry,unexplored,bytes,shared);records.push(extra.record);crossings.push({execution_id:extra.record.execution_id,crossing:extra.artifact.crossing,receipt:extra.artifact.receipt});
   let vanilla=null;
   if(options.minecraft) {
     const payload=Buffer.from('DOORS!');

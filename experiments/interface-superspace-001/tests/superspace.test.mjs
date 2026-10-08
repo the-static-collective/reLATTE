@@ -60,7 +60,10 @@ test('MIDI: native event timing changes identity without changing payload',async
 });
 test('multiple routes keep different route, native, crossing and receipt identities',async()=>{
   const selected=['udp-send','midi-event-out','filesystem-output'].map(planThrough),out=[];
-  for(const p of selected)out.push(await runPlan(registry,p,bytes));
+  const sourceParticular={particular_id:occurrence('particular'),native_ref:occurrence('source')};
+  for(const p of selected)out.push(await runPlan(registry,p,bytes,{sourceParticular}));
+  assert.equal(new Set(out.map(x=>x.record.source.particular_id)).size,1);
+  assert.equal(new Set(out.map(x=>x.record.source.native_ref)).size,1);
   assert.equal(new Set(out.map(x=>x.record.route_id)).size,3);
   assert.equal(new Set(out.map(x=>x.artifact.receipt.receipt_id)).size,3);
   assert.equal(new Set(out.map(x=>x.artifact.crossing.crossing_id)).size,3);
