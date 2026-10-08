@@ -54,9 +54,12 @@ jobs:
           node experiments/composition-instance-002/verify.mjs fixtures/composition-instance-002
           git diff --exit-code f34772194e761585ee6d05a48be33f614f6d4c03 -- src spec schemas experiments/composition-instance-001
           git diff --exit-code 1bdb060130842df2f634831a80f4dc5bb57f630c -- experiments/dynamic-interface-field-001 experiments/interface-superspace-001
+      - name: Archive identity-addressed evidence without changing its filenames
+        if: always()
+        run: tar -czf work/composition-instance-002-evidence.tar.gz -C work composition-instance-002
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: composition-instance-002-signed-evidence
-          path: work/composition-instance-002/
+          path: work/composition-instance-002-evidence.tar.gz
           retention-days: 14
