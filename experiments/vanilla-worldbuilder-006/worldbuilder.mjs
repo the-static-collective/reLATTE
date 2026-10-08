@@ -113,24 +113,59 @@ async function waitForObserverAnchors(bot, anchors, timeoutMs = 15000) {
   );
 }
 
-function scanWorld(bot) {
+async function scanWorld(bot, rcon, observerName) {
   const rows = [];
   const histogram = {};
   const columns = new Map();
 
-  for (let z = WORLD_BOUNDS.minZ; z <= WORLD_BOUNDS.maxZ; z += 1) {
-    for (let x = WORLD_BOUNDS.minX; x <= WORLD_BOUNDS.maxX; x += 1) {
-      let highest = null;
-      for (let y = WORLD_BOUNDS.minY; y <= WORLD_BOUNDS.maxY; y += 1) {
-        const block = bot.blockAt(new Vec3(x, y, z));
-        if (!block) throw new Error('WORLDBUILDER_SCAN_CHUNK_MISSING:' + x + ',' + y + ',' + z);
-        if (block.name === 'air' || block.name === 'cave_air' || block.name === 'void_air') continue;
-        const line = x + ',' + y + ',' + z + '=' + block.name;
-        rows.push(line);
-        histogram[block.name] = (histogram[block.name] || 0) + 1;
-        highest = block.name;
+  const minChunkX = Math.floor(WORLD_BOUNDS.minX / 16);
+  const maxChunkX = Math.floor(WORLD_BOUNDS.maxX / 16);
+  const minChunkZ = Math.floor(WORLD_BOUNDS.minZ / 16);
+  const maxChunkZ = Math.floor(WORLD_BOUNDS.maxZ / 16);
+
+  for (let chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ += 1) {
+    for (let chunkX = minChunkX; chunkX <= maxChunkX; chunkX += 1) {
+      const centerX = chunkX * 16 + 8;
+      const centerZ = chunkZ * 16 + 8;
+
+      // Observation is allowed to move the observer, but not alter world state.
+      await rcon.send(
+        'tp ' + observerName + ' ' + centerX + ' 80 ' + centerZ,
+      );
+      await bot.waitForChunksToLoad();
+      await sleep(250);
+
+      const xStart = Math.max(WORLD_BOUNDS.minX, chunkX * 16);
+      const xEnd = Math.min(WORLD_BOUNDS.maxX, chunkX * 16 + 15);
+      const zStart = Math.max(WORLD_BOUNDS.minZ, chunkZ * 16);
+      const zEnd = Math.min(WORLD_BOUNDS.maxZ, chunkZ * 16 + 15);
+
+      for (let z = zStart; z <= zEnd; z += 1) {
+        for (let x = xStart; x <= xEnd; x += 1) {
+          let highest = null;
+          for (let y = WORLD_BOUNDS.minY; y <= WORLD_BOUNDS.maxY; y += 1) {
+            const block = bot.blockAt(new Vec3(x, y, z));
+            if (!block) {
+              throw new Error(
+                'WORLDBUILDER_SCAN_CHUNK_MISSING:' +
+                x + ',' + y + ',' + z +
+                ':chunk=' + chunkX + ',' + chunkZ,
+              );
+            }
+            if (
+              block.name === 'air' ||
+              block.name === 'cave_air' ||
+              block.name === 'void_air'
+            ) continue;
+
+            const line = x + ',' + y + ',' + z + '=' + block.name;
+            rows.push(line);
+            histogram[block.name] = (histogram[block.name] || 0) + 1;
+            highest = block.name;
+          }
+          columns.set(x + ',' + z, highest);
+        }
       }
-      columns.set(x + ',' + z, highest);
     }
   }
 
@@ -151,6 +186,15 @@ function scanWorld(bot) {
     non_air_blocks: rows.length,
     histogram,
     top_down: map.join('\n') + '\n',
+    observed_chunks: {
+      min_chunk_x: minChunkX,
+      max_chunk_x: maxChunkX,
+      min_chunk_z: minChunkZ,
+      max_chunk_z: maxChunkZ,
+      count:
+        (maxChunkX - minChunkX + 1) *
+        (maxChunkZ - minChunkZ + 1),
+    },
   };
 }
 
@@ -498,7 +542,11 @@ async function main() {
       });
     }
 
-    const scan = scanWorld(observerBot);
+    const scan = await scanWorld(
+      observerBot,
+      rcon,
+      observerName,
+    );
     if (scan.non_air_blocks === 0) {
       throw new Error('WORLDBUILDER_FRESH_OBSERVER_SAW_EMPTY_WORLD');
     }
@@ -583,6 +631,7 @@ async function main() {
         field_sha256: scan.field_sha256,
         non_air_blocks: scan.non_air_blocks,
         histogram: scan.histogram,
+        observed_chunks: scan.observed_chunks,
       },
       top_down_map: scan.top_down,
       observation: {
