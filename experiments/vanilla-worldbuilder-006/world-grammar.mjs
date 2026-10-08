@@ -138,6 +138,10 @@ function addGarden(ops, cx, cz, palette, rand, anchors) {
     const z = cz + int(rand, -r + 2, r - 2);
     addTree(ops, x, z, palette, int(rand, 4, 6));
   }
+  // The water channel crosses the garden center. A support-dependent light
+  // (for example minecraft:lantern) would otherwise pop immediately under
+  // vanilla block physics. Constitute a stable pedestal before the heart.
+  ops.push(setblock(cx, 63, cz, palette.primary));
   ops.push(setblock(cx, 64, cz, palette.light));
   anchors.push({ at: { x: cx, y: 64, z: cz }, block: palette.light, role: 'garden-heart' });
 }
