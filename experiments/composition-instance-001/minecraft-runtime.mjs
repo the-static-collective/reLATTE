@@ -81,12 +81,11 @@ async function main() {
       'minecraft.creative',
       'minecraft.command.fill',
       'minecraft.command.setblock',
-      'minecraft.command.summon',
     ],
     limits: {
       runtime: 'official-unmodified-mojang-server',
       network: 'localhost-only',
-      command_surface: ['fill', 'setblock', 'summon'],
+      command_surface: ['fill', 'setblock'],
       world_bounds: {
         min_x: -48,
         max_x: 48,
