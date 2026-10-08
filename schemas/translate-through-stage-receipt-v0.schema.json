@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://the-static-collective.github.io/reLATTE/schemas/translate-through-stage-receipt-v0.schema.json",
+  "title": "TranslateThroughStageReceiptExtensionV0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "operation_id",
+    "stage_index",
+    "stage_id",
+    "from",
+    "to",
+    "input_ref",
+    "output_ref",
+    "state",
+    "prior_stage_receipt_id",
+    "semantic_equivalence_claim",
+    "laws"
+  ],
+  "properties": {
+    "schema": {
+      "const": "relatte.translate-through-stage-receipt/v0"
+    },
+    "operation_id": {
+      "type": "string",
+      "pattern": "^relatte-translate-through-v0:[0-9a-f]{64}$"
+    },
+    "stage_index": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "stage_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "from": {
+      "$ref": "#/$defs/point"
+    },
+    "to": {
+      "$ref": "#/$defs/point"
+    },
+    "input_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "state": {
+      "enum": [
+        "COMPLETE",
+        "HELD",
+        "REFUSED",
+        "FAILED"
+      ]
+    },
+    "prior_stage_receipt_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "semantic_equivalence_claim": {
+      "const": "none"
+    },
+    "laws": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_id",
+        "domain",
+        "representation",
+        "role"
+      ],
+      "properties": {
+        "stage_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "domain": {
+          "type": "string",
+          "minLength": 1
+        },
+        "representation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "enum": [
+            "source",
+            "through",
+            "target",
+            "return"
+          ]
+        }
+      }
+    }
+  }
+}
