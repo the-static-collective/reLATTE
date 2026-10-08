@@ -221,25 +221,52 @@ async function main() {
     await rcon.send('save-all flush');
 
     const anchorVerification = [];
-    for (const anchor of plan.anchors) {
-      const command =
+    await rcon.send('scoreboard objectives add relatte_anchor dummy');
+
+    for (let anchorIndex = 0; anchorIndex < plan.anchors.length; anchorIndex += 1) {
+      const anchor = plan.anchors[anchorIndex];
+      const witness = '#anchor_' + anchorIndex;
+
+      await rcon.send(
+        'scoreboard players set ' +
+        witness +
+        ' relatte_anchor 0',
+      );
+
+      await rcon.send(
         'execute if block ' +
         anchor.at.x + ' ' + anchor.at.y + ' ' + anchor.at.z + ' ' +
-        anchor.block + ' run seed';
-      const response = await rcon.send(command);
-      const responseText = String(response);
-      if (
-        /fail|unknown|not found/i.test(responseText) ||
-        !/-?[0-9]+/.test(responseText)
-      ) {
+        anchor.block +
+        ' run scoreboard players set ' +
+        witness +
+        ' relatte_anchor 1',
+      );
+
+      const response = await rcon.send(
+        'scoreboard players get ' +
+        witness +
+        ' relatte_anchor',
+      );
+      const numbers = String(response).match(/-?[0-9]+/g) ?? [];
+      const score = Number(numbers.at(-1));
+
+      if (score !== 1) {
         throw new Error(
           'WORLDBUILDER_ANCHOR_FAILED:' +
           anchor.role +
-          ':' +
-          responseText,
+          ':score=' +
+          String(score) +
+          ':response=' +
+          String(response),
         );
       }
-      anchorVerification.push({ ...anchor, response });
+
+      anchorVerification.push({
+        ...anchor,
+        witness,
+        score,
+        response,
+      });
     }
 
     // Do not trust the author client's own cached world view. Disconnect it,
