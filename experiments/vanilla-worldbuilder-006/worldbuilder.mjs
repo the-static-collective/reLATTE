@@ -235,32 +235,47 @@ async function verifyOperationEffect(rcon, op, actionIndex) {
 
   if (op.kind === 'summon') {
     const witness = '#action_' + actionIndex;
+    const tag = 'relatte_action_' + actionIndex;
     const check = await scoreboardWitness(
       rcon,
       witness,
-      'execute if entity @e[type=' +
-        op.entity +
-        ',x=' + op.at.x +
-        ',y=' + op.at.y +
-        ',z=' + op.at.z +
-        ',distance=..2] ',
+      'execute if entity @e[tag=' + tag + ',limit=1] ',
     );
     if (check.score !== 1) {
       throw new Error(
         'WORLDBUILDER_ACTION_NOT_CONSTITUTED:' +
         actionIndex +
         ':summon:' +
-        JSON.stringify({ point: op.at, expected: op.entity, check }),
+        JSON.stringify({
+          point: op.at,
+          expected: op.entity,
+          tag,
+          check,
+        }),
       );
     }
-    return [{ point: op.at, expected: op.entity, ...check }];
+    return [{
+      point: op.at,
+      expected: op.entity,
+      entity_tag: tag,
+      ...check,
+    }];
   }
 
   throw new Error('WORLDBUILDER_UNKNOWN_OPERATION_EFFECT');
 }
 
 async function sendBotCommand(bot, rcon, op, actionIndex, log, receipts) {
-  const command = operationToCommand(op);
+  const command =
+    op.kind === 'summon'
+      ? '/summon ' +
+        op.entity + ' ' +
+        op.at.x + ' ' +
+        op.at.y + ' ' +
+        op.at.z +
+        ' {Tags:["relatte_action_' + actionIndex + '"]}'
+      : operationToCommand(op);
+
   if (
     !command.startsWith('/fill ') &&
     !command.startsWith('/setblock ') &&
