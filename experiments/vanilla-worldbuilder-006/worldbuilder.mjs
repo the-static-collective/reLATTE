@@ -220,54 +220,10 @@ async function main() {
     await sleep(750);
     await rcon.send('save-all flush');
 
+    // Anchor verification is deliberately deferred until after a fresh
+    // observer has reconstructed the world. Author completion is not evidence
+    // that the resulting vanilla state survived physics and chunk propagation.
     const anchorVerification = [];
-    await rcon.send('scoreboard objectives add relatte_anchor dummy');
-
-    for (let anchorIndex = 0; anchorIndex < plan.anchors.length; anchorIndex += 1) {
-      const anchor = plan.anchors[anchorIndex];
-      const witness = '#anchor_' + anchorIndex;
-
-      await rcon.send(
-        'scoreboard players set ' +
-        witness +
-        ' relatte_anchor 0',
-      );
-
-      await rcon.send(
-        'execute if block ' +
-        anchor.at.x + ' ' + anchor.at.y + ' ' + anchor.at.z + ' ' +
-        anchor.block +
-        ' run scoreboard players set ' +
-        witness +
-        ' relatte_anchor 1',
-      );
-
-      const response = await rcon.send(
-        'scoreboard players get ' +
-        witness +
-        ' relatte_anchor',
-      );
-      const numbers = String(response).match(/-?[0-9]+/g) ?? [];
-      const score = Number(numbers.at(-1));
-
-      if (score !== 1) {
-        throw new Error(
-          'WORLDBUILDER_ANCHOR_FAILED:' +
-          anchor.role +
-          ':score=' +
-          String(score) +
-          ':response=' +
-          String(response),
-        );
-      }
-
-      anchorVerification.push({
-        ...anchor,
-        witness,
-        score,
-        response,
-      });
-    }
 
     // Do not trust the author client's own cached world view. Disconnect it,
     // then reconstruct observed reality from a fresh, non-OP client.
@@ -325,6 +281,48 @@ async function main() {
         'WORLDBUILDER_NO_OBSERVER_CONVERGED:' +
         JSON.stringify(observerAttempts),
       );
+    }
+
+    // Second witness: after the fresh client has observed every anchor, ask
+    // the vanilla server itself to independently attest to the same blocks.
+    await rcon.send('scoreboard objectives add relatte_anchor dummy');
+    for (let anchorIndex = 0; anchorIndex < plan.anchors.length; anchorIndex += 1) {
+      const anchor = plan.anchors[anchorIndex];
+      const witness = '#anchor_' + anchorIndex;
+      await rcon.send(
+        'scoreboard players set ' + witness + ' relatte_anchor 0',
+      );
+      await rcon.send(
+        'execute if block ' +
+        anchor.at.x + ' ' + anchor.at.y + ' ' + anchor.at.z + ' ' +
+        anchor.block +
+        ' run scoreboard players set ' +
+        witness +
+        ' relatte_anchor 1',
+      );
+      const response = await rcon.send(
+        'scoreboard players get ' + witness + ' relatte_anchor',
+      );
+      const numbers = String(response).match(/-?[0-9]+/g) ?? [];
+      const score = Number(numbers.at(-1));
+      if (score !== 1) {
+        throw new Error(
+          'WORLDBUILDER_SERVER_ANCHOR_DISAGREES_WITH_OBSERVER:' +
+          anchor.role +
+          ':score=' + String(score) +
+          ':response=' + String(response),
+        );
+      }
+      const observed = observerBot.blockAt(
+        new Vec3(anchor.at.x, anchor.at.y, anchor.at.z),
+      );
+      anchorVerification.push({
+        ...anchor,
+        witness,
+        score,
+        response,
+        observer_block: observed?.name ?? null,
+      });
     }
 
     const scan = scanWorld(observerBot);
