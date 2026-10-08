@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "door-grant-v0",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "relatte.dynamic-door-grant.experimental/v0"
+    },
+    "grant_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "world_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "interface_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "offer_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "descriptor_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operation": {
+      "enum": [
+        "observe",
+        "propose",
+        "configure",
+        "perturb",
+        "transmit",
+        "receive",
+        "mutate"
+      ]
+    },
+    "permission": {
+      "enum": ["observe", "propose", "mutate"]
+    },
+    "expires_at": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "max_uses": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 128
+    },
+    "public_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema",
+    "grant_id",
+    "world_id",
+    "interface_id",
+    "offer_id",
+    "descriptor_digest",
+    "subject",
+    "operation",
+    "permission",
+    "expires_at",
+    "max_uses",
+    "public_key",
+    "signature"
+  ],
+  "additionalProperties": false
+}

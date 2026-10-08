@@ -1,0 +1,222 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "field-view-v0",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "relatte.dynamic-field-view.experimental/v0"
+    },
+    "observed_at": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "frontiers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "world_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "head": {
+            "type": "string",
+            "minLength": 1
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": ["world_id", "head", "count"],
+        "additionalProperties": false
+      }
+    },
+    "door_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "offer_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "descriptor": {
+            "type": "object"
+          },
+          "descriptor_digest": {
+            "type": "string",
+            "minLength": 1
+          },
+          "expires_at": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "parents": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "world_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "event_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "offer_id",
+          "descriptor",
+          "descriptor_digest",
+          "expires_at",
+          "parents",
+          "world_id",
+          "event_ref"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "relation_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "offer_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "descriptor": {
+            "type": "object"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "world_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "interface_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "offer_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "descriptor_digest": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "world_id",
+              "interface_id",
+              "offer_id",
+              "descriptor_digest"
+            ],
+            "additionalProperties": false
+          },
+          "destination": {
+            "type": "object",
+            "properties": {
+              "world_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "interface_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "offer_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "descriptor_digest": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "world_id",
+              "interface_id",
+              "offer_id",
+              "descriptor_digest"
+            ],
+            "additionalProperties": false
+          },
+          "expires_at": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "world_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "event_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "offer_id",
+          "descriptor",
+          "source",
+          "destination",
+          "expires_at",
+          "world_id",
+          "event_ref"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "excluded": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "relation_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["relation_id", "reason"],
+        "additionalProperties": false
+      }
+    },
+    "registry_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "const": "SELECTED_LOCAL_HISTORIES_ONLY"
+    },
+    "authority": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "view_digest": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema",
+    "observed_at",
+    "frontiers",
+    "door_refs",
+    "relation_refs",
+    "excluded",
+    "registry_digest",
+    "scope",
+    "authority",
+    "view_digest"
+  ],
+  "additionalProperties": false
+}

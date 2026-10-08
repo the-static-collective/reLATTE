@@ -1,0 +1,720 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "field-event-v0",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "relatte.dynamic-field-event.experimental/v0"
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "world_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "previous": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "at_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "kind": {
+      "enum": [
+        "genesis",
+        "publish",
+        "reconstitute",
+        "fork-door",
+        "withdraw",
+        "relation-publish",
+        "relation-withdraw",
+        "grant",
+        "revoke",
+        "fork",
+        "composition-created"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    },
+    "public_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema",
+    "event_id",
+    "world_id",
+    "seq",
+    "previous",
+    "at_ms",
+    "kind",
+    "payload",
+    "public_key",
+    "signature"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "genesis"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "parent": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "world_id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "head": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "offer_id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "interface_id": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "world_id",
+                      "head",
+                      "offer_id",
+                      "interface_id"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": ["parent"],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "publish"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "offer_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "descriptor": {
+                "type": "object"
+              },
+              "descriptor_digest": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expires_at": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "parents": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "required": [
+              "offer_id",
+              "descriptor",
+              "descriptor_digest",
+              "expires_at",
+              "parents"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "reconstitute"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "offer_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "descriptor": {
+                "type": "object"
+              },
+              "descriptor_digest": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expires_at": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "parents": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "required": [
+              "offer_id",
+              "descriptor",
+              "descriptor_digest",
+              "expires_at",
+              "parents"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "fork-door"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "offer_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "descriptor": {
+                "type": "object"
+              },
+              "descriptor_digest": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expires_at": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "parents": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "required": [
+              "offer_id",
+              "descriptor",
+              "descriptor_digest",
+              "expires_at",
+              "parents"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "withdraw"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "interface_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "offer_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": ["interface_id", "offer_id"],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "relation-publish"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "offer_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "descriptor": {
+                "type": "object"
+              },
+              "source": {
+                "type": "object",
+                "properties": {
+                  "world_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "interface_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "offer_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "descriptor_digest": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "world_id",
+                  "interface_id",
+                  "offer_id",
+                  "descriptor_digest"
+                ],
+                "additionalProperties": false
+              },
+              "destination": {
+                "type": "object",
+                "properties": {
+                  "world_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "interface_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "offer_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "descriptor_digest": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "world_id",
+                  "interface_id",
+                  "offer_id",
+                  "descriptor_digest"
+                ],
+                "additionalProperties": false
+              },
+              "expires_at": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "offer_id",
+              "descriptor",
+              "source",
+              "destination",
+              "expires_at"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "relation-withdraw"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "relation_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "offer_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": ["relation_id", "offer_id"],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "grant"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "schema": {
+                "const": "relatte.dynamic-door-grant.experimental/v0"
+              },
+              "grant_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "world_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "interface_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "offer_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "descriptor_digest": {
+                "type": "string",
+                "minLength": 1
+              },
+              "subject": {
+                "type": "string",
+                "minLength": 1
+              },
+              "operation": {
+                "enum": [
+                  "observe",
+                  "propose",
+                  "configure",
+                  "perturb",
+                  "transmit",
+                  "receive",
+                  "mutate"
+                ]
+              },
+              "permission": {
+                "enum": ["observe", "propose", "mutate"]
+              },
+              "expires_at": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "max_uses": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 128
+              },
+              "public_key": {
+                "type": "string",
+                "minLength": 1
+              },
+              "signature": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "schema",
+              "grant_id",
+              "world_id",
+              "interface_id",
+              "offer_id",
+              "descriptor_digest",
+              "subject",
+              "operation",
+              "permission",
+              "expires_at",
+              "max_uses",
+              "public_key",
+              "signature"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "revoke"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "grant_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": ["grant_id"],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "fork"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "child": {
+                "type": "object",
+                "properties": {
+                  "world_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "public_key": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": ["world_id", "public_key"],
+                "additionalProperties": false
+              },
+              "parent": {
+                "type": "object",
+                "properties": {
+                  "world_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "head": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "offer_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "interface_id": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": ["world_id", "head", "offer_id", "interface_id"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["child", "parent"],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "composition-created"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "schema": {
+                "const": "relatte.composition-instance.experimental/v0"
+              },
+              "composition_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "world_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "member_plan_digest": {
+                "type": "string",
+                "minLength": 1
+              },
+              "member_doors": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "world_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "interface_id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "offer_id": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": ["world_id", "interface_id", "offer_id"],
+                  "additionalProperties": false
+                }
+              },
+              "limits": {
+                "type": "object",
+                "properties": {
+                  "max_calls": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 8
+                  },
+                  "max_bytes": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4096
+                  },
+                  "max_steps": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 8
+                  },
+                  "ttl": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 60000
+                  }
+                },
+                "required": ["max_calls", "max_bytes", "max_steps", "ttl"],
+                "additionalProperties": false
+              },
+              "authority": {
+                "type": "object",
+                "properties": {
+                  "observe": {
+                    "const": true
+                  },
+                  "propose": {
+                    "const": false
+                  },
+                  "authorize": {
+                    "const": false
+                  },
+                  "mutate": {
+                    "const": false
+                  }
+                },
+                "required": ["observe", "propose", "authorize", "mutate"],
+                "additionalProperties": false
+              },
+              "network": {
+                "const": false
+              },
+              "arbitrary_shell": {
+                "const": false
+              },
+              "recursion": {
+                "const": false
+              }
+            },
+            "required": [
+              "schema",
+              "composition_id",
+              "world_id",
+              "member_plan_digest",
+              "member_doors",
+              "limits",
+              "authority",
+              "network",
+              "arbitrary_shell",
+              "recursion"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "operation-ticket-v0",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "relatte.dynamic-operation-ticket.experimental/v0"
+    },
+    "ticket_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "world_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "head": {
+      "type": "string",
+      "minLength": 1
+    },
+    "offer_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "interface_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "grant_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operation": {
+      "enum": [
+        "observe",
+        "propose",
+        "configure",
+        "perturb",
+        "transmit",
+        "receive",
+        "mutate"
+      ]
+    },
+    "permission": {
+      "enum": ["observe", "propose", "mutate"]
+    },
+    "at_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "use": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 128
+    },
+    "public_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema",
+    "ticket_id",
+    "world_id",
+    "head",
+    "offer_id",
+    "interface_id",
+    "grant_id",
+    "subject",
+    "operation",
+    "permission",
+    "at_ms",
+    "use",
+    "public_key",
+    "signature"
+  ],
+  "additionalProperties": false
+}

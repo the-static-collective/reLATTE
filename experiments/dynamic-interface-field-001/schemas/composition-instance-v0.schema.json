@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "composition-instance-v0",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "relatte.composition-instance.experimental/v0"
+    },
+    "composition_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "world_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "member_plan_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "member_doors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "world_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "interface_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "offer_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["world_id", "interface_id", "offer_id"],
+        "additionalProperties": false
+      }
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "max_calls": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "max_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096
+        },
+        "max_steps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "ttl": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        }
+      },
+      "required": ["max_calls", "max_bytes", "max_steps", "ttl"],
+      "additionalProperties": false
+    },
+    "authority": {
+      "type": "object",
+      "properties": {
+        "observe": {
+          "const": true
+        },
+        "propose": {
+          "const": false
+        },
+        "authorize": {
+          "const": false
+        },
+        "mutate": {
+          "const": false
+        }
+      },
+      "required": ["observe", "propose", "authorize", "mutate"],
+      "additionalProperties": false
+    },
+    "network": {
+      "const": false
+    },
+    "arbitrary_shell": {
+      "const": false
+    },
+    "recursion": {
+      "const": false
+    }
+  },
+  "required": [
+    "schema",
+    "composition_id",
+    "world_id",
+    "member_plan_digest",
+    "member_doors",
+    "limits",
+    "authority",
+    "network",
+    "arbitrary_shell",
+    "recursion"
+  ],
+  "additionalProperties": false
+}
