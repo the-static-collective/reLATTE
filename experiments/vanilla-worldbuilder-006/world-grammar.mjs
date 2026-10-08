@@ -248,9 +248,12 @@ export function buildWorldPlan({ goal, serverSeed }) {
   const ops = [];
   const anchors = [];
 
-  // Blank authored plot + neutral ground.
+  // Blank authored plot + neutral ground. Vanilla /fill is capped, so the
+  // vertical clear is deliberately sliced into legal 3-layer operations.
   ops.push(fill(-48, 63, -48, 48, 63, 48, 'minecraft:grass_block'));
-  ops.push(fill(-48, 64, -48, 48, 92, 48, 'minecraft:air'));
+  for (let y = 64; y <= 92; y += 3) {
+    ops.push(fill(-48, y, -48, 48, Math.min(92, y + 2), 48, 'minecraft:air'));
+  }
 
   const roads = [
     fill(-4, 64, -48, 4, 64, 48, palette.primary),
