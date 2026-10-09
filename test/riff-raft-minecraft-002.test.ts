@@ -53,7 +53,7 @@ test('vanilla redstone wire and repeaters have independent support and bounded c
   assert.equal(extras[0].kind,'fill');
   assert.equal(extras[0].kind==='fill'?extras[0].block:null,'minecraft:stone_bricks');
   assert.equal(extras.filter(o=>o.kind==='setblock'&&o.block==='minecraft:redstone_lamp').length,9);
-  assert.equal(extras.filter(o=>o.kind==='setblock'&&o.block==='minecraft:repeater[facing=east,delay=4]').length,5);
+  assert.equal(extras.filter(o=>o.kind==='setblock'&&o.block==='minecraft:repeater[facing=west,delay=4]').length,5);
   assert.equal(extras.filter(o=>o.kind==='fill'&&o.block==='minecraft:redstone_wire').length,6);
   assert.equal(extras.some(o=>o.kind!=='summon'&&o.block==='minecraft:redstone_block'),false);
   for(const op of extras){
