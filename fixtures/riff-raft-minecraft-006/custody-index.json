@@ -1,0 +1,43 @@
+{
+  "schema": "relatte.riff-raft-006-black-star-capsule/v0",
+  "custody_kind": "durable-experiment-branch-git-copy",
+  "source_repository": "the-static-collective/reLATTE",
+  "source_workflow_run_id": 37994927245,
+  "source_workflow_head_sha": "c0d47a96245ec9adcff7f2b5247845c9addfd252",
+  "source_artifact_id": 11646368461,
+  "archived_bundle_bytes_sha256": "da6c556051f197e1d07578b5e435ae3b7132538c7c098a4add9e4acfd4572d42",
+  "signed_return_packet_sha256": "1d9deb55ccda77a98d2c4c8c062fa965830077c26798b74a9344534d8657936e",
+  "signed_return_crossing_id": "relatte-crossing-v0:bceaf6c25b074b0e1eed56c157368dae7aa97c99d33c382d5d00c96ddb91dda1",
+  "signed_return_receipt_id": "relatte-receipt-v0:c4c8dd65fb645fded4ef8175d734d94fb1145be1cbf9b2f4fab7acf89cd856c3",
+  "signed_parent_004_crossing_id": "relatte-crossing-v0:0b61b9476c0ab3e2b57a5090781d2591e8c1145ac84c2eea2f67efb301d54fa3",
+  "signed_parent_004_receipt_id": "relatte-receipt-v0:5ad43d10051e60ce2f5d52fca00808027785b55bc31c70ff75a88f2496a06d11",
+  "signed_parent_004_packet_sha256": "9956d0887a5f65495cb777a5ba06aa03451946c46285930d8d96eeaa2a7d0a17",
+  "worlds": [
+    {
+      "world_id": "A",
+      "previous_fault_lit": 3,
+      "observed_follow_up_fault_lit": 5,
+      "instance_id": "composition-instance-v0:232208a1932e62f3018bcf44531ac73fbc2bf856a6fead18f241f37b8c204173",
+      "candidate_crossing_id": "relatte-crossing-v0:cbfb731f2f372a102d15ae2a59d2130ab266dbc5a937579ec8e0e6bd80b1bcfc",
+      "observed_game_state_sha256": "ec950eb2753bfd4198431ba93b36e4285d40e73ccef3ee905cbcb083ae1464e5",
+      "composition_bytes_sha256": "e68600893c2438a4243821c2bbac8c29acd93d720dbcbd4af5c88a985e9d509f",
+      "runtime_bytes_sha256": "c44a431297d7d423839912ad5331fc05cdc03f8e392807721f5838f045b0deef"
+    },
+    {
+      "world_id": "B",
+      "previous_fault_lit": 6,
+      "observed_follow_up_fault_lit": 2,
+      "instance_id": "composition-instance-v0:e3264ba1473d0140c747d0c1cf0dee4d1745327e4a4a0fbcb24e07fa89b85e58",
+      "candidate_crossing_id": "relatte-crossing-v0:d1f318c57a5a30713004258bda2362c36cb670b68e1b0110509b83b37e280ae3",
+      "observed_game_state_sha256": "7bd68bfb95b5c3c02826f374710c6293694c3e588e38bceb6ab97d32a9d1a53a",
+      "composition_bytes_sha256": "8f09b11b43c36f0b246c296548ed1664ffda8c3dee02b75b4a864ee29d7c99ca",
+      "runtime_bytes_sha256": "8bf6baa73036e5e90a468e50ce995275bae8bba27349dd8c549c102a7657e0d4"
+    }
+  ],
+  "gHot_independent_P256_reverification_required": true,
+  "archive_is_evidence_not_organization_identity": true,
+  "transport_copy_does_not_resign": true,
+  "archive_grants_no_execution": true,
+  "archive_grants_no_ownership": true,
+  "receiver_disposition": "HOLD"
+}

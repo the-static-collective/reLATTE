@@ -1,0 +1,170 @@
+name: RIFF-RAFT-MINECRAFT-006 durable signed evidence mailbox
+on:
+  push:
+    branches:
+      - experiment/riff-raft-minecraft-006-black-star-mailbox
+    paths:
+      - ".github/workflows/riff-raft-minecraft-006.yml"
+      - "experiments/riff-raft-minecraft-006/**"
+      - "test/riff-raft-minecraft-006*"
+      - "docs/RIFF-RAFT-MINECRAFT-006.md"
+      - "fixtures/riff-raft-minecraft-006/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: riff-raft-006-seal-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  seal-source-on-experiment-branch:
+    name: Independently verify 005, archive its exact signed bytes to git
+    if: github.ref == 'refs/heads/experiment/riff-raft-minecraft-006-black-star-mailbox'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - name: Checkout experiment branch (never main)
+        uses: actions/checkout@v4
+        with:
+          ref: experiment/riff-raft-minecraft-006-black-star-mailbox
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Inspect existing committed capsule
+        id: source
+        run: |
+          if test -s fixtures/riff-raft-minecraft-006/signed-005-return.bundle.json &&
+             test -s fixtures/riff-raft-minecraft-006/custody-index.json; then
+            echo "sealed=true" >> "$GITHUB_OUTPUT"
+            echo "Archive already in git; no CI source download necessary"
+          else
+            echo "sealed=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Download pinned 005 return only if capsule does not yet exist
+        if: steps.source.outputs.sealed == 'false'
+        uses: actions/download-artifact@v4
+        with:
+          name: riff-raft-minecraft-005-return-to-ghot
+          repository: the-static-collective/reLATTE
+          run-id: 37994927245
+          github-token: ${{ github.token }}
+          path: work/original-005
+      - name: Check out pinned GHoT P-256 receiver independent of reLATTE
+        uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/GHoT
+          ref: c8b15d43b334b6091f4920578557616b56ce72a6
+          path: ghot-verifier
+          persist-credentials: false
+      - name: Independently verify original signed 004 + 005 ancestry
+        id: verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.source.outputs.sealed }}" = "true" ]; then
+            src="fixtures/riff-raft-minecraft-006/signed-005-return.bundle.json"
+          else
+            src="work/original-005/riff-raft-return-bundle.json"
+          fi
+          test -s "$src"
+          mkdir -p work/verification
+          python3 ghot-verifier/ghot/riff_raft_counterfactual_return.py "$src" > work/verification/ghot-intake.json
+          python3 - <<'PY'
+          import json
+          x=json.load(open("work/verification/ghot-intake.json"))
+          assert x["disposition"]=="HOLD"
+          assert x["world_count"]==2
+          assert all(item["source_verified"] is True for item in x["verified_sources"])
+          assert x["crossing_signature_valid"] is True
+          assert x["receipt_signature_valid"] is True
+          assert x["remote_work_dispatch"] is False
+          assert x["owner_admitted"] is False
+          assert x["physical_actuation"] is False
+          assert x["ghot_energy_or_water_moved"] is False
+          print(json.dumps({"GHoT":"HOLD","validated_old_and_new_worlds":2}))
+          PY
+          echo "verified_source_path=$src" >> "$GITHUB_OUTPUT"
+      - name: Copy verified bytes into durable experimental Git tree
+        if: steps.source.outputs.sealed == 'false'
+        run: |
+          python3 experiments/riff-raft-minecraft-006/seal-capsule.py \
+            seal fixtures/riff-raft-minecraft-006 \
+            --source "${{ steps.verify.outputs.verified_source_path }}"
+      - name: Refuse any archive mismatch, including on later CI runs
+        run: |
+          python3 experiments/riff-raft-minecraft-006/seal-capsule.py \
+            reopen fixtures/riff-raft-minecraft-006
+      - name: Commit exact source archive only on experiment branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add fixtures/riff-raft-minecraft-006/custody-index.json \
+            fixtures/riff-raft-minecraft-006/signed-005-return.bundle.json
+          if git diff --cached --quiet; then
+            echo "Already sealed in immutable Git snapshot."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "RIFF-RAFT-006: archive reverified signed 005 crossing and immutable 004 ancestry"
+          git push origin HEAD:refs/heads/experiment/riff-raft-minecraft-006-black-star-mailbox
+
+  cold-reopen:
+    name: Fresh runner reopens archived Git-only signed evidence without Actions artifacts
+    needs: [seal-source-on-experiment-branch]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Check out sealed experiment branch, not prior workflow artifacts
+        uses: actions/checkout@v4
+        with:
+          ref: experiment/riff-raft-minecraft-006-black-star-mailbox
+          persist-credentials: false
+      - name: Independently reopen original signed bytes
+        run: |
+          python3 experiments/riff-raft-minecraft-006/seal-capsule.py \
+            reopen fixtures/riff-raft-minecraft-006
+      - name: Independently verify 004 and 005 signatures again in separate checkout
+        uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/GHoT
+          ref: c8b15d43b334b6091f4920578557616b56ce72a6
+          path: ghot-reopener
+          persist-credentials: false
+      - name: Verify signed ancestry after cold Git checkout
+        run: |
+          mkdir -p work/cold-replay
+          python3 ghot-reopener/ghot/riff_raft_counterfactual_return.py \
+            fixtures/riff-raft-minecraft-006/signed-005-return.bundle.json \
+            > work/cold-replay/reception.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path("work/cold-replay/reception.json").read_text())
+          assert x["disposition"] == "HOLD"
+          assert x["world_count"] == 2
+          assert x["crossing_signature_valid"] and x["receipt_signature_valid"]
+          assert all(w["source_verified"] for w in x["verified_sources"])
+          assert x["physical_actuation"] is False
+          assert x["remote_work_dispatch"] is False
+          assert x["owner_admitted"] is False
+          print("BLACK STAR COLD REPLAY VERIFIED; GHoT HOLD")
+          PY
+      - name: Prove independent archive byte tampering cannot survive reopen
+        run: |
+          python3 experiments/riff-raft-minecraft-006/custody-hostility.py \
+            fixtures/riff-raft-minecraft-006
+      - name: Save durable-custody CI receipt only (not new authority)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: riff-raft-minecraft-006-cold-reopen-receipt
+          path: work/cold-replay/reception.json
+          if-no-files-found: warn
+          retention-days: 7
