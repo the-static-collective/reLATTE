@@ -704,6 +704,14 @@ export class LocalReceiver {
     }, this.keys);
   }
 
+  /** Public signing identity for explicit local-pinning; never exports private material. */
+  receiptSignerPublicJwk(): JsonWebKey {
+    // Created keys are normalized; reopened stored exported JWKs may include
+    // ext/key_ops. Keep the stable, four-field identity across restarts.
+    const { kty, crv, x, y } = this.keys.publicKeyJwk;
+    return { kty, crv, x, y };
+  }
+
   snapshot(): ReceiverSnapshot {
     const ids = [...this.received.keys()].sort();
     const by = (kind: LocalDisposition) => ids.filter((id) => this.dispositions.get(id)?.disposition === kind);
