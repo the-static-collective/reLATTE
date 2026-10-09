@@ -12,7 +12,7 @@ for(const t of tabs) $('tab-'+t).addEventListener('click',()=>showMode(t));
 function messageDescription(){
   try {
     const packet=transmission($('message').value,Number($('tx-chip').value));
-    $('message-size').textContent=`${bytesForText($('message').length} UTF-8 bytes · ${Math.round(packet.durationMs/1000)} seconds of flashing plus lead-in`;
+    $('message-size').textContent=`${bytesForText($('message').value).length} UTF-8 bytes · ${Math.round(packet.durationMs/1000)} seconds of flashing plus lead-in`;
     $('tx-start').disabled=false;
   } catch(err){
     $('message-size').textContent=err.message+' (UTF-8 bytes, not character count)';
