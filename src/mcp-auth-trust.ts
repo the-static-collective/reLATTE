@@ -188,7 +188,7 @@ export function createIssuerIntrospection(
           claim.exp === facts.expiresAt &&
           claim.iat === facts.issuedAt &&
           claim.jti === facts.tokenId &&
-          scopes.includes(config.scope) && scopes.includes(config.scope);
+          scopes.includes(config.scope);
       } catch { return false; }
       finally { clearTimeout(deadline); }
     },
