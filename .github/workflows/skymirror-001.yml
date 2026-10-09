@@ -1,0 +1,24 @@
+name: skymirror-001
+
+on:
+  push:
+    paths:
+      - 'experiments/SKYMIRROR-001/**'
+      - '.github/workflows/skymirror-001.yml'
+  pull_request:
+    paths:
+      - 'experiments/SKYMIRROR-001/**'
+      - '.github/workflows/skymirror-001.yml'
+
+jobs:
+  offline-specimen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify byte-preserving optical experiment
+        run: node --test experiments/SKYMIRROR-001/skymirror.test.mjs
+      - name: Produce a demonstration record
+        run: node experiments/SKYMIRROR-001/demo.mjs
