@@ -1,0 +1,61 @@
+name: RIFF-RAFT-MINECRAFT-007 custody verification
+on:
+  push:
+    branches:
+      - experiment/riff-raft-minecraft-007-two-custodians
+    paths:
+      - "experiments/riff-raft-minecraft-007/**"
+      - "test/riff-raft-minecraft-007.test.ts"
+      - ".github/workflows/riff-raft-minecraft-007.yml"
+      - "docs/RIFF-RAFT-MINECRAFT-007.md"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/GHoT
+          ref: experiment/riff-raft-007-peer-custody
+          path: peer-GHoT
+          persist-credentials: false
+      - run: npm ci
+      - name: Check byte-identical two-repository source and both signed Minecraft histories
+        run: |
+          node --experimental-strip-types experiments/riff-raft-minecraft-007/custody-audit.mjs pair fixtures/riff-raft-minecraft-006/signed-005-return.bundle.json peer-GHoT/fixtures/riff-raft-007/signed-005-return.bundle.json
+  primary-alone:
+    name: reLATTE source reopens while GHoT peer data is unavailable
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - name: Verify primary original signed chain without peer checkout
+        run: |
+          test ! -e peer-GHoT
+          node --experimental-strip-types experiments/riff-raft-minecraft-007/custody-audit.mjs primary-alone fixtures/riff-raft-minecraft-006/signed-005-return.bundle.json
+  peer-alone:
+    name: GHoT copy reopens while reLATTE primary data is unavailable
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            experiments
+            src
+            package.json
+            package-lock.json
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/GHoT
+          ref: experiment/riff-raft-007-peer-custody
+          path: peer-GHoT
+          persist-credentials: false
+      - run: npm ci
+      - name: Verify peer-only original signed chain
+        run: |
+          test ! -e fixtures/riff-raft-minecraft-006/signed-005-return.bundle.json
+          node --experimental-strip-types experiments/riff-raft-minecraft-007/custody-audit.mjs peer-alone peer-GHoT/fixtures/riff-raft-007/signed-005-return.bundle.json
