@@ -119,7 +119,7 @@ async function handle(inputValue: unknown): Promise<Obj> {
       { encoding: 'utf8', flag: 'wx', mode: 0o600 });
     return { schema: 'relatte.wab-native-result/v0', action: 'init',
              status: 'POLICY_PINNED_LOCALLY', policy_address: digest(policy),
-             snapshot: receiver.snapshot(), physical_execution: false };
+             snapshot: receiver.snapshot(), receiver_public_key: receiver.receiptSignerPublicJwk(), physical_execution: false };
   }
   if (input.action !== 'submit') throw Error('WAB_BAD_ACTION');
   const policy = record(JSON.parse(await readFile(join(input.receiver_root, POLICY_FILE), 'utf8')), 'WAB_POLICY_MISSING');
@@ -163,6 +163,7 @@ async function handle(inputValue: unknown): Promise<Obj> {
     schema: 'relatte.wab-native-result/v0',
     action: 'submit', status: approved ? 'ADMITTED_FOR_LOCAL_HASH' : 'HELD_NO_CONSENT',
     approved, receive_receipt: received, disposition_receipt: disposition,
+    receiver_public_key: receiver.receiptSignerPublicJwk(),
     snapshot: receiver.snapshot(), policy_address: digest(policy),
     physical_execution: false, economic_credit: 0,
   };
