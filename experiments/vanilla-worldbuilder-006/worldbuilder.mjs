@@ -3,6 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 
 import { buildWorldPlan, operationToCommand, validateWorldPlan, WORLD_BOUNDS } from './world-grammar.mjs';
+import { buildRiffRaftMinecraftPlan } from '../riff-raft-minecraft-001/terraform-grammar.mjs';
 import {
   FROZEN_CORE_SHA,
   makeObservation,
@@ -409,7 +410,18 @@ async function main() {
       );
     }
 
-    const plan = buildWorldPlan({ goal: GOAL, serverSeed });
+    const riffRaftMode = process.env.MC_RIFF_RAFT_PLAN === '1';
+    const plan = riffRaftMode
+      ? buildRiffRaftMinecraftPlan({
+          goal: GOAL,
+          serverSeed,
+          provenance: JSON.parse(await readFile(
+            process.env.MC_RIFF_RAFT_MANIFEST ??
+              'fixtures/riff-raft-minecraft-001/donor-manifest.json',
+            'utf8',
+          )),
+        })
+      : buildWorldPlan({ goal: GOAL, serverSeed });
     validateWorldPlan(plan);
 
     const commandLog = [];
