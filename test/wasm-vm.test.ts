@@ -230,7 +230,7 @@ test('valid guest signatures cannot create grants, bypass HOLD, spoof host key o
       successor: identity('guest'), left: 1, right: 1,
     }), /WASM_SUCCESSOR_IDENTITY_NOT_FRESH/);
     await assert.rejects(runAdmittedWasmVm({
-      candidate, evidence: host.evidence,
+      candidate, evidence: host.evidence, host_root: host.receiver.root,
       successor: identity('valid'), left: 2 ** 40, right: 0,
     }), /INVALID_WASM_ARGUMENT/);
   } finally {
