@@ -1,0 +1,22 @@
+name: skymirror-002
+
+on:
+  push:
+    paths:
+      - 'experiments/SKYMIRROR-002/**'
+      - '.github/workflows/skymirror-002.yml'
+  pull_request:
+    paths:
+      - 'experiments/SKYMIRROR-002/**'
+      - '.github/workflows/skymirror-002.yml'
+
+jobs:
+  offline-optical-prototype:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check experiments/SKYMIRROR-002/app.mjs
+      - run: node --test experiments/SKYMIRROR-002/protocol.test.mjs

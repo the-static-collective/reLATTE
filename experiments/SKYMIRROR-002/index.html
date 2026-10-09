@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>SKYMIRROR-002 • Optical Packet Bench</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">THE STATIC COLLECTIVE / reLATTE / BENCH EXPERIMENT</div>
+      <h1>SKYMIRROR <span>002</span></h1>
+      <p>Transmit a short packet as light. Receive it through a camera and a passive mirror. No network connection or server required after the page loads.</p>
+      <div class="flag">OFFLINE OPTICAL EXPERIMENT — NOT A SATELLITE LINK</div>
+    </header>
+    <nav aria-label="Experiment mode">
+      <button class="tab selected" id="tab-tx" aria-pressed="true">1 / Transmit</button>
+      <button class="tab" id="tab-rx" aria-pressed="false">2 / Receive</button>
+      <button class="tab" id="tab-sim" aria-pressed="false">3 / Simulate</button>
+    </nav>
+    <section id="section-tx" class="panel">
+      <h2>Screen transmitter</h2>
+      <p>Enter a tiny message. Place the mirror where the second phone can see this screen's reflection. Keep this page open and the screen unobstructed.</p>
+      <label for="message">Packet text (1–24 UTF-8 bytes)</label>
+      <input id="message" type="text" value="HI" maxlength="24" autocomplete="off" spellcheck="false" />
+      <div class="meta" id="message-size">2 bytes · approx 70 sec</div>
+      <label for="tx-chip">Brightness symbol duration</label>
+      <select id="tx-chip">
+        <option value="600" selected>600 ms — reliable starting point</option>
+        <option value="500">500 ms — faster</option>
+        <option value="800">800 ms — slower</option>
+        <option value="1000">1000 ms — high-margin</option>
+      </select>
+      <button id="tx-start" class="primary">Start flashing packet</button>
+      <p class="hint">The screen flashes black and white (around 1–2 brightness transitions per second). Not suitable for photosensitive viewers. Lower ambient light or turn up manual screen brightness if needed. Do not direct lasers at the sky, people or aircraft.</p>
+      <div id="tx-result" class="readout" aria-live="polite">Transmitter idle.</div>
+    </section>
+    <section id="section-rx" class="panel hidden">
+      <h2>Camera receiver</h2>
+      <p>On phone B, tap Start Camera, point the rear camera at the mirror image of phone A, then start the transmitter on phone A. Keep both phones still until capture completes.</p>
+      <label for="rx-chip">Match transmitter timing</label>
+      <select id="rx-chip">
+        <option value="600" selected>600 ms</option>
+        <option value="500">500 ms</option>
+        <option value="800">800 ms</option>
+        <option value="1000">1000 ms</option>
+      </select>
+      <div class="video-frame">
+        <video id="camera" autoplay muted playsinline></video>
+        <div id="reticle" aria-hidden="true">⊞</div>
+        <div class="preview-label">Point crosshair at center of reflected screen</div>
+      </div>
+      <canvas id="signal" width="720" height="96" aria-label="Measured brightness graph"></canvas>
+      <div class="metrics"><span id="brightness">Luma: —</span><span id="contrast">Contrast: —</span><span id="count">Samples: 0</span></div>
+      <div class="button-row">
+        <button id="rx-start" class="primary">Start camera + capture</button>
+        <button id="rx-stop" disabled>Stop</button>
+      </div>
+      <div id="rx-result" class="readout" role="status" aria-live="polite">Receiver idle. Camera stays entirely in your browser; frames are not saved.</div>
+      <button id="export" disabled>Export measurement log (JSON)</button>
+      <p class="hint">Camera permission requires HTTPS or localhost on many browsers. Some devices aggressively adjust exposure or throttle when screens sleep. A timeout or missing checksum means no verified message was received.</p>
+    </section>
+    <section id="section-sim" class="panel hidden">
+      <h2>Synthetic dry-run</h2>
+      <p>Run the same encoder and decoder against artificial camera samples, including jitter and noise. This tests software only; it is not physical optical evidence.</p>
+      <button class="primary" id="simulate">Run deterministic simulation</button>
+      <pre id="sim-result" class="readout">No simulation yet.</pre>
+    </section>
+    <footer>
+      <p>Road ≠ authority · CRC ≠ signature · reflection ≠ permission · software pass ≠ physical pass.</p>
+      <p>All processing is local. No audio capture. No video recording or uploads. Export saves only timestamps and sampled brightness measurements plus the decoded message, if any.</p>
+    </footer>
+  </main>
+  <div id="transmitter" hidden aria-live="off">
+    <button id="tx-stop">STOP TRANSMISSION</button>
+    <div class="tx-progress" id="tx-progress">Starting…</div>
+  </div>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>
