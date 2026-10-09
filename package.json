@@ -10,8 +10,9 @@
     "verify": "npm run check && npm test && npm run build",
     "mcp:local": "node --experimental-strip-types scripts/mcp-local.ts",
     "mcp:oauth:check": "node --experimental-strip-types --test test/mcp-oauth-resource.test.ts",
-    "audit:prod": "npm audit --omit=dev --audit-level=high",
-    "audit:all": "npm audit --audit-level=high"
+    "audit:prod": "npm audit --omit=dev --audit-level=moderate",
+    "audit:all": "npm audit --audit-level=moderate",
+    "deps:policy": "node scripts/check-dependency-policy.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.3.1",
