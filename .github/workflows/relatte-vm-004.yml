@@ -1,0 +1,60 @@
+name: RELATTE-VM-004 file-transport handshake
+
+on:
+  push:
+    paths:
+      - "src/vm-lease.ts"
+      - "scripts/vm004-peers.mjs"
+      - "test/vm-lease.test.ts"
+      - ".github/workflows/relatte-vm-004.yml"
+  pull_request:
+    paths:
+      - "src/vm-lease.ts"
+      - "scripts/vm004-peers.mjs"
+      - "test/vm-lease.test.ts"
+      - ".github/workflows/relatte-vm-004.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  offline-transport:
+    name: Offline signed peer-carrier and cold resource verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install --ignore-scripts
+      - name: Execute file-carrier workflow without exporting private keys
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/vm004/public work/vm004/offer
+          node --experimental-strip-types scripts/vm004-peers.mjs prepare work/vm004/public/candidate.json
+          node --experimental-strip-types scripts/vm004-peers.mjs enroll "$RUNNER_TEMP/vm004/private-receiver" work/vm004/public/recipient-card.json > work/vm004/public/enroll-log.json
+          node --experimental-strip-types scripts/vm004-peers.mjs offer work/vm004/public/candidate.json work/vm004/public/recipient-card.json "$RUNNER_TEMP/vm004/private-sender" work/vm004/offer > work/vm004/public/offer-log.json
+          sender_pin="$(node -e 'const f=require("fs");process.stdout.write(JSON.parse(f.readFileSync("work/vm004/public/offer-log.json")).sender_public_fingerprint)')"
+          recipient_pin="$(node -e 'const f=require("fs");process.stdout.write(JSON.parse(f.readFileSync("work/vm004/public/enroll-log.json")).recipient_public_fingerprint)')"
+          node --experimental-strip-types scripts/vm004-peers.mjs receive work/vm004/public/candidate.json work/vm004/offer/offer.json work/vm004/offer/sender-card.json "$RUNNER_TEMP/vm004/private-receiver" "$sender_pin" work/vm004/public > work/vm004/public/receive-log.json
+          node --experimental-strip-types scripts/vm004-peers.mjs verify work/vm004/public/candidate.json work/vm004/offer/offer.json work/vm004/offer/sender-card.json work/vm004/public/recipient-card.json work/vm004/public/public-run.json "$sender_pin" "$recipient_pin" > work/vm004/public/verified.json
+          grep -q '"verified":true' work/vm004/public/verified.json
+          test ! -e work/vm004/public/peer-private.jwk
+          test ! -e work/vm004/public/receiver-key.json
+          cat work/vm004/public/verified.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vm004-public-offline-verification
+          path: |
+            work/vm004/public/candidate.json
+            work/vm004/public/recipient-card.json
+            work/vm004/public/public-run.json
+            work/vm004/public/verified.json
+            work/vm004/offer/offer.json
+            work/vm004/offer/sender-card.json
+          if-no-files-found: error
+          retention-days: 7
