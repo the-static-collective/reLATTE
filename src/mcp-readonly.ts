@@ -59,6 +59,7 @@ const caution = 'Self-contained P-256 signature verification proves only integri
 
 function result(value: Dict, isError = false): Dict {
   return {
+    resultType: 'complete',
     content: [{ type: 'text', text: JSON.stringify(value) }],
     structuredContent: value,
     ...(isError ? { isError: true } : {}),
@@ -159,13 +160,32 @@ export async function dispatchReadOnlyMcpRequest(value: unknown): Promise<Dict> 
   if (!req || req.jsonrpc !== '2.0' || !validId || typeof req.method !== 'string') {
     return { jsonrpc: '2.0', id: null, error: { code: -32600, message: 'Invalid Request' } };
   }
+  if (req.method === 'server/discover') {
+    return {
+      jsonrpc: '2.0', id,
+      result: {
+        resultType: 'complete',
+        supportedVersions: ['2026-07-28'],
+        capabilities: { tools: {} },
+        _meta: { 'io.modelcontextprotocol/serverInfo': { name: 'relatte-readonly', version: '0.0.2' } },
+        instructions: 'Verify externally supplied signed crossing evidence. A verified signature is neither a human identity nor receiving-world authority. No writes or deliveries are provided.',
+        ttlMs: 60000,
+        cacheScope: 'public',
+      },
+    };
+  }
   if (req.method === 'tools/list') {
-    return { jsonrpc: '2.0', id, result: { tools: listReadOnlyMcpTools(), ttlMs: 60000, cacheScope: 'global' } };
+    return { jsonrpc: '2.0', id, result: {
+      resultType: 'complete', tools: listReadOnlyMcpTools(), ttlMs: 60000, cacheScope: 'public',
+    } };
   }
   if (req.method === 'tools/call') {
     const params = exactly(req.params, ['name', 'arguments', '_meta']);
     if (!params || typeof params.name !== 'string') {
       return { jsonrpc: '2.0', id, error: { code: -32602, message: 'Invalid params' } };
+    }
+    if (!READ_ONLY_MCP_TOOLS.some((tool) => tool.name === params.name)) {
+      return { jsonrpc: '2.0', id, error: { code: -32602, message: 'Unknown tool' } };
     }
     return { jsonrpc: '2.0', id, result: await callReadOnlyMcpTool(params.name, params.arguments) };
   }
