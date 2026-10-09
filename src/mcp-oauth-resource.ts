@@ -10,7 +10,7 @@ import { createRemoteJWKSet, jwtVerify } from 'jose';
 import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
 import * as z from 'zod/v4';
 
-import { callReadOnlyMcpTool } from './mcp-readonly.ts';
+import { callReadOnlyMcpTool, READ_ONLY_MCP_TOOLS } from './mcp-readonly.ts';
 import { checkAccessTrust, checkDpopProof, validateAccessTrustPolicy } from './mcp-auth-trust.ts';
 import type { AccessTrustPolicy, AccessTokenFacts } from './mcp-auth-trust.ts';
 
@@ -248,6 +248,23 @@ export function createOAuthMcpResource(
         }
         if (!bounded) return json({ error: 'REQUEST_TOO_LARGE' }, 413);
         const wireCopy = bounded.clone();
+        // Enforce the read-only permit list at ingress, independently of SDK
+        // unknown-method presentation and regardless of the OAuth subject.
+        let candidate: unknown;
+        try { candidate = await bounded.clone().json(); }
+        catch { return json({ error: 'INVALID_MCP_JSON' }, 400); }
+        if (candidate !== null && typeof candidate === 'object' && !Array.isArray(candidate)) {
+          const command = candidate as { id?: unknown; method?: unknown; params?: { name?: unknown } };
+          if (command.method === 'tools/call' &&
+              !READ_ONLY_MCP_TOOLS.some((tool) => tool.name === command.params?.name)) {
+            return json({
+              jsonrpc: '2.0',
+              id: typeof command.id === 'string' || typeof command.id === 'number'
+                ? command.id : null,
+              error: { code: -32602, message: 'Tool not in read-only allowlist' },
+            }, 400);
+          }
+        }
         const answer = await mcp.fetch(bounded);
         return withAuthSchemes(wireCopy, answer);
       }
