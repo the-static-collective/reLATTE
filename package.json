@@ -12,7 +12,8 @@
     "mcp:oauth:check": "node --experimental-strip-types --test test/mcp-oauth-resource.test.ts",
     "audit:prod": "npm audit --omit=dev --audit-level=moderate",
     "audit:all": "npm audit --audit-level=moderate",
-    "deps:policy": "node scripts/check-dependency-policy.mjs"
+    "deps:policy": "node scripts/check-dependency-policy.mjs",
+    "mcp:edge:probe": "node --experimental-strip-types scripts/mcp-edge-probe.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.3.1",
