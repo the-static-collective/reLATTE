@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { mkdir, realpath, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { LocalReceiver } from './receiver.ts';
 
 import { canonicalize, canonicalizeDomainValue, sha256Hex, validateTimestamp } from './canonical.ts';
 import { sealCrossingEnvelope, sealReceipt, verifyCrossingEnvelope, verifyReceipt } from './protocol.ts';
@@ -390,8 +391,7 @@ export async function runVm004Lease(args: {
     throw new Error('VM004_WITNESS_KEY_MISMATCH');
   }
   // Prevent revoked/deleted receiver from burning a lease without execution.
-  const {LocalReceiver} = await import('./receiver.ts');
-  let receiver: InstanceType<typeof LocalReceiver>;
+  let receiver: LocalReceiver;
   try {receiver = await LocalReceiver.open(args.host_root);}
   catch {throw new Error('VM004_HOST_NOT_LIVE');}
   const snapshot=receiver.snapshot();
