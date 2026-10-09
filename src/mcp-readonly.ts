@@ -76,7 +76,7 @@ export async function callReadOnlyMcpTool(name: string, args: unknown): Promise<
     const valid = await verifyCrossingEnvelope(a.crossing);
     return result({
       verified: valid,
-      crossing_id: valid ? a.crossing.crossing_id : null,
+      crossing_id: valid ? (a.crossing as Dict).crossing_id : null,
       code: valid ? 'VALID_SIGNATURE' : 'INVALID_CROSSING',
       limitation: caution,
     });
@@ -88,10 +88,10 @@ export async function callReadOnlyMcpTool(name: string, args: unknown): Promise<
     const valid = await verifyReceipt(a.receipt);
     return result({
       verified: valid,
-      receipt_id: valid ? a.receipt.receipt_id : null,
-      crossing_id: valid ? a.receipt.crossing_id : null,
-      kind: valid ? a.receipt.kind : null,
-      semantic_effect: valid ? a.receipt.semantic_effect : null,
+      receipt_id: valid ? (a.receipt as Dict).receipt_id : null,
+      crossing_id: valid ? (a.receipt as Dict).crossing_id : null,
+      kind: valid ? (a.receipt as Dict).kind : null,
+      semantic_effect: valid ? (a.receipt as Dict).semantic_effect : null,
       code: valid ? 'VALID_SIGNATURE' : 'INVALID_RECEIPT',
       limitation: caution,
     });
@@ -103,7 +103,7 @@ export async function callReadOnlyMcpTool(name: string, args: unknown): Promise<
         a.receipts.length < 1 || a.receipts.length > 16 ||
         a.receipts.some((r) => !object(r))) return invalidArguments();
 
-    const crossing = a.crossing;
+    const crossing = a.crossing as Dict;
     if (!(await verifyCrossingEnvelope(crossing))) {
       return result({ verified: false, code: 'INVALID_CROSSING', limitation: caution });
     }
