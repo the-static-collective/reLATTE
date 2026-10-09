@@ -51,7 +51,7 @@ function assertName(value: unknown, code: string): asserts value is string {
 
 function manifestBody(maxSteps: number, maxDepth: number) {
   return {
-    schema: 'relatte.vm-manifest/v0',
+    schema: 'relatte.vm-manifest/v0' as const,
     engine: VM_ENGINE,
     max_steps: maxSteps,
     max_depth: maxDepth,
