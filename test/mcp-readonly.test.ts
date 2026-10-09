@@ -153,3 +153,45 @@ test('loopback HTTP uses matching 2026-07-28 routing headers and rejects unsafe 
     await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
   }
 });
+
+
+test('optional loopback staging token rejects absent and incorrect credentials', async () => {
+  assert.throws(() => createLocalReadOnlyMcpServer({ stagingBearerToken: 'short' }), /STAGING_TOKEN_TOO_SHORT/);
+  const token = 'test-secret-32bytes-long-do-not-use-in-production';
+  const server = createLocalReadOnlyMcpServer({ stagingBearerToken: token });
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  try {
+    const address = server.address();
+    if (!address || typeof address === 'string') throw new Error('NO_ADDRESS');
+    const url = 'http://127.0.0.1:' + address.port + '/mcp';
+    const body = JSON.stringify({
+      jsonrpc: '2.0', id: 2, method: 'server/discover',
+      params: { _meta: {
+        'io.modelcontextprotocol/protocolVersion': '2026-07-28',
+        'io.modelcontextprotocol/clientInfo': { name: 'staging-test', version: '1' },
+        'io.modelcontextprotocol/clientCapabilities': {},
+      } },
+    });
+    const headers = {
+      'content-type': 'application/json',
+      accept: 'application/json, text/event-stream',
+      'mcp-protocol-version': '2026-07-28',
+      'mcp-method': 'server/discover',
+    };
+    const denied = await fetch(url, { method: 'POST', headers, body });
+    assert.equal(denied.status, 401);
+    const wrong = await fetch(url, {
+      method: 'POST', headers: { ...headers, authorization: 'Bearer ' + token + '-wrong' }, body,
+    });
+    assert.equal(wrong.status, 401);
+    const allowed = await fetch(url, {
+      method: 'POST', headers: { ...headers, authorization: 'Bearer ' + token }, body,
+    });
+    assert.equal(allowed.status, 200);
+    assert.deepEqual(((await allowed.json()) as any).result.supportedVersions, ['2026-07-28']);
+  } finally {
+    server.closeAllConnections();
+    await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+  }
+});
