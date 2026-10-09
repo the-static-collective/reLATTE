@@ -6,6 +6,7 @@ import { buildWorldPlan, operationToCommand, validateWorldPlan, WORLD_BOUNDS } f
 import { buildRiffRaftMinecraftPlan } from '../riff-raft-minecraft-001/terraform-grammar.mjs';
 import { buildRiffRaftRedstonePlan } from '../riff-raft-minecraft-002/redstone-grammar.mjs';
 import {GHOT_004_COMMIT,validateQuest} from '../riff-raft-minecraft-004/quest-grammar.mjs';
+import {GHOT_005_COMMIT,validateCounterfactualQuest} from '../riff-raft-minecraft-005/counterfactual-grammar.mjs';
 import {
   FROZEN_CORE_SHA,
   makeObservation,
@@ -429,13 +430,19 @@ async function main() {
         })
       : buildWorldPlan({ goal: GOAL, serverSeed });
     validateWorldPlan(plan);
+    const counterfactualMode = process.env.MC_RIFF_RAFT_COUNTERFACTUAL === '1';
     const questMode = process.env.MC_RIFF_RAFT_DYNAMIC_QUEST === '1';
     if(questMode && (!redstoneMode ||
       process.env.MC_RIFF_RAFT_REDSTONE_FAULT !== '1' ||
       !process.env.MC_RIFF_RAFT_QUEST_PATH)){
       throw Error('RIFF_RAFT_QUEST_NOT_ADMITTED_FOR_GAME_FAULT');
     }
-    const quest=questMode?validateQuest(
+    if(counterfactualMode && !questMode){
+      throw Error('COUNTERFACTUAL_REQUIRES_EXPLICIT_QUEST_MODE');
+    }
+    const quest=questMode?(counterfactualMode
+      ? validateCounterfactualQuest
+      : validateQuest)(
       JSON.parse(await readFile(process.env.MC_RIFF_RAFT_QUEST_PATH,'utf8')),
       process.env.MC_RIFF_RAFT_WORLD_ID,serverSeed):null;
     const commandLog = [];
@@ -520,7 +527,7 @@ async function main() {
         stage_count:9,
         ...(quest ? {dynamic_quest:{
           proposal:quest,
-          source_ghot_proposer_commit:GHOT_004_COMMIT,
+          source_ghot_proposer_commit:counterfactualMode?GHOT_005_COMMIT:GHOT_004_COMMIT,
           selected_fault_position:faultAt,
           actual_game_fault_observed:true,
           physical_ecological_effect:false,
