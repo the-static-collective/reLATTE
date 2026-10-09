@@ -10,10 +10,10 @@ const sha=(x:Buffer|string)=>createHash('sha256').update(x).digest('hex');
 
 test('RIFF-RAFT-003: one or zero worlds never becomes two',async()=>{
   await assert.rejects(()=>assemblePair([]),/EXPECTED_TWO_WORLDS/);
-  await assert.rejects(()=>assemblePair([{world_id:'A'}]),/EXPECTED_TWO_WORLDS/);
+  await assert.rejects(()=>assemblePair([{world_id:'A',composition_bytes:Buffer.from('{}'),runtime_bytes:Buffer.from('{}')}]),/EXPECTED_TWO_WORLDS/);
 });
 test('RIFF-RAFT-003: duplicate labels refuse before parsing false evidence',async()=>{
-  const invalid={world_id:'A',composition_bytes:Buffer.from('{}'),runtime_bytes:Buffer.from('{}')};
+  const invalid={world_id:'A' as const,composition_bytes:Buffer.from('{}'),runtime_bytes:Buffer.from('{}')};
   await assert.rejects(()=>assemblePair([invalid,invalid]),/BAD_INSTANCE_EVIDENCE/);
 });
 test('RIFF-RAFT-003: malformed signed story cannot impersonate Minecraft',async()=>{
