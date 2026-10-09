@@ -313,6 +313,9 @@ jobs:
           node --experimental-strip-types experiments/riff-raft-minecraft-004/dynamic-replay.mjs \
             work/two-world-inputs \
             work/two-world-return/riff-raft-return-bundle.json
+      - name: Assert new signed return bundle actually exists
+        run: test -s work/two-world-return/riff-raft-return-bundle.json
+
       - name: Checkout fixed GHoT read-only receiver
         uses: actions/checkout@v4
         with:
