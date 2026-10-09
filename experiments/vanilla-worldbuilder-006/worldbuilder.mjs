@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { buildWorldPlan, operationToCommand, validateWorldPlan, WORLD_BOUNDS } from './world-grammar.mjs';
 import { buildRiffRaftMinecraftPlan } from '../riff-raft-minecraft-001/terraform-grammar.mjs';
 import { buildRiffRaftRedstonePlan } from '../riff-raft-minecraft-002/redstone-grammar.mjs';
+import {GHOT_004_COMMIT,validateQuest} from '../riff-raft-minecraft-004/quest-grammar.mjs';
 import {
   FROZEN_CORE_SHA,
   makeObservation,
@@ -428,7 +429,15 @@ async function main() {
         })
       : buildWorldPlan({ goal: GOAL, serverSeed });
     validateWorldPlan(plan);
-
+    const questMode = process.env.MC_RIFF_RAFT_DYNAMIC_QUEST === '1';
+    if(questMode && (!redstoneMode ||
+      process.env.MC_RIFF_RAFT_REDSTONE_FAULT !== '1' ||
+      !process.env.MC_RIFF_RAFT_QUEST_PATH)){
+      throw Error('RIFF_RAFT_QUEST_NOT_ADMITTED_FOR_GAME_FAULT');
+    }
+    const quest=questMode?validateQuest(
+      JSON.parse(await readFile(process.env.MC_RIFF_RAFT_QUEST_PATH,'utf8')),
+      process.env.MC_RIFF_RAFT_WORLD_ID,serverSeed):null;
     const commandLog = [];
     const actionReceipts = [];
     for (let actionIndex = 0; actionIndex < plan.operations.length; actionIndex += 1) {
@@ -483,7 +492,7 @@ async function main() {
         block:'minecraft:redstone_block'};
       const offTrigger = {kind:'setblock',at:circuit.trigger,
         block:'minecraft:air'};
-      const faultAt = circuit.break_repeater;
+      const faultAt = quest?.fault_repeater_position ?? circuit.break_repeater;
       let broken = null;
       let afterReset = null;
       if (process.env.MC_RIFF_RAFT_REDSTONE_FAULT === '1') {
@@ -493,7 +502,7 @@ async function main() {
         await sendBotCommand(authorBot,rcon,trigger,actionReceipts.length,
           commandLog,actionReceipts);
         await sleep(1600);
-        broken = await inspect('broken',circuit.stages.map((_,i) => i < 3));
+        broken = await inspect('broken',quest?.expected_lit_during_fault ?? circuit.stages.map((_,i) => i < 3));
         await sendBotCommand(authorBot,rcon,offTrigger,actionReceipts.length,
           commandLog,actionReceipts);
         await sleep(1400);
@@ -509,6 +518,14 @@ async function main() {
       redstoneProof = {
         schema:'relatte.riff-raft-redstone-execution/v0',
         stage_count:9,
+        ...(quest ? {dynamic_quest:{
+          proposal:quest,
+          source_ghot_proposer_commit:GHOT_004_COMMIT,
+          selected_fault_position:faultAt,
+          actual_game_fault_observed:true,
+          physical_ecological_effect:false,
+          automatic_authority:false,
+        }} : {}),
         circuit_plan_sha256:plan.plan_sha256,
         source_ghot_commit:plan.riff_raft.source_commit,
         physical_field_improvement_verified:false,
