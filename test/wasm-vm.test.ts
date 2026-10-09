@@ -108,10 +108,12 @@ test('two independent local admissions launch distinct real OS processes with id
 
     const runC = await runAdmittedWasmVm({
       candidate: f.candidate, evidence: hostC.evidence,
+      host_root: hostC.receiver.root,
       successor: identity('successor-c'), left: 19, right: 23,
     });
     const runD = await runAdmittedWasmVm({
       candidate: f.candidate, evidence: hostD.evidence,
+      host_root: hostD.receiver.root,
       successor: identity('successor-d'), left: -4, right: 3,
     });
     assert.equal(runC.result, 42);
@@ -157,9 +159,14 @@ test('cold archived evidence reconstructs and executes after the source and rece
     };
     assert.equal(await verifyWasmVmCandidate(candidate), true);
     assert.equal(await verifyWasmVmAdmission(candidate, saved.evidence), true);
+    await assert.rejects(runAdmittedWasmVm({
+      candidate, evidence: saved.evidence, host_root: host.receiver.root,
+      successor: identity('forbidden-dead-host'), left: 10, right: 32,
+    }), /WASM_HOST_NOT_LIVE/);
+    const freshHost = await admittedFixture(base, 'cold-new-owner', candidate.wasm_crossing);
     const run = await runAdmittedWasmVm({
-      candidate, evidence: saved.evidence, successor: identity('cold-successor'),
-      left: 10, right: 32,
+      candidate, evidence: freshHost.evidence, host_root: freshHost.receiver.root,
+      successor: identity('cold-successor'), left: 10, right: 32,
     });
     assert.equal(run.result, 42);
     assert.deepEqual(run.inherited_grants, []);
@@ -215,11 +222,11 @@ test('valid guest signatures cannot create grants, bypass HOLD, spoof host key o
     };
     assert.equal(await verifyWasmVmAdmission(candidate, holdEvidence), false);
     await assert.rejects(runAdmittedWasmVm({
-      candidate, evidence: holdEvidence,
+      candidate, evidence: holdEvidence, host_root: holding.root,
       successor: identity('not-authorized'), left: 1, right: 1,
     }), /WASM_LAUNCH_NOT_ADMITTED/);
     await assert.rejects(runAdmittedWasmVm({
-      candidate, evidence: host.evidence,
+      candidate, evidence: host.evidence, host_root: host.receiver.root,
       successor: identity('guest'), left: 1, right: 1,
     }), /WASM_SUCCESSOR_IDENTITY_NOT_FRESH/);
     await assert.rejects(runAdmittedWasmVm({
@@ -238,12 +245,14 @@ test('malicious infinite-loop WASM is terminated by parent wall-clock deadline; 
     const host = await admittedFixture(base, 'timeout', loop.candidate.wasm_crossing);
     await assert.rejects(runAdmittedWasmVm({
       candidate: loop.candidate, evidence: host.evidence,
+      host_root: host.receiver.root,
       successor: identity('loop-successor'), left: 1, right: 2,
     }), /WASM_PROCESS_TIMEOUT/);
     const good = await sourceFixture();
     const allowed = await admittedFixture(base, 'good', good.candidate.wasm_crossing);
     const run = await runAdmittedWasmVm({
       candidate: good.candidate, evidence: allowed.evidence,
+      host_root: allowed.receiver.root,
       successor: identity('after-timeout'), left: 2, right: 3,
     });
     assert.equal(run.result, 5);
