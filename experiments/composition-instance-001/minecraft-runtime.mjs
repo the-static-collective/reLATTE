@@ -34,6 +34,11 @@ const RIFF_REDSTONE_MODE = process.env.MC_RIFF_RAFT_REDSTONE === '1';
 if (RIFF_REDSTONE_MODE && !RIFF_RAFT_MODE) {
   throw new Error('RIFF_RAFT_REDSTONE_NO_PARENT_MODE');
 }
+const TWO_WORLD_LABEL=process.env.MC_RIFF_RAFT_WORLD_ID;
+if(TWO_WORLD_LABEL && (!['A','B'].includes(TWO_WORLD_LABEL) || !RIFF_REDSTONE_MODE ||
+    process.env.MC_RIFF_RAFT_REDSTONE_FAULT !== '1')){
+  throw Error('RIFF_RAFT_TWO_WORLD_REQUIRES_EXPLICIT_FAULT_AND_LABEL');
+}
 const PROVISIONED_SEED =
   process.env.MC_LEVEL_SEED ?? '381654729';
 
@@ -133,6 +138,10 @@ async function main() {
         riff_raft_redstone_mode:'operator-triggered-game-only',
         fault_control:process.env.MC_RIFF_RAFT_REDSTONE_FAULT === '1',
         independent_fresh_observer_required:true,
+      } : {}),
+      ...(TWO_WORLD_LABEL ? {
+        riff_raft_two_world_label:TWO_WORLD_LABEL,
+        riff_raft_two_world_replay:true,
       } : {}),
     },
   });
