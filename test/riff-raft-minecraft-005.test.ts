@@ -123,7 +123,7 @@ test('005: CI regression — original signed ancestor is downloaded and checked 
   check(compare);
   assert.match(compare,/name: riff-raft-005-counterfactual-offers/);
   assert.match(compare,/run: test -s work\/source-005\/source-004-bundle\.json/);
-  assert.match(compare,/counterfactual-replay\.mjs[\\s\\S]*work\/source-005\/source-004-bundle\.json/);
+  assert.match(compare,/counterfactual-replay\.mjs[\s\S]*work\/source-005\/source-004-bundle\.json/);
   assert.match(compare,/name: riff-raft-minecraft-005-return-to-ghot/);
   assert.throws(()=>check(compare.replace(
     'name: Retrieve pinned signed source for independent GHoT review',
