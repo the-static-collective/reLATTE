@@ -180,7 +180,9 @@ test('cross-socket issuer-resource-client trust gauntlet: authenticate → revok
         method: incoming.method, headers, body,
       });
       const reply = await resource.fetch(request);
-      outgoing.writeHead(reply.status, Object.fromEntries(reply.headers));
+      const responseHeaders: Record<string, string> = {};
+      reply.headers.forEach((value, name) => { responseHeaders[name] = value; });
+      outgoing.writeHead(reply.status, responseHeaders);
       outgoing.end(Buffer.from(await reply.arrayBuffer()));
     } catch {
       outgoing.writeHead(500); outgoing.end();
