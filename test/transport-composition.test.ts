@@ -11,7 +11,7 @@ import {
   generateP256KeyPair, sealCrossingEnvelope, sealReceipt,
   canonicalizeDomainValue, sha256Hex,
 } from '../src/index.ts';
-import type { CarrierKind, CrossingCarrierFragment } from '../src/index.ts';
+import type { FieldCarrierKind, CrossingCarrierFragment } from '../src/index.ts';
 
 const at=(seconds:number)=>new Date(Date.UTC(2026,9,9,19,0,seconds)).toISOString();
 async function source() {
@@ -40,10 +40,10 @@ const observer=async () => ({
   allowed_carriers:[
     'bluetooth','wifi-direct','wifi-mesh','telephone-audio',
     'cellular-sms','lora-unlicensed','internet','file-courier',
-  ] as CarrierKind[],
+  ] as FieldCarrierKind[],
 });
 async function frame(f:Awaited<ReturnType<typeof source>>,
-  index:number,carrier:CarrierKind,route_id:string) {
+  index:number,carrier:FieldCarrierKind,route_id:string) {
   return makeCarrierFragment({...f,index,carrier,route_id,sent_at:at(1)});
 }
 function changedPacket(packet:CrossingCarrierFragment,bytes:Buffer):CrossingCarrierFragment {
@@ -61,7 +61,7 @@ test('001 signed crossing changes roads and resumes after omission; no new cross
   const f=await source();
   assert.equal(verifyCrossingFieldManifest(f.manifest),true);
   const receiver=new CrossingFieldReceiver(f.manifest,await observer());
-  const carriers:CarrierKind[]=['bluetooth','telephone-audio','wifi-mesh','wifi-direct',
+  const carriers:FieldCarrierKind[]=['bluetooth','telephone-audio','wifi-mesh','wifi-direct',
     'cellular-sms','lora-unlicensed','internet','file-courier'];
   let duplicatePacket:CrossingCarrierFragment | undefined;
   const packets:CrossingCarrierFragment[]=[];
