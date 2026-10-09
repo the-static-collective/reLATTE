@@ -6,6 +6,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 
 import { generateP256KeyPair } from '../../src/protocol.ts';
 import {GHOT_004_COMMIT,validateQuest} from '../riff-raft-minecraft-004/quest-grammar.mjs';
+import {GHOT_005_COMMIT,validateCounterfactualQuest} from '../riff-raft-minecraft-005/counterfactual-grammar.mjs';
 import {
   finalizeCompositionInstance,
   makeCompositionInstanceSpec,
@@ -33,6 +34,10 @@ const GOAL = process.env.MC_WORLD_GOAL ?? 'BUILD A WORLD';
 const RIFF_RAFT_MODE = process.env.MC_RIFF_RAFT_PLAN === '1';
 const RIFF_REDSTONE_MODE = process.env.MC_RIFF_RAFT_REDSTONE === '1';
 const DYNAMIC_QUEST_MODE = process.env.MC_RIFF_RAFT_DYNAMIC_QUEST === '1';
+const COUNTERFACTUAL_MODE = process.env.MC_RIFF_RAFT_COUNTERFACTUAL === '1';
+if(COUNTERFACTUAL_MODE && !DYNAMIC_QUEST_MODE){
+  throw Error('COUNTERFACTUAL_REQUIRES_OPERATOR_SELECTED_GAME_MODE');
+}
 if(DYNAMIC_QUEST_MODE && (!RIFF_REDSTONE_MODE ||
   process.env.MC_RIFF_RAFT_REDSTONE_FAULT !== '1' ||
   !process.env.MC_RIFF_RAFT_QUEST_PATH)){
@@ -97,7 +102,8 @@ async function main() {
   await mkdir(OUT_DIR, { recursive: true });
   const meta = JSON.parse(await readFile(META_PATH, 'utf8'));
   const serverSeed = String(PROVISIONED_SEED);
-  const quest=DYNAMIC_QUEST_MODE?validateQuest(
+  const quest=DYNAMIC_QUEST_MODE?(COUNTERFACTUAL_MODE
+    ? validateCounterfactualQuest : validateQuest)(
     JSON.parse(await readFile(process.env.MC_RIFF_RAFT_QUEST_PATH,'utf8')),
     TWO_WORLD_LABEL,serverSeed):null;
 
@@ -156,10 +162,10 @@ async function main() {
         riff_raft_two_world_replay:true,
       } : {}),
       ...(quest ? {
-        riff_raft_dynamic_quest:'explicit-gHot-proposal-game-only',
+        riff_raft_dynamic_quest:COUNTERFACTUAL_MODE?'observed-counterfactual-game-only':'explicit-gHot-proposal-game-only',
         riff_raft_quest_sha256:quest.quest_sha256,
-        riff_raft_quest_priority:quest.priority,
-        riff_raft_ghot_proposer_commit:GHOT_004_COMMIT,
+        riff_raft_quest_priority:COUNTERFACTUAL_MODE?quest.policy:quest.priority,
+        riff_raft_ghot_proposer_commit:COUNTERFACTUAL_MODE?GHOT_005_COMMIT:GHOT_004_COMMIT,
       } : {}),
     },
   });
@@ -282,7 +288,7 @@ async function main() {
   if(quest){
     const actual=runtimeEvidence.redstone?.dynamic_quest;
     if(!actual || JSON.stringify(actual.proposal)!==JSON.stringify(quest) ||
-      actual.source_ghot_proposer_commit!==GHOT_004_COMMIT ||
+      actual.source_ghot_proposer_commit!==(COUNTERFACTUAL_MODE?GHOT_005_COMMIT:GHOT_004_COMMIT) ||
       JSON.stringify(actual.selected_fault_position)!==
         JSON.stringify(quest.fault_repeater_position) ||
       actual.actual_game_fault_observed!==true ||
@@ -357,10 +363,10 @@ async function main() {
           riff_raft_game_and_field_conflation:false,
           ...(quest ? {
             riff_raft_dynamic_quest_sha256:quest.quest_sha256,
-            riff_raft_dynamic_quest_priority:quest.priority,
+            riff_raft_dynamic_quest_priority:COUNTERFACTUAL_MODE?quest.policy:quest.priority,
             riff_raft_dynamic_broken_lamps:
               runtimeEvidence.redstone.broken_link_trial.filter(x=>x.lit).length,
-            riff_raft_dynamic_source_ghot_commit:GHOT_004_COMMIT,
+            riff_raft_dynamic_source_ghot_commit:COUNTERFACTUAL_MODE?GHOT_005_COMMIT:GHOT_004_COMMIT,
           } : {}),
         } : {}),
         palette: runtimeEvidence.plan.palette.name,
