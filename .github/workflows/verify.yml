@@ -4,13 +4,27 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
-      - run: npm install
-      - run: npm run verify
+          cache: npm
+      - name: Verify lockfile and patched-MCP dependency policy
+        run: npm run deps:policy
+      - name: Reproducible install without third-party lifecycle scripts
+        run: npm ci --ignore-scripts --no-fund
+      - name: Audit runtime dependencies (moderate and above)
+        run: npm run audit:prod
+      - name: Audit all dependencies (moderate and above)
+        run: npm run audit:all
+      - name: TypeScript, native reLATTE, and MCP security regression tests
+        run: npm run verify

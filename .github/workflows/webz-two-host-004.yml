@@ -13,16 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "24"
       - name: Install pinned reLATTE dependencies
-        run: npm install --ignore-scripts
+        run: npm ci --ignore-scripts --no-fund
       - name: Original Workbench fictional fixture bytes at immutable WEBZ-003 commit
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           repository: the-static-collective/static-workbench
           ref: 53db559bbc510ad1003a0f8330d1673dcd04d7a0
@@ -48,14 +48,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "24"
       - name: Install receiver-owned reLATTE dependencies
-        run: npm install --ignore-scripts
+        run: npm ci --ignore-scripts --no-fund
       - uses: actions/download-artifact@v4
         with:
           name: webz004-sender-carriers
@@ -80,14 +80,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "24"
       - name: Install verifier-owned reLATTE dependencies
-        run: npm install --ignore-scripts
+        run: npm ci --ignore-scripts --no-fund
       - uses: actions/download-artifact@v4
         with:
           name: webz004-sender-carriers

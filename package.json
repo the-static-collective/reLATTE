@@ -9,17 +9,23 @@
     "test": "node --test --experimental-strip-types test/*.test.ts",
     "verify": "npm run check && npm test && npm run build",
     "mcp:local": "node --experimental-strip-types scripts/mcp-local.ts",
-    "mcp:oauth:check": "node --experimental-strip-types --test test/mcp-oauth-resource.test.ts"
+    "mcp:oauth:check": "node --experimental-strip-types --test test/mcp-oauth-resource.test.ts",
+    "audit:prod": "npm audit --omit=dev --audit-level=moderate",
+    "audit:all": "npm audit --audit-level=moderate",
+    "deps:policy": "node scripts/check-dependency-policy.mjs"
   },
   "dependencies": {
-    "@modelcontextprotocol/server": "2.0.0",
+    "@modelcontextprotocol/server": "2.3.1",
     "jose": "6.1.0",
     "json-canonicalize": "3.0.1",
     "zod": "4.4.2"
   },
   "devDependencies": {
-    "@modelcontextprotocol/client": "2.0.0",
+    "@modelcontextprotocol/client": "2.3.1",
     "@types/node": "26.1.2",
     "typescript": "7.0.2"
+  },
+  "engines": {
+    "node": ">=22.17.0 <23 || >=24.0.0"
   }
 }
