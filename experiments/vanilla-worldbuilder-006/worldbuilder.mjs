@@ -490,12 +490,12 @@ async function main() {
         await sendBotCommand(authorBot,rcon,{kind:'setblock',at:faultAt,
           block:'minecraft:air'},actionReceipts.length,commandLog,
           actionReceipts);
-        await sendBotCommand(authorBot,rcon,trigger,commandLog,
-          actionReceipts.length,actionReceipts);
+        await sendBotCommand(authorBot,rcon,trigger,actionReceipts.length,
+          commandLog,actionReceipts);
         await sleep(1600);
         broken = await inspect('broken',circuit.stages.map((_,i) => i < 3));
-        await sendBotCommand(authorBot,rcon,offTrigger,commandLog,
-          actionReceipts.length,actionReceipts);
+        await sendBotCommand(authorBot,rcon,offTrigger,actionReceipts.length,
+          commandLog,actionReceipts);
         await sleep(1400);
         afterReset = await inspect('reset',none);
         await sendBotCommand(authorBot,rcon,{kind:'setblock',at:faultAt,
