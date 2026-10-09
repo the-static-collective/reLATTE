@@ -22,7 +22,7 @@ jobs:
           ref: experiment/riff-raft-007-peer-custody
           path: peer-GHoT
           persist-credentials: false
-      - run: npm ci
+      - run: npm install
       - name: Check byte-identical two-repository source and both signed Minecraft histories
         run: |
           node --experimental-strip-types experiments/riff-raft-minecraft-007/custody-audit.mjs pair fixtures/riff-raft-minecraft-006/signed-005-return.bundle.json peer-GHoT/fixtures/riff-raft-007/signed-005-return.bundle.json
@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci
+      - run: npm install
       - name: Verify primary original signed chain without peer checkout
         run: |
           test ! -e peer-GHoT
@@ -54,7 +54,7 @@ jobs:
           ref: experiment/riff-raft-007-peer-custody
           path: peer-GHoT
           persist-credentials: false
-      - run: npm ci
+      - run: npm install
       - name: Verify peer-only original signed chain
         run: |
           test ! -e fixtures/riff-raft-minecraft-006/signed-005-return.bundle.json
