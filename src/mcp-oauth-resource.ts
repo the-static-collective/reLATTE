@@ -244,7 +244,10 @@ export function createOAuthMcpResource(
             return json({ error: 'REQUEST_TOO_LARGE' }, 413);
           }
           try {
-            const bounded = await boundedBody(request.clone());
+            // The request is denied after this check; do NOT tee/clone an
+            // untrusted body before size enforcement. A cancelled tee branch
+            // can wait indefinitely for its unconsumed sibling.
+            const bounded = await boundedBody(request);
             if (!bounded) return json({ error: 'REQUEST_TOO_LARGE' }, 413);
             const body: unknown = await bounded.json();
             if (body !== null && typeof body === 'object' && !Array.isArray(body)) {
