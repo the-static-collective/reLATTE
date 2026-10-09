@@ -1,0 +1,26 @@
+name: FABRICATION-CROSSING-013 — signed sovereign machine decisions
+on:
+  push:
+    branches: [experiment/fabrication-crossing-013]
+  pull_request:
+    paths:
+      - "experiments/fabrication-crossing-013/**"
+      - ".github/workflows/fabrication-crossing-013.yml"
+permissions:
+  contents: read
+jobs:
+  fabrication-worlds:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Reconstruct reLATTE sovereign local worlds with real Ed25519 signatures
+        run: node --test experiments/fabrication-crossing-013/tests/*.test.mjs
+      - name: Unchanged independently-owned dynamic interface field regressions
+        run: node --test experiments/dynamic-interface-field-001/tests/*.test.mjs
+      - name: Normative reLATTE core contract remains valid
+        run: npm run check && npm test
