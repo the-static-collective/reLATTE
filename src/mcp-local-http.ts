@@ -109,7 +109,7 @@ export function createLocalReadOnlyMcpServer(options: { stagingBearerToken?: str
           request.headers['mcp-protocol-version'] !== declaredVersion ||
           request.headers['mcp-method'] !== rpc.method ||
           (rpc.method === 'tools/call'
-            ? headerValue(request.headers['mcp-name']) !== params?.name
+            ? headerValue(typeof request.headers['mcp-name'] === 'string' ? request.headers['mcp-name'] : undefined) !== params?.name
             : request.headers['mcp-name'] !== undefined)) {
         send(400, rpcError(id, -32020, 'HeaderMismatch'));
         return;
