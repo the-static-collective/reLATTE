@@ -20,6 +20,8 @@ Upstream release: https://github.com/modelcontextprotocol/typescript-sdk/release
 4. CI runs production and full-tree npm audit with audit-level moderate, failing on moderate/high/critical findings.
 5. scripts/check-dependency-policy.mjs rejects absent/altered lock, version ranges, SDK downgrades, untrusted registries, missing sha512 integrity or accidental production MCP test-client dependency.
 6. Dependabot schedules weekly npm and GitHub Actions PRs; review remains human-controlled.
+7. The .npmrc defaults to ignore-scripts, save-exact and engine-strict even for local installs.
+8. All three two-host CI jobs also use lockfile-only npm ci and fixed checkout/setup action SHAs.
 
 ## Checks and interpretation
 
