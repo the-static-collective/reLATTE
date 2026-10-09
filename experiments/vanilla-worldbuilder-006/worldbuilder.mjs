@@ -499,7 +499,7 @@ async function main() {
         await sleep(1400);
         afterReset = await inspect('reset',none);
         await sendBotCommand(authorBot,rcon,{kind:'setblock',at:faultAt,
-          block:'minecraft:repeater[facing=east,delay=4]'},
+          block:'minecraft:repeater[facing=west,delay=4]'},
           actionReceipts.length,commandLog,actionReceipts);
       }
       await sendBotCommand(authorBot,rcon,trigger,actionReceipts.length,
