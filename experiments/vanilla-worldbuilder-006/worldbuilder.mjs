@@ -502,8 +502,8 @@ async function main() {
           block:'minecraft:repeater[facing=east,delay=4]'},
           actionReceipts.length,commandLog,actionReceipts);
       }
-      await sendBotCommand(authorBot,rcon,trigger,commandLog,
-        actionReceipts.length,actionReceipts);
+      await sendBotCommand(authorBot,rcon,trigger,actionReceipts.length,
+        commandLog,actionReceipts);
       await sleep(1800);
       const powered = await inspect('powered',all);
       redstoneProof = {
