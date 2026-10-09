@@ -5,6 +5,7 @@ import {
 } from './protocol.ts';
 import type { P256KeyMaterial } from './protocol.ts';
 import { verifyVmCandidate, verifyVmManifest } from './vm.ts';
+import { LocalReceiver } from './receiver.ts';
 import type { VmIdentity, VmManifest, VmAdmissionEvidence } from './vm.ts';
 
 const WASM_PACKAGE_DOMAIN = 'reLATTE-WasmVmPackage-v0|';
@@ -376,12 +377,33 @@ async function executeInSeparateProcess(
 export async function runAdmittedWasmVm(args: {
   candidate: WasmVmCandidate;
   evidence: VmAdmissionEvidence;
+  host_root: string;
   successor: VmIdentity;
   left: number;
   right: number;
 }): Promise<WasmVmResult> {
   if (!(await verifyWasmVmAdmission(args.candidate, args.evidence))) {
     throw new Error('WASM_LAUNCH_NOT_ADMITTED');
+  }
+  // A signed historical ADMIT is not an executable grant on another host.
+  // The owner-local live journal must still exist and corroborate both receipts.
+  let liveHost: LocalReceiver;
+  try {
+    liveHost = await LocalReceiver.open(args.host_root);
+  } catch {
+    throw new Error('WASM_HOST_NOT_LIVE');
+  }
+  const crossingId = args.candidate.wasm_crossing.crossing_id;
+  const current = liveHost.snapshot();
+  if (current.world_id !== args.evidence.owner.world_id ||
+      current.receiver_particular !== args.evidence.owner.receiver_particular ||
+      liveHost.config.contract_ref !== args.evidence.owner.contract_ref ||
+      !current.admitted.includes(crossingId) ||
+      liveHost.getReceiveReceipt(crossingId)?.receipt_id !==
+        args.evidence.receive_receipt.receipt_id ||
+      liveHost.getDispositionReceipt(crossingId)?.receipt_id !==
+        args.evidence.admit_receipt.receipt_id) {
+    throw new Error('WASM_HOST_ADMISSION_NOT_CURRENT');
   }
   const old = args.candidate.wasm_crossing;
   if (!exactKeys(args.successor, ['world_id', 'particular', 'runtime_id']) ||
