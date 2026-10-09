@@ -357,6 +357,13 @@ jobs:
           pattern: riff-raft-minecraft-005-*
           path: work/two-world-inputs
           merge-multiple: false
+      - name: Retrieve pinned signed source for independent GHoT review
+        uses: actions/download-artifact@v4
+        with:
+          name: riff-raft-005-counterfactual-offers
+          path: work/source-005
+      - name: Assert previous source remains available
+        run: test -s work/source-005/source-004-bundle.json
       - name: Compare native worlds; sign held reLATTE return
         run: |
           node --experimental-strip-types experiments/riff-raft-minecraft-005/counterfactual-replay.mjs \
@@ -366,13 +373,6 @@ jobs:
       - name: Assert new signed return bundle actually exists
         run: test -s work/two-world-return/riff-raft-return-bundle.json
 
-      - name: Retrieve pinned signed source for independent GHoT review
-        uses: actions/download-artifact@v4
-        with:
-          name: riff-raft-005-counterfactual-offers
-          path: work/source-005
-      - name: Assert previous source remains available
-        run: test -s work/source-005/source-004-bundle.json
       - name: Checkout fixed GHoT read-only receiver
         uses: actions/checkout@v4
         with:
