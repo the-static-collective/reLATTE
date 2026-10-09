@@ -233,8 +233,44 @@ export function createOAuthMcpResource(
       if ('error' in principal) {
         const insufficient = principal.error === 'insufficient_scope';
         const description = insufficient ? 'Required read-only permission is missing' : 'Missing or invalid bearer token';
+        const authChallenge = challenge(principal.error, description);
+
+        // ChatGPT's tool-linking UI needs a tool-result challenge IN ADDITION
+        // to the HTTP Bearer challenge and tools/list securitySchemes.
+        // Never advertise linking for an unknown (possibly effectful) tool.
+        if (request.method === 'POST') {
+          const declaredLength = request.headers.get('content-length');
+          if (declaredLength && Number(declaredLength) > MAX_BYTES) {
+            return json({ error: 'REQUEST_TOO_LARGE' }, 413);
+          }
+          try {
+            const bounded = await boundedBody(request.clone());
+            if (!bounded) return json({ error: 'REQUEST_TOO_LARGE' }, 413);
+            const body: unknown = await bounded.json();
+            if (body !== null && typeof body === 'object' && !Array.isArray(body)) {
+              const call = body as { jsonrpc?: unknown; id?: unknown; method?: unknown;
+                params?: { name?: unknown } };
+              const id = call.id;
+              if (call.jsonrpc === '2.0' &&
+                  (typeof id === 'string' || (typeof id === 'number' && Number.isFinite(id))) &&
+                  call.method === 'tools/call' &&
+                  READ_ONLY_MCP_TOOLS.some(tool => tool.name === call.params?.name)) {
+                return json({
+                  jsonrpc: '2.0', id,
+                  result: {
+                    isError: true,
+                    content: [{ type: 'text', text: 'Authentication required for this read-only tool.' }],
+                    _meta: { 'mcp/www_authenticate': [authChallenge] },
+                  },
+                }, 200, { 'www-authenticate': authChallenge });
+              }
+            }
+          } catch {
+            // Malformed/missing params don't acquire an OAuth login surface.
+          }
+        }
         return json({ error: principal.error }, insufficient ? 403 : 401, {
-          'www-authenticate': challenge(principal.error, description),
+          'www-authenticate': authChallenge,
         });
       }
       if (request.method === 'POST') {
