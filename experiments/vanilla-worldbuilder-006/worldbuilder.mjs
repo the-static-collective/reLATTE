@@ -488,7 +488,7 @@ async function main() {
       let afterReset = null;
       if (process.env.MC_RIFF_RAFT_REDSTONE_FAULT === '1') {
         await sendBotCommand(authorBot,rcon,{kind:'setblock',at:faultAt,
-          block:'minecraft:air'},commandLog,actionReceipts.length,
+          block:'minecraft:air'},actionReceipts.length,commandLog,
           actionReceipts);
         await sendBotCommand(authorBot,rcon,trigger,commandLog,
           actionReceipts.length,actionReceipts);
@@ -500,7 +500,7 @@ async function main() {
         afterReset = await inspect('reset',none);
         await sendBotCommand(authorBot,rcon,{kind:'setblock',at:faultAt,
           block:'minecraft:repeater[facing=east,delay=4]'},
-          commandLog,actionReceipts.length,actionReceipts);
+          actionReceipts.length,commandLog,actionReceipts);
       }
       await sendBotCommand(authorBot,rcon,trigger,commandLog,
         actionReceipts.length,actionReceipts);
