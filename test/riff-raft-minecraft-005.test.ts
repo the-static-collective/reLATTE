@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
+import {readFileSync} from 'node:fs';
 import test from 'node:test';
 import {
   validateCounterfactualQuest,counterfactualScenario,
@@ -96,4 +97,41 @@ test('005: no empty or forged two-world result can be compared',async()=>{
 test('005: unverified ancestor cannot be wrapped in legitimate-looking reLATTE HOLD',async()=>{
   const fake={schema:SCHEMA,worlds:[{instance_id:'mock-A'},{instance_id:'mock-B'}]};
   await assert.rejects(()=>emitSignedReturn(fake,{},{}),/VERIFIED_SOURCE_004_BUNDLE_REQUIRED/);
+});
+
+test('005: CI regression — original signed ancestor is downloaded and checked BEFORE return signing',()=>{
+  const flow=readFileSync('.github/workflows/riff-raft-minecraft-005.yml','utf8');
+  const start=flow.indexOf('  compare-return:');
+  assert.ok(start>0,'missing receiver comparison job');
+  const compare=flow.slice(start);
+  const steps=[
+    'name: Collect both isolated vanilla evidence artifacts',
+    'name: Retrieve pinned signed source for independent GHoT review',
+    'name: Assert previous source remains available',
+    'name: Compare native worlds; sign held reLATTE return',
+    'name: Assert new signed return bundle actually exists',
+    'name: GHoT independently verifies source P256 signatures; HOLDS',
+  ];
+  const check=(snippet:string)=>{
+    let last=-1;
+    for(const step of steps){
+      const at=snippet.indexOf(step);
+      assert.ok(at>last, 'missing or misordered provenance-bound CI step: '+step);
+      last=at;
+    }
+  };
+  check(compare);
+  assert.match(compare,/name: riff-raft-005-counterfactual-offers/);
+  assert.match(compare,/run: test -s work\/source-005\/source-004-bundle\.json/);
+  assert.match(compare,/counterfactual-replay\.mjs[\\s\\S]*work\/source-005\/source-004-bundle\.json/);
+  assert.match(compare,/name: riff-raft-minecraft-005-return-to-ghot/);
+  assert.throws(()=>check(compare.replace(
+    'name: Retrieve pinned signed source for independent GHoT review',
+    'name: missing source retrieval')), /misordered provenance-bound CI step/);
+  assert.throws(()=>check(compare.replace(
+    'name: Assert previous source remains available',
+    'name: missing parent check')), /misordered provenance-bound CI step/);
+  assert.throws(()=>check(compare.replace(
+    'name: Compare native worlds; sign held reLATTE return',
+    'name: silently skipped signing')), /misordered provenance-bound CI step/);
 });
