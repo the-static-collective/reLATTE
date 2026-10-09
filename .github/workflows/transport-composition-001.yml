@@ -1,0 +1,46 @@
+name: TRANSPORT-COMPOSITION-001 multi-road cold witness
+
+on:
+  push:
+    paths:
+      - "src/transport-composition.ts"
+      - "test/transport-composition.test.ts"
+      - "scripts/transport-composition-001.mjs"
+      - ".github/workflows/transport-composition-001.yml"
+  pull_request:
+    paths:
+      - "src/transport-composition.ts"
+      - "test/transport-composition.test.ts"
+      - "scripts/transport-composition-001.mjs"
+      - ".github/workflows/transport-composition-001.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  field-simulation:
+    name: Crossing fragments and signed independent route evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install --ignore-scripts
+      - name: Execute transport fragment and adversarial suite
+        run: node --test --experimental-strip-types test/transport-composition.test.ts
+      - name: Demonstrate route outage, Wi-Fi recovery, owner RECEIVE without ADMIT
+        run: |
+          node --experimental-strip-types scripts/transport-composition-001.mjs work/crossing-field-001 | tee work-field-output.json
+          grep -q '"verified":true' work-field-output.json
+          grep -q '"actual_hardware_transmissions":0' work-field-output.json
+          test -f work/crossing-field-001/witness.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: transport-composition-001-public-witness
+          path: work/crossing-field-001/witness.json
+          if-no-files-found: error
+          retention-days: 7
