@@ -121,9 +121,6 @@ test('official MCP v2 client negotiates with authenticated SDK server and verifi
       'verify_crossing', 'verify_receipt', 'inspect_crossing_evidence',
     ]);
     assert.equal(list.tools.every(t => t.annotations?.readOnlyHint), true);
-    assert.equal(list.tools.every((t: any) =>
-      Array.isArray(t.securitySchemes) && t.securitySchemes.some((s: any) =>
-        s.type === 'oauth2' && s.scopes.includes(config.scope))), true);
     const crossing = await signedCrossing();
     const valid = await client.callTool({ name: 'verify_crossing', arguments: { crossing } });
     assert.equal((valid.structuredContent as any)?.verified, true);
@@ -136,4 +133,36 @@ test('official MCP v2 client negotiates with authenticated SDK server and verifi
     await client.close();
     await resource.close();
   }
+});
+
+test('raw MCP tool discovery advertises OpenAI OAuth requirements on every tool', async () => {
+  const resource = createOAuthMcpResource(config, localKeys);
+  const token = await mint();
+  try {
+    const response = await resource.fetch(new Request(config.resource, {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer ' + token,
+        'content-type': 'application/json',
+        accept: 'application/json, text/event-stream',
+        'mcp-protocol-version': '2026-07-28',
+        'mcp-method': 'tools/list',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0', id: 'schemas', method: 'tools/list',
+        params: { _meta: {
+          'io.modelcontextprotocol/protocolVersion': '2026-07-28',
+          'io.modelcontextprotocol/clientInfo': { name: 'raw-schema-test', version: '1.0' },
+          'io.modelcontextprotocol/clientCapabilities': {},
+        } },
+      }),
+    }));
+    assert.equal(response.status, 200);
+    const result: any = await response.json();
+    assert.equal(result.result.tools.length, 3);
+    assert.equal(result.result.tools.every((tool: any) =>
+      Array.isArray(tool.securitySchemes) &&
+      tool.securitySchemes.some((scheme: any) =>
+        scheme.type === 'oauth2' && scheme.scopes.includes(config.scope))), true);
+  } finally { await resource.close(); }
 });
