@@ -126,7 +126,10 @@ test('station order and morphology show a symbolic chain, never claim redstone a
 
 test('schema digest catches arbitrary block replacement in plan',()=>{
   const p=fixture();
-  p.operations[p.operations.length-1]!.block='minecraft:command_block';
+  const last=p.operations[p.operations.length-1]!;
+  assert.equal(last.kind, 'setblock');
+  if (last.kind !== 'setblock') throw new Error('TEST_EXPECTED_SETBLOCK');
+  last.block='minecraft:command_block';
   assert.throws(()=>validateWorldPlan(p),/WORLDBUILDER_PLAN_HASH/);
 });
 
