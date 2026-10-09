@@ -39,5 +39,6 @@ test('007: distribution is NOT independently administered authority',()=>{
   assert.match(flow,/repository: the-static-collective\/GHoT/);
   assert.match(flow,/name: reLATTE source reopens while GHoT peer data is unavailable/);
   assert.match(flow,/name: GHoT copy reopens while reLATTE primary data is unavailable/);
-  assert.match(flow,/administrative_independence_verified/);
+  const auditor=readFileSync('experiments/riff-raft-minecraft-007/custody-audit.mjs','utf8');
+  assert.match(auditor,/administrative_independence_verified:false/);
 });
