@@ -1,0 +1,109 @@
+name: RIFF-RAFT-MINECRAFT-005 sealed return from verified earlier worlds
+
+on:
+  push:
+    branches:
+      - experiment/riff-raft-minecraft-005-counterfactual-return
+    paths:
+      - ".github/workflows/riff-raft-minecraft-005-return-replay.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  compare-preserved-native-worlds:
+    name: sealed prior two-world replay + GHoT independent HOLD
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install locked reLATTE dependencies
+        run: npm install
+      - name: Restore actual preserved vanilla World A evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: riff-raft-minecraft-005-A
+          run-id: 37994386969
+          repository: the-static-collective/reLATTE
+          github-token: ${{ github.token }}
+          path: work/two-world-inputs/riff-raft-minecraft-005-A
+      - name: Restore actual preserved vanilla World B evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: riff-raft-minecraft-005-B
+          run-id: 37994386969
+          repository: the-static-collective/reLATTE
+          github-token: ${{ github.token }}
+          path: work/two-world-inputs/riff-raft-minecraft-005-B
+      - name: Restore the verified GHoT offers and signed ancestor
+        uses: actions/download-artifact@v4
+        with:
+          name: riff-raft-005-counterfactual-offers
+          run-id: 37994386969
+          repository: the-static-collective/reLATTE
+          github-token: ${{ github.token }}
+          path: work/source-005
+      - name: Require both native observations and original signed source
+        run: |
+          test -s work/two-world-inputs/riff-raft-minecraft-005-A/composition-evidence.json
+          test -s work/two-world-inputs/riff-raft-minecraft-005-A/runtime-evidence.json
+          test -s work/two-world-inputs/riff-raft-minecraft-005-B/composition-evidence.json
+          test -s work/two-world-inputs/riff-raft-minecraft-005-B/runtime-evidence.json
+          test -s work/source-005/source-004-bundle.json
+          test -s work/source-005/counterfactual-A.json
+          test -s work/source-005/counterfactual-B.json
+      - name: Compare real observed counterfactuals, P256 verify and sign R3_HOLD
+        run: |
+          node --experimental-strip-types \
+            experiments/riff-raft-minecraft-005/counterfactual-replay.mjs \
+            work/two-world-inputs \
+            work/two-world-return/riff-raft-return-bundle.json \
+            work/source-005/source-004-bundle.json
+          test -s work/two-world-return/riff-raft-return-bundle.json
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/GHoT
+          ref: c8b15d43b334b6091f4920578557616b56ce72a6
+          path: ghot-receiver
+          persist-credentials: false
+      - name: GHoT independently re-verifies complete 004+005 ancestry
+        run: |
+          python3 ghot-receiver/ghot/riff_raft_counterfactual_return.py \
+            work/two-world-return/riff-raft-return-bundle.json \
+            > work/two-world-return/ghot-reception.json
+          python3 - <<'PY'
+          import json
+          b=json.load(open("work/two-world-return/ghot-reception.json"))
+          assert b["disposition"]=="HOLD"
+          assert b["world_count"]==2
+          assert all(x["source_verified"] for x in b["verified_sources"])
+          assert b["crossing_signature_valid"] and b["receipt_signature_valid"]
+          assert b["owner_admitted"] is False
+          assert b["remote_work_dispatch"] is False
+          assert b["physical_actuation"] is False
+          assert b["ghot_energy_or_water_moved"] is False
+          print(json.dumps({
+            "result":"RIFF_RAFT_005_RETURN_VERIFIED",
+            "worlds":b["world_count"],
+            "ghot_disposition":b["disposition"],
+            "crossing_id":b["crossing_id"],
+            "receipt_id":b["receipt_id"],
+          },indent=2))
+          PY
+      - name: Preserve signed 005 return and sovereign GHoT receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: riff-raft-005-sealed-return-to-ghot
+          path: |
+            work/two-world-return/riff-raft-return-bundle.json
+            work/two-world-return/ghot-reception.json
+          if-no-files-found: warn
+          retention-days: 7
