@@ -18,7 +18,7 @@ The 002 addition is a nearby dedicated redstone lane at `z=46`:
 
 - Nine redstone lamps below redstone wire at `(x, 65, 46)` for x = −40, −30, −20, −10, 0, 10, 20, 30, 40.
 - Support blocks under all wire and repeaters.
-- Six stretches of genuine `redstone_wire`, with five east-facing four-tick repeaters at x = −28, −13, 2, 17, 32 to restore power across the 80-block chain.
+- Six stretches of genuine `redstone_wire`, with five west-facing four-tick repeaters at x = −28, −13, 2, 17, 32 to restore power across the 80-block chain.
 - One explicitly permitted trigger: `/setblock -43 66 46 minecraft:redstone_block`.
 - The trigger is **not** placed by the world-building plan; it is a separate logged operator action after all equipment has been assembled and unpowered states independently checked.
 
