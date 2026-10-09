@@ -222,7 +222,11 @@ export async function assemblePair(inputs){
   };
   return packet;
 }
-export async function emitSignedReturn(packet,worldEvidence){
+export async function emitSignedReturn(packet,worldEvidence,ancestralSource){
+  demand(ancestralSource?.crossing?.crossing_id===SOURCE_CROSSING &&
+    ancestralSource?.receipt?.receipt_id===SOURCE_RECEIPT &&
+    sha(Buffer.from(ancestralSource?.packet_json??'','utf8'))===SOURCE_PACKET,
+    'VERIFIED_SOURCE_004_BUNDLE_REQUIRED');
   const packetJson=JSON.stringify(packet);
   const packetBytes=Buffer.from(packetJson,'utf8');
   const observation=makeObservation(
@@ -258,9 +262,12 @@ export async function emitSignedReturn(packet,worldEvidence){
     crossing:hop.crossing,
     receipt:hop.receipt,
     world_evidence:worldEvidence,
+    ancestral_source_004:ancestralSource,
   };
 }
-export async function buildBundleFromFiles(root,outPath){
+export async function buildBundleFromFiles(root,outPath,source004Path){
+  demand(typeof source004Path==='string'&&source004Path.length>0,'SOURCE_004_REQUIRED');
+  const original=JSON.parse(await readFile(source004Path,'utf8'));
   const inputs=[], evidence={};
   for(const world_id of ['A','B']){
     const folder=root+'/riff-raft-minecraft-005-'+world_id;
@@ -273,7 +280,7 @@ export async function buildBundleFromFiles(root,outPath){
     };
   }
   const packet=await assemblePair(inputs);
-  const result=await emitSignedReturn(packet,evidence);
+  const result=await emitSignedReturn(packet,evidence,original);
   await mkdir(dirname(outPath),{recursive:true});
   await writeFile(outPath,JSON.stringify(result,null,2)+'\n');
   return {worlds:packet.worlds.map(x=>({id:x.world_id,instance:x.instance_id})),
@@ -283,8 +290,8 @@ export async function buildBundleFromFiles(root,outPath){
     output_path:outPath};
 }
 if(process.argv[1]?.endsWith('counterfactual-replay.mjs')){
-  const root=process.argv[2],out=process.argv[3];
-  if(!root||!out)throw Error('Usage: two-world-replay.mjs <artifact-root> <output-json>');
-  buildBundleFromFiles(root,out).then(x=>console.log(JSON.stringify(x,null,2)))
+  const root=process.argv[2],out=process.argv[3],previous=process.argv[4];
+  if(!root||!out||!previous)throw Error('Usage: counterfactual-replay.mjs <artifact-root> <output-json> <verified-source-004.json>');
+  buildBundleFromFiles(root,out,previous).then(x=>console.log(JSON.stringify(x,null,2)))
     .catch(e=>{console.error(e.stack||String(e));process.exitCode=1;});
 }
