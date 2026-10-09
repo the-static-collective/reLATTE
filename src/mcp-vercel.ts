@@ -6,6 +6,7 @@
  * No secrets or defaults are embedded.
  */
 import { createOAuthMcpResource } from './mcp-oauth-resource.ts';
+import { createIssuerIntrospection } from './mcp-auth-trust.ts';
 
 type RuntimeEnv = NodeJS.ProcessEnv;
 type Endpoint = 'mcp' | 'metadata';
@@ -17,10 +18,15 @@ function configuration(env: RuntimeEnv) {
   const issuer = env.RELATTE_OAUTH_ISSUER;
   const jwksUri = env.RELATTE_OAUTH_JWKS_URI;
   const scope = env.RELATTE_OAUTH_SCOPE;
-  if (!resource || !issuer || !jwksUri || !scope) {
-    throw new Error('OAUTH_ENV_UNCONFIGURED');
+  const introspectionUri = env.RELATTE_OAUTH_INTROSPECTION_URI;
+  const introspectionClientId = env.RELATTE_OAUTH_INTROSPECTION_CLIENT_ID;
+  const introspectionClientSecret = env.RELATTE_OAUTH_INTROSPECTION_CLIENT_SECRET;
+  if (!resource || !issuer || !jwksUri || !scope ||
+      !introspectionUri || !introspectionClientId || !introspectionClientSecret) {
+    throw new Error('OAUTH_STATUS_GATE_UNCONFIGURED');
   }
-  return { resource, issuer, jwksUri, scope };
+  return { resource, issuer, jwksUri, scope,
+    introspectionUri, introspectionClientId, introspectionClientSecret };
 }
 
 function errorResponse(status: number, error: string): Response {
@@ -40,7 +46,15 @@ export async function handleMcpVercelRequest(
     // Reusing one verifier/JWKS cache per isolate is fine: each MCP request
     // still receives an independent SDK server instance.
     const cacheKey = JSON.stringify(config);
-    server = instances.get(cacheKey) ?? createOAuthMcpResource(config);
+    server = instances.get(cacheKey) ?? createOAuthMcpResource(config, undefined, {
+      requireLiveStatus: true,
+      maxTokenLifetimeSeconds: 900,
+      revocation: createIssuerIntrospection({
+        endpoint: config.introspectionUri, issuer: config.issuer, resource: config.resource,
+        scope: config.scope,
+        clientId: config.introspectionClientId, clientSecret: config.introspectionClientSecret,
+      }),
+    });
     instances.set(cacheKey, server);
   } catch {
     // Fail shut; never fall back to local noauth verifier or mock credentials.

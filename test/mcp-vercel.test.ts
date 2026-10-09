@@ -7,6 +7,9 @@ const environment = {
   RELATTE_OAUTH_ISSUER: 'https://auth.example.org/',
   RELATTE_OAUTH_JWKS_URI: 'https://auth.example.org/.well-known/jwks.json',
   RELATTE_OAUTH_SCOPE: 'relatte:verify',
+  RELATTE_OAUTH_INTROSPECTION_URI: 'https://auth.example.org/introspect',
+  RELATTE_OAUTH_INTROSPECTION_CLIENT_ID: 'test-client',
+  RELATTE_OAUTH_INTROSPECTION_CLIENT_SECRET: 'synthetic-only-test-secret',
 };
 
 test('Vercel boundary never downgrades to anonymous when OAuth is unconfigured', async () => {

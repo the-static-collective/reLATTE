@@ -24,6 +24,7 @@ async function mint(options: {
     .setIssuer(options.issuer ?? config.issuer)
     .setAudience(options.aud ?? config.resource)
     .setSubject(options.subject ?? 'fixture-subject-001')
+    .setJti('fixture-jti-000001')
     .setIssuedAt()
     .setExpirationTime(options.expiry ?? '2m')
     .sign(fixture.privateKey);

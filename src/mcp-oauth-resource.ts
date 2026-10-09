@@ -10,7 +10,9 @@ import { createRemoteJWKSet, jwtVerify } from 'jose';
 import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
 import * as z from 'zod/v4';
 
-import { callReadOnlyMcpTool } from './mcp-readonly.ts';
+import { callReadOnlyMcpTool, READ_ONLY_MCP_TOOLS } from './mcp-readonly.ts';
+import { checkAccessTrust, checkDpopProof, validateAccessTrustPolicy } from './mcp-auth-trust.ts';
+import type { AccessTrustPolicy, AccessTokenFacts } from './mcp-auth-trust.ts';
 
 const MAX_BYTES = 256 * 1024;
 const readOnly = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
@@ -129,12 +131,17 @@ async function boundedBody(request: Request): Promise<Request | null> {
   });
 }
 
-export function createOAuthMcpResource(configValue: McpOAuthConfig, verificationKey?: VerifyKey) {
+export function createOAuthMcpResource(
+  configValue: McpOAuthConfig, verificationKey?: VerifyKey, trust: AccessTrustPolicy = {},
+) {
+  validateAccessTrustPolicy(trust);
   const config = validateMcpOAuthConfig(configValue);
   const resource = new URL(config.resource);
   const metadataUrl = new URL('/.well-known/oauth-protected-resource', config.resource);
   // jose fetches keys ONLY from the operator-configured issuer-owned HTTPS URI.
-  const key = verificationKey ?? createRemoteJWKSet(new URL(config.jwksUri));
+  const key = verificationKey ?? createRemoteJWKSet(new URL(config.jwksUri), {
+    cacheMaxAge: 60_000, cooldownDuration: 5_000, timeoutDuration: 3_000,
+  });
   const mcp = createMcpHandler(() => makeServer(config.scope), { responseMode: 'json' });
 
   // The upstream SDK currently does not declare ChatGPT's extension field
@@ -175,14 +182,25 @@ export function createOAuthMcpResource(configValue: McpOAuthConfig, verification
         audience: config.resource,
         algorithms: ['RS256', 'ES256'],
         clockTolerance: '5s',
+        typ: 'at+jwt',
       });
       const claims = verified.payload;
       if (typeof claims.sub !== 'string' || claims.sub.length === 0 ||
-          typeof claims.exp !== 'number' || !Number.isSafeInteger(claims.exp)) {
+          typeof claims.exp !== 'number' || !Number.isSafeInteger(claims.exp) ||
+          typeof claims.iat !== 'number' || !Number.isSafeInteger(claims.iat) ||
+          typeof claims.jti !== 'string' || claims.jti.length < 8 || claims.jti.length > 256) {
         return { error: 'invalid_token' };
       }
       const scopes = typeof claims.scope === 'string' ? claims.scope.split(' ').filter(Boolean) : [];
       if (!scopes.includes(config.scope)) return { error: 'insufficient_scope' };
+      const facts: AccessTokenFacts = {
+        subject: claims.sub, issuer: config.issuer, audience: config.resource,
+        scopes, expiresAt: claims.exp, tokenId: claims.jti, issuedAt: claims.iat,
+      };
+      if (!(await checkAccessTrust(token, facts, trust))) return { error: 'invalid_token' };
+      if (trust.dpop && !(await checkDpopProof(
+        request.headers.get('dpop'), token, claims.cnf, request, trust.dpop.replayStore,
+      ))) return { error: 'invalid_token' };
       return { subject: claims.sub, issuer: config.issuer, scopes, expiresAt: claims.exp };
     } catch {
       // Never echo token contents or verification exception to clients/logs.
@@ -230,6 +248,23 @@ export function createOAuthMcpResource(configValue: McpOAuthConfig, verification
         }
         if (!bounded) return json({ error: 'REQUEST_TOO_LARGE' }, 413);
         const wireCopy = bounded.clone();
+        // Enforce the read-only permit list at ingress, independently of SDK
+        // unknown-method presentation and regardless of the OAuth subject.
+        let candidate: unknown;
+        try { candidate = await bounded.clone().json(); }
+        catch { return json({ error: 'INVALID_MCP_JSON' }, 400); }
+        if (candidate !== null && typeof candidate === 'object' && !Array.isArray(candidate)) {
+          const command = candidate as { id?: unknown; method?: unknown; params?: { name?: unknown } };
+          if (command.method === 'tools/call' &&
+              !READ_ONLY_MCP_TOOLS.some((tool) => tool.name === command.params?.name)) {
+            return json({
+              jsonrpc: '2.0',
+              id: typeof command.id === 'string' || typeof command.id === 'number'
+                ? command.id : null,
+              error: { code: -32602, message: 'Tool not in read-only allowlist' },
+            }, 400);
+          }
+        }
         const answer = await mcp.fetch(bounded);
         return withAuthSchemes(wireCopy, answer);
       }
