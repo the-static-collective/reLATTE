@@ -52,7 +52,7 @@ function isRecord(value: unknown): value is Record<string, any> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
-function exactKeys(value: unknown, keys: string[]): boolean {
+function exactKeys(value: unknown, keys: string[]): value is Record<string, any> {
   return isRecord(value) &&
     Object.keys(value).sort().join('|') === [...keys].sort().join('|');
 }
