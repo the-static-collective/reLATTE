@@ -236,15 +236,25 @@ export class CrossingFieldReceiver {
   private readonly pieces=new Map<number,Buffer>();
   private readonly observations: CarrierRouteObservation[]=[];
   private readonly holds: string[]=[];
+  readonly manifest: CrossingFieldManifest;
+  readonly observer: {
+    world_id: string;
+    particular: string;
+    signing_keys: P256KeyMaterial;
+    allowed_carriers: FieldCarrierKind[];
+  };
+
   constructor(
-    readonly manifest: CrossingFieldManifest,
-    readonly observer: {
+    manifest: CrossingFieldManifest,
+    observer: {
       world_id: string;
       particular: string;
       signing_keys: P256KeyMaterial;
       allowed_carriers: FieldCarrierKind[];
     },
   ) {
+    this.manifest=manifest;
+    this.observer=observer;
     if (!verifyCrossingFieldManifest(manifest)) throw new Error('FIELD_INVALID_MANIFEST');
     if (!str(observer.world_id) || !str(observer.particular) ||
         !observer.signing_keys || !Array.isArray(observer.allowed_carriers) ||
