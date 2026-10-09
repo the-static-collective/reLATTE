@@ -122,9 +122,16 @@ test('loopback HTTP uses matching 2026-07-28 routing headers and rejects unsafe 
     const address = server.address();
     if (!address || typeof address === 'string') throw new Error('INVALID_TEST_SERVER_ADDRESS');
     const url = 'http://127.0.0.1:' + address.port + '/mcp';
-    const payload = JSON.stringify({ jsonrpc: '2.0', id: 'tools', method: 'tools/list', params: {} });
+    const payload = JSON.stringify({ jsonrpc: '2.0', id: 'tools', method: 'tools/list', params: {
+      _meta: {
+        'io.modelcontextprotocol/protocolVersion': '2026-07-28',
+        'io.modelcontextprotocol/clientInfo': { name: 'relatte-test-client', version: '1.0' },
+        'io.modelcontextprotocol/clientCapabilities': {},
+      },
+    } });
     const headers = {
       'content-type': 'application/json',
+      'accept': 'application/json, text/event-stream',
       'mcp-protocol-version': '2026-07-28',
       'mcp-method': 'tools/list',
     };
