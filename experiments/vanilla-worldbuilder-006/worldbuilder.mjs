@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 
 import { buildWorldPlan, operationToCommand, validateWorldPlan, WORLD_BOUNDS } from './world-grammar.mjs';
 import { buildRiffRaftMinecraftPlan } from '../riff-raft-minecraft-001/terraform-grammar.mjs';
+import { buildRiffRaftRedstonePlan } from '../riff-raft-minecraft-002/redstone-grammar.mjs';
 import {
   FROZEN_CORE_SHA,
   makeObservation,
@@ -411,8 +412,12 @@ async function main() {
     }
 
     const riffRaftMode = process.env.MC_RIFF_RAFT_PLAN === '1';
+    const redstoneMode = process.env.MC_RIFF_RAFT_REDSTONE === '1';
+    if (redstoneMode && !riffRaftMode) {
+      throw new Error('RIFF_RAFT_REDSTONE_REQUIRES_EXPLICIT_RIFF_RAFT_MODE');
+    }
     const plan = riffRaftMode
-      ? buildRiffRaftMinecraftPlan({
+      ? (redstoneMode ? buildRiffRaftRedstonePlan : buildRiffRaftMinecraftPlan)({
           goal: GOAL,
           serverSeed,
           provenance: JSON.parse(await readFile(
@@ -436,6 +441,86 @@ async function main() {
         commandLog,
         actionReceipts,
       );
+    }
+
+    // 002: one input powers nine lamp states through actual vanilla redstone
+    // and repeater delays. A deliberately broken mid-link is independently
+    // sampled before repair and the final one-command trigger. None of this
+    // changes any real-world device state or moves any material in GHoT.
+    let redstoneProof = null;
+    if (redstoneMode) {
+      const circuit = plan.riff_raft_redstone;
+      await rcon.send('scoreboard objectives add relatte_redstone dummy');
+      const inspect = async (label, expected) => {
+        const rows = [];
+        for (let i = 0; i < circuit.stages.length; i += 1) {
+          const stage = circuit.stages[i];
+          const at = stage.at;
+          const criterion = 'execute if block ' +
+            at.x + ' ' + at.y + ' ' + at.z +
+            ' minecraft:redstone_lamp[lit=true]';
+          const witness = '#red_' + label + '_' + i;
+          await rcon.send('scoreboard players set ' + witness + ' relatte_redstone 0');
+          await rcon.send(criterion + ' run scoreboard players set ' +
+            witness + ' relatte_redstone 1');
+          const response = String(await rcon.send(
+            'scoreboard players get ' + witness + ' relatte_redstone'));
+          const values = response.match(/-?[0-9]+/g) ?? [];
+          const observed = Number(values.at(-1)) === 1;
+          if (observed !== expected[i]) {
+            throw new Error('RIFF_RAFT_REDSTONE_CAUSALITY_MISMATCH:' +
+              label + ':' + stage.cue + ':' + observed + ':expected:' +
+              expected[i] + ':' + response);
+          }
+          rows.push({cue:stage.cue,at,lit:observed,witness,response});
+        }
+        return rows;
+      };
+      const none = circuit.stages.map(() => false);
+      const all = circuit.stages.map(() => true);
+      const before = await inspect('before', none);
+      const trigger = {kind:'setblock',at:circuit.trigger,
+        block:'minecraft:redstone_block'};
+      const offTrigger = {kind:'setblock',at:circuit.trigger,
+        block:'minecraft:air'};
+      const faultAt = circuit.break_repeater;
+      let broken = null;
+      let afterReset = null;
+      if (process.env.MC_RIFF_RAFT_REDSTONE_FAULT === '1') {
+        await sendBotCommand(authorBot,rcon,{kind:'setblock',at:faultAt,
+          block:'minecraft:air'},actionReceipts.length,commandLog,
+          actionReceipts);
+        await sendBotCommand(authorBot,rcon,trigger,actionReceipts.length,
+          commandLog,actionReceipts);
+        await sleep(1600);
+        broken = await inspect('broken',circuit.stages.map((_,i) => i < 3));
+        await sendBotCommand(authorBot,rcon,offTrigger,actionReceipts.length,
+          commandLog,actionReceipts);
+        await sleep(1400);
+        afterReset = await inspect('reset',none);
+        await sendBotCommand(authorBot,rcon,{kind:'setblock',at:faultAt,
+          block:'minecraft:repeater[facing=west,delay=4]'},
+          actionReceipts.length,commandLog,actionReceipts);
+      }
+      await sendBotCommand(authorBot,rcon,trigger,actionReceipts.length,
+        commandLog,actionReceipts);
+      await sleep(1800);
+      const powered = await inspect('powered',all);
+      redstoneProof = {
+        schema:'relatte.riff-raft-redstone-execution/v0',
+        stage_count:9,
+        circuit_plan_sha256:plan.plan_sha256,
+        source_ghot_commit:plan.riff_raft.source_commit,
+        physical_field_improvement_verified:false,
+        ghot_resource_moved:false,
+        redstone_circuit_actuated_in_game:true,
+        game_author_command_count:commandLog.length,
+        broken_link_trial:broken,
+        original_unpowered_states:before,
+        reset_states:afterReset,
+        powered_states:powered,
+        final_observer:null,
+      };
     }
 
     const onlinePlayers = String(await rcon.send('list'));
@@ -564,6 +649,39 @@ async function main() {
     }
     await writeFile(MAP_PATH, scan.top_down);
 
+    if (redstoneMode) {
+      const rows = [];
+      for (const stage of plan.riff_raft_redstone.stages) {
+        const {at,cue} = stage;
+        const block = observerBot.blockAt(new Vec3(at.x,at.y,at.z));
+        const props = block?.getProperties?.() ?? {};
+        if (block?.name !== 'redstone_lamp' || props.lit !== true) {
+          throw new Error('RIFF_RAFT_FRESH_OBSERVER_LAMP_NOT_LIT:' +
+            cue + ':' + JSON.stringify({name:block?.name,props}));
+        }
+        const witness='#fresh_red_'+stage.sequence;
+        await rcon.send('scoreboard players set '+witness+' relatte_redstone 0');
+        await rcon.send('execute if block '+at.x+' '+at.y+' '+at.z+
+          ' minecraft:redstone_lamp[lit=true] run scoreboard players set '+
+          witness+' relatte_redstone 1');
+        const response=String(await rcon.send(
+          'scoreboard players get '+witness+' relatte_redstone'));
+        const values=response.match(/-?[0-9]+/g) ?? [];
+        if (Number(values.at(-1)) !== 1) {
+          throw new Error('RIFF_RAFT_FRESH_OBSERVER_SERVER_DISAGREES:'+cue);
+        }
+        rows.push({cue,at,observer_name:block.name,observer_properties:props,
+          server_lit:true});
+      }
+      redstoneProof.final_observer={
+        observer:observerName, author:BOT_NAME, stages:rows,
+        observed_state_sha256:sha(JSON.stringify(rows)),
+        game_causality_verified:true,
+        independent_fresh_client:true,
+        physical_field_evidence:false,
+      };
+    }
+
     const worldDescriptor = Buffer.from(JSON.stringify({
       schema: 'relatte.vanilla-authored-world/v0',
       goal: GOAL,
@@ -573,6 +691,7 @@ async function main() {
       non_air_blocks: scan.non_air_blocks,
       histogram: scan.histogram,
       anchors: plan.anchors,
+      ...(redstoneMode ? {redstone_execution:redstoneProof} : {}),
     }), 'utf8');
 
     const observation = makeObservation(
@@ -602,6 +721,12 @@ async function main() {
         fixed_blueprint: false,
         generative_grammar: true,
         bounded_command_surface: ['fill', 'setblock'],
+        ...(redstoneMode ? {
+          riff_raft_redstone_observed_state_sha256:
+            redstoneProof.final_observer.observed_state_sha256,
+          actual_vanilla_redstone_causality: 'OBSERVED',
+          physical_soil_improvement: 'NOT_CLAIMED',
+        } : {}),
       },
     );
 
@@ -639,6 +764,7 @@ async function main() {
       command_log: commandLog,
       action_receipts: actionReceipts,
       anchor_verification: anchorVerification,
+      ...(redstoneMode ? {redstone:redstoneProof} : {}),
       scan: {
         field_sha256: scan.field_sha256,
         non_air_blocks: scan.non_air_blocks,
@@ -669,6 +795,13 @@ async function main() {
         human_blueprint: 'REFUTED_FOR_EXACT_COORDINATE_PLAN',
         open_ended_general_intelligence: 'UNOBSERVED',
         human_aesthetic_judgment: 'UNOBSERVED',
+        ...(redstoneMode ? {
+          minecraft_redstone_causal_propagation: 'OBSERVED',
+          minecraft_fault_injection_and_repair: redstoneProof.broken_link_trial
+            ? 'OBSERVED' : 'NOT_ATTEMPTED',
+          independent_minecraft_redstone_observer: 'OBSERVED',
+          physical_ecological_improvement: 'UNOBSERVED',
+        } : {}),
       },
     };
 
