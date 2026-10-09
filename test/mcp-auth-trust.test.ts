@@ -99,9 +99,14 @@ test('issuer status outage and overlong bearer lifetime fail closed', async () =
   const long = createOAuthMcpResource(config, local);
   try { assert.equal((await long.fetch(req(jwt))).status, 401); }
   finally { await long.close(); }
-  assert.equal(await checkAccessTrust('opaque',
-    { subject: 'a', issuer: 'i', audience: 'r', scopes: [], expiresAt: 15, issuedAt: 0, tokenId: 'token-12345' },
-    {}), true);
+  const now = Math.floor(Date.now() / 1000);
+  const facts = { subject: 'a', issuer: 'i', audience: 'r', scopes: [],
+    expiresAt: now + 120, issuedAt: now, tokenId: 'token-12345' };
+  assert.equal(await checkAccessTrust('opaque', facts, {}), true);
+  assert.equal(await checkAccessTrust('opaque', { ...facts, issuedAt: now + 600,
+    expiresAt: now + 720 }, {}), false, 'future-issued JWT must fail closed');
+  assert.equal(await checkAccessTrust('opaque', { ...facts, issuedAt: now - 300,
+    expiresAt: now - 60 }, {}), false, 'expired JWT must fail closed');
 });
 
 test('issuer introspection compares signed identity and refuses token redirect or stale claims', async () => {
@@ -228,4 +233,39 @@ test('authenticated subject has no sovereign ADMIT tool or synthetic owner autho
     }));
     assert.ok(bad.status >= 400 || (await bad.clone().text()).includes('Unknown tool'));
   } finally { await server.close(); }
+});
+
+
+test('RFC7662 introspection caps hostile response size before buffering', async () => {
+  const cfg = {
+    endpoint: config.issuer + 'introspect',
+    issuer: config.issuer, resource: config.resource,
+    clientId: 'resource-fixture', clientSecret: 'synthetic-only',
+    scope: config.scope,
+  };
+  const now = Math.floor(Date.now()/1000);
+  const facts = {
+    subject: 'human:alice', issuer: config.issuer,
+    audience: config.resource, scopes: [config.scope],
+    tokenId: 'fixture-status-id', issuedAt: now, expiresAt: now + 60,
+  };
+  // Chunked response intentionally omits Content-Length. The implementation
+  // must abandon it once 8KiB are observed rather than response.text().
+  let attemptedOversize = false;
+  const checker = createIssuerIntrospection(cfg, async () => {
+    const stream = new ReadableStream<Uint8Array>({
+      pull(controller) {
+        attemptedOversize = true;
+        controller.enqueue(new TextEncoder().encode('x'.repeat(9000)));
+        controller.close();
+      },
+    });
+    return new Response(stream, { headers: { 'content-type': 'application/json' } });
+  });
+  assert.equal(await checker.checkActive('fixture', facts), false);
+  assert.equal(attemptedOversize, true);
+  const checkerDeclared = createIssuerIntrospection(cfg, async () => new Response(null, {
+    headers: { 'content-type': 'application/json', 'content-length': '9999999' },
+  }));
+  assert.equal(await checkerDeclared.checkActive('fixture', facts), false);
 });
