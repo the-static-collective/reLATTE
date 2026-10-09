@@ -11,6 +11,8 @@ import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
 import * as z from 'zod/v4';
 
 import { callReadOnlyMcpTool } from './mcp-readonly.ts';
+import { checkAccessTrust, checkDpopProof, validateAccessTrustPolicy } from './mcp-auth-trust.ts';
+import type { AccessTrustPolicy, AccessTokenFacts } from './mcp-auth-trust.ts';
 
 const MAX_BYTES = 256 * 1024;
 const readOnly = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
@@ -129,12 +131,17 @@ async function boundedBody(request: Request): Promise<Request | null> {
   });
 }
 
-export function createOAuthMcpResource(configValue: McpOAuthConfig, verificationKey?: VerifyKey) {
+export function createOAuthMcpResource(
+  configValue: McpOAuthConfig, verificationKey?: VerifyKey, trust: AccessTrustPolicy = {},
+) {
+  validateAccessTrustPolicy(trust);
   const config = validateMcpOAuthConfig(configValue);
   const resource = new URL(config.resource);
   const metadataUrl = new URL('/.well-known/oauth-protected-resource', config.resource);
   // jose fetches keys ONLY from the operator-configured issuer-owned HTTPS URI.
-  const key = verificationKey ?? createRemoteJWKSet(new URL(config.jwksUri));
+  const key = verificationKey ?? createRemoteJWKSet(new URL(config.jwksUri), {
+    cacheMaxAge: 60_000, cooldownDuration: 5_000, timeoutDuration: 3_000,
+  });
   const mcp = createMcpHandler(() => makeServer(config.scope), { responseMode: 'json' });
 
   // The upstream SDK currently does not declare ChatGPT's extension field
@@ -175,14 +182,25 @@ export function createOAuthMcpResource(configValue: McpOAuthConfig, verification
         audience: config.resource,
         algorithms: ['RS256', 'ES256'],
         clockTolerance: '5s',
+        typ: 'at+jwt',
       });
       const claims = verified.payload;
       if (typeof claims.sub !== 'string' || claims.sub.length === 0 ||
-          typeof claims.exp !== 'number' || !Number.isSafeInteger(claims.exp)) {
+          typeof claims.exp !== 'number' || !Number.isSafeInteger(claims.exp) ||
+          typeof claims.iat !== 'number' || !Number.isSafeInteger(claims.iat) ||
+          typeof claims.jti !== 'string' || claims.jti.length < 8 || claims.jti.length > 256) {
         return { error: 'invalid_token' };
       }
       const scopes = typeof claims.scope === 'string' ? claims.scope.split(' ').filter(Boolean) : [];
       if (!scopes.includes(config.scope)) return { error: 'insufficient_scope' };
+      const facts: AccessTokenFacts = {
+        subject: claims.sub, issuer: config.issuer, audience: config.resource,
+        scopes, expiresAt: claims.exp, tokenId: claims.jti, issuedAt: claims.iat,
+      };
+      if (!(await checkAccessTrust(token, facts, trust))) return { error: 'invalid_token' };
+      if (trust.dpop && !(await checkDpopProof(
+        request.headers.get('dpop'), token, claims.cnf, request, trust.dpop.replayStore,
+      ))) return { error: 'invalid_token' };
       return { subject: claims.sub, issuer: config.issuer, scopes, expiresAt: claims.exp };
     } catch {
       // Never echo token contents or verification exception to clients/logs.
