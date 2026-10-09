@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import { timingSafeEqual } from 'node:crypto';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import { dispatchReadOnlyMcpRequest } from './mcp-readonly.ts';
@@ -27,7 +28,11 @@ function headerValue(value: string | undefined): string | null {
 }
 
 // Development-only adapter, deliberately loopback-only, no reverse-proxy trust.
-export function createLocalReadOnlyMcpServer() {
+export function createLocalReadOnlyMcpServer(options: { stagingBearerToken?: string } = {}) {
+  const token = options.stagingBearerToken;
+  if (token !== undefined && Buffer.byteLength(token, 'utf8') < 32) {
+    throw new Error('STAGING_TOKEN_TOO_SHORT');
+  }
   return createServer(async (request: IncomingMessage, response: ServerResponse) => {
     const send = (status: number, payload?: unknown) => {
       response.writeHead(status, {
@@ -45,6 +50,20 @@ export function createLocalReadOnlyMcpServer() {
       request.headers.origin !== undefined) {
       send(403, { error: 'LOCAL_CLIENT_ONLY' });
       return;
+    }
+    // Optional loopback staging gateway: deny by default when configured.
+    // A shared secret is not user OAuth and is never sufficient for public submission.
+    if (token !== undefined) {
+      const actual = request.headers.authorization ?? '';
+      const expected = 'Bearer ' + token;
+      const actualBytes = Buffer.from(actual, 'utf8');
+      const expectedBytes = Buffer.from(expected, 'utf8');
+      if (actualBytes.length !== expectedBytes.length ||
+          !timingSafeEqual(actualBytes, expectedBytes)) {
+        response.setHeader('www-authenticate', 'Bearer realm="relatte-staging"');
+        send(401, { error: 'STAGING_AUTH_REQUIRED' });
+        return;
+      }
     }
     if (request.url !== '/mcp') {
       send(404, { error: 'NOT_FOUND' });
