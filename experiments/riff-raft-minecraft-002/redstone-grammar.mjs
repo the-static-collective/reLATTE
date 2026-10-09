@@ -46,7 +46,7 @@ export function buildRiffRaftRedstonePlan({goal,serverSeed,provenance}){
     additions.push(fill({x:a,y:66,z:46},{x:b,y:66,z:46},'minecraft:redstone_wire'));
   }
   for(const x of REDSTONE_CIRCUIT.repeaters){
-    additions.push(set(x,66,46,'minecraft:repeater[facing=east,delay=4]'));
+    additions.push(set(x,66,46,'minecraft:repeater[facing=west,delay=4]'));
   }
   const body={
     ...parent,
