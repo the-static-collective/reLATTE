@@ -1,6 +1,6 @@
 import {createHash} from 'node:crypto';
 
-export const GHOT_004_COMMIT='f611c388c9c81d701d09019337cb459ac6b0e984';
+export const GHOT_004_COMMIT='9aee07370ffb4ace0fcfaffb840359dc8797c0f0';
 export const QUEST_SCHEMA='ghot.riff-raft-terraform-quest/v0';
 export const RETURN_SCHEMA='ghot.riff-raft-dynamic-return/v0';
 export const BUNDLE_SCHEMA='ghot.riff-raft-dynamic-return-bundle/v0';
