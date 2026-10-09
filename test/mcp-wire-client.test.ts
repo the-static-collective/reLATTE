@@ -130,6 +130,28 @@ test('independent Node process speaks strict MCP v2026, preserving signature != 
     assert.equal(oldVersion.status, 400);
     assert.equal(oldVersion.response.error.code, -32020);
 
+    const unsupportedBody = JSON.stringify({
+      jsonrpc: '2.0', id: 'version-test', method: 'server/discover',
+      params: { _meta: {
+        ...metadata,
+        'io.modelcontextprotocol/protocolVersion': '1900-01-01',
+      } },
+    });
+    const unsupported = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'application/json, text/event-stream',
+        'mcp-protocol-version': '1900-01-01',
+        'mcp-method': 'server/discover',
+      },
+      body: unsupportedBody,
+    });
+    assert.equal(unsupported.status, 400);
+    const unsupportedResult: any = await unsupported.json();
+    assert.equal(unsupportedResult.error.code, -32022);
+    assert.deepEqual(unsupportedResult.error.data.supported, [version]);
+
     const unknownMethod = await wire(url, 'does/not-exist');
     assert.equal(unknownMethod.status, 404);
     assert.equal(unknownMethod.response.error.code, -32601);
