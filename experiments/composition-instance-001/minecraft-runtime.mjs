@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 
 import { generateP256KeyPair } from '../../src/protocol.ts';
+import {GHOT_004_COMMIT,validateQuest} from '../riff-raft-minecraft-004/quest-grammar.mjs';
 import {
   finalizeCompositionInstance,
   makeCompositionInstanceSpec,
@@ -31,6 +32,12 @@ const COMPOSITION_EVIDENCE =
 const GOAL = process.env.MC_WORLD_GOAL ?? 'BUILD A WORLD';
 const RIFF_RAFT_MODE = process.env.MC_RIFF_RAFT_PLAN === '1';
 const RIFF_REDSTONE_MODE = process.env.MC_RIFF_RAFT_REDSTONE === '1';
+const DYNAMIC_QUEST_MODE = process.env.MC_RIFF_RAFT_DYNAMIC_QUEST === '1';
+if(DYNAMIC_QUEST_MODE && (!RIFF_REDSTONE_MODE ||
+  process.env.MC_RIFF_RAFT_REDSTONE_FAULT !== '1' ||
+  !process.env.MC_RIFF_RAFT_QUEST_PATH)){
+  throw Error('RIFF_RAFT_QUEST_NOT_OPERATOR_SELECTED');
+}
 if (RIFF_REDSTONE_MODE && !RIFF_RAFT_MODE) {
   throw new Error('RIFF_RAFT_REDSTONE_NO_PARENT_MODE');
 }
@@ -78,6 +85,8 @@ function worldCandidate(runtimeEvidence) {
           reset:runtimeEvidence.redstone.reset_states,
           powered:runtimeEvidence.redstone.powered_states,
           fresh_observer:runtimeEvidence.redstone.final_observer,
+          ...(runtimeEvidence.redstone.dynamic_quest
+            ? {dynamic_quest:runtimeEvidence.redstone.dynamic_quest} : {}),
           physical_field_improvement_verified:false,
         }} : {}),
   };
@@ -88,6 +97,9 @@ async function main() {
   await mkdir(OUT_DIR, { recursive: true });
   const meta = JSON.parse(await readFile(META_PATH, 'utf8'));
   const serverSeed = String(PROVISIONED_SEED);
+  const quest=DYNAMIC_QUEST_MODE?validateQuest(
+    JSON.parse(await readFile(process.env.MC_RIFF_RAFT_QUEST_PATH,'utf8')),
+    TWO_WORLD_LABEL,serverSeed):null;
 
   const spec = makeCompositionInstanceSpec({
     runtime_id: 'minecraft-vanilla-worldbuilder-006',
@@ -142,6 +154,12 @@ async function main() {
       ...(TWO_WORLD_LABEL ? {
         riff_raft_two_world_label:TWO_WORLD_LABEL,
         riff_raft_two_world_replay:true,
+      } : {}),
+      ...(quest ? {
+        riff_raft_dynamic_quest:'explicit-gHot-proposal-game-only',
+        riff_raft_quest_sha256:quest.quest_sha256,
+        riff_raft_quest_priority:quest.priority,
+        riff_raft_ghot_proposer_commit:GHOT_004_COMMIT,
       } : {}),
     },
   });
@@ -254,12 +272,26 @@ async function main() {
     if (process.env.MC_RIFF_RAFT_REDSTONE_FAULT === '1' &&
       (trace.broken_link_trial?.length !== 9 ||
        trace.reset_states?.length !== 9 ||
-       !trace.broken_link_trial.every((x,i) => x.lit === (i<3)) ||
+       !trace.broken_link_trial.every((x,i) => x.lit === (quest ? quest.expected_lit_during_fault[i] : i<3)) ||
        !trace.reset_states.every(x=>x.lit === false))) {
       throw new Error('RIFF_RAFT_REDSTONE_FAULT_CONTROL_INVALID');
     }
   } else if (runtimeEvidence.redstone) {
     throw new Error('RIFF_RAFT_REDSTONE_UNDECLARED_EVIDENCE');
+  }
+  if(quest){
+    const actual=runtimeEvidence.redstone?.dynamic_quest;
+    if(!actual || JSON.stringify(actual.proposal)!==JSON.stringify(quest) ||
+      actual.source_ghot_proposer_commit!==GHOT_004_COMMIT ||
+      JSON.stringify(actual.selected_fault_position)!==
+        JSON.stringify(quest.fault_repeater_position) ||
+      actual.actual_game_fault_observed!==true ||
+      actual.physical_ecological_effect!==false ||
+      actual.automatic_authority!==false){
+      throw Error('RIFF_RAFT_DYNAMIC_QUEST_EXECUTION_NOT_WITNESSED');
+    }
+  }else if(runtimeEvidence.redstone?.dynamic_quest){
+    throw Error('RIFF_RAFT_UNDECLARED_DYNAMIC_QUEST');
   }
 
   // Type-only voxel scans omit block properties such as redstone_lamp.lit.
@@ -323,6 +355,13 @@ async function main() {
           riff_raft_fresh_observer_state_sha256:
             runtimeEvidence.redstone.final_observer.observed_state_sha256,
           riff_raft_game_and_field_conflation:false,
+          ...(quest ? {
+            riff_raft_dynamic_quest_sha256:quest.quest_sha256,
+            riff_raft_dynamic_quest_priority:quest.priority,
+            riff_raft_dynamic_broken_lamps:
+              runtimeEvidence.redstone.broken_link_trial.filter(x=>x.lit).length,
+            riff_raft_dynamic_source_ghot_commit:GHOT_004_COMMIT,
+          } : {}),
         } : {}),
         palette: runtimeEvidence.plan.palette.name,
         districts: runtimeEvidence.plan.districts,
