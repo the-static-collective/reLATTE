@@ -16,7 +16,7 @@ function requestCheck(req) {
   reject(req&&typeof req==="object"&&!Array.isArray(req),"REQUEST_REQUIRED");
   const {request_id,...body}=req;
   reject(req.schema===REQUEST_SCHEMA &&
-         request_id==="static-os-fabrication-013:"+digest(body) &&
+         request_id==="static-os-fabrication-013:"+digest(body).slice(7) &&
          req.state==="FABRICATION_PROPOSAL_ONLY" &&
          req.owner_machine_grants_included===false &&
          req.fabrication_occurred===false &&
