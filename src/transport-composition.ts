@@ -6,14 +6,14 @@ import { LocalReceiver } from './receiver.ts';
 export const CROSSING_FIELD_DOMAIN = 'reLATTE-TransportComposition001-v0|';
 export const CROSSING_FIELD_OBSERVATION_KIND = 'TRANSPORT_FRAGMENT_OBSERVED';
 export const CROSSING_FIELD_CONTRACT = 'relatte.transport-composition-001/v0';
-export type CarrierKind =
+export type FieldCarrierKind =
   | 'bluetooth' | 'wifi-direct' | 'wifi-mesh'
   | 'telephone-audio' | 'cellular-sms' | 'lora-unlicensed'
   | 'amateur-radio' | 'internet' | 'file-courier';
 
 const LIMIT_BYTES = 256 * 1024;
 const LIMIT_FRAGMENTS = 4096;
-const CARRIER_MAX_FRAGMENT: Record<CarrierKind, number> = {
+const CARRIER_MAX_FRAGMENT: Record<FieldCarrierKind, number> = {
   bluetooth: 512,
   'wifi-direct': 8192,
   'wifi-mesh': 8192,
@@ -48,7 +48,7 @@ export interface CrossingCarrierFragment {
   transfer_id: string;
   packet_id: string;
   crossing_id: string;
-  carrier: CarrierKind;
+  carrier: FieldCarrierKind;
   route_id: string;
   index: number;
   fragment_count: number;
@@ -60,7 +60,7 @@ export interface CrossingCarrierFragment {
 export interface CarrierRouteObservation {
   packet_id: string;
   route_id: string;
-  carrier: CarrierKind;
+  carrier: FieldCarrierKind;
   index: number;
   status: 'STORED' | 'DUPLICATE' | 'HOLD';
   reason: string;
@@ -89,7 +89,7 @@ function sha(bytes: Uint8Array): string {
 }
 function transferBody(crossingId: string, digest: string, length: number, chunk: number, count: number) {
   return {
-    schema: 'relatte.crossing-field-manifest/v0',
+    schema: 'relatte.crossing-field-manifest/v0' as const,
     crossing_id: crossingId,
     canonical_sha256: digest,
     byte_length: length,
@@ -166,7 +166,7 @@ export async function makeCarrierFragment(args: {
   manifest: CrossingFieldManifest;
   crossing: Record<string, any>;
   index: number;
-  carrier: CarrierKind;
+  carrier: FieldCarrierKind;
   route_id: string;
   sent_at: string;
 }): Promise<CrossingCarrierFragment> {
@@ -214,7 +214,7 @@ export function verifyCarrierFragment(
       !str(value.route_id) ||
       !str(value.packet_id) ||
       !hex(value.fragment_sha256)) throw new Error('FIELD_INVALID_PACKET');
-  const max=CARRIER_MAX_FRAGMENT[value.carrier as CarrierKind];
+  const max=CARRIER_MAX_FRAGMENT[value.carrier as FieldCarrierKind];
   if (max===undefined) throw new Error('FIELD_UNKNOWN_CARRIER');
   if (max===0) throw new Error('FIELD_HAM_CROSSING_BYTES_DENIED');
   validateTimestamp(value.sent_at);
@@ -242,7 +242,7 @@ export class CrossingFieldReceiver {
       world_id: string;
       particular: string;
       signing_keys: P256KeyMaterial;
-      allowed_carriers: CarrierKind[];
+      allowed_carriers: FieldCarrierKind[];
     },
   ) {
     if (!verifyCrossingFieldManifest(manifest)) throw new Error('FIELD_INVALID_MANIFEST');
@@ -308,7 +308,7 @@ export class CrossingFieldReceiver {
       }},
     },this.observer.signing_keys);
     const observed:CarrierRouteObservation={
-      packet_id:packetIdValue,carrier:carrier as CarrierKind,
+      packet_id:packetIdValue,carrier:carrier as FieldCarrierKind,
       route_id:route,index,status,reason,receipt,
     };
     this.observations.push(observed);
