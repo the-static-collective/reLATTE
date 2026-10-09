@@ -17,15 +17,14 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
-      - name: Install exact candidate dependencies
-        run: npm install --ignore-scripts --no-fund
-      - name: Check production dependency advisories
+          cache: npm
+      - name: Verify lockfile and patched-MCP dependency policy
+        run: npm run deps:policy
+      - name: Reproducible install without third-party lifecycle scripts
+        run: npm ci --ignore-scripts --no-fund
+      - name: Audit runtime dependencies (moderate and above)
         run: npm run audit:prod
-      - name: Check whole dependency tree
+      - name: Audit all dependencies (moderate and above)
         run: npm run audit:all
-      - name: Full TypeScript, native and MCP contract checks
+      - name: TypeScript, native reLATTE, and MCP security regression tests
         run: npm run verify
-      - name: Capture lockfile candidate for human Git review (temporary)
-        if: startsWith(github.ref, 'refs/heads/experiment/relatte-mcp-dependency-hardening-004')
-        run: |
-          node -e 'const fs=require("node:fs"); const s=fs.readFileSync("package-lock.json","utf8"); for(let i=0;i<s.length;i+=800) console.log("LOCKPART-"+String(i/800).padStart(3,"0")+":"+JSON.stringify(s.slice(i,i+800)))'
