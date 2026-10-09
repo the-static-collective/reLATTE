@@ -20,7 +20,7 @@ import {
 const provenance=()=>JSON.parse(readFileSync('fixtures/riff-raft-minecraft-001/donor-manifest.json','utf8'));
 const args=()=>({goal:'MAKE GROUND IN A REHEARSAL WORLD',serverSeed:'381654729',provenance:provenance()});
 const plan=()=>buildRiffRaftRedstonePlan(args());
-const sha=x=>createHash('sha256').update(x).digest('hex');
+const sha=(x:Buffer|string)=>createHash('sha256').update(x).digest('hex');
 
 test('normative core frozen; changes isolated to experiments',()=>{
   assert.equal(execFileSync('git',['rev-parse','HEAD:src'],{encoding:'utf8'}).trim(),
