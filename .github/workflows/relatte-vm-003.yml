@@ -1,0 +1,142 @@
+name: RELATTE-VM-003 witnessed two-runner execution
+
+on:
+  push:
+    paths:
+      - "src/vm.ts"
+      - "src/wasm-vm.ts"
+      - "src/wasm-witness.ts"
+      - "scripts/wasm-two-runner-003.mjs"
+      - "test/wasm-witness.test.ts"
+      - ".github/workflows/relatte-vm-003.yml"
+  pull_request:
+    paths:
+      - "src/vm.ts"
+      - "src/wasm-vm.ts"
+      - "src/wasm-witness.ts"
+      - "scripts/wasm-two-runner-003.mjs"
+      - "test/wasm-witness.test.ts"
+      - ".github/workflows/relatte-vm-003.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  source:
+    name: Source - assemble signed bytes-only carrier
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install --ignore-scripts
+      - name: Produce verifiable candidate without exporting a source key
+        run: |
+          node --experimental-strip-types scripts/wasm-two-runner-003.mjs prepare work/vm003/source
+          test -f work/vm003/source/candidate.json
+          test ! -e work/vm003/source/private-key.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vm003-source
+          path: work/vm003/source/
+          if-no-files-found: error
+          retention-days: 7
+
+  runner-a:
+    name: A - independent receiver and witnessed WASM
+    needs: [source]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: vm003-source
+          path: work/vm003/source
+      - name: Host A signs one host-observed execution
+        run: |
+          node --experimental-strip-types scripts/wasm-two-runner-003.mjs host work/vm003/source/candidate.json work/vm003/a runner-a
+          test -f work/vm003/a/witness.json
+          test ! -e work/vm003/a/receiver-key.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vm003-a-public-witness
+          path: work/vm003/a/
+          if-no-files-found: error
+          retention-days: 7
+
+  runner-b:
+    name: B - separate receiver and witnessed WASM
+    needs: [source]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: vm003-source
+          path: work/vm003/source
+      - name: Host B independently admits and signs identical executable
+        run: |
+          node --experimental-strip-types scripts/wasm-two-runner-003.mjs host work/vm003/source/candidate.json work/vm003/b runner-b
+          test -f work/vm003/b/witness.json
+          test ! -e work/vm003/b/receiver-key.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vm003-b-public-witness
+          path: work/vm003/b/
+          if-no-files-found: error
+          retention-days: 7
+
+  verifier:
+    name: C - cold verification of two independently signed observations
+    needs: [source, runner-a, runner-b]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: vm003-source
+          path: work/vm003/source
+      - uses: actions/download-artifact@v4
+        with:
+          name: vm003-a-public-witness
+          path: work/vm003/a
+      - uses: actions/download-artifact@v4
+        with:
+          name: vm003-b-public-witness
+          path: work/vm003/b
+      - name: Verify signatures and exact cross-runner bindings offline
+        run: |
+          node --experimental-strip-types scripts/wasm-two-runner-003.mjs verify work/vm003/source/candidate.json work/vm003/a/witness.json work/vm003/b/witness.json > work/vm003/verified.json
+          cat work/vm003/verified.json
+          grep -q '"verified":true' work/vm003/verified.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vm003-independent-public-verification
+          path: work/vm003/verified.json
+          if-no-files-found: error
+          retention-days: 7
