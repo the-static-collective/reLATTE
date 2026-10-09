@@ -30,6 +30,10 @@ const COMPOSITION_EVIDENCE =
 
 const GOAL = process.env.MC_WORLD_GOAL ?? 'BUILD A WORLD';
 const RIFF_RAFT_MODE = process.env.MC_RIFF_RAFT_PLAN === '1';
+const RIFF_REDSTONE_MODE = process.env.MC_RIFF_RAFT_REDSTONE === '1';
+if (RIFF_REDSTONE_MODE && !RIFF_RAFT_MODE) {
+  throw new Error('RIFF_RAFT_REDSTONE_NO_PARENT_MODE');
+}
 const PROVISIONED_SEED =
   process.env.MC_LEVEL_SEED ?? '381654729';
 
@@ -61,6 +65,16 @@ function worldCandidate(runtimeEvidence) {
     ...(runtimeEvidence.plan.riff_raft
       ? {riff_raft: runtimeEvidence.plan.riff_raft}
       : {}),
+    ...(runtimeEvidence.redstone
+      ? {redstone_execution: {
+          circuit_plan_sha256:runtimeEvidence.redstone.circuit_plan_sha256,
+          initial:runtimeEvidence.redstone.original_unpowered_states,
+          fault:runtimeEvidence.redstone.broken_link_trial,
+          reset:runtimeEvidence.redstone.reset_states,
+          powered:runtimeEvidence.redstone.powered_states,
+          fresh_observer:runtimeEvidence.redstone.final_observer,
+          physical_field_improvement_verified:false,
+        }} : {}),
   };
   return Buffer.from(JSON.stringify(body), 'utf8');
 }
@@ -82,6 +96,7 @@ async function main() {
     goal: GOAL,
     capabilities: [
       ...(RIFF_RAFT_MODE ? ['minecraft.riff-raft.terraformer'] : []),
+      ...(RIFF_REDSTONE_MODE ? ['minecraft.riff-raft.redstone-causality'] : []),
       'minecraft.operator',
       'minecraft.creative',
       'minecraft.command.fill',
@@ -113,6 +128,11 @@ async function main() {
         riff_raft_mode: 'opt-in-nine-station-voxel-rehearsal',
         riff_raft_source_commit: 'a63624f1be6a533f5ab927b1e4e8b1a629f1ba53',
         physical_world_claim: false,
+      } : {}),
+      ...(RIFF_REDSTONE_MODE ? {
+        riff_raft_redstone_mode:'operator-triggered-game-only',
+        fault_control:process.env.MC_RIFF_RAFT_REDSTONE_FAULT === '1',
+        independent_fresh_observer_required:true,
       } : {}),
     },
   });
@@ -194,6 +214,56 @@ async function main() {
     throw new Error('RIFF_RAFT_UNDECLARED_RUNTIME_VARIANT');
   }
 
+  if (RIFF_REDSTONE_MODE) {
+    const trace=runtimeEvidence.redstone;
+    const circuit=runtimeEvidence.plan.riff_raft_redstone;
+    if (!trace || !circuit ||
+        trace.schema !== 'relatte.riff-raft-redstone-execution/v0' ||
+        trace.circuit_plan_sha256 !== runtimeEvidence.plan.plan_sha256 ||
+        trace.source_ghot_commit !==
+          'a63624f1be6a533f5ab927b1e4e8b1a629f1ba53' ||
+        trace.physical_field_improvement_verified !== false ||
+        trace.ghot_resource_moved !== false ||
+        trace.redstone_circuit_actuated_in_game !== true ||
+        trace.original_unpowered_states?.length !== 9 ||
+        trace.powered_states?.length !== 9 ||
+        !trace.original_unpowered_states.every(x=>x.lit===false) ||
+        !trace.powered_states.every(x=>x.lit===true) ||
+        trace.final_observer?.stages?.length !== 9 ||
+        trace.final_observer?.independent_fresh_client !== true ||
+        trace.final_observer?.physical_field_evidence !== false ||
+        trace.final_observer?.observer === runtimeEvidence.bot.username ||
+        trace.final_observer?.observer !==
+          runtimeEvidence.bot.fresh_observer_username ||
+        !trace.final_observer.stages.every(x =>
+          x.observer_name === 'redstone_lamp' &&
+          x.observer_properties?.lit === true && x.server_lit === true) ||
+        trace.final_observer.observed_state_sha256 !==
+          sha256Hex(Buffer.from(JSON.stringify(trace.final_observer.stages)))) {
+      throw new Error('RIFF_RAFT_REDSTONE_CROSSING_EVIDENCE_INVALID');
+    }
+    if (process.env.MC_RIFF_RAFT_REDSTONE_FAULT === '1' &&
+      (trace.broken_link_trial?.length !== 9 ||
+       trace.reset_states?.length !== 9 ||
+       !trace.broken_link_trial.every((x,i) => x.lit === (i<3)) ||
+       !trace.reset_states.every(x=>x.lit === false))) {
+      throw new Error('RIFF_RAFT_REDSTONE_FAULT_CONTROL_INVALID');
+    }
+  } else if (runtimeEvidence.redstone) {
+    throw new Error('RIFF_RAFT_REDSTONE_UNDECLARED_EVIDENCE');
+  }
+
+  // Type-only voxel scans omit block properties such as redstone_lamp.lit.
+  // Bind the observed-state ID to BOTH block types and the fresh, non-OP
+  // client-verified powered states so a lamp bit change changes identity.
+  const observedStateSha256=RIFF_REDSTONE_MODE
+    ? sha256Hex(Buffer.from(JSON.stringify({
+        vanilla_block_field_sha256:runtimeEvidence.scan.field_sha256,
+        independently_observed_redstone_state_sha256:
+          runtimeEvidence.redstone.final_observer.observed_state_sha256,
+      })))
+    : runtimeEvidence.scan.field_sha256;
+
   const candidateBytes = worldCandidate(runtimeEvidence);
   const actionTraceBytes = Buffer.from(
     JSON.stringify(runtimeEvidence.command_log),
@@ -220,9 +290,9 @@ async function main() {
       author_session_id: authorSessionId,
       observer_session_id: observerSessionId,
       observed_state_ref:
-        'sha256:' + runtimeEvidence.scan.field_sha256,
+        'sha256:' + observedStateSha256,
       observed_state_sha256:
-        runtimeEvidence.scan.field_sha256,
+        observedStateSha256,
       action_trace_ref:
         'sha256:' + sha256Hex(actionTraceBytes),
       claims: {
@@ -237,6 +307,14 @@ async function main() {
           runtimeEvidence.scan.field_sha256,
         plan_sha256: runtimeEvidence.plan.plan_sha256,
         non_air_blocks: runtimeEvidence.scan.non_air_blocks,
+        ...(RIFF_REDSTONE_MODE ? {
+          riff_raft_redstone_causality_in_vanilla:'OBSERVED',
+          riff_raft_redstone_fault_control:runtimeEvidence.redstone.broken_link_trial
+            ? 'OBSERVED' : 'NOT_ATTEMPTED',
+          riff_raft_fresh_observer_state_sha256:
+            runtimeEvidence.redstone.final_observer.observed_state_sha256,
+          riff_raft_game_and_field_conflation:false,
+        } : {}),
         palette: runtimeEvidence.plan.palette.name,
         districts: runtimeEvidence.plan.districts,
         ...(RIFF_RAFT_MODE ? {
@@ -280,6 +358,13 @@ async function main() {
       observed_field_sha256:
         runtimeEvidence.scan.field_sha256,
       non_air_blocks: runtimeEvidence.scan.non_air_blocks,
+      observed_state_sha256: observedStateSha256,
+      ...(RIFF_REDSTONE_MODE ? {
+        redstone_observed_sha256:
+          runtimeEvidence.redstone.final_observer.observed_state_sha256,
+        redstone_server_powered_count:runtimeEvidence.redstone.powered_states.filter(x=>x.lit).length,
+        redstone_fault_control:runtimeEvidence.redstone.broken_link_trial !== null,
+      } : {}),
       author_session_id: authorSessionId,
       observer_session_id: observerSessionId,
       claims: runtimeEvidence.claims,
@@ -315,6 +400,11 @@ async function main() {
         plan_sha256: runtimeEvidence.plan.plan_sha256,
         observed_field_sha256:
           runtimeEvidence.scan.field_sha256,
+        observed_state_sha256:observedStateSha256,
+        ...(RIFF_REDSTONE_MODE ? {
+          redstone_observed_sha256:
+            runtimeEvidence.redstone.final_observer.observed_state_sha256,
+        } : {}),
         non_air_blocks: runtimeEvidence.scan.non_air_blocks,
         author_session_id: authorSessionId,
         observer_session_id: observerSessionId,
