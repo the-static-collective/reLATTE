@@ -72,7 +72,7 @@ async function parseOne(worldId,compBytes,runtimeBytes){
   demand(equal(r.plan.riff_raft_redstone.stages.map(s=>s.cue),RIFF_RAFT_STAGES),
     'STAGE_ORDER_DRIFT');
   const p=r.redstone;
-  demand(p?.schema='relatte.riff-raft-redstone-execution/v0' &&
+  demand(p?.schema==='relatte.riff-raft-redstone-execution/v0' &&
     p.stage_count===9 && p.redstone_circuit_actuated_in_game===true &&
     p.physical_field_improvement_verified===false &&
     p.ghot_resource_moved===false,'REDSTONE_CLAIMS_INVALID');
