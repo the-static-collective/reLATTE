@@ -264,7 +264,7 @@ export async function buildBundleFromFiles(root,outPath){
     packet_sha256:sha(Buffer.from(result.packet_json,'utf8')),
     output_path:outPath};
 }
-if(process.argv[1]?.endsWith('two-world-replay.mjs')){
+if(process.argv[1]?.endsWith('dynamic-replay.mjs')){
   const root=process.argv[2],out=process.argv[3];
   if(!root||!out)throw Error('Usage: two-world-replay.mjs <artifact-root> <output-json>');
   buildBundleFromFiles(root,out).then(x=>console.log(JSON.stringify(x,null,2)))
