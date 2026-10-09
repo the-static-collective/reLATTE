@@ -142,7 +142,10 @@ async function handle(inputValue: unknown): Promise<Obj> {
         proposal_id: proposal.proposal_id, cut: proposal.cut,
         capability: 'system.hash', physical_execution: false,
         offer_address: crossing.extensions?.world_asks_back_native?.offer_address,
-      }) || typeof crossing.extensions?.world_asks_back_native?.offer_address !== 'string' ||
+        nonce: crossing.extensions?.world_asks_back_native?.nonce,
+      }) || typeof crossing.extensions?.world_asks_back_native?.nonce !== 'string' ||
+      crossing.extensions.world_asks_back_native.nonce.length < 16 ||
+      typeof crossing.extensions?.world_asks_back_native?.offer_address !== 'string' ||
       !crossing.extensions.world_asks_back_native.offer_address.startsWith('sha256:')) throw Error('WAB_CROSSING_NOT_BOUND_TO_PINNED_INTENT');
   const approved = await grantsValid(input.grants, policy, crossing);
   const receiver = await LocalReceiver.open(input.receiver_root);
