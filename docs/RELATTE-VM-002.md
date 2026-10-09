@@ -36,6 +36,9 @@
     host-pinned public-key verification (not from candidate)
         |
         v
+    live LocalReceiver.open() journal replay + same R3_ADMIT
+        |
+        v
     separate Node OS process running WebAssembly no-imports module
         |
         v
@@ -71,6 +74,9 @@ unsupported assertion that a complete VM or arbitrary software is safely sandbox
 - Stdout/stderr limits: 4 KiB per stream.
 - Inputs and output must satisfy signed 32-bit integer contract.
 - Fresh successor runtime identity; explicitly no inherited grants.
+- Each launch must reopen a live owner-local receiver journal and find the exact
+  signed RECEIVE / R3_ADMIT receipts for the same crossing. An archived receipt
+  detached from a dead host cannot launch execution.
 - Guest execution outputs are *observations returned by the worker*, not cryptographically
   attested CPU measurements or automatically authorized world state.
 
@@ -83,8 +89,10 @@ security, distributed scheduling, or a protected supply chain.
 The test writes the self-reference manifest, signed parent candidate, package,
 signed executable candidate, binary bytes and local admission receipts to an
 archive file. It then terminates the source VMs and deletes the receiving
-host's private root. The archived public evidence is verified anew and the
-same WASM is executed in a fresh OS process under a distinct runtime identity.
+host's private root. The archived public evidence remains verifiable but is
+**not** sufficient to execute. A newly constructed, independent receiving host
+must perform fresh RECEIVE and R3_ADMIT before the identical WASM may execute
+in another process under a distinct runtime identity.
 
 The owner public key in the verifier's arguments is an **out-of-band trust anchor**.
 If callers let an attacker select it, receipt signature verification no longer
@@ -98,6 +106,7 @@ proves *which owner* admitted the execution.
 - guest-forged local receiver ADMIT receipt;
 - HOLD without admission;
 - mismatch of host trust anchor;
+- attempts to boot from valid archived admission receipts after original host root deletion;
 - reuse of predecessor world/particular/runtime;
 - out-of-range inputs and invalid WASM sections;
 - infinite-loop WASM termination without taking down host process;
@@ -138,5 +147,7 @@ used by VM-002 itself.
   exchanging bytes and crossings over the reLATTE transport.
 - Add genuinely OS-enforced memory/process limits (cgroups/seccomp/namespaces
   on Linux or equivalent) and trusted measured execution, where possible.
+- Add an owner-local revocation/policy epoch: the current experiment requires
+  a live journal with ADMIT, but R3 has no grant-expiration primitive.
 - Add a stable, exportable machine representation capable of executing a wider
   reLATTE organ API without granting the guest arbitrary host capabilities.
