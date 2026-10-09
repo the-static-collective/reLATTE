@@ -29,6 +29,7 @@ const COMPOSITION_EVIDENCE =
   OUT_DIR + '/composition-evidence.json';
 
 const GOAL = process.env.MC_WORLD_GOAL ?? 'BUILD A WORLD';
+const RIFF_RAFT_MODE = process.env.MC_RIFF_RAFT_PLAN === '1';
 const PROVISIONED_SEED =
   process.env.MC_LEVEL_SEED ?? '381654729';
 
@@ -57,6 +58,9 @@ function worldCandidate(runtimeEvidence) {
     histogram: runtimeEvidence.scan.histogram,
     districts: runtimeEvidence.plan.districts,
     anchors: runtimeEvidence.plan.anchors,
+    ...(runtimeEvidence.plan.riff_raft
+      ? {riff_raft: runtimeEvidence.plan.riff_raft}
+      : {}),
   };
   return Buffer.from(JSON.stringify(body), 'utf8');
 }
@@ -77,6 +81,7 @@ async function main() {
       serverSeed,
     goal: GOAL,
     capabilities: [
+      ...(RIFF_RAFT_MODE ? ['minecraft.riff-raft.terraformer'] : []),
       'minecraft.operator',
       'minecraft.creative',
       'minecraft.command.fill',
@@ -104,6 +109,11 @@ async function main() {
       server_jar_sha1: meta.server_sha1,
       runtime_specimen: 'VANILLA-WORLDBUILDER-006',
       runtime_contract: 'black-box',
+      ...(RIFF_RAFT_MODE ? {
+        riff_raft_mode: 'opt-in-nine-station-voxel-rehearsal',
+        riff_raft_source_commit: 'a63624f1be6a533f5ab927b1e4e8b1a629f1ba53',
+        physical_world_claim: false,
+      } : {}),
     },
   });
 
@@ -158,6 +168,32 @@ async function main() {
     runtimeEvidence.version?.server_sha1 !== meta.server_sha1
   ) throw new Error('COMPOSITION_RUNTIME_SNAPSHOT_MISMATCH');
 
+  if (RIFF_RAFT_MODE) {
+    const riff = runtimeEvidence.plan.riff_raft;
+    if (riff?.source_commit !==
+          'a63624f1be6a533f5ab927b1e4e8b1a629f1ba53' ||
+        riff.stations?.length !== 9 ||
+        riff.default_candidate_disposition !== 'R3_HOLD' ||
+        riff.actual_ghot_execution_observed !== false ||
+        riff.actual_minecraft_execution_observed !== false) {
+      throw new Error('RIFF_RAFT_RUNTIME_PLAN_PROVENANCE_INVALID');
+    }
+    const receiptByRole = new Map(
+      runtimeEvidence.anchor_verification.map(item => [item.role, item]),
+    );
+    for (const station of riff.stations) {
+      const role = 'riff-raft-' +
+        station.cue.toLowerCase().replaceAll('_', '-');
+      const receipt = receiptByRole.get(role);
+      if (receipt?.score !== 1 ||
+          receipt.observer_block !== station.expected_block.replace(/^minecraft:/, '')) {
+        throw new Error('RIFF_RAFT_STATION_NOT_OBSERVED:' + station.cue);
+      }
+    }
+  } else if (runtimeEvidence.plan.riff_raft) {
+    throw new Error('RIFF_RAFT_UNDECLARED_RUNTIME_VARIANT');
+  }
+
   const candidateBytes = worldCandidate(runtimeEvidence);
   const actionTraceBytes = Buffer.from(
     JSON.stringify(runtimeEvidence.command_log),
@@ -203,6 +239,12 @@ async function main() {
         non_air_blocks: runtimeEvidence.scan.non_air_blocks,
         palette: runtimeEvidence.plan.palette.name,
         districts: runtimeEvidence.plan.districts,
+        ...(RIFF_RAFT_MODE ? {
+          riff_raft_minecraft_stations_observed: 'OBSERVED_IN_MINECRAFT_ONLY',
+          real_soil_fertility_verified: false,
+          living_ecosystem_terraforming_verified: false,
+          ghot_python_simulation_executed_here: false,
+        } : {}),
       },
     },
     candidate_bytes: candidateBytes,
