@@ -11,9 +11,9 @@ import { canonicalize, LocalReceiver, verifyCrossingEnvelope, verifyReceipt } fr
 const ROLES = ['household', 'fabricator', 'stockist'] as const;
 type Role = typeof ROLES[number];
 const SCOPES: Record<Role, string> = {
-  household: 'simulate-repair-my-hinge',
-  fabricator: 'simulate-printer-and-design-use',
-  stockist: 'simulate-material-consumption',
+  household: 'authorize-local-hash-of-my-proposal',
+  fabricator: 'authorize-local-hash-compute',
+  stockist: 'authorize-local-hash-of-stock-claim',
 };
 const RECEIVER_CONTRACT = 'relatte:wab-native-hash/v0';
 const RECEIVER_WORLD = 'world:ghot:wab-native-hash';
@@ -21,7 +21,7 @@ const RECEIVER_PARTICULAR = 'particular:relatte:wab-native-hash';
 const SOURCE_WORLD = 'world:ghot:synthetic-household';
 const REQUESTED_EFFECT = { action: 'execute-bounded-hash', scope: 'local-compute-only' };
 const CLAIMED_KIND = 'ghot.wab-native-hash/v0';
-const GRANT_DOMAIN = 'GHOT-WAB001-GRANT|';
+const GRANT_DOMAIN = 'GHOT-WAB002-NATIVE-GRANT|';
 const POLICY_FILE = 'wab-local-policy.json';
 
 type Obj = Record<string, any>;
@@ -70,7 +70,7 @@ function initPolicy(input: Obj): Obj {
 function householdParticular(key: Obj): string {
   return 'ghot-p256:' + digest(key).slice('sha256:'.length);
 }
-async function grantsValid(value: unknown, policy: Obj): Promise<boolean> {
+async function grantsValid(value: unknown, policy: Obj, crossing: Obj): Promise<boolean> {
   if (value === null || value === undefined) return false;
   const grants = record(value, 'WAB_GRANT_SET_NOT_OBJECT');
   if (!equal(Object.keys(grants).sort(), [...ROLES].sort())) {
@@ -79,12 +79,16 @@ async function grantsValid(value: unknown, policy: Obj): Promise<boolean> {
   }
   for (const role of ROLES) {
     const grant = record(grants[role], 'WAB_BAD_GRANT');
-    const keys = ['schema', 'role', 'epoch', 'proposal_id', 'cut', 'scope', 'decision', 'public_key', 'signature'];
+    const keys = ['schema', 'role', 'proposal_id', 'cut', 'crossing_id', 'offer_address', 'capability', 'scope', 'decision', 'expires_at', 'public_key', 'signature'];
     if (!equal(Object.keys(grant).sort(), keys.sort())) throw Error('WAB_GRANT_FIELDS_INVALID');
-    if (grant.schema !== 'ghot.wab-grant/v0' || grant.role !== role ||
-        grant.epoch !== 1 || grant.proposal_id !== policy.proposal_id ||
-        grant.cut !== policy.cut || grant.scope !== SCOPES[role] ||
-        grant.decision !== 'APPROVE_SIMULATION' ||
+    if (grant.schema !== 'ghot.wab-native-grant/v0' || grant.role !== role ||
+        grant.proposal_id !== policy.proposal_id || grant.crossing_id !== crossing.crossing_id ||
+        grant.offer_address !== crossing.extensions?.world_asks_back_native?.offer_address ||
+        grant.cut !== policy.cut || grant.capability !== 'system.hash' ||
+        grant.scope !== SCOPES[role] || grant.decision !== 'AUTHORIZE_LOCAL_HASH' ||
+        typeof grant.expires_at !== 'string' || !Number.isFinite(Date.parse(grant.expires_at)) ||
+        Date.parse(grant.expires_at) <= Date.now() ||
+        Date.parse(grant.expires_at) > Date.now() + 10 * 60 * 1000 ||
         !equal(grant.public_key, policy.trusted_pins[role])) throw Error('WAB_GRANT_SCOPE_OR_PIN_FAILURE');
     const unsigned = { ...grant }; delete unsigned.signature;
     if (typeof grant.signature !== 'string') throw Error('WAB_BAD_GRANT_SIGNATURE');
@@ -137,8 +141,10 @@ async function handle(inputValue: unknown): Promise<Obj> {
       !equal(crossing.extensions?.world_asks_back_native, {
         proposal_id: proposal.proposal_id, cut: proposal.cut,
         capability: 'system.hash', physical_execution: false,
-      })) throw Error('WAB_CROSSING_NOT_BOUND_TO_PINNED_INTENT');
-  const approved = await grantsValid(input.grants, policy);
+        offer_address: crossing.extensions?.world_asks_back_native?.offer_address,
+      }) || typeof crossing.extensions?.world_asks_back_native?.offer_address !== 'string' ||
+      !crossing.extensions.world_asks_back_native.offer_address.startsWith('sha256:')) throw Error('WAB_CROSSING_NOT_BOUND_TO_PINNED_INTENT');
+  const approved = await grantsValid(input.grants, policy, crossing);
   const receiver = await LocalReceiver.open(input.receiver_root);
   // Ownership and requested effect verified BEFORE this durable RECEIVE. No
   // caller-supplied decision or unauthenticated "approve" flag is accepted.
