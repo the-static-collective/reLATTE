@@ -121,6 +121,9 @@ test('official MCP v2 client negotiates with authenticated SDK server and verifi
       'verify_crossing', 'verify_receipt', 'inspect_crossing_evidence',
     ]);
     assert.equal(list.tools.every(t => t.annotations?.readOnlyHint), true);
+    assert.equal(list.tools.every((t: any) =>
+      Array.isArray(t.securitySchemes) && t.securitySchemes.some((s: any) =>
+        s.type === 'oauth2' && s.scopes.includes(config.scope))), true);
     const crossing = await signedCrossing();
     const valid = await client.callTool({ name: 'verify_crossing', arguments: { crossing } });
     assert.equal((valid.structuredContent as any)?.verified, true);
