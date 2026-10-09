@@ -63,8 +63,10 @@ export async function checkAccessTrust(
   facts: AccessTokenFacts,
   policy: AccessTrustPolicy,
 ): Promise<boolean> {
+  const now = Math.floor(Date.now() / 1000);
   if (!Number.isSafeInteger(facts.issuedAt) || !Number.isSafeInteger(facts.expiresAt) ||
       !facts.tokenId || facts.expiresAt <= facts.issuedAt ||
+      facts.issuedAt > now + 5 || facts.expiresAt <= now - 5 ||
       facts.expiresAt - facts.issuedAt > (policy.maxTokenLifetimeSeconds ?? 900)) {
     return false;
   }
@@ -174,8 +176,32 @@ export function createIssuerIntrospection(
           cache: 'no-store',
         });
         if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) return false;
-        const text = await response.text();
-        if (text.length > 8192) return false;
+        // Limit the response WHILE reading; response.text() would buffer an
+        // attacker-sized issuer body before checking its length.
+        const declaredBytes = response.headers.get('content-length');
+        if (declaredBytes && (!/^\d+$/.test(declaredBytes) || Number(declaredBytes) > 8192)) {
+          return false;
+        }
+        if (!response.body) return false;
+        const reader = response.body.getReader();
+        let bytes = 0;
+        let text = '';
+        const decoder = new TextDecoder('utf-8', { fatal: true });
+        try {
+          while (true) {
+            const item = await reader.read();
+            if (item.done) break;
+            bytes += item.value.byteLength;
+            if (bytes > 8192) {
+              await reader.cancel();
+              return false;
+            }
+            text += decoder.decode(item.value, { stream: true });
+          }
+          text += decoder.decode();
+        } finally {
+          reader.releaseLock();
+        }
         const body: unknown = JSON.parse(text);
         if (typeof body !== 'object' || body === null || Array.isArray(body)) return false;
         const claim = body as Record<string, unknown>;
