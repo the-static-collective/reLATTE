@@ -62,13 +62,11 @@ function makeServer(scope: string): McpServer {
     { name: 'relatte-sovereign-crossings', version: '0.0.3' },
     { instructions: 'Read-only verifier of user-supplied signed reLATTE evidence. SIGNED != TRUE. RECEIVED != ADMITTED. No signatures, transfers, local effects or user data stores.' },
   );
-  const secure = [{ type: 'oauth2' as const, scopes: [scope] }];
   server.registerTool('verify_crossing', {
     title: 'Verify crossing signature',
     description: 'Verify a supplied reLATTE crossing using its embedded P-256 public key and canonical ID. Does not establish owner identity or authority.',
     inputSchema: { crossing: evidence },
     annotations: readOnly,
-    securitySchemes: secure,
   }, async ({ crossing }) => toolResult(await callReadOnlyMcpTool('verify_crossing', { crossing })));
 
   server.registerTool('verify_receipt', {
@@ -76,7 +74,6 @@ function makeServer(scope: string): McpServer {
     description: 'Verify a supplied signed reLATTE receipt; do not infer actual delivery, sender identity or lawful authority.',
     inputSchema: { receipt: evidence },
     annotations: readOnly,
-    securitySchemes: secure,
   }, async ({ receipt }) => toolResult(await callReadOnlyMcpTool('verify_receipt', { receipt })));
 
   server.registerTool('inspect_crossing_evidence', {
@@ -87,7 +84,6 @@ function makeServer(scope: string): McpServer {
       receipts: z.array(evidence).min(1).max(16),
     },
     annotations: readOnly,
-    securitySchemes: secure,
   }, async ({ crossing, receipts }) => toolResult(
     await callReadOnlyMcpTool('inspect_crossing_evidence', { crossing, receipts }),
   ));
@@ -140,6 +136,27 @@ export function createOAuthMcpResource(configValue: McpOAuthConfig, verification
   // jose fetches keys ONLY from the operator-configured issuer-owned HTTPS URI.
   const key = verificationKey ?? createRemoteJWKSet(new URL(config.jwksUri));
   const mcp = createMcpHandler(() => makeServer(config.scope), { responseMode: 'json' });
+
+  // The upstream SDK currently does not declare ChatGPT's extension field
+  // securitySchemes in its registerTool() API. Add the extension only to the
+  // authenticated tools/list wire result, without claiming SDK-native support.
+  async function withAuthSchemes(request: Request, response: Response): Promise<Response> {
+    if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) return response;
+    let callMethod: string | undefined;
+    try { callMethod = (await request.clone().json() as { method?: string }).method; }
+    catch { return response; }
+    if (callMethod !== 'tools/list') return response;
+    const payload: any = await response.json();
+    if (Array.isArray(payload?.result?.tools)) {
+      payload.result.tools = payload.result.tools.map((tool: Record<string, unknown>) => ({
+        ...tool, securitySchemes: [{ type: 'oauth2', scopes: [config.scope] }],
+      }));
+    }
+    const headers = new Headers(response.headers);
+    headers.set('cache-control', 'no-store');
+    return new Response(JSON.stringify(payload), { status: response.status, headers });
+  }
+
 
   const challenge = (error = 'invalid_token', description = 'OAuth access token required') =>
     'Bearer resource_metadata="' + metadataUrl.href +
@@ -212,7 +229,7 @@ export function createOAuthMcpResource(configValue: McpOAuthConfig, verification
           return json({ error: 'INVALID_BODY' }, 400);
         }
         if (!bounded) return json({ error: 'REQUEST_TOO_LARGE' }, 413);
-        return mcp.fetch(bounded);
+        return withAuthSchemes(bounded, await mcp.fetch(bounded));
       }
       return mcp.fetch(request);
     },
