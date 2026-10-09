@@ -66,7 +66,7 @@ function makeServer(scope: string): McpServer {
   server.registerTool('verify_crossing', {
     title: 'Verify crossing signature',
     description: 'Verify a supplied reLATTE crossing using its embedded P-256 public key and canonical ID. Does not establish owner identity or authority.',
-    inputSchema: z.object({ crossing: evidence }).strict(),
+    inputSchema: { crossing: evidence },
     annotations: readOnly,
     securitySchemes: secure,
   }, async ({ crossing }) => toolResult(await callReadOnlyMcpTool('verify_crossing', { crossing })));
@@ -74,7 +74,7 @@ function makeServer(scope: string): McpServer {
   server.registerTool('verify_receipt', {
     title: 'Verify receipt signature',
     description: 'Verify a supplied signed reLATTE receipt; do not infer actual delivery, sender identity or lawful authority.',
-    inputSchema: z.object({ receipt: evidence }).strict(),
+    inputSchema: { receipt: evidence },
     annotations: readOnly,
     securitySchemes: secure,
   }, async ({ receipt }) => toolResult(await callReadOnlyMcpTool('verify_receipt', { receipt })));
@@ -82,10 +82,10 @@ function makeServer(scope: string): McpServer {
   server.registerTool('inspect_crossing_evidence', {
     title: 'Inspect supplied crossing evidence',
     description: 'Verify one crossing and 1–16 signed receipts for internal consistency; reports a disposition CLAIM only, not a confirmed receiver journal.',
-    inputSchema: z.object({
+    inputSchema: {
       crossing: evidence,
       receipts: z.array(evidence).min(1).max(16),
-    }).strict(),
+    },
     annotations: readOnly,
     securitySchemes: secure,
   }, async ({ crossing, receipts }) => toolResult(
