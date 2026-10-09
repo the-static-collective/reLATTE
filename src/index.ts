@@ -19,3 +19,4 @@ export * from './material-delivery.ts';
 export * from './vm.ts';
 export * from './wasm-vm.ts';
 export * from './wasm-witness.ts';
+export * from './vm-lease.ts';
