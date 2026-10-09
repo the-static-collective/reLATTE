@@ -229,7 +229,9 @@ export function createOAuthMcpResource(configValue: McpOAuthConfig, verification
           return json({ error: 'INVALID_BODY' }, 400);
         }
         if (!bounded) return json({ error: 'REQUEST_TOO_LARGE' }, 413);
-        return withAuthSchemes(bounded, await mcp.fetch(bounded));
+        const wireCopy = bounded.clone();
+        const answer = await mcp.fetch(bounded);
+        return withAuthSchemes(wireCopy, answer);
       }
       return mcp.fetch(request);
     },
