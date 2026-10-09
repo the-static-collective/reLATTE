@@ -1,0 +1,23 @@
+{
+  "source_repo": "the-static-collective/GHoT",
+  "source_commit": "a63624f1be6a533f5ab927b1e4e8b1a629f1ba53",
+  "source_document": "https://github.com/the-static-collective/GHoT/pull/113",
+  "witness_class": "ghot-simulation-manifest-only",
+  "stages": [
+    "READ_FIELD",
+    "LAY_BONES",
+    "CATCH_WATER",
+    "MAKE_SHADE",
+    "MAKE_GROUND",
+    "SEED_NUCLEUS",
+    "FEED_FIELD",
+    "WITNESS_DELTA",
+    "ONE_METER_OUTWARD"
+  ],
+  "claims": {
+    "actual_minecraft_actions_executed": false,
+    "physical_field_improvement_verified": false,
+    "real_world_actuation": false,
+    "signed_ghot_receipts_ingested": false
+  }
+}

@@ -1,0 +1,234 @@
+name: RIFF-RAFT-MINECRAFT-001 official vanilla Terraformer proof
+
+on:
+  push:
+    branches:
+      - experiment/riff-raft-minecraft-001-terraform-crossing
+    paths:
+      - "experiments/riff-raft-minecraft-001/**"
+      - "experiments/composition-instance-001/minecraft-runtime.mjs"
+      - "experiments/vanilla-worldbuilder-006/worldbuilder.mjs"
+      - "test/riff-raft-minecraft-001.test.ts"
+      - "docs/RIFF-RAFT-MINECRAFT-001.md"
+      - "fixtures/riff-raft-minecraft-001/**"
+      - ".github/workflows/riff-raft-minecraft-001.yml"
+      - "experiments/polyglot-crossing-001/common.ts"
+  pull_request:
+    paths:
+      - "experiments/riff-raft-minecraft-001/**"
+      - "experiments/composition-instance-001/minecraft-runtime.mjs"
+      - "experiments/vanilla-worldbuilder-006/worldbuilder.mjs"
+      - "test/riff-raft-minecraft-001.test.ts"
+      - "docs/RIFF-RAFT-MINECRAFT-001.md"
+      - "fixtures/riff-raft-minecraft-001/**"
+      - ".github/workflows/riff-raft-minecraft-001.yml"
+      - "experiments/polyglot-crossing-001/common.ts"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  riff-raft-vanilla-terraformer:
+    name: nine voxel cues, fresh observer, instance admit, result hold
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Install repository dependencies
+        run: npm install
+
+      - name: Run reLATTE core verification and Riff-Raft hostile tests
+        run: |
+          npm run verify
+          node --test --experimental-strip-types test/riff-raft-minecraft-001.test.ts
+
+      - name: Install pinned Minecraft runtime clients
+        run: |
+          npm install --no-save --ignore-scripts             mineflayer@4.39.0             rcon-client@4.2.5             vec3@0.2.0
+
+      - name: Resolve and verify official Mojang 26.1.1 server jar
+        run: |
+          set -euo pipefail
+          mkdir -p work/composition-instance/server
+          curl --fail --silent --show-error             https://piston-meta.mojang.com/mc/game/version_manifest_v2.json             -o work/composition-instance/version-manifest.json
+
+          python3 - <<'PY'
+          import json, pathlib, urllib.request
+          root = pathlib.Path("work/composition-instance")
+          manifest = json.loads((root / "version-manifest.json").read_text())
+          version = next(v for v in manifest["versions"] if v["id"] == "26.1.1")
+          data = json.load(urllib.request.urlopen(version["url"]))
+          server = data["downloads"]["server"]
+          meta = {
+              "id": data["id"],
+              "type": data["type"],
+              "releaseTime": data["releaseTime"],
+              "server_url": server["url"],
+              "server_sha1": server["sha1"],
+              "server_size": server["size"],
+              "version_metadata_url": version["url"],
+          }
+          (root / "server-version.json").write_text(
+              json.dumps(meta, indent=2) + "\n"
+          )
+          urllib.request.urlretrieve(
+              server["url"],
+              root / "server/server.jar",
+          )
+          PY
+
+          cd work/composition-instance/server
+          EXPECTED="$(python3 -c 'import json; print(json.load(open("../server-version.json"))["server_sha1"])')"
+          ACTUAL="$(sha1sum server.jar | awk '{print $1}')"
+          test "$ACTUAL" = "$EXPECTED"
+          echo "official server sha1 verified: $ACTUAL"
+
+      - name: Configure blank vanilla composition world
+        run: |
+          cat > work/composition-instance/server/server.properties <<'EOF'
+          server-port=25565
+          online-mode=false
+          enforce-secure-profile=false
+          gamemode=creative
+          force-gamemode=true
+          difficulty=peaceful
+          spawn-protection=0
+          generate-structures=false
+          level-type=minecraft:flat
+          level-seed=381654729
+          view-distance=8
+          simulation-distance=8
+          allow-flight=true
+          op-permission-level=4
+          enable-rcon=true
+          rcon.port=25575
+          rcon.password=relatte-ci
+          enable-query=false
+          motd=reLATTE RIFF-RAFT-MINECRAFT-001
+          EOF
+          echo "eula=true" > work/composition-instance/server/eula.txt
+
+      - name: Start official vanilla composition runtime
+        run: |
+          set -euo pipefail
+          cd work/composition-instance/server
+          java -Xms1G -Xmx2G -jar server.jar nogui > server.log 2>&1 &
+          echo $! > server.pid
+
+          for i in $(seq 1 120); do
+            if grep -q 'Done (' server.log; then
+              echo "vanilla server ready"
+              exit 0
+            fi
+            if ! kill -0 "$(cat server.pid)" 2>/dev/null; then
+              cat server.log
+              exit 1
+            fi
+            sleep 1
+          done
+
+          cat server.log
+          echo "server did not become ready" >&2
+          exit 1
+
+      - name: Admit instance, execute black-box runtime, hold result
+        env:
+          MC_HOST: 127.0.0.1
+          MC_PORT: "25565"
+          MC_RCON_PORT: "25575"
+          MC_RCON_PASSWORD: relatte-ci
+          MC_BOT_NAME: WorldBuilder
+          MC_WORLD_GOAL: MAKE GROUND IN A REHEARSAL WORLD
+          MC_RIFF_RAFT_PLAN: "1"
+          MC_LEVEL_SEED: "381654729"
+          MC_VERSION_META: work/composition-instance/server-version.json
+          COMPOSITION_INSTANCE_OUT_DIR: work/composition-instance
+          RUNTIME_EVIDENCE_OUT: work/composition-instance/runtime-evidence.json
+          RUNTIME_MAP_OUT: work/composition-instance/runtime-world-map.txt
+          COMPOSITION_EVIDENCE_OUT: work/composition-instance/composition-evidence.json
+        run: |
+          node --experimental-strip-types             experiments/composition-instance-001/minecraft-runtime.mjs
+
+      - name: Verify durable lifecycle evidence
+        run: |
+          set -euo pipefail
+          test -s work/composition-instance/composition-evidence.json
+          test -s work/composition-instance/runtime-evidence.json
+          test -s work/composition-instance/runtime-world-map.txt
+
+          test "$(git rev-parse HEAD:src)" =             "c0e4d2c59481e0fb2a4bf4bb294f373907fd2b76"
+
+          python3 - <<'PY'
+          import json
+          e = json.load(open("work/composition-instance/composition-evidence.json"))
+          assert e["spec"]["goal"] == "MAKE GROUND IN A REHEARSAL WORLD"
+          assert "minecraft.riff-raft.terraformer" in e["spec"]["capabilities"]
+          raw = json.load(open("work/composition-instance/runtime-evidence.json"))
+          riff = raw["plan"]["riff_raft"]
+          assert riff["source_commit"] == "a63624f1be6a533f5ab927b1e4e8b1a629f1ba53"
+          assert riff["default_candidate_disposition"] == "R3_HOLD"
+          assert len(riff["stations"]) == 9
+          assert all(not x["physical_causality_claimed"] for x in riff["stations"])
+          att = {a["role"]: a for a in raw["anchor_verification"]}
+          for x in riff["stations"]:
+              role = "riff-raft-" + x["cue"].lower().replace("_","-")
+              assert att[role]["score"] == 1
+              assert att[role]["observer_block"] == x["expected_block"].replace("minecraft:","") 
+          assert e["result"]["runtime_claims"]["real_soil_fertility_verified"] is False
+          assert e["result"]["runtime_claims"]["ghot_python_simulation_executed_here"] is False
+          assert e["spec"]["runtime_id"] == "minecraft-vanilla-worldbuilder-006"
+          assert e["launch"]["receipt"]["kind"] == "R3_ADMIT"
+          assert e["result"]["result_disposition"] == "R3_HOLD"
+          assert e["candidate"]["receipt"]["kind"] == "R3_HOLD"
+          assert e["result"]["author_session_id"] != e["result"]["observer_session_id"]
+          assert e["candidate"]["crossing"]["parents"] == [
+              e["launch"]["crossing"]["crossing_id"]
+          ]
+          assert e["runtime"]["non_air_blocks"] > 10000
+          assert e["runtime"]["observed_field_sha256"] == e["result"]["observed_state_sha256"]
+          assert e["result"]["runtime_id"] == e["spec"]["runtime_id"]
+          print(json.dumps({
+              "instance_id": e["instance_id"],
+              "runtime": e["spec"]["runtime_id"],
+              "goal": e["spec"]["goal"],
+              "launch_disposition": e["launch"]["receipt"]["kind"],
+              "observed_field_sha256": e["runtime"]["observed_field_sha256"],
+              "non_air_blocks": e["runtime"]["non_air_blocks"],
+              "author_session_id": e["result"]["author_session_id"],
+              "observer_session_id": e["result"]["observer_session_id"],
+              "candidate_disposition": e["candidate"]["receipt"]["kind"],
+              "launch_crossing_id": e["launch"]["crossing"]["crossing_id"],
+              "candidate_crossing_id": e["candidate"]["crossing"]["crossing_id"],
+              "candidate_receipt_id": e["candidate"]["receipt"]["receipt_id"],
+          }, indent=2))
+          PY
+
+      - name: Preserve Riff-Raft official Minecraft evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: riff-raft-minecraft-001-vanilla-evidence
+          path: |
+            work/composition-instance/composition-evidence.json
+            work/composition-instance/runtime-evidence.json
+            work/composition-instance/runtime-world-map.txt
+            work/composition-instance/server-version.json
+            work/composition-instance/server/server.log
+            work/composition-instance/server/world/level.dat
+            work/composition-instance/server/world/region/
+          if-no-files-found: warn
+          retention-days: 7
