@@ -706,7 +706,10 @@ export class LocalReceiver {
 
   /** Public signing identity for explicit local-pinning; never exports private material. */
   receiptSignerPublicJwk(): JsonWebKey {
-    return { ...this.keys.publicKeyJwk };
+    // Created keys are normalized; reopened stored exported JWKs may include
+    // ext/key_ops. Keep the stable, four-field identity across restarts.
+    const { kty, crv, x, y } = this.keys.publicKeyJwk;
+    return { kty, crv, x, y };
   }
 
   snapshot(): ReceiverSnapshot {
