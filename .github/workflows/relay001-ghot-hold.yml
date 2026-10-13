@@ -1,0 +1,110 @@
+name: RELAY-001 GHoT to reLATTE native HOLD
+
+on:
+  push:
+    branches: [experiment/relay001-ghot-opaque-hold]
+  pull_request:
+    paths:
+      - scripts/relay001-ghot-hold.mjs
+      - .github/workflows/relay001-ghot-hold.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-third-organ:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout reLATTE
+        uses: actions/checkout@v4
+      - name: Checkout pinned GHoT proposed bridge
+        uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/GHoT
+          ref: 9aec1e00667994c7e0dc0e345c5d40d5012fdf8e
+          path: .relay-deps/GHoT
+          persist-credentials: false
+      - name: Checkout pinned LOADOUT
+        uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/LOADOUT
+          ref: 1adcb3d82f736f3ca8329c3c1d0d9eba398d49ee
+          path: .relay-deps/LOADOUT
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install reLATTE dependencies and bounded ffprobe
+        run: |
+          npm install --no-audit --no-fund
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          command -v ffprobe
+      - name: Generate harmless synthetic WAV
+        run: |
+          python3 - <<'PY'
+          import math, struct, wave
+          with wave.open('relay001-fixture.wav','wb') as wav:
+              wav.setnchannels(1)
+              wav.setsampwidth(2)
+              wav.setframerate(16000)
+              wav.writeframes(b''.join(struct.pack('<h',int(5000*math.sin(2*math.pi*220*i/16000))) for i in range(4000)))
+          PY
+      - name: Execute native first two organs
+        run: |
+          SHA="$(sha256sum relay001-fixture.wav | cut -d ' ' -f 1)"
+          GHOT_HOME="$RUNNER_TEMP/ghot-v0" python3 .relay-deps/GHoT/ghot/relay001_loadout_probe.py relay001-fixture.wav \
+            --sha256 "$SHA" --loadout-src .relay-deps/LOADOUT/src \
+            --ghot-root .relay-deps/GHoT --out "$RUNNER_TEMP/donor"
+          echo "RELAY_DONOR=$RUNNER_TEMP/donor" >> "$GITHUB_ENV"
+      - name: Native signed reLATTE crossing and HOLD
+        run: |
+          node --experimental-strip-types scripts/relay001-ghot-hold.mjs "$RELAY_DONOR" "$RUNNER_TEMP/third-organ" relay001-fixture.wav
+          node --experimental-strip-types scripts/relay001-ghot-hold.mjs verify "$RELAY_DONOR" "$RUNNER_TEMP/third-organ/public"
+          python3 - <<'PY'
+          import json, os, pathlib
+          base=pathlib.Path(os.environ['RUNNER_TEMP'])/'third-organ'/'public'
+          result=json.loads((base/'roundtrip-result.json').read_text())
+          verdict=json.loads((base/'verification.json').read_text())
+          assert verdict['signed_crossing_valid'] and verdict['signed_receive_valid'] and verdict['signed_hold_valid']
+          assert result['receive_receipt']['kind']=='RECEIVED'
+          assert result['disposition_receipt']['kind']=='R3_HOLD'
+          assert result['receiver_snapshot']['admitted']==[]
+          assert len(result['receiver_snapshot']['held'])==1
+          print('PASS: native LOADOUT + GHoT + signed reLATTE receiver-local HOLD')
+          PY
+      - name: Reject modified donor before signing
+        run: |
+          mkdir -p "$RUNNER_TEMP/bad-donor"
+          cp "$RELAY_DONOR"/*.json "$RUNNER_TEMP/bad-donor/"
+          python3 - <<'PY'
+          import json, os, pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'bad-donor'/'ghot-receipt.json'
+          d=json.loads(p.read_text()); d['output']['probe']['format']['duration']='99999'
+          p.write_text(json.dumps(d))
+          PY
+          if node --experimental-strip-types scripts/relay001-ghot-hold.mjs \
+              "$RUNNER_TEMP/bad-donor" "$RUNNER_TEMP/bad-output"; then
+            echo "ERROR: tampered GHoT output crossed"; exit 1
+          fi
+          test ! -e "$RUNNER_TEMP/bad-output/public/roundtrip-result.json"
+          echo "PASS: tampered donor refused"
+      - name: Package only public code and synthetic public receipts
+        run: |
+          tar -czf relay001-relatte-native-source.tar.gz \
+            src scripts/relay001-ghot-hold.mjs node_modules/json-canonicalize package.json
+          mkdir -p evidence-relay
+          cp "$RUNNER_TEMP/third-organ/public/"*.json evidence-relay/
+      - name: Upload public-code carrier
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-001-relatte-source-carrier
+          path: relay001-relatte-native-source.tar.gz
+          if-no-files-found: error
+      - name: Upload synthetic-only public receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-001-relatte-synthetic-HOLD
+          path: evidence-relay/
+          if-no-files-found: error
