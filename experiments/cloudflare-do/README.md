@@ -57,7 +57,7 @@ From the root of the `reLATTE` repository:
 ```bash
 npm install --ignore-scripts
 node --test --experimental-strip-types experiments/cloudflare-do/test/*.test.mjs
-npx wrangler@4.102.0 deploy --dry-run --config experiments/cloudflare-do/wrangler.jsonc
+npx wrangler@4.151.0 deploy --dry-run --config experiments/cloudflare-do/wrangler.jsonc
 ```
 
 The tests use a real in-memory SQLite engine with a Cloudflare-style
@@ -79,7 +79,7 @@ For an end-to-end **local Worker runtime** smoke test:
 3. Run:
 
    ```bash
-   npx wrangler@4.102.0 dev --config experiments/cloudflare-do/wrangler.jsonc --local
+   npx wrangler@4.151.0 dev --config experiments/cloudflare-do/wrangler.jsonc --local
    ```
 
 4. In another terminal call (substitute your locally generated token):
