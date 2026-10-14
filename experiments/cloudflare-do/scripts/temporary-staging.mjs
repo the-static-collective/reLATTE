@@ -70,7 +70,19 @@ const accountClaimStatus = () => claimUrls.length ? 'available' : 'not_printed';
 async function deploy(config,secrets) {
   const path=config===receiverConfig?receiverTemp:ownerTemp;
   await writeFile(path,JSON.stringify(secrets),{mode:0o600,flag:'w'});
-  const out=await wranglerRun(['deploy','--temporary','--config',config,'--secrets-file',path]);
+  // Temporary preview API provisioning can briefly return "Worker does not exist"
+  // while the new account's routing propagates. Retry only that specific case.
+  let out;
+  for(let attempt=0;attempt<4;attempt++){
+    try {
+      out=await wranglerRun(['deploy','--temporary','--config',config,'--secrets-file',path]);
+      break;
+    } catch(error) {
+      if(attempt===3 || !/This Worker does not exist on your account|code: 10007/.test(error.message))
+        throw error;
+      await new Promise(r=>setTimeout(r,3500*(attempt+1)));
+    }
+  }
   // A deploy URL is derived ONLY from output verified by Wrangler.
   const urls=out.match(hostRegex)??[];
   if(!urls.length) throw Error('Cloudflare deploy produced no workers.dev URL');
