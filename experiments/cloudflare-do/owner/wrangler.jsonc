@@ -1,0 +1,36 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "relatte-mw-owner-pilot",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-14",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": true,
+  "preview_urls": false,
+  "services": [
+    {
+      "binding": "MW_RECEIVER_SERVICE",
+      "service": "relatte-mw-durable-pilot"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "MW_OWNER",
+        "class_name": "MysticalWhimseyOwner"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "MysticalWhimseyOwner"
+      ]
+    }
+  ],
+  "observability": {
+    "enabled": false
+  }
+}
