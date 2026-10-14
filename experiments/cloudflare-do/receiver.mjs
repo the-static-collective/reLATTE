@@ -156,9 +156,10 @@ export class SqliteReceiver {
       const receive = await sealReceipt(
         receiptDraft(crossingId,'RECEIVED',before,before,head.event_hash,null,payloadRefs), keys);
       const firstEvent = event(head.seq + 1, head.event_hash, 'RECEIVE', value, receive);
-      const after = stateRef([...statuses(this.sql), { crossing_id: crossingId, disposition: 'HOLD' }]);
+      const receivedState = stateRef([...statuses(this.sql), { crossing_id: crossingId, disposition: 'RECEIVED' }]);
+      const heldState = stateRef([...statuses(this.sql), { crossing_id: crossingId, disposition: 'HOLD' }]);
       const held = await sealReceipt(
-        receiptDraft(crossingId,'R3_HOLD',before,after,firstEvent.event_hash,receive.receipt_id,payloadRefs), keys);
+        receiptDraft(crossingId,'R3_HOLD',receivedState,heldState,firstEvent.event_hash,receive.receipt_id,payloadRefs), keys);
       const secondEvent = event(firstEvent.seq + 1,firstEvent.event_hash,'DISPOSITION',null,held);
       // No await in this transaction: either the complete RECEIVE+HOLD pair survives or neither.
       this.storage.transactionSync(() => {
@@ -179,7 +180,7 @@ export class SqliteReceiver {
   }
   // Cold replay validates journal links, source signatures, receiver key continuity,
   // and the indexed materialized state. A damaged journal fails closed.
-  async replay() {
+  async replay(pinnedSourceFingerprint) {
     return this._enqueue(async () => {
       const events = list(this.sql, 'SELECT seq,event_hash,event_json FROM journal ORDER BY seq');
       const items = list(this.sql, 'SELECT * FROM crossings ORDER BY crossing_id');
@@ -198,6 +199,7 @@ export class SqliteReceiver {
             || e.receipt.crossing_id !== e.crossing_id || e.receipt.created_at !== e.created_at) throw Error('JOURNAL_WRONG_RECEIVER');
         if (e.event_type === 'RECEIVE') {
           if (known.has(e.crossing_id) || decisions.has(e.crossing_id) || !publicShape(e.crossing)
+              || sourceFingerprint(e.crossing.signing?.public_key) !== pinnedSourceFingerprint
               || !(await verifyCrossingEnvelope(e.crossing)) || e.crossing.crossing_id !== e.crossing_id
               || e.receipt.kind !== 'RECEIVED' || e.receipt.semantic_effect !== 'none'
               || e.receipt.pre_state_ref !== stateRef([...known.keys()].map(crossing_id=>({crossing_id,disposition:decisions.get(crossing_id)??'RECEIVED'})))
