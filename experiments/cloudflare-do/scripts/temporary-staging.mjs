@@ -15,7 +15,8 @@ const wrangler = resolve('node_modules/wrangler/bin/wrangler.js');
 const home = await mkdtemp(join(tmpdir(),'mw-edge-temp-'));
 const recvToken = randomBytes(32).toString('hex');
 const ownerToken = randomBytes(32).toString('hex');
-const relayToken = randomBytes(32).toString('hex');
+// Single receiver-scoped token: the owner Worker may relay but cannot read the receiver's key.
+const relayToken = recvToken;
 const receiverTemp = join(home,'receiver-secrets.json');
 const ownerTemp = join(home,'owner-secrets.json');
 const claimUrls = [];
