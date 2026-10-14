@@ -61,7 +61,8 @@ export default {
     const isIngest = url.pathname === '/v0/crossings' && request.method === 'POST';
     const isState = url.pathname === '/v0/state' && request.method === 'GET';
     const isIdentity = url.pathname === '/v0/identity' && request.method === 'GET';
-    if (!isIngest && !isState && !isIdentity) return reply({error:'not_found'},404);
+    const isTrust = url.pathname === '/v0/trust' && request.method === 'GET';
+    if (!isIngest && !isState && !isIdentity && !isTrust) return reply({error:'not_found'},404);
     // Safe even when a Worker has been deployed before secrets were provisioned.
     if (!env.MW_OPERATOR_TOKEN || !env.MW_TRUSTED_SOURCE_FINGERPRINT
         || !/^sha256:[a-f0-9]{64}$/.test(env.MW_TRUSTED_SOURCE_FINGERPRINT)) {
@@ -82,6 +83,7 @@ export default {
     try {
       if (isState) return reply(await stub.state());
       if (isIdentity) return reply(await stub.identity());
+      if (isTrust) return reply({source_fingerprint:env.MW_TRUSTED_SOURCE_FINGERPRINT,configured:true});
       const result = await stub.ingest(body);
       return reply(result,result.duplicate?200:202);
     } catch (error) {
