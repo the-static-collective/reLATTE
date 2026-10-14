@@ -124,7 +124,6 @@ export class OwnerOutbox {
          ||!equality(received.residual_refs,crossing.payload_refs.map(x=>x.address))
          ||!equality(held.residual_refs,crossing.payload_refs.map(x=>x.address))
          ||received.post_state_ref!==received.pre_state_ref
-         ||held.pre_state_ref!==received.post_state_ref
          ||held.post_state_ref===held.pre_state_ref)
         throw Error('WRONG_REMOTE_CONSEQUENCE');
       const pair={received,held};
