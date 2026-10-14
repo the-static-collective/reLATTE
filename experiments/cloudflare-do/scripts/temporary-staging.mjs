@@ -139,6 +139,19 @@ try {
   });
   if(afterPinUrl!==receiverUrl)throw Error('Receiver URL changed across pinned-key redeploy');
   await awaitReady(receiverUrl,'receiver after source pin');
+  // Remote secret propagation can lag behind an already healthy old Worker.
+  // Confirm the new public trust anchor before attempting the crossing.
+  let trustConfirmed=false, observedPin='not-returned';
+  for(let n=0;n<45;n++){
+    const trust=await call(receiverUrl,'/v0/trust',recvToken).catch(()=>null);
+    observedPin=trust?.payload?.source_fingerprint??'missing';
+    if(trust?.status===200 && observedPin===ownerIdentity.fingerprint){
+      trustConfirmed=true;break;
+    }
+    await new Promise(r=>setTimeout(r,1800));
+  }
+  if(!trustConfirmed)throw Error('Remote pinned source signer did not update: '+observedPin);
+
 
   // The public edge is authenticated; business data is never accepted.
   const denied=await fetch(ownerUrl+'/v0/outbox',{signal:AbortSignal.timeout(15000)});
