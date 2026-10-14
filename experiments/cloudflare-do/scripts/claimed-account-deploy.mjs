@@ -18,8 +18,9 @@ const ownerConfig=join(root,'owner','wrangler.jsonc');
 const wrangler=resolve('node_modules/wrangler/bin/wrangler.js');
 const TOKEN=process.env.CLOUDFLARE_API_TOKEN;
 const ACCOUNT=process.env.CLOUDFLARE_ACCOUNT_ID;
-if(process.env.CLAIMED_ACCOUNT_DEPLOY_CONFIRM!=='REDEPLOY_CLAIMED_STAGING')
-  throw Error('Explicit staging deployment confirmation is missing');
+const MODE=process.env.CLAIMED_ACCOUNT_DEPLOY_CONFIRM;
+if(!['VERIFY_CLAIMED_STAGING','REDEPLOY_CLAIMED_STAGING'].includes(MODE))
+  throw Error('Explicit claimed-account verification or staging-deploy mode is missing');
 if(!TOKEN || TOKEN.length<15 || !/^[a-f0-9]{32}$/i.test(ACCOUNT??''))
   throw Error('Configure claimed-account CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID; never paste tokens into logs');
 if(!process.env.GITHUB_ACTIONS || !process.env.CI)
@@ -101,6 +102,13 @@ try {
   await publicHealth(endpoints.receiver,'receiver');
   console.log('CLAIMED_ACCOUNT_PREFLIGHT=PASS; verified both original Workers and exact workers.dev namespace');
 
+  if(MODE==='VERIFY_CLAIMED_STAGING') {
+    console.log('CLAIMED_ACCOUNT_VERIFICATION_RESULT=PASS');
+    console.log('CLAIMED_OWNER_HEALTH='+endpoints.owner+'/health');
+    console.log('CLAIMED_RECEIVER_HEALTH='+endpoints.receiver+'/health');
+    console.log('CLOUDFLARE_WORKERS_DEPLOYED=false');
+    console.log('NO_HISTORY_MODIFICATIONS=true');
+  } else {
   // Owner first: rotate its credential, keep it unable to admit remote receipts
   // until the receiver's existing identity has been independently checked.
   await deploy(ownerConfig,{
@@ -173,8 +181,9 @@ try {
   console.log('RECEIVER_HOLD_COUNT='+finalReceiver.held.length);
   console.log('NO_BOOKING_NO_PUBLICATION=true');
   console.log('Operator tokens rotated and intentionally NOT retained by CI.');
+  }
 } catch(error) {
-  console.error('CLAIMED_ACCOUNT_STAGING_RESULT=FAIL');
+  console.error(MODE==='VERIFY_CLAIMED_STAGING' ? 'CLAIMED_ACCOUNT_VERIFICATION_RESULT=FAIL' : 'CLAIMED_ACCOUNT_STAGING_RESULT=FAIL');
   console.error(String(error.message).slice(0,600));
   process.exitCode=1;
 } finally {
