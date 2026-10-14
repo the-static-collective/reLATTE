@@ -49,6 +49,7 @@ export class MysticalWhimseyReceiver extends DurableObject {
     return this.receiver.ingest(crossing,this.env.MW_TRUSTED_SOURCE_FINGERPRINT);
   }
   async state() { return this.receiver.snapshot(); }
+  async identity() { return this.receiver.identity(); }
 }
 export default {
   async fetch(request,env) {
@@ -59,7 +60,8 @@ export default {
     }
     const isIngest = url.pathname === '/v0/crossings' && request.method === 'POST';
     const isState = url.pathname === '/v0/state' && request.method === 'GET';
-    if (!isIngest && !isState) return reply({error:'not_found'},404);
+    const isIdentity = url.pathname === '/v0/identity' && request.method === 'GET';
+    if (!isIngest && !isState && !isIdentity) return reply({error:'not_found'},404);
     // Safe even when a Worker has been deployed before secrets were provisioned.
     if (!env.MW_OPERATOR_TOKEN || !env.MW_TRUSTED_SOURCE_FINGERPRINT
         || !/^sha256:[a-f0-9]{64}$/.test(env.MW_TRUSTED_SOURCE_FINGERPRINT)) {
@@ -79,6 +81,7 @@ export default {
     const stub = env.MW_RECEIVER.getByName('mw-edge-pilot-v0');
     try {
       if (isState) return reply(await stub.state());
+      if (isIdentity) return reply(await stub.identity());
       const result = await stub.ingest(body);
       return reply(result,result.duplicate?200:202);
     } catch (error) {
