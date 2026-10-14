@@ -36,3 +36,5 @@ jobs:
         run: npx wrangler@4.151.0 deploy --dry-run --config experiments/cloudflare-do/owner/wrangler.jsonc --outdir .tmp-owner-bundle
       - name: Run real local two-Worker service-binding and cold-restart proof
         run: node --experimental-strip-types experiments/cloudflare-do/test/two-worker-runtime.mjs
+      - name: Parse claimed-account deploy tool without permissions or credentials
+        run: node --check experiments/cloudflare-do/scripts/claimed-account-deploy.mjs
