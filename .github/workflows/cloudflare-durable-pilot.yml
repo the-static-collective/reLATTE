@@ -27,8 +27,8 @@ jobs:
       - name: Test exact reLATTE crossing/receipt crypto on SQLite-style durable adapter
         run: node --test --experimental-strip-types experiments/cloudflare-do/test/*.test.mjs
       - name: Bundle Cloudflare Worker without uploading or attaching domains
-        run: npx --yes wrangler@4.102.0 deploy --dry-run --config experiments/cloudflare-do/wrangler.jsonc --outdir .tmp-edge-bundle
+        run: npx --yes wrangler@4.151.0 deploy --dry-run --config experiments/cloudflare-do/wrangler.jsonc --outdir .tmp-edge-bundle
       - name: Install pinned local Wrangler runtime (no cloud account required)
-        run: npm install --no-save --ignore-scripts --no-audit --no-fund wrangler@4.102.0
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund wrangler@4.151.0
       - name: Exercise real local Durable Object, including restart persistence
         run: node --experimental-strip-types experiments/cloudflare-do/test/worker-runtime.mjs
