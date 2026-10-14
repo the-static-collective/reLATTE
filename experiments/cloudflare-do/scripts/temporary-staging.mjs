@@ -86,6 +86,22 @@ async function call(url,path,token,body) {
   const payload=await response.json().catch(()=>({invalid_json:true}));
   return {status:response.status,payload};
 }
+async function awaitReady(url,label) {
+  let last = 'unavailable';
+  for (let n=0;n<45;n++) {
+    try {
+      const response=await fetch(url+'/health',{signal:AbortSignal.timeout(4500)});
+      const body=await response.text();
+      if(response.status===200) {
+        const parsed=JSON.parse(body);
+        if(parsed.pilot===true)return;
+      }
+      last='HTTP '+response.status+' '+body.slice(0,160);
+    } catch(error) {last=error.message;}
+    await new Promise(r=>setTimeout(r,2000));
+  }
+  throw Error(label+' endpoint did not become ready: '+last);
+}
 function required(actual,label,status=200) {
   if(actual.status!==status)throw Error(label+' unexpectedly returned HTTP '+actual.status+': '
     +JSON.stringify(actual.payload).slice(0,600));
@@ -100,6 +116,7 @@ try {
   receiverUrl = await deploy(receiverConfig,{
     MW_OPERATOR_TOKEN:recvToken, MW_TRUSTED_SOURCE_FINGERPRINT:dummy,
   });
+  await awaitReady(receiverUrl,'receiver');
   const receiverIdentity=required(
     await call(receiverUrl,'/v0/identity',recvToken), 'receiver identity');
   if(!/^sha256:[a-f0-9]{64}$/.test(receiverIdentity.fingerprint))
@@ -109,6 +126,7 @@ try {
     MW_OPERATOR_TOKEN:ownerToken, MW_RELAY_TOKEN:relayToken,
     MW_RECEIVER_FINGERPRINT:receiverIdentity.fingerprint,
   });
+  await awaitReady(ownerUrl,'owner');
   const ownerIdentity=required(await call(ownerUrl,'/v0/identity',ownerToken),'owner identity');
   if(!/^sha256:[a-f0-9]{64}$/.test(ownerIdentity.fingerprint)
       || ownerIdentity.fingerprint===receiverIdentity.fingerprint)
@@ -120,6 +138,7 @@ try {
     MW_TRUSTED_SOURCE_FINGERPRINT:ownerIdentity.fingerprint,
   });
   if(afterPinUrl!==receiverUrl)throw Error('Receiver URL changed across pinned-key redeploy');
+  await awaitReady(receiverUrl,'receiver after source pin');
 
   // The public edge is authenticated; business data is never accepted.
   const denied=await fetch(ownerUrl+'/v0/outbox',{signal:AbortSignal.timeout(15000)});
