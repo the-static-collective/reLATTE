@@ -178,6 +178,18 @@ export class SqliteReceiver {
         disposition_receipt: held, state: this.snapshot() };
     });
   }
+  async identity() {
+    return this._enqueue(async () => {
+      const keys = await this._keys();
+      return {
+        world_id: CONFIG.world_id,
+        receiver_particular: CONFIG.receiver_particular,
+        public_key: keys.publicKeyJwk,
+        fingerprint: sourceFingerprint(keys.publicKeyJwk),
+        note: 'Enrol fingerprint through an authenticated independent channel; this endpoint does not establish human identity',
+      };
+    });
+  }
   // Cold replay validates journal links, source signatures, receiver key continuity,
   // and the indexed materialized state. A damaged journal fails closed.
   async replay(pinnedSourceFingerprint) {
