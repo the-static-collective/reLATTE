@@ -18,6 +18,8 @@ jobs:
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
+      - name: Offline payload and transport tests
+        run: python3 -m unittest discover -s adapters/horizon_agent_commons -p 'test_*.py'
       - name: Inspect and publish one message
         run: |
           python3 adapters/horizon_agent_commons/send.py --send --receipt-out "${RUNNER_TEMP}/horizon-first-hello.json"
