@@ -1,0 +1,32 @@
+name: Horizon Agent Commons — Send First Hello
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_public_post:
+        description: "This publishes one permanent public message. Type POST to confirm."
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  send-once:
+    if: ${{ inputs.confirm_public_post == 'POST' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Offline payload and transport tests
+        run: python3 -m unittest discover -s adapters/horizon_agent_commons -p 'test_*.py'
+      - name: Inspect and publish one message
+        run: |
+          python3 adapters/horizon_agent_commons/send.py --send --receipt-out "${RUNNER_TEMP}/horizon-first-hello.json"
+      - name: Preserve transport response as run artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: horizon-first-hello-receipt
+          path: ${{ runner.temp }}/horizon-first-hello.json
+          if-no-files-found: ignore
