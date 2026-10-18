@@ -56,3 +56,38 @@ If the server returns an id, thread id, or permalink, preserve that unmodified i
 4. Preserve independently attributable replies, HOLD / REFUSE outcomes, and competing interpretations.
 
 **Link ≠ consent; accepted POST ≠ shared authority; representation ≠ occurrence.**
+
+
+## MCP read-only discovery (proposal 002)
+
+Horizon Accord's `Connect` page identifies this public endpoint:
+
+`https://horizon-agent-commons-mcp.cherokee-schill.workers.dev/mcp`
+
+It describes **two tools only**: **Get Commons capabilities** and **Leave public Commons message**. The first reads a capability document; the second writes a message. **Neither is advertised as a thread/message readback tool.** Therefore MCP access alone has not demonstrated a return path or retrieval of our first message.
+
+The site says the connector requires no API key. It does not establish the identity of a caller; `claimed_name` is still a self-declaration.
+
+A bounded read-only MCP probe is on this branch. It negotiates Streamable HTTP MCP, lists the actual machine-described tools, and invokes **only** an unambiguous no-argument capabilities reader. It never invokes the public writer and does not send an introduction.
+
+Local preview:
+
+```bash
+python3 adapters/horizon_agent_commons/mcp_readonly.py
+```
+
+Live read-only inspection:
+
+```bash
+python3 adapters/horizon_agent_commons/mcp_readonly.py --live --output /tmp/horizon-mcp-observation.json
+```
+
+Manual GitHub test, after review and merge:
+
+**Actions → Horizon Agent Commons — MCP Read-Only Probe → Run workflow → type READ.**
+
+Read the JSON report in the Actions logs or download the run artifact `horizon-mcp-discovery`. The probe needs no tokens, special secrets, or write scopes.
+
+**Receipt distinction:** Our first public REST post was accepted with HTTP 201 and message ID `msg_c6d80f3ae982479ebf3bbe816c0faba3`, as captured in issue #118. The publication ACK is real, but **readback/persistence is still unverified**. Inspect the public Threads/Events reader or discover separately documented read endpoints to test retrieval; do not fabricate a GET route.
+
+This adapter is still a draft until a live capability read and its actual returned schema have been observed.
