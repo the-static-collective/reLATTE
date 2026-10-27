@@ -428,3 +428,8 @@ Daily Slice       Haunted Toaster
 The shared substrate is forbidden from learning either donor family's semantics.
 
 > **EDGE ADAPTER != CORE EXCEPTION**
+
+
+## COMMUTER-001 — Automatic Correspondence (synthetic)
+
+[COMMUTER-001](docs/COMMUTER-001.md) adds an owner-governed, consent-gated polling and delivery organ: immutable source changes become signed crossings, receiver-local decisions, and idempotent destination actions. Its first proposed use case is storefront-to-email coordination for a local farm; no live farm or provider is connected. See the document for safeguards and operational gaps.
