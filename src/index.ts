@@ -17,3 +17,4 @@ export * from './organ.ts';
 export * from './roundtrip.ts';
 export * from './material-delivery.ts';
 export * from './commuter.ts';
+export * from './commuter-store.ts';
