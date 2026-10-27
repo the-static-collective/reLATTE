@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="A hands-on, sample-data demonstration of reLATTE's Farm Post Office: automatic communication between a farm storefront and its email system, with farmer-controlled permissions.">
+  <title>Farm Post Office · reLATTE / Static Collective</title>
+  <style>
+    :root{--earth:#1b342b;--forest:#254f3c;--leaf:#4c7f53;--mint:#eaf2e5;--cream:#f9f8f0;--paper:#fffefa;--gold:#e8b46a;--ink:#213129;--muted:#61736a;--border:#dbe6d7;--red:#9a513f;--hold:#8c691f}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--forest)}a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+    .shell{max-width:1120px;padding:0 24px;margin:0 auto}.bar{background:var(--earth);color:#f7f8ef}.bar .shell{display:flex;justify-content:space-between;align-items:center;gap:14px;min-height:65px}.logo{font-weight:790;letter-spacing:.04em}.bar .right{font-size:.8rem;color:#c7dec8}.bar a{color:#e4efdc;text-decoration:none}.kicker{font-size:.76rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#a1d0a6}.hero{background:radial-gradient(ellipse at 84% 2%,#376849 0,transparent 48%),var(--earth);color:#f8faef;padding:72px 0 80px}.hero-inner{display:grid;grid-template-columns:1.3fr .7fr;gap:46px;align-items:center}h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.12;margin:0 0 16px}h1{font-size:clamp(2.6rem,6vw,5.2rem);letter-spacing:-.04em}h2{font-size:clamp(1.9rem,3.7vw,2.75rem);letter-spacing:-.025em}h3{font-size:1.4rem}.hero p{font-size:1.13rem;color:#dde8dc;max-width:610px}.small{font-size:.85rem}.soft{color:var(--muted)}.btn{font:inherit;font-weight:750;border:1px solid transparent;border-radius:11px;padding:12px 18px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .1s,background .1s}.btn:active{transform:translateY(1px)}.btn.primary{background:var(--gold);color:#243426}.btn.primary:hover{background:#f7c98b}.btn.light{background:#fff;color:var(--earth)}.btn.outline{background:transparent;color:inherit;border-color:#acc6ad}.btn.dark{background:var(--forest);color:white}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}.seal{border-radius:21px;border:1px solid #568367;padding:26px;background:#ffffff0a;box-shadow:0 15px 40px #0002}.seal .mini-label{font-size:.77rem;font-weight:800;letter-spacing:.08em;color:#b4d5bb;text-transform:uppercase}.seal .steps{list-style:none;padding:0;margin:22px 0 0}.seal .steps li{padding:12px 0;border-top:1px solid #ffffff22}.seal .num{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#547e58;color:#fff;margin-right:10px;font-size:.78rem}.section{padding:72px 0}.section.alt{background:var(--mint)}.header-desc{max-width:790px;color:#576b5e;font-size:1.08rem}.callout{border-radius:14px;border:1px solid var(--border);background:var(--paper);padding:16px 20px;margin:22px 0}.callout strong{color:var(--earth)}.flow{display:grid;grid-template-columns:1fr 32px 1fr 32px 1fr;gap:8px;align-items:stretch;margin:30px 0}.flow .node{padding:24px 20px;border-radius:15px;background:white;border:1px solid var(--border);box-shadow:0 6px 18px #203c2310}.flow .node .over{font-weight:800;color:var(--forest);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em}.flow .arrow{display:grid;place-items:center;color:var(--leaf);font-size:1.9rem}.flow p{font-size:.89rem;margin-bottom:0;color:#546559}.demo-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:22px;align-items:start}.panel{border:1px solid var(--border);background:white;border-radius:17px;padding:25px;box-shadow:0 8px 22px #233a2910}.scenarios{display:grid;gap:9px}.scenario{text-align:left;border:1px solid #dce7d8;background:#f9fcf6;border-radius:12px;padding:13px 15px;font:inherit;cursor:pointer;color:var(--ink)}.scenario:hover{border-color:var(--leaf);background:#edf6e8}.scenario strong,.scenario span{display:block}.scenario span{font-size:.81rem;color:#6b7a70;margin-top:3px}.ledger{min-height:295px;display:grid;gap:9px;align-content:start}.event{border:1px solid var(--border);border-left:5px solid #5d9866;padding:11px 13px;border-radius:9px;background:#fafcf8}.event.hold{border-left-color:var(--gold)}.event.error{border-left-color:var(--red)}.event .line{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}.tag{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;font-weight:800;padding:3px 8px;border-radius:20px;background:#e3eee1;color:#265d3d}.event.hold .tag{color:#775014;background:#fff2d5}.event.error .tag{color:#853c32;background:#fbeae6}.event p{margin:5px 0 0;color:#5e6a63;font-size:.82rem}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0 0 14px}.metric{background:#f1f7ed;border:1px solid #dce9d9;text-align:center;border-radius:10px;padding:10px 5px}.metric b{font-size:1.5rem;display:block;color:var(--earth)}.metric span{font-size:.71rem}.demo-warning{font-size:.82rem;color:#756a44;background:#fff7dc;padding:9px 12px;border-radius:9px;margin-top:12px}.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}.two .panel{height:100%}.question{border-bottom:1px solid var(--border);padding:16px 0}.question:last-child{border-bottom:0}.question strong{display:block;margin-bottom:5px}.question p{margin:0;color:var(--muted);font-size:.92rem}.input-row{margin:0 0 18px}.input-row label{display:block;font-size:.89rem;font-weight:750;margin-bottom:6px}.input-row input,.input-row select,.input-row textarea{background:white;border:1px solid #bdcebb;border-radius:9px;width:100%;padding:11px 12px;font:inherit;color:var(--ink)}.input-row textarea{min-height:105px;resize:vertical}.privacy{background:#e5f0e3;border-left:4px solid var(--leaf);padding:12px 15px;border-radius:6px;font-size:.86rem}.privacy strong{display:block}.foot{background:var(--earth);color:#c4d7c6;padding:27px 0}.foot .shell{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;font-size:.8rem}.foot a{color:#e2f2da}.foot strong{color:white}.mutedline{color:#6d7d71;font-size:.87rem;margin-top:9px}.note{font-size:.82rem;color:#617367;margin:12px 0}.sep{border-top:1px solid #ccd9ca;margin-top:18px;padding-top:18px}button[disabled]{cursor:not-allowed;opacity:.6}.toast{font-size:.86rem;min-height:1.8em;margin-top:8px;color:#2a6542}
+    @media(max-width:790px){.hero-inner,.demo-grid,.two{grid-template-columns:1fr}.hero{padding:55px 0}.flow{grid-template-columns:1fr;gap:9px}.flow .arrow{transform:rotate(90deg);min-height:21px}.section{padding:56px 0}.bar .right{display:none}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+  </style>
+</head>
+<body>
+<header class="bar"><div class="shell"><span class="logo">THE STATIC COLLECTIVE <span aria-hidden="true">✳</span> reLATTE</span><span class="right">Farm Post Office · Invitation prototype 001</span></div></header>
+<main>
+<section class="hero"><div class="shell hero-inner">
+  <div><div class="kicker">A small invitation to a working experiment</div>
+    <h1>Let your farm's systems talk to each other.</h1>
+    <p>Orders, memberships, and email lists shouldn't require copying names from one place to another. We're building a farmer-controlled bridge between the tools you already use.</p>
+    <div class="buttons"><a class="btn primary" href="#demo">Try the sample demo <span aria-hidden="true">↗</span></a><a class="btn outline" href="#pilot">Explore a pilot</a></div>
+    <p class="small" style="margin-top:25px;color:#b6d6c0">No account · No real customer data · Nothing connected during this demo</p>
+  </div>
+  <aside class="seal"><div class="mini-label">Your own digital post office</div>
+  <ol class="steps"><li><span class="num">1</span>Something changes in your farm store.</li><li><span class="num">2</span>reLATTE carries a signed, verifiable notice.</li><li><span class="num">3</span>Your rules decide what can happen.</li><li><span class="num">4</span>Your email system acts when authorized.</li><li><span class="num">5</span>You get a useful receipt.</li></ol>
+  </aside>
+</div></section>
+<section class="section"><div class="shell">
+  <div class="kicker" style="color:var(--leaf)">The idea</div><h2>Connect systems. Keep control.</h2>
+  <p class="header-desc">We aren't asking you to replace your storefront or email provider. The goal is automatic, permission-aware communication between them, even when they belong to different organizations.</p>
+  <div class="flow" aria-label="Farm store connects to reLATTE Post Office connects to email system">
+    <div class="node"><div class="over">Your existing store</div><h3>Something happens</h3><p>A customer places an order or joins a CSA. Your data stays under your control.</p></div>
+    <div class="arrow" aria-hidden="true">→</div>
+    <div class="node"><div class="over">reLATTE</div><h3>The post office</h3><p>Records where the notice came from, asks what is permitted, and keeps a receipt.</p></div>
+    <div class="arrow" aria-hidden="true">→</div>
+    <div class="node"><div class="over">Your email tool</div><h3>The appropriate action</h3><p>Update a contact, apply an unsubscribe, or send only when your rules allow it.</p></div>
+  </div>
+  <div class="callout"><strong>Important distinction:</strong> Buying vegetables does not automatically subscribe someone to marketing emails. The bridge has to respect opt-ins, unsubscribes, and the farmer's own rules.</div>
+</div></section>
+<section class="section alt" id="demo"><div class="shell">
+  <div class="kicker" style="color:var(--leaf)">Hands-on sandbox</div><h2>Try sending an imaginary change.</h2>
+  <p class="header-desc">Click an event and watch what a farmer's operator panel could report. Everything below is simulated in this browser using fictional records. It does not connect to real farm software or send emails.</p>
+  <div class="demo-grid">
+    <div class="panel">
+      <h3>Choose a sample event</h3>
+      <div class="scenarios">
+        <button class="scenario" type="button" data-scenario="join"><strong>① New CSA member</strong><span>Customer record is synchronized for an authorized service purpose.</span></button>
+        <button class="scenario" type="button" data-scenario="optin"><strong>② Newsletter opt-in</strong><span>Verified permission permits a marketing-list update.</span></button>
+        <button class="scenario" type="button" data-scenario="hold"><strong>③ Newsletter request, no permission</strong><span>HOLD: no marketing email is sent.</span></button>
+        <button class="scenario" type="button" data-scenario="unsubscribe"><strong>④ Customer unsubscribes</strong><span>Apply a suppression before any future marketing.</span></button>
+        <button class="scenario" type="button" data-scenario="repeat"><strong>⑤ Repeat the same order update</strong><span>A repeated event is recognized, not applied twice.</span></button>
+        <button class="scenario" type="button" data-scenario="outage"><strong>⑥ Email provider is unavailable</strong><span>Retain the source cursor and offer an explicit retry.</span></button>
+      </div>
+      <div class="buttons"><button class="btn dark" id="retry" type="button" disabled>Retry delayed event</button><button class="btn outline" id="reset" type="button">Reset demo</button></div>
+      <div class="mutedline">The real reLATTE library provides signed crossings, local decisions, and retry primitives. This page demonstrates their intended operator experience, not a live connection.</div>
+    </div>
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap"><h3 style="margin:0">The farm mailroom</h3><span class="tag">Simulation only</span></div>
+      <p class="small soft" style="margin:8px 0 15px">Storefront → permissions → email service</p>
+      <div class="metrics" aria-live="polite"><div class="metric"><b id="countApplied">0</b><span>Applied</span></div><div class="metric"><b id="countHeld">0</b><span>Held</span></div><div class="metric"><b id="countDelayed">0</b><span>Delayed</span></div></div>
+      <div id="ledger" class="ledger" aria-live="polite" aria-relevant="additions text"><p class="soft">No sample events yet. Choose one on the left.</p></div>
+      <div class="demo-warning">No real customers, messages, credentials, or live integrations are used here.</div>
+    </div>
+  </div>
+</div></section>
+<section class="section" id="pilot"><div class="shell">
+  <div class="kicker" style="color:var(--leaf)">First farm pilot</div><h2>Start with one small useful connection.</h2>
+  <p class="header-desc">Our first proposed trial is simple: one authorized storefront change automatically updates one appropriate record in your chosen email system, with a receipt you can inspect. Start with synthetic data or a few agreed-upon test records, not your entire customer list.</p>
+  <div class="two">
+    <div class="panel">
+      <h3>What we'd work out together</h3>
+      <div class="question"><strong>Which storefront are you using?</strong><p>For example, a co-op e-commerce service, a farm shop, or a CSA platform.</p></div>
+      <div class="question"><strong>What handles your emails?</strong><p>Could be a newsletter provider, a CRM, or email marketing inside your website.</p></div>
+      <div class="question"><strong>What would help first?</strong><p>New contacts, CSA segments, fulfillment notices, or preventing unsubscribed people from receiving mail.</p></div>
+      <div class="question"><strong>Who approves the connection?</strong><p>You choose the rules and grant access only if you decide to proceed. No password sharing.</p></div>
+      <p class="note">Experimental prototype · No cost or commitment to explore fit · Scope, any ongoing costs, and responsibilities would be agreed before real integration.</p>
+    </div>
+    <div class="panel">
+      <h3>Make your own pilot note</h3>
+      <p class="small soft">These answers stay on this page until you choose to copy them. Nothing here is sent to us.</p>
+      <div class="input-row"><label for="store">My farm's store / sales platform</label><input id="store" autocomplete="off" placeholder="e.g. GrownBy, Shopify, other / not sure"></div>
+      <div class="input-row"><label for="email">My email / newsletter system</label><input id="email" autocomplete="off" placeholder="e.g. Mailchimp, Squarespace, other / not sure"></div>
+      <div class="input-row"><label for="goal">The first automatic connection I'd like</label><select id="goal"><option value="Keep customer contact records in sync">Keep customer contact records in sync</option><option value="Update CSA membership segments">Update CSA membership segments</option><option value="Respect newsletter opt-ins and unsubscribes">Respect newsletter opt-ins and unsubscribes</option><option value="Send authorized service or fulfillment updates">Send authorized service or fulfillment updates</option><option value="Something else">Something else</option></select></div>
+      <div class="input-row"><label for="notes">Anything else? (optional)</label><textarea id="notes" placeholder="What takes the most manual work right now?"></textarea></div>
+      <div class="privacy"><strong>Safe first step</strong>Please don't enter customer information, passwords, API keys, or private records. A real connection would use an agreed authorization method and a separate private setup.</div>
+      <div class="buttons"><button id="copy" class="btn dark" type="button">Copy my pilot note</button><button id="mail" class="btn outline" type="button">Open email draft</button></div>
+      <div id="copyStatus" role="status" class="toast"></div>
+      <p class="note">Copy the note and reply to the person who invited you. The email draft intentionally leaves the recipient blank; you choose whom to send it to.</p>
+    </div>
+  </div>
+</div></section>
+<section class="section alt"><div class="shell">
+  <h2>Curious, but not ready to connect anything?</h2>
+  <p class="header-desc">That's fine. The first conversation can be a ten-minute screen share about which tools you already use and where information gets stuck. We can show an automated sample with no access to your systems.</p>
+  <div class="buttons"><a class="btn dark" href="#demo">Run the sample again</a><a class="btn outline" href="https://github.com/the-static-collective/reLATTE/blob/main/docs/COMMUTER-001.md" target="_blank" rel="noopener noreferrer">Read the technical design ↗</a></div>
+</div></section>
+</main>
+<footer class="foot"><div class="shell"><span><strong>reLATTE / The Static Collective</strong> · Independent experimental software for useful work.</span><span>Independent proposal. No farm partnership or integration is implied. <a href="https://github.com/the-static-collective/reLATTE" target="_blank" rel="noopener noreferrer">View source</a></span></div></footer>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const count = {applied:0, held:0, delayed:0};
+  const seen = new Set();
+  let delayed = false;
+  const ledger = $('ledger');
+  function draw() {
+    $('countApplied').textContent = String(count.applied);
+    $('countHeld').textContent = String(count.held);
+    $('countDelayed').textContent = String(count.delayed);
+    $('retry').disabled = !delayed;
+  }
+  function entry(title, status, info, level='ok') {
+    if (ledger.querySelector('p.soft')) ledger.replaceChildren();
+    const block = document.createElement('article'); block.className = 'event ' + level;
+    const line = document.createElement('div'); line.className='line';
+    const head = document.createElement('strong'); head.textContent=title;
+    const badge = document.createElement('span'); badge.className='tag'; badge.textContent=status;
+    const note = document.createElement('p'); note.textContent=info;
+    line.append(head,badge); block.append(line,note); ledger.prepend(block);
+  }
+  function scenario(type) {
+    switch(type) {
+      case 'join': count.applied++; entry('Sample CSA member joined','ADMITTED · APPLIED','An owner-authorized service contact update would reach the email system.'); break;
+      case 'optin': count.applied++; entry('Sample newsletter opt-in','ADMITTED · APPLIED','Permission evidence was checked in this fictional example before a marketing list update.'); break;
+      case 'hold': count.held++; entry('Sample newsletter request','HOLD','No permission evidence. No marketing message or list enrollment.', 'hold'); break;
+      case 'unsubscribe': count.applied++; entry('Sample unsubscribe','SUPPRESSED','A permitted suppression update would prevent further marketing.'); break;
+      case 'repeat':
+        if (seen.has('sample-order-001')) entry('Repeated sample order update','ALREADY APPLIED','Stable event ID matched the earlier simulated operation; no duplicate work.');
+        else {seen.add('sample-order-001');count.applied++;entry('Sample order update','ADMITTED · APPLIED','First occurrence recorded; click this example again to see deduplication.');}
+        break;
+      case 'outage':
+        if (delayed) { entry('Another simulated provider outage','RETRY PENDING','The same event remains pending. Retry it below.', 'error'); break; }
+        delayed=true;count.delayed++;entry('Sample email service unavailable','RETRY PENDING','No cursor advancement; no successful delivery claim. Use Retry delayed event.', 'error');break;
+      default:return;
+    }
+    draw();
+  }
+  document.querySelectorAll('[data-scenario]').forEach(b=>b.addEventListener('click',()=>scenario(b.dataset.scenario)));
+  $('retry').addEventListener('click',()=>{
+    if (!delayed) return;
+    delayed=false;count.delayed--;count.applied++;
+    entry('Delayed sample update','RETRIED · APPLIED','The simulated email service recovered. Same event identity; one applied action.');
+    draw();
+  });
+  $('reset').addEventListener('click',()=>{
+    count.applied=0;count.held=0;count.delayed=0;delayed=false;seen.clear();
+    ledger.replaceChildren(); const p=document.createElement('p');p.className='soft';p.textContent='No sample events yet. Choose one on the left.';ledger.append(p);draw();
+  });
+  function note() {
+    const val = id => $(id).value.trim() || '(not sure yet)';
+    return 'Farm Post Office — pilot conversation\n\nStorefront: '+val('store')+'\nEmail system: '+val('email')+'\nFirst automatic connection: '+val('goal')+'\nNotes: '+( $('notes').value.trim() || '(none)' )+'\n\nI would like to discuss a small synthetic-data pilot before granting any system access.\n\nPlease do not send private customer data or login credentials.';
+  }
+  $('copy').addEventListener('click',async()=>{
+    try { await navigator.clipboard.writeText(note()); $('copyStatus').textContent='Copied. Reply to the person who sent you this link.'; }
+    catch { $('copyStatus').textContent='Copy was blocked by this browser. Use Open email draft instead.'; }
+  });
+  $('mail').addEventListener('click',()=>{
+    const uri='mailto:?subject='+encodeURIComponent('Farm Post Office — pilot conversation')+'&body='+encodeURIComponent(note());
+    window.location.href=uri;
+    $('copyStatus').textContent='If your email app opened, choose your recipient before sending.';
+  });
+  draw();
+})();
+</script>
+</body>
+</html>
