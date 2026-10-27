@@ -9,10 +9,13 @@ import type { CommuterCursorStore } from './commuter.ts';
  * No distributed lock, remote-store transaction, or fsync guarantee.
  */
 export class FileCommuterCursorStore implements CommuterCursorStore {
-  constructor(readonly path: string) {
+  readonly path: string;
+
+  constructor(path: string) {
     if (typeof path !== 'string' || path.trim() === '') {
       throw new Error('INVALID_COMMUTER_CURSOR_PATH');
     }
+    this.path = path;
   }
 
   async read(): Promise<string | null> {
