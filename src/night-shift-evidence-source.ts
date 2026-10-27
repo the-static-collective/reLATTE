@@ -34,7 +34,7 @@ function asEntry(v: unknown): FeedEntry {
   for (const field of ['observed_at','source_happened_at'] as const) {
     const value = e[field];
     if (typeof value !== 'string' ||
-        !/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|\\+00:00)$/.test(value) ||
+        !/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:[.][0-9]{1,6})?(?:Z|[+]00:00)$/.test(value) ||
         !Number.isFinite(Date.parse(value))) {
       throw new Error('INVALID_NIGHT_SOURCE_TIMESTAMP');
     }
