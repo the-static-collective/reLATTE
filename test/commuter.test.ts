@@ -174,3 +174,23 @@ test('source event identity is stable and opaque input validation prevents bare 
     consent: { state: 'granted', evidence_ref: evidence },
   })), /INVALID_COMMUTER_SUPPRESSION/);
 });
+
+test('durable file cursor is read after restart and rejects corruption', async () => {
+  const { FileCommuterCursorStore } = await import('../src/commuter-store.ts');
+  const root = await mkdtemp(join(tmpdir(), 'relatte-commuter-cursor-'));
+  const path = join(root, 'state', 'cursor.json');
+  try {
+    const first = new FileCommuterCursorStore(path);
+    assert.equal(await first.read(), null);
+    await first.write('after-001');
+    const reopened = new FileCommuterCursorStore(path);
+    assert.equal(await reopened.read(), 'after-001');
+    await first.write(null);
+    assert.equal(await reopened.read(), null);
+    const { writeFile } = await import('node:fs/promises');
+    await writeFile(path, '{"schema":"relatte.commuter-cursor/v0","cursor":7}');
+    await assert.rejects(() => reopened.read(), /INVALID_COMMUTER_CURSOR_STORE/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
