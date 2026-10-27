@@ -73,3 +73,20 @@ A live sender must explicitly sign, and a live receiving world must independentl
 No current proof of permanent hosted key custody, background delivery, multi-operator admission, live browser-to-worker crossing, or other external provider integration is implied by this library change. Proposed production adapters: first Night Shift, then independently permissioned Vercel deployments, publications, Garden field notes, and Penny settlement observations. Do not pretend a grocery delivery is verified merely because a contributor said it was.
 
 **Law: source observed ≠ receiver admitted ≠ independently reviewed ≠ field proved.**
+
+
+## NIGHT-SHIFT-WORKER-001 — real one-shot road
+
+`npm run evidence:night` polls the **current live, public Night Shift source feed**, maps public GitHub PR observations through `NightShiftPublicEvidenceSource`, signs each reLATTE crossing with a persistent local P-256 source key, and hands it to a distinct durable `LocalReceiver`. No background job or cloud timer is claimed.
+
+First use: `npm install && npm run evidence:night`.
+
+The default receiver **HOLDs** all observations and writes independently signed `RECEIVED` and `R3_HOLD` receipts into a local append-only journal. It does *not* change Night Shift tasks.
+
+Explicit operator choice: `npm run evidence:night -- --admit-observations` uses a **separate receiver world** and only admits the narrow `night-shift:github-rest` public source-observation kind to a durable, local, idempotent record store. This says **stored observation**, not merged-author identity or task completion. A GitHub PR is not proof of who performed a community service.
+
+Keys and receipts reside under `~/.relatte/night-shift-evidence`, or in the private directory selected by `RELATTE_NIGHT_EVIDENCE_HOME`. The source signing key is created once (mode 0600 on Unix), and each receiver manages its own independent key. Back up these files carefully; losing them loses continuity. Do not copy keys into a repository, a public URL, or a screenshot.
+
+**Operational limitations:** no 24/7 process, no scheduling, no global receiver lease, no multi-operator coordination. The current public API returns at most five latest merged PR observations; if a persisted cursor is not in a full five-row window, polling fails instead of silently skipping events. This is a bounded pilot aperture, not a lossless production event bus. Production use requires a paginated outbox and stronger identity/key custody.
+
+The adapter converts Supabase PostgREST microsecond UTC timestamps to strict millisecond-Z values before canonical reLATTE signing. Observation payload digests are domain-separated, while the actual public source bytes are not included in the envelope.

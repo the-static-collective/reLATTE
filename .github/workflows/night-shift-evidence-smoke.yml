@@ -1,0 +1,43 @@
+name: Night Shift live evidence crossing smoke
+
+on:
+  pull_request:
+    paths:
+      - 'src/night-shift-evidence-source.ts'
+      - 'src/evidence-transit.ts'
+      - 'scripts/night-shift-evidence.ts'
+      - '.github/workflows/night-shift-evidence-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  witness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install
+      - name: Live public source to signed RECEIVE and HOLD
+        env:
+          RELATTE_NIGHT_EVIDENCE_HOME: ${{ runner.temp }}/night-evidence-witness
+        run: |
+          npm run evidence:night
+          test -s "$RELATTE_NIGHT_EVIDENCE_HOME/held-observations/receiver/journal.jsonl"
+          grep -q 'R3_HOLD' "$RELATTE_NIGHT_EVIDENCE_HOME/held-observations/receiver/journal.jsonl"
+      - name: Repeat with persisted source key and cursor
+        env:
+          RELATTE_NIGHT_EVIDENCE_HOME: ${{ runner.temp }}/night-evidence-witness
+        run: |
+          npm run evidence:night
+      - name: Independent opt-in receiver and idempotent observation store
+        env:
+          RELATTE_NIGHT_EVIDENCE_HOME: ${{ runner.temp }}/night-evidence-witness
+        run: |
+          npm run evidence:night -- --admit-observations
+          grep -q 'R3_ADMIT' "$RELATTE_NIGHT_EVIDENCE_HOME/approved-source-observations/receiver/journal.jsonl"
+          test -n "$(find "$RELATTE_NIGHT_EVIDENCE_HOME/approved-source-observations/observations" -type f -name '*.json' -print -quit)"

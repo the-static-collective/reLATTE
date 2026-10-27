@@ -31,8 +31,17 @@ function asEntry(v: unknown): FeedEntry {
   if (typeof e.title !== 'string' || e.title.length === 0 || e.title.length > 350) {
     throw new Error('INVALID_NIGHT_SOURCE_TITLE');
   }
-  validateTimestamp(e.observed_at);
-  validateTimestamp(e.source_happened_at);
+  for (const field of ['observed_at','source_happened_at'] as const) {
+    const value = e[field];
+    if (typeof value !== 'string' ||
+        !/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:[.][0-9]{1,6})?(?:Z|[+]00:00)$/.test(value) ||
+        !Number.isFinite(Date.parse(value))) {
+      throw new Error('INVALID_NIGHT_SOURCE_TIMESTAMP');
+    }
+    // The external API may return microseconds and +00:00; normalize before
+    // entering the strict reLATTE millisecond-Z signing profile.
+    validateTimestamp(new Date(value).toISOString());
+  }
   return e as FeedEntry;
 }
 /** No authentication, contacts, task IDs, or local reviewer identities cross. */
