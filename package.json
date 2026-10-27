@@ -7,7 +7,8 @@
     "check": "tsc --noEmit",
     "build": "tsc",
     "test": "node --test --experimental-strip-types test/*.test.ts",
-    "verify": "npm run check && npm test && npm run build"
+    "verify": "npm run check && npm test && npm run build",
+    "evidence:night": "node --experimental-strip-types scripts/night-shift-evidence.ts"
   },
   "dependencies": {
     "json-canonicalize": "3.0.1"
