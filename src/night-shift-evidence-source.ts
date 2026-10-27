@@ -74,10 +74,12 @@ function cursorFor(e: FeedEntry): string {
  * A production outbox should eventually replace this polling aperture.
  */
 export class NightShiftPublicEvidenceSource implements EvidenceSource {
-  constructor(
-    private readonly fetcher: typeof fetch = fetch,
-    private readonly endpoint: string = NIGHT_SHIFT_PUBLIC_FEED,
-  ) {}
+  private readonly fetcher: typeof fetch;
+  private readonly endpoint: string;
+  constructor(fetcher: typeof fetch = fetch, endpoint: string = NIGHT_SHIFT_PUBLIC_FEED) {
+    this.fetcher = fetcher;
+    this.endpoint = endpoint;
+  }
 
   async poll(cursor: string | null): Promise<{ observations: EvidenceObservation[]; next_cursor: string | null }> {
     if (cursor !== null && (typeof cursor !== 'string' || cursor.length > 350)) {
