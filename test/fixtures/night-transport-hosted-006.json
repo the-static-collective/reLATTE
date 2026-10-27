@@ -1,0 +1,128 @@
+{
+  "held": {
+    "kind": "R3_HOLD",
+    "note": "Owner-local default HOLD. Observation awaits human review; no task completed",
+    "schema": "relatte.receipt/v0",
+    "signing": {
+      "domain": "relatte.receipt-signature/v0",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "oLqonf14mEg_C2VO1OXf4Qg3ZCPfF1n9nBNFFQRfXCpPDnhHzPj_zRhMiHmbcCKVNIWFFGU0aQl0VG0U45Hlmw",
+      "public_key": {
+        "x": "akLB2yoTb_zx7eooNwVPlOlJiCDVSMXvKdlbb6Ki-Bk",
+        "y": "L_Ai3ZidyHQJMJU6vl_MIHnopiRh95STYzEnr7K_frY",
+        "crv": "P-256",
+        "kty": "EC"
+      }
+    },
+    "world_id": "world:night-shift-hosted-receiver",
+    "created_at": "2026-10-27T09:44:58.200Z",
+    "extensions": {
+      "night_transport": {
+        "law": "RECEIVED != ADMITTED",
+        "policy": "worker-policy-v1-default-hold",
+        "source": "github-public-pr",
+        "decision": "HOLD"
+      }
+    },
+    "receipt_id": "relatte-receipt-v0:373d549f887b860bc00c4e18417a3b6ff783a85b21f84d928faa2afd180968c6",
+    "crossing_id": "relatte-crossing-v0:b5c3146e1007c33b098b37364fa62011ac7d9eee56297d603b0935f07d6e2afe",
+    "contract_ref": "contract:night-evidence-hold/v0",
+    "pre_state_ref": null,
+    "residual_refs": [
+      "sha256:6171cebc011742c96911ff9fc67a65957be87c6e7da83820dc3eae215470e8df"
+    ],
+    "post_state_ref": null,
+    "descendant_refs": [],
+    "semantic_effect": "none",
+    "receiver_particular": "particular:night-shift-source-inbox"
+  },
+  "crossing": {
+    "schema": "relatte.crossing-envelope/v0",
+    "parents": [],
+    "signing": {
+      "domain": "relatte.crossing-signature/v0",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "S1psXKIeMv4O7Fvx9VjLpPaX0FxP2PFAdvpz0jJajvrnHWN7ZKvKMN0_PUYomTlmBKmXSMVmTok9M9jvweZ34A",
+      "public_key": {
+        "x": "jgXqMSJjs1bPvQHFzf_ce9EC87UJUcDgc1U08QtaPZA",
+        "y": "7WGJmVmIRIaTHRC6UhoSre9elZW6WzGIXnWw2QcgYg0",
+        "crv": "P-256",
+        "kty": "EC"
+      }
+    },
+    "created_at": "2026-10-27T08:45:32.125Z",
+    "extensions": {
+      "evidence_transit": {
+        "laws": [
+          "OBSERVATION != TRUTH",
+          "SOURCE_SIGNATURE != SOURCE_AUTHORITY",
+          "ADMISSION != FIELD_VERIFICATION"
+        ],
+        "schema": "relatte.evidence-reference/v0",
+        "event_id": "relatte-evidence-event-v0:b7ebaf567f722fd046513fc510811a4dfae646a696a956f6aa561a888f1a73b5",
+        "assertion_kind": "github.pull_request.state",
+        "evidence_level": "source_observed",
+        "source_event_id": "night-source-v0:6171cebc011742c96911ff9fc67a65957be87c6e7da83820dc3eae215470e8df"
+      }
+    },
+    "crossing_id": "relatte-crossing-v0:b5c3146e1007c33b098b37364fa62011ac7d9eee56297d603b0935f07d6e2afe",
+    "payload_refs": [
+      {
+        "role": "source-owned-evidence-reference",
+        "address": "sha256:6171cebc011742c96911ff9fc67a65957be87c6e7da83820dc3eae215470e8df",
+        "media_type": "application/octet-stream"
+      }
+    ],
+    "source_world": "world:night-shift-public-source-feed",
+    "declared_kind": "EVIDENCE_OBSERVATION",
+    "capability_ref": null,
+    "privacy_policy": "payload-not-in-envelope",
+    "return_address": null,
+    "audience_policy": "night-shift-owner-holding-inbox",
+    "protocol_version": "0",
+    "requested_effect": {
+      "kind": "store-observation",
+      "destination": "night-shift-owner-holding-inbox"
+    },
+    "source_particular": "source:night-shift-github-pr-state",
+    "source_history_head": null
+  },
+  "received": {
+    "kind": "RECEIVED",
+    "note": "Signed crossing received: no truth or source authority conferred",
+    "schema": "relatte.receipt/v0",
+    "signing": {
+      "domain": "relatte.receipt-signature/v0",
+      "algorithm": "ECDSA-P256-SHA256",
+      "signature": "0pz5M0vMAXt1T5ztvOUnMEonYRXSHvB_dCIrYFwhuP9q-pG7GXlojcpqIHMUPUytKUwI8nELl6conYat3qNKxQ",
+      "public_key": {
+        "x": "akLB2yoTb_zx7eooNwVPlOlJiCDVSMXvKdlbb6Ki-Bk",
+        "y": "L_Ai3ZidyHQJMJU6vl_MIHnopiRh95STYzEnr7K_frY",
+        "crv": "P-256",
+        "kty": "EC"
+      }
+    },
+    "world_id": "world:night-shift-hosted-receiver",
+    "created_at": "2026-10-27T09:44:58.200Z",
+    "extensions": {
+      "night_transport": {
+        "law": "RECEIVED != ADMITTED",
+        "policy": "worker-policy-v1-default-hold",
+        "source": "github-public-pr",
+        "decision": "RECEIVE"
+      }
+    },
+    "receipt_id": "relatte-receipt-v0:17d313222701c35b90ab60b72c5ac817c4d910305a5daadf134a617bde7846a7",
+    "crossing_id": "relatte-crossing-v0:b5c3146e1007c33b098b37364fa62011ac7d9eee56297d603b0935f07d6e2afe",
+    "contract_ref": "contract:night-evidence-hold/v0",
+    "pre_state_ref": null,
+    "residual_refs": [
+      "sha256:6171cebc011742c96911ff9fc67a65957be87c6e7da83820dc3eae215470e8df"
+    ],
+    "post_state_ref": null,
+    "descendant_refs": [],
+    "semantic_effect": "none",
+    "receiver_particular": "particular:night-shift-source-inbox"
+  },
+  "source_ref": "the-static-collective/reLATTE#121"
+}
