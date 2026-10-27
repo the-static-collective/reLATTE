@@ -56,3 +56,15 @@ test('does not silently skip source outages', async () => {
   const bad = new NightShiftPublicEvidenceSource(async()=>new Response('down',{status:502}) as any);
   await assert.rejects(()=>bad.poll(null),/NIGHT_SOURCE_HTTP_502/);
 });
+
+test('production PostgREST microsecond timestamps normalize to strict reLATTE milliseconds', () => {
+  const live = {
+    ...one,
+    observed_at: '2026-10-27T08:45:32.125712+00:00',
+    source_happened_at: '2026-10-27T07:49:35+00:00',
+  };
+  const event = nightShiftEvidenceObservation(live);
+  assert.equal(event.observed_at, '2026-10-27T08:45:32.125Z');
+  assert.equal(event.occurred_at, '2026-10-27T07:49:35.000Z');
+  assert.match(evidenceEventId(event), /^relatte-evidence-event-v0:[a-f0-9]{64}$/);
+});
