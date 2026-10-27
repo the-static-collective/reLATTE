@@ -108,3 +108,7 @@ RETRY != NEW CUSTOMER EVENT
 ```
 
 **Goal:** one farmer can see whether independently owned systems are communicating, what was applied, and what needs a human decision—without reLATTE becoming the farmer's master database.
+
+## Single-host durable cursor
+
+`FileCommuterCursorStore` in `src/commuter-store.ts` persists a poll cursor via same-filesystem atomic rename and rejects malformed state. It is intended for one serial worker on a persistent filesystem. It does not provide distributed locking, fsync durability, or serverless persistence; configure a transactional external store and work lease before scaling out.
