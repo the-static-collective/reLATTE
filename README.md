@@ -433,3 +433,7 @@ The shared substrate is forbidden from learning either donor family's semantics.
 ## COMMUTER-001 — Automatic Correspondence (synthetic)
 
 [COMMUTER-001](docs/COMMUTER-001.md) adds an owner-governed, consent-gated polling and delivery organ: immutable source changes become signed crossings, receiver-local decisions, and idempotent destination actions. Its first proposed use case is storefront-to-email coordination for a local farm; no live farm or provider is connected. See the document for safeguards and operational gaps.
+
+## PLANZ-RETURN-TRANSPORT-001 — Signed review candidates
+
+[PlanZ Return Transport 001](docs/PLANZ-RETURN-TRANSPORT-001.md) binds JAR;VIS's local `planz.return-candidate/v0` to a content-addressed `claim` observation and P-256-signed reLATTE crossing. An independent planZ receiver can HOLD, REFUSE or ADMIT the observation for review; ADMIT never means task completion, beneficiary confirmation or Full Measure capacity. No keys, guest records or private reports are shared.
