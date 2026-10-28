@@ -54,7 +54,7 @@ export function validatePlanReturnCandidate(value: unknown): asserts value is Pl
       p.disposition!=='HOLD_FOR_OWNER_REVIEW'||p.fieldVerified!==false||
       p.sourceOwnerApproved!==false||p.recipientConfirmed!==false||
       p.sentExternally!==false||p.authority!=='NONE'||
-      typeof p.notice!=='string'||p.notice.length>300||
+      p.notice!=='Unverified local candidate. No personal notes, aliases or evidence exported.'||
       typeof p.candidateId!=='string'|| !/^planz-return-v0:[a-f0-9]{64}$/.test(p.candidateId)) {
     throw Error('UNSAFE_OR_UNVERIFIED_PLAN_RETURN');
   }
@@ -76,6 +76,25 @@ export function planReturnPayloadRef(value: PlanReturnCandidate): string {
   return 'sha256:'+sha256Hex(canonicalizeDomainValue(PLANZ_RETURN_DOMAIN,value));
 }
 
+/**
+ * The receiving owner may check an out-of-band payload against the crossing's
+ * promised content hash. A hash match proves sameness of bytes, not real work.
+ */
+export function matchesPlanReturnPayload(
+  observation: EvidenceObservation, candidate: unknown,
+): boolean {
+  try {
+    validatePlanReturnCandidate(candidate);
+    const expected=adaptPlanReturnToEvidence(candidate);
+    return observation.schema===expected.schema &&
+      observation.source_system===expected.source_system &&
+      observation.source_event_id===expected.source_event_id &&
+      observation.subject_ref===expected.subject_ref &&
+      observation.payload_ref===expected.payload_ref &&
+      observation.assertion_kind===expected.assertion_kind &&
+      observation.evidence_level==='claim';
+  } catch { return false; }
+}
 /** This is *claim*-level evidence even when both reLATTE signatures verify. */
 export function adaptPlanReturnToEvidence(value: PlanReturnCandidate): EvidenceObservation {
   validatePlanReturnCandidate(value);
