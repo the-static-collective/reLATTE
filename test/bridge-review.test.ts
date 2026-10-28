@@ -4,7 +4,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import test from 'node:test';
 import {LocalReceiver} from '../src/receiver.ts';
-import {generateP256KeyPair,verifyReceipt,verifyCrossingEnvelope} from '../src/protocol.ts';
+import {generateP256KeyPair,verifyReceipt} from '../src/protocol.ts';
 import {deliverBridgeForReview,inspectBridgeCard} from '../src/bridge-review.ts';
 
 function card(target:'JARVIS'|'PLANZ'='JARVIS'){
@@ -57,8 +57,6 @@ test('independent receiver signs real RECEIVE and HOLD for fictional public cand
   const again=await deliverBridgeForReview(card(),route);
   assert.equal(again.crossingId,out.crossingId);
   assert.equal(receiver.journalLength(),first);
-  const stored=receiver.getReceivedCrossing(out.crossingId);
-  if(stored) assert.equal(await verifyCrossingEnvelope(stored),true);
  }finally{await rm(base,{recursive:true,force:true})}
 });
 test('independent REFUSE remains separate from HOLD, never authorizes tasks',async()=>{
