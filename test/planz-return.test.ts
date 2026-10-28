@@ -8,7 +8,7 @@ import { LocalReceiver } from '../src/receiver.ts';
 import { generateP256KeyPair, verifyCrossingEnvelope, verifyReceipt } from '../src/protocol.ts';
 import {sealEvidenceObservation} from '../src/evidence-transit.ts';
 import type { EvidenceRoute } from '../src/evidence-transit.ts';
-import {adaptPlanReturnToEvidence,planReturnPayloadRef,transportPlanReturn,validatePlanReturnCandidate} from '../src/planz-return.ts';
+import {adaptPlanReturnToEvidence,planReturnPayloadRef,transportPlanReturn,validatePlanReturnCandidate,matchesPlanReturnPayload} from '../src/planz-return.ts';
 import type {PlanReturnCandidate} from '../src/planz-return.ts';
 function sample():PlanReturnCandidate {
  const basis={
@@ -113,4 +113,13 @@ test('wrong inbox or absent local store cannot receive content as accomplishment
    route.evaluate=async()=>({disposition:'ADMIT',reason:'local review only'});
    assert.equal((await transportPlanReturn(sample(),route)).status,'HELD');
  }finally{await rm(dir,{recursive:true,force:true})}
+});
+
+test('receiver can bind redacted out-of-band review packet to signed reference without claiming field proof',()=>{
+ const p=sample();
+ const obs=adaptPlanReturnToEvidence(p);
+ assert.equal(matchesPlanReturnPayload(obs,p),true);
+ assert.equal(matchesPlanReturnPayload({...obs,payload_ref:'sha256:'+'0'.repeat(64)},p),false);
+ assert.equal(matchesPlanReturnPayload(obs,{...p,notice:'Other notice'}),false);
+ assert.equal(matchesPlanReturnPayload(obs,{...p,fieldVerified:true}),false);
 });
