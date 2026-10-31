@@ -20,3 +20,5 @@ export * from './commuter.ts';
 export * from './commuter-store.ts';
 
 export * from './planz-return.ts';
+
+export * from './possibility.ts';
