@@ -138,7 +138,7 @@ test('GrO transfer needs proposal, maker approval and recipient acceptance; only
   for (const x of [a,b,c,d,e,f,g,h]) validateGrOUsefulLater(x);
   assert.equal(adaptGrOUsefulLater(h,source()).action,'work.confirmed');
   assert.notEqual(possibilitySignalId(adaptGrOUsefulLater(c,source())),possibilitySignalId(adaptGrOUsefulLater(h,source())));
-  assert.throws(()=>validateGrOUsefulLater(withEvent(d,'TRANSFER_ACCEPTED','Claire')),/APPROVAL/);
+  assert.throws(()=>validateGrOUsefulLater(withEvent(d,'TRANSFER_ACCEPTED','Claire')),/TRANSFER_ACCEPTANCE/);
   assert.throws(()=>validateGrOUsefulLater(withEvent(e,'TRANSFER_ACCEPTED','Bob')),/ACCEPTANCE/);
   assert.throws(()=>validateGrOUsefulLater(withEvent(g,'WORK_CONFIRMED','Bob')),/CONFIRM/);
   assert.throws(()=>validateGrOUsefulLater({...h,events:[...h.events,{type:'RELEASED',actor:'Claire',at:WHEN}]}),/CLOSED/);
