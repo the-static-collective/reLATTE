@@ -1,0 +1,93 @@
+{
+  "schema": "relatte.world-cartridge-generational-lock/v0",
+  "project": "LANTERN_COMMONS_011",
+  "source_game": "Minecraft Java 26.1.1",
+  "original_world_seed": "314159265",
+  "verified_actions_run": 41727936592,
+  "verified_actions_url": "https://github.com/the-static-collective/reLATTE/actions/runs/41727936592",
+  "verified_commit": "be1c9827c81a934a14054f4e125ec836e2d09f4f",
+  "root_parent": {
+    "name": "mutual_aid@0.1.1",
+    "cartridge_id": "b45537517d670812a7dc337c4e4881918ff2f477b2b2de7ddc253a7e86f5c5c6",
+    "verified_parent_run": 41722731806,
+    "items": {
+      "wheat": 2,
+      "stone_bricks": 2
+    },
+    "archive": "branch-mutual_aid.zip",
+    "github_actions_artifact_id": 13272923066
+  },
+  "descendants": [
+    {
+      "branch": "silo",
+      "version": "0.1.2",
+      "parent_cartridge_id": "b45537517d670812a7dc337c4e4881918ff2f477b2b2de7ddc253a7e86f5c5c6",
+      "cartridge_id": "6076c6a8fee3462fcc3bbd835ba69c86c6a965d1553161c170aa67b03576fe5f",
+      "archive_sha256": "94733156f64ea35d5f278c3cbfd328c37e463f568771d0c66e3b38831cd0405a",
+      "archive": "silo-v0.1.2.zip",
+      "artifact_id": 13275896026,
+      "world_files": 72,
+      "stocks": {
+        "original_wheat": 0,
+        "original_bricks": 0,
+        "silo_wheat": 2,
+        "silo_bricks": 2,
+        "seed_vault_wheat": 0
+      },
+      "actual_game_events": "Two non-OP clients moved inherited wheat and bricks to public silo containers; game tick built silo marker"
+    },
+    {
+      "branch": "steward",
+      "version": "0.1.2",
+      "parent_cartridge_id": "b45537517d670812a7dc337c4e4881918ff2f477b2b2de7ddc253a7e86f5c5c6",
+      "cartridge_id": "d98188b7047227c32388da0dc3e89c8756ea7275b6f0dc71353f6aa54630418c",
+      "archive_sha256": "5d1b73add6097c166efc6fb898722fc3ecdeda66283da4ff8a7aff2667527110",
+      "archive": "steward-v0.1.2.zip",
+      "artifact_id": 13274578979,
+      "world_files": 72,
+      "stocks": {
+        "original_wheat": 2,
+        "original_bricks": 2,
+        "silo_wheat": 0,
+        "silo_bricks": 0,
+        "seed_vault_wheat": 0
+      },
+      "actual_game_events": "Source-owned steward decision leaves inherited stocks unchanged"
+    },
+    {
+      "branch": "silo_heir",
+      "version": "0.1.3",
+      "parent_cartridge_id": "6076c6a8fee3462fcc3bbd835ba69c86c6a965d1553161c170aa67b03576fe5f",
+      "cartridge_id": "dd1a1004b02d7fbb17fe868a788178b6d2ce07aebed4080dbafd77fa8e57287d",
+      "archive_sha256": "28910edaea5061b93f5ec31fd61d6a3244b8900597e7e91b211e906d3d08b023",
+      "archive": "silo_heir-v0.1.3.zip",
+      "artifact_id": 13275292493,
+      "world_files": 73,
+      "stocks": {
+        "original_wheat": 0,
+        "original_bricks": 0,
+        "silo_wheat": 0,
+        "silo_bricks": 2,
+        "seed_vault_wheat": 2
+      },
+      "actual_game_events": "Child of exact saved silo, another non-OP client moved inherited wheat to seed vault; source tick witnessed the deposit"
+    }
+  ],
+  "external_lineage_artifact_id": 13274063081,
+  "source_game_goods_each_generation": {
+    "wheat": 2,
+    "stone_bricks": 2,
+    "operator_inventory_minting": 0
+  },
+  "game_materials_actually_produced": 0,
+  "artifacts_expire_at": "2027-02-01T22:07:15Z",
+  "cartridge_storage": "Source registry only; original binary game world archives in Actions and separately downloadable conversation kit, not GitHub Releases",
+  "proof_limitations": [
+    "Game resource conservation across copies; not a self-sustaining production economy",
+    "Three descendants of one original 010 world; new copies are not independent founders",
+    "Game witnesses and hashes not reLATTE P-256 signature or independent real-world authority",
+    "Player-bot choices are authored scripts not real human consent",
+    "No new wheat grown or consumed and no population/culture empirically simulated",
+    "No automatic ADMIT or human financial assets"
+  ]
+}
