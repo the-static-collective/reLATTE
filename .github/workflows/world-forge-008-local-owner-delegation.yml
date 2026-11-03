@@ -44,7 +44,7 @@ jobs:
   browser-ceremony:
     name: actual Chromium key-storage, grant/revoke, signature and no-network click-through
     needs: native-ceremony
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
