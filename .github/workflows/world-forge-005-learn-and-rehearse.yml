@@ -1,0 +1,252 @@
+name: WORLD-FORGE-005 Minecraft-derived recovery skill to fresh Godot
+
+on:
+  push:
+    branches:
+      - experiment/world-forge-005-bounded-learn-rehearse
+    paths:
+      - 'experiments/world-forge-005/**'
+      - '.github/workflows/world-forge-005-learn-and-rehearse.yml'
+  pull_request:
+    paths:
+      - 'experiments/world-forge-005/**'
+      - '.github/workflows/world-forge-005-learn-and-rehearse.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    name: bounded witness hostile tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify fail-closed evidence parser
+        run: |
+          node --test experiments/world-forge-004/tests/verify.test.mjs
+          node --test experiments/world-forge-005/tests/forge.test.mjs
+
+  minecraft:
+    name: Minecraft official non-OP observation / ${{ matrix.world }}
+    needs: unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {world: alpha, seed: 381654729}
+          - {world: beta, seed: 918273645}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Build original fixture and crater datapack
+        run: |
+          node experiments/world-forge-001/src/build.mjs
+          node experiments/crater-smash-002/src/build.mjs
+      - name: Install pinned independent protocol client and operator RCON
+        run: npm install --no-save --ignore-scripts mineflayer@4.39.0 vec3@0.2.0 rcon-client@4.2.5
+      - name: Download and verify official Mojang Java 26.1.1 server
+        run: |
+          set -euo pipefail
+          mkdir -p work/minecraft-probe/server
+          python3 - <<'PY'
+          import json,hashlib,pathlib,urllib.request
+          root=pathlib.Path('work/minecraft-probe')
+          with urllib.request.urlopen('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json') as r:
+              manifest=json.load(r)
+          version=next(v for v in manifest['versions'] if v['id']=='26.1.1')
+          with urllib.request.urlopen(version['url']) as r:
+              data=json.load(r)
+          payload=urllib.request.urlopen(data['downloads']['server']['url']).read()
+          actual=hashlib.sha1(payload).hexdigest()
+          if actual!=data['downloads']['server']['sha1']:raise ValueError('official jar hash mismatch')
+          (root/'server/server.jar').write_bytes(payload)
+          (root/'server-version.json').write_text(json.dumps({'id':data['id'],'server_sha1':actual,'releaseTime':data['releaseTime']})+'\n')
+          print('Official runtime manifest verified:',data['id'],actual)
+          PY
+      - name: Configure disposable loopback-bound world and original datapack
+        env:
+          WF_SEED: ${{ matrix.seed }}
+        run: |
+          set -euo pipefail
+          root=work/minecraft-probe/server
+          mkdir -p "$root/world/datapacks/crater-smash-002"
+          cp -r experiments/crater-smash-002/dist/minecraft/. "$root/world/datapacks/crater-smash-002/"
+          cat > "$root/server.properties" <<EOF
+          level-name=world
+          server-port=25565
+          server-ip=127.0.0.1
+          online-mode=false
+          enforce-secure-profile=false
+          gamemode=creative
+          force-gamemode=true
+          difficulty=peaceful
+          generate-structures=false
+          level-type=minecraft:flat
+          level-seed=$WF_SEED
+          view-distance=6
+          simulation-distance=6
+          enable-rcon=true
+          rcon.port=25575
+          rcon.password=worldforge-004-ephemeral-ci
+          motd=WF004 ephemeral CI; no public server
+          EOF
+          echo 'eula=true' > "$root/eula.txt"
+      - name: Launch official server and wait until ready
+        run: |
+          set -euo pipefail
+          cd work/minecraft-probe/server
+          java -Xms512M -Xmx2G -jar server.jar nogui >server.log 2>&1 &
+          echo $! >server.pid
+          for i in $(seq 1 120); do
+            if grep -q 'Done (' server.log; then echo 'Mojang server ready';exit 0;fi
+            if ! kill -0 "$(cat server.pid)" 2>/dev/null; then tail -100 server.log;exit 1;fi
+            sleep 1
+          done
+          tail -100 server.log;exit 1
+      - name: Separate non-OP Mineflayer client observes actual intermediate blocks
+        env:
+          WF_WORLD: ${{ matrix.world }}
+          WF_RCON_PASSWORD: worldforge-004-ephemeral-ci
+        run: |
+          node experiments/world-forge-004/minecraft/author-and-observe.mjs
+          test -s "work/minecraft-probe/minecraft-$WF_WORLD.json"
+          test -s "work/minecraft-probe/author-trace-$WF_WORLD.json"
+      - name: Preserve observer, author and actual Mojang runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-forge-004-minecraft-${{ matrix.world }}
+          path: |
+            work/minecraft-probe/minecraft-${{ matrix.world }}.json
+            work/minecraft-probe/author-trace-${{ matrix.world }}.json
+            work/minecraft-probe/server-version.json
+            work/minecraft-probe/server/server.log
+          if-no-files-found: warn
+          retention-days: 7
+
+  synthesize:
+    name: infer a held cartridge from TWO Minecraft donor + observer traces
+    needs: minecraft
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Import raw official Minecraft evidence from independent jobs
+        uses: actions/download-artifact@v4
+        with:
+          pattern: world-forge-004-minecraft-*
+          path: work/wf005-inputs
+          merge-multiple: false
+      - name: Reconcile real donor action trace with non-OP observed states
+        run: |
+          mkdir -p work/wf005
+          node experiments/world-forge-005/src/forge.mjs work/wf005-inputs work/wf005/cartridge.json
+          test -s work/wf005/cartridge.json
+      - name: Preserve bounded non-authoritative cartridge
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-forge-005-cartridge
+          path: work/wf005/cartridge.json
+          retention-days: 7
+
+  replay:
+    name: fresh Godot 3D sandbox replays extracted repair operations
+    needs: synthesize
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download original raw donor evidence independently of cartridge
+        uses: actions/download-artifact@v4
+        with:
+          pattern: world-forge-004-minecraft-*
+          path: work/wf005-inputs
+          merge-multiple: false
+      - name: Download derived candidate
+        uses: actions/download-artifact@v4
+        with:
+          name: world-forge-005-cartridge
+          path: work/wf005-import
+      - name: Reject any tampered candidate before starting a sandbox
+        run: |
+          node --input-type=module - <<'NODE'
+          import assert from 'node:assert/strict';
+          import {readFileSync} from 'node:fs';
+          import {forgeFromArtifacts,validateCandidate} from './experiments/world-forge-005/src/forge.mjs';
+          const c=JSON.parse(readFileSync('work/wf005-import/cartridge.json','utf8'));
+          validateCandidate(c);
+          assert.deepEqual(c,forgeFromArtifacts('work/wf005-inputs'));
+          console.log('Re-derived donor ancestry passes; sandbox rehearsal only, receiver HOLD');
+          NODE
+      - name: Download pinned official Godot 4.4.1 editor
+        run: |
+          curl --fail --location --retry 2 --silent --show-error \
+            https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip -o /tmp/godot.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.4.1-stable_linux.x86_64
+          /tmp/Godot_v4.4.1-stable_linux.x86_64 --version
+      - name: Fresh Godot environment executes NEW BASE gold at NEW coordinates
+        run: |
+          set -euo pipefail
+          mkdir -p experiments/world-forge-005/godot/replay experiments/world-forge-005/godot/snapshots work/wf005
+          cp work/wf005-import/cartridge.json experiments/world-forge-005/godot/replay/cartridge.json
+          /tmp/Godot_v4.4.1-stable_linux.x86_64 --headless \
+            --path experiments/world-forge-005/godot --script res://author-from-cartridge.gd \
+            2>&1 | tee work/wf005/godot-author.log
+          for stage in build impact repair; do
+            test -s "experiments/world-forge-005/godot/snapshots/gamma-$stage.tscn"
+          done
+      - name: Separate Godot process independently reads THREE actual snapshots
+        run: |
+          set -euo pipefail
+          /tmp/Godot_v4.4.1-stable_linux.x86_64 --headless \
+            --path experiments/world-forge-005/godot --script res://observe-independent.gd \
+            2>&1 | tee work/wf005/godot-observer.log
+          node experiments/world-forge-005/src/verify-replay.mjs \
+            work/wf005-import/cartridge.json \
+            work/wf005-inputs \
+            work/wf005/godot-author.log \
+            work/wf005/godot-observer.log \
+            experiments/world-forge-005/godot/snapshots \
+            work/wf005/reproduction-report.json
+          test -s work/wf005/reproduction-report.json
+      - name: Retain source-derived candidate, raw readbacks and rehearsal report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-forge-005-bounded-reproduction
+          path: |
+            work/wf005-import/cartridge.json
+            work/wf005/godot-author.log
+            work/wf005/godot-observer.log
+            work/wf005/reproduction-report.json
+            experiments/world-forge-005/godot/snapshots/
+          if-no-files-found: warn
+          retention-days: 7
