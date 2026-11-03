@@ -141,9 +141,9 @@ def inspect(archive):
             if manifest["branch"] != "main" or manifest["version"] != "0.1.0":
                 fail("UNAUTHORIZED_ROOT_VERSION")
         else:
-            if not isinstance(parent, dict) or
+            if (not isinstance(parent, dict) or
                 not SHA_RE.fullmatch(str(parent.get("cartridge_id", ""))) or
-                not SHA_RE.fullmatch(str(parent.get("world_tree_sha256", ""))):
+                not SHA_RE.fullmatch(str(parent.get("world_tree_sha256", "")))):
                 fail("INVALID_PARENT")
             if manifest["branch"] == "main":
                 fail("CHILD_MASQUERADING_AS_ROOT")
@@ -163,8 +163,8 @@ def inspect(archive):
         expected = digest(canonical({k: v for k, v in manifest.items() if k != "cartridge_id"}))
         if manifest.get("cartridge_id") != expected:
             fail("TAMPERED_MANIFEST")
-        if "world/level.dat" not in content or
-           not any(x.startswith("world/region/") and x.endswith(".mca") for x in content):
+        if ("world/level.dat" not in content or
+           not any(x.startswith("world/region/") and x.endswith(".mca") for x in content)):
             fail("INCOMPLETE_WORLD")
         if not any(x.startswith("world/datapacks/") and x.endswith("/pack.mcmeta") for x in content):
             fail("NO_DATAPACK")
