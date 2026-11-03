@@ -42,7 +42,7 @@ jobs:
           java-version: '25'
       - name: Install locked runtime and protocol clients
         run: |
-          npm ci
+          npm install --ignore-scripts
           npm install --no-save --ignore-scripts mineflayer@4.39.0 rcon-client@4.2.5 vec3@0.2.0
       - name: Verify exact Lantern 003 source functions
         run: |
@@ -175,7 +175,7 @@ jobs:
         with:
           node-version: '24'
       - name: Install original reLATTE runtime
-        run: npm ci
+        run: npm install --ignore-scripts
       - uses: actions/download-artifact@v4
         with:
           pattern: lantern-native-world-*
