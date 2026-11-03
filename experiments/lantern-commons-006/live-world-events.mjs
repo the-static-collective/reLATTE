@@ -40,7 +40,7 @@ const expected={
   ABSTAIN:{irrigation:'air',pond:'air',crop_west:'air',crop_east:'air',phase_marker:'redstone_block',lightning_rod:'lightning_rod'}
 };
 const rcon=await Rcon.connect({host:'127.0.0.1',port:25575,password:process.env.MC_RCON_PASSWORD});
-const game=mineflayer.createBot({host:'127.0.0.1',port:25565,username:'WorldWitness'+scenario,auth:'offline'});
+const game=mineflayer.createBot({host:'127.0.0.1',port:25565,username:'LW_'+scenario,auth:'offline'});
 const stages=[];
 const operatorTrace=[];
 try{
