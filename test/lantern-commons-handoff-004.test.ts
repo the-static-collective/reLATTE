@@ -41,7 +41,7 @@ test('no shape match cannot enter the signed crossing',()=>{
   assert.throws(()=>validateLanternEvidence(p),/BLOCK_MATCH_NOT_PROVEN/);
 });
 test('claims of independent live witness rejected',()=>{
-  const p=candidate();p.independent_live_client_observer={verified:true};
+  const p=candidate();(p as any).independent_live_client_observer={verified:true};
   assert.throws(()=>validateLanternEvidence(p),/FALSE_WITNESS_CLAIM/);
 });
 test('same-seed world clone rejected',()=>{
