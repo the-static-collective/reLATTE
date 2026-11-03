@@ -74,6 +74,21 @@ async function barrel(side){
   return Number(number[1]);
 }
 async function move(bot,name,side,withdraw=false,count=2){
+  const target=sites[side],standing=side==='wheat'
+    ?'104 65 14':'114 65 14';
+  let near=false;
+  for(let attempt=0;attempt<3;attempt++){
+    const p=bot.entity.position;
+    if(p.distanceTo(target)<4.5){near=true;break;}
+    console.log('DISCERNMENT_REPOSITION',bot.username,
+      JSON.stringify({from:p,target,round:records.length+1,attempt}));
+    const reply=await command('tp '+bot.username+' '+standing);
+    console.log('DISCERNMENT_REPOSITION_RESULT',reply);
+    await sleep(900);
+    await bot.waitForChunksToLoad();
+  }
+  assert(near || bot.entity.position.distanceTo(target)<4.5,
+    'ACTOR_TOO_FAR_FROM_OWN_BARREL_'+bot.username+':'+JSON.stringify(bot.entity.position));
   const kind=bot.registry.itemsByName[name];
   assert(!!kind,'ITEM_TYPE_'+name);
   const place=bot.blockAt(sites[side]);
@@ -117,9 +132,7 @@ try{
   const grower=await join('AidGrower');
   const mason=await join('AidMason');
   const witness=await join('CoopWitness');
-  for(const c of ['forceload add 96 -4 124 22',
-    'tp AidGrower 104 65 14','tp AidMason 114 65 14',
-    'tp CoopWitness 109 68 8'])await command(c);
+  for(const c of ['forceload add 96 -4 124 22'])await command(c);
   await sleep(1500);
   for(const b of bots)await b.waitForChunksToLoad();
   let memory=freshMemory();
