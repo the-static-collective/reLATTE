@@ -26,6 +26,9 @@ async function verifyState(stage,material){
 }
 try{
   await command('scoreboard objectives add wf_probe dummy');
+  // All commands use a fresh fixed origin. Load it explicitly; world spawn may be elsewhere.
+  const forced=await command('forceload add -32 -32 32 32');
+  if(/error|unknown|failed/i.test(forced))throw Error('forceload failed: '+forced);
   const enabled=await command('datapack list enabled');
   if(!enabled.includes('crater-smash-002'))throw Error('crater-smash-002 datapack not enabled: '+enabled);
   await command(`execute positioned 0 ${y} 0 run function worldforge:build_${WORLD}`);
@@ -46,4 +49,7 @@ try{
   };
   writeFileSync('work/minecraft-probe/runtime-probe.json',JSON.stringify(result,null,2)+'\n');
   console.log('WORLD_FORGE_MINECRAFT_PROBE='+JSON.stringify({world:WORLD,station,stages:result.observed.map(o=>o.stage),version:meta.id,source_sha256:expectedHash,receiver:'HOLD',independent_non_op_observer:false}));
+} catch(error) {
+  writeFileSync('work/minecraft-probe/failed-operator-trace.json',JSON.stringify({format:'world-forge/failed-minecraft-operator-trace/v0',instance:WORLD,source_sha256:expectedHash,error:String(error),actions:events,observer:'OPERATOR_RCON_ONLY',receiver:'HOLD'},null,2)+'\n');
+  throw error;
 } finally {rcon.end();}
