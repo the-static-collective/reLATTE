@@ -17,9 +17,14 @@ try{
  assert.match(await page.locator('#status').innerText(),/Ready/);
  assert.match(await page.locator('main').innerText(),/Your key/);
  await page.getByRole('button',{name:'Create local signer'}).click();
- assert.match(await page.locator('#identity-state').innerText(),/nonexportable/);
+ await page.waitForFunction(() => document.querySelector('#identity-state')?.textContent.includes('nonexportable') ||
+   document.querySelector('#status')?.textContent.startsWith('REJECTED:'));
+ assert.match(await page.locator('#identity-state').innerText(),/nonexportable/,
+   await page.locator('#status').innerText());
  assert.match(await page.locator('#fingerprint').innerText(),/SHA-256 [a-f0-9]{64}/);
  await page.getByRole('button',{name:'Sign scoped project delegation'}).click();
+ await page.waitForFunction(() => document.querySelector('#status')?.textContent.includes('Signed. Your grant') ||
+   document.querySelector('#status')?.textContent.startsWith('REJECTED:'));
  assert.match(await page.locator('#status').innerText(),/Signed/);
  const parsed=JSON.parse(await page.locator('#grant-preview').innerText());
  assert.equal(await verifySigned(parsed),true);
@@ -34,9 +39,13 @@ try{
  assert.equal(Object.hasOwn(saved,'private_jwk'),false);
  assert.equal(JSON.stringify(saved).includes('"d":'),false);
  await page.reload({waitUntil:'load'});
+ await page.waitForFunction(() => document.querySelector('#status')?.textContent.startsWith('Ready.') ||
+   document.querySelector('#status')?.textContent.startsWith('UNAVAILABLE:'));
  assert.match(await page.locator('#identity-state').innerText(),/nonexportable/);
  assert.equal((await page.locator('#create').isDisabled()),true);
  await page.getByRole('button',{name:'Sign revocation of this grant'}).click();
+ await page.waitForFunction(() => document.querySelector('#status')?.textContent.includes('Revocation signed') ||
+   document.querySelector('#status')?.textContent.startsWith('REJECTED:'));
  assert.match(await page.locator('#status').innerText(),/Revocation signed/);
  const rev=JSON.parse(await page.locator('#revocation-preview').innerText());
  assert.equal(await verifySigned(rev),true);
