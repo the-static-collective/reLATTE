@@ -26,9 +26,9 @@ async function main(){
   const reports=[];
   for(const mode of modes){
     const folder=root+'/lantern-event-world-'+mode;
-    const raw=await readFile(folder+'/event-record.json');
+    const raw=await readFile(folder+'/world-events/event-record.json');
     const report=JSON.parse(raw.toString('utf8'));
-    const meta=JSON.parse(await readFile(folder+'/world-meta.json','utf8'));
+    const meta=JSON.parse(await readFile(folder+'/lantern/world-meta.json','utf8'));
     insist(report.schema==='lantern.world-events-native-observation/v0' &&
       report.scenario===mode && meta.scenario===mode,'SCENARIO');
     insist(report.game_version==='26.1.1'&&meta.minecraft_version==='26.1.1'&&
