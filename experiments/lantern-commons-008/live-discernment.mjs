@@ -141,9 +141,14 @@ try{
       'tp AidMason 114 65 14',
       'tp CoopWitness 109 68 8',
       'clear AidGrower','clear AidMason',
-      'give AidGrower minecraft:wheat 2',
-      'give AidMason minecraft:stone_bricks '+brickSupply,
     ])await command(c);
+    // Distinguish the inventory-clear and game-give network packets, and
+    // wait for the client inventory to settle rather than trusting one
+    // transient Mineflayer read after two consecutive RCON mutations.
+    await sleep(1200);
+    await command('give AidGrower minecraft:wheat 2');
+    await command('give AidMason minecraft:stone_bricks '+brickSupply);
+    await sleep(1100);
     await until(async()=>inventory(grower,'wheat')===2,'SELF_INVENTORY_ROUND_'+round);
     await until(async()=>inventory(mason,'stone_bricks')===brickSupply,'PARTNER_INVENTORY_ROUND_'+round);
     await sleep(900);
@@ -161,7 +166,9 @@ try{
     // Disk read is the actual state carried between episodes; no scenario hints.
     const onDisk=JSON.parse(await readFile('work/discernment/creature-memory.json','utf8'));
     assert(JSON.stringify(onDisk)===JSON.stringify(memory),'MEMORY_RESTART_MISMATCH');
-    const first=decide(onDisk,{self_items:inventory(grower,'wheat'),
+    const currentItemCount=inventory(grower,'wheat');
+    assert(currentItemCount===initial.self_inventory,'ITEMS_DRIFTED_BEFORE_DECISION');
+    const first=decide(onDisk,{self_items:currentItemCount,
       partner_barrel_items:initial.brick_barrel,garden_dry:true});
     console.log('DISCERNMENT_DECISION_INPUT',JSON.stringify({
       round,prior:onDisk,items:inventory(grower,'wheat'),
