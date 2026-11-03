@@ -1,0 +1,43 @@
+name: LANTERN-004 native reLATTE HOLD gate
+
+on:
+  push:
+    branches:
+      - experiment/lantern-commons-004-two-world-hold
+    paths:
+      - 'scripts/lantern-commons-handoff-004.ts'
+      - 'test/lantern-commons-handoff-004.test.ts'
+      - '.github/workflows/lantern-commons-004.yml'
+  pull_request:
+    paths:
+      - 'scripts/lantern-commons-handoff-004.ts'
+      - 'test/lantern-commons-handoff-004.test.ts'
+      - '.github/workflows/lantern-commons-004.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-signed-hold:
+    name: Verify source-native P-256 receive/HOLD/custody
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Verify base reLATTE runtime
+        run: npm run verify
+      - name: Verify candidate shape, signed HOLD, restart and hostile controls
+        run: node --test --experimental-strip-types test/lantern-commons-handoff-004.test.ts
+      - name: Document scope of evidence
+        run: |
+          echo 'PASS here only proves source-native synthetic candidate plumbing.'
+          echo 'NO live Mojang Java world, player action trace, live non-OP observer, or physical community proof was executed by this job.'
