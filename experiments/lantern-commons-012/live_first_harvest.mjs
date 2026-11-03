@@ -99,7 +99,11 @@ async function move(b,x,y,z){
  await sleep(700);
  await b.waitForChunksToLoad();
  const p=b.entity.position;
- must(p.distanceTo(new Vec3(Number(x),Number(y),Number(z)))<2.0,
+ // On survival servers a player teleported over air lands on the real world
+ // floor before its client position update arrives. Check horizontal arrival,
+ // and separately enforce that the avatar stayed in the bounded game lab.
+ must(Math.hypot(p.x-Number(x),p.z-Number(z))<2.0 &&
+   p.y>=63 && p.y<=Number(y)+2,
    'TELEPORT_POSITION_UNKNOWN_'+JSON.stringify(p));
 }
 async function deposit(b,loc,item,n){
@@ -150,7 +154,7 @@ try{
  await sleep(2400);
  await cmd('forceload add 96 -4 124 22');
  const witness=await bot('WC012_Witness');
- await move(witness,109,68,8);
+ await move(witness,102.5,65,14.5);
  await sleep(900);
  const first=await snapshot(witness);
  const initialSeed=first.stock.harvested_seeds;
