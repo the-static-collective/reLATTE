@@ -163,8 +163,22 @@ try{
       'CLEAR_ACK_MASON_'+round,70,180);
     await command('item replace entity AidGrower hotbar.0 with minecraft:wheat '+card.grower.inventory);
     await command('item replace entity AidMason hotbar.0 with minecraft:stone_bricks '+card.mason.inventory);
-    await sleep(850);
-    console.log('PRESSURE_PROVISION',JSON.stringify({round,
+    // Prior runs exposed a stale client-side Mineflayer inventory: after
+    // clear+new supply the bot sometimes reported 5 when the declared
+    // server slot was 4. The authoritative owner/server and player socket
+    // must be reconciled BEFORE the next voluntary item movement.
+    await sleep(500);
+    for(const role of names){
+      const oldClient=clients[role];
+      oldClient.quit();
+    }
+    await sleep(1050);
+    clients.grower=await spawn('AidGrower');
+    clients.mason=await spawn('AidMason');
+    await clients.grower.waitForChunksToLoad();
+    await clients.mason.waitForChunksToLoad();
+    await sleep(500);
+    console.log('PRESSURE_PROVISION_AFTER_FRESH_LOGIN',JSON.stringify({round,
       grower_client:itemCount(clients.grower,'wheat'),
       mason_client:itemCount(clients.mason,'stone_bricks'),
       declared:card}));
