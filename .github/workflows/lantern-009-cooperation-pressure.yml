@@ -9,8 +9,8 @@ on:
       - '.github/workflows/lantern-009-cooperation-pressure.yml'
   pull_request:
     paths:
-      - 'experiments/lantern-commons-008/**'
-      - '.github/workflows/lantern-008-discernment.yml'
+      - 'experiments/lantern-commons-009/**'
+      - '.github/workflows/lantern-009-cooperation-pressure.yml'
   workflow_dispatch:
 
 permissions:
