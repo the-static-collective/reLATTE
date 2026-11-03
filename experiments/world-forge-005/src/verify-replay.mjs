@@ -72,6 +72,6 @@ export function verifyFromPaths(candidatePath,sourceRoot,authorPath,readerPath,s
   return report;
 }
 if(process.argv[1]&&process.argv[1].endsWith('/verify-replay.mjs')){
-  if(process.argv.length!==9)throw Error('usage verify-replay.mjs CANDIDATE DONORROOT AUTHORLOG READERLOG SNAPSHOTS REPORT');
+  if(process.argv.length!==8)throw Error('usage verify-replay.mjs CANDIDATE DONORROOT AUTHORLOG READERLOG SNAPSHOTS REPORT');
   verifyFromPaths(...process.argv.slice(2));
 }
