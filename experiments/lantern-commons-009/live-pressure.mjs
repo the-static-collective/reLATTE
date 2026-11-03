@@ -133,6 +133,10 @@ function decisionInput(role,card,memory,actor,partnerDeposit,observer,round){
 }
 const records=[],names=['grower','mason'],clients={};
 try{
+  // Mojang's "Done" log appears before all Minecraft status-ping paths are
+  // consistently open on constrained hosted runners. Let the official server
+  // finish its listener warmup before starting the first non-OP client.
+  await sleep(2600);
   clients.grower=await spawn('AidGrower');
   clients.mason=await spawn('AidMason');
   clients.witness=await spawn('CoopWitness');
