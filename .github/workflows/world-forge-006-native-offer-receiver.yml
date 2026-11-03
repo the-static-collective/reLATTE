@@ -384,8 +384,8 @@ jobs:
       - name: Cryptographically verify independent HOLD and REFUSE receipts
         run: |
           node --experimental-strip-types experiments/world-forge-006/src/compare-receivers.mjs \
-            work/wf006-final/world-forge-006-public-choice-HOLD/work/wf006-public/local-HOLD.json \
-            work/wf006-final/world-forge-006-public-choice-REFUSE/work/wf006-public/local-REFUSE.json \
+            work/wf006-final/world-forge-006-public-choice-HOLD/local-HOLD.json \
+            work/wf006-final/world-forge-006-public-choice-REFUSE/local-REFUSE.json \
             work/wf006-owners-report.json
           test -s work/wf006-owners-report.json
       - name: Retain final bounded source-signed two-receiver result
