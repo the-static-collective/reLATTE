@@ -118,6 +118,7 @@ jobs:
         run: |
           node experiments/crater-smash-002/ci/minecraft-runtime-probe.mjs
           test -s work/minecraft-probe/runtime-probe.json
+            work/minecraft-probe/failed-operator-trace.json
       - name: Preserve exact runtime evidence and logs
         if: always()
         uses: actions/upload-artifact@v4
