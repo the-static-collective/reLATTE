@@ -32,7 +32,7 @@ jobs:
           node-version: '24'
           cache: npm
       - name: Install dependencies
-        run: npm ci
+        run: npm install --ignore-scripts
       - name: Verify base reLATTE runtime
         run: npm run verify
       - name: Verify candidate shape, signed HOLD, restart and hostile controls
