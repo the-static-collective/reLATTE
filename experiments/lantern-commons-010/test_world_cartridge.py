@@ -97,7 +97,7 @@ class TestWorldCartridge(unittest.TestCase):
                 content=src.read(member)
                 if member=="world-cartridge.json":
                     doc=json.loads(content)
-                    doc["version"]="0.1.9"
+                    doc["experiment_action"]="FORGED_ACTION"
                     content=wc.canonical(doc)
                 out.writestr(member,content)
         with self.assertRaisesRegex(ValueError, "TAMPERED_MANIFEST"):
