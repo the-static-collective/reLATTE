@@ -29,7 +29,7 @@ func _observe() -> void:
         return
     var readings: Array = []
     for stage in ["build", "impact", "repair"]:
-        var path := "res://snapshots/" + world + "-" + stage + ".tscn"
+        var path: String = "res://snapshots/" + world + "-" + stage + ".tscn"
         var resource := load(path) as PackedScene
         if resource == null:
             _fail("snapshot missing " + path)
