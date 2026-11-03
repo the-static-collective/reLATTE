@@ -82,7 +82,8 @@ def read_world(world):
         result["world/" + relative] = data
     if "world/level.dat" not in result:
         fail("MISSING_LEVEL_DAT")
-    # Java 26.1 moved Overworld Anvil chunks into dimensions/minecraft/overworld/region.\n    if not any(k.startswith("world/dimensions/minecraft/overworld/region/") and k.endswith(".mca") for k in result):
+    # Java 26.1 moved Overworld Anvil chunks into dimensions/minecraft/overworld/region.
+    if not any(k.startswith("world/dimensions/minecraft/overworld/region/") and k.endswith(".mca") for k in result):
         fail("MISSING_GENERATED_CHUNKS")
     if not any(k.startswith("world/datapacks/") and k.endswith("/pack.mcmeta") for k in result):
         fail("MISSING_EMBEDDED_DATAPACKS")
