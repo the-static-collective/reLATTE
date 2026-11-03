@@ -21,8 +21,8 @@ for(const spec of need){
  requireIt(report.label===spec.label&&report.seed===spec.seed,'WRONG_WORLD');
  requireIt(report.constitution===spec.constitution&&JSON.stringify(report.budget)===JSON.stringify(spec.budget),'BUDGET_OR_CONSTITUTION');
  requireIt(report.source_function_sha256.kitchen===originals.kitchen && report.source_function_sha256.annex===originals.annex,'SOURCE_DRIFT');
- requireIt(meta.world===spec.label&&meta.server_version==='26.1.1'&&/^[a-f0-9]{40}$/.test(meta.mojang_jar_sha1),'OFFICIAL_WORLD_META');
- requireIt(/^[a-f0-9]{64}$/.test(meta.level_dat_sha256),'MISSING_REAL_SAVE');
+ requireIt(meta.world_label===spec.label&&meta.minecraft_version==='26.1.1'&&/^[a-f0-9]{40}$/.test(meta.official_jar_sha1),'OFFICIAL_WORLD_META');
+ requireIt(/^[a-f0-9]{64}$/.test(meta.world_level_dat_sha256),'MISSING_REAL_SAVE');
  requireIt(report.game_sessions.builder!==report.game_sessions.reviewer &&
   report.game_sessions.observer!==report.game_sessions.builder &&
   report.game_sessions.observer!==report.game_sessions.reviewer,'SESSION_COLLAPSE');
@@ -43,7 +43,7 @@ for(const spec of need){
   report.constraints.representative_society_slice_not_full_003_pack===true &&
   report.constraints.physical_work===false&&report.constraints.receiver_admission===false,'FALSE_REAL_WORLD_CLAIM');
  verified.push({world:spec.label,seed:spec.seed,constitution:spec.constitution,budget:spec.budget,
-  save_sha256:meta.level_dat_sha256,source_evidence_sha256:hash(bytes),
+  save_sha256:meta.world_level_dat_sha256,source_evidence_sha256:hash(bytes),
   player_sessions:report.game_sessions,observed_blocks:report.observations,
   game_action_count:trace.length});
 }
