@@ -140,7 +140,21 @@ async function harvestCrop(b,z,index){
  const was=countInventory(b,'wheat');
  await b.dig(target,true);
  await until(async()=>b.blockAt(position)?.name==='air','WORLD_CROP_NOT_BROKEN_'+z);
- await until(async()=>countInventory(b,'wheat')>=was+1,'WORLD_DROP_NOT_PICKED_UP_'+z,110,170);
+ // Vanilla drops scatter randomly. First attempt unobtrusive pickup from
+ // outside the field; if the item scatters away, the NON-OP bot physically
+ // approaches the broken crop tile, without ever receiving any granted item.
+ let collected=false;
+ for(let attempt=0;attempt<22;attempt++){
+   if(countInventory(b,'wheat')>=was+1){collected=true;break;}
+   await sleep(150);
+ }
+ if(!collected){
+   await move(b,103.4,65.25,z+0.5);
+   await until(async()=>countInventory(b,'wheat')>=was+1,
+     'WORLD_DROP_NOT_PICKED_UP_AFTER_PHYSICAL_MOVEMENT_'+z,110,170);
+ }
+ console.log('REAL_DROP_COLLECTED',JSON.stringify({z,fromGameCrop:true,
+   wheatInventory:countInventory(b,'wheat'),seedsInventory:countInventory(b,'wheat_seeds')}));
  growthProof.push({event:'REAL_BLOCK_BREAK_AND_ITEM_PICKUP',position:[103,65,z],
   before:'wheat[age=7]',after:'air',grain_inventory_added:countInventory(b,'wheat')-was,
   crop_origin:index==='regrowth'?'PLAYER_PLANTED_AND_RANDOM_TICK_MATURED':'INHERITED_RIPE_FIELD_FROM_006'});
