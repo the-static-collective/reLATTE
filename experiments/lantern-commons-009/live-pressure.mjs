@@ -155,10 +155,19 @@ try{
       'function lantern:cooperation/setup',
       'clear AidGrower','clear AidMason'
     ])await command(cmd);
-    await sleep(1150); // clear packet settles before give packet
-    await command('give AidGrower minecraft:wheat '+card.grower.inventory);
-    await command('give AidMason minecraft:stone_bricks '+card.mason.inventory);
-    await sleep(1000);
+    // The server-side clear and resulting client inventory update MUST both
+    // settle before assigning next episode's independently observable supply.
+    await until(async()=>itemCount(clients.grower,'wheat')===0,
+      'CLEAR_ACK_GROWER_'+round,70,180);
+    await until(async()=>itemCount(clients.mason,'stone_bricks')===0,
+      'CLEAR_ACK_MASON_'+round,70,180);
+    await command('item replace entity AidGrower hotbar.0 with minecraft:wheat '+card.grower.inventory);
+    await command('item replace entity AidMason hotbar.0 with minecraft:stone_bricks '+card.mason.inventory);
+    await sleep(850);
+    console.log('PRESSURE_PROVISION',JSON.stringify({round,
+      grower_client:itemCount(clients.grower,'wheat'),
+      mason_client:itemCount(clients.mason,'stone_bricks'),
+      declared:card}));
     for(const role of names){
       await until(async()=>itemCount(clients[role],role==='grower'?'wheat':'stone_bricks')===
         card[role].inventory,'ENDOWMENT_'+role+'_'+round);
