@@ -78,7 +78,7 @@ async function move(bot,name,side,withdraw=false,count=2){
   assert(!!kind,'ITEM_TYPE_'+name);
   const place=bot.blockAt(sites[side]);
   assert(place?.name==='barrel','MISSING_BARREL_'+side+':'+place?.name);
-  console.log('DISCERNMENT_ACTOR_POSITION',bot.username,JSON.stringify(bot.entity.position), 'container',JSON.stringify(at), 'round',records.length+1);
+  console.log('DISCERNMENT_ACTOR_POSITION',bot.username,JSON.stringify(bot.entity.position), 'container',JSON.stringify(sites[side]), 'round',records.length+1);
   const window=await bot.openContainer(place);
   try{
     if(withdraw)await window.withdraw(kind.id,null,count);
@@ -163,6 +163,9 @@ try{
     assert(JSON.stringify(onDisk)===JSON.stringify(memory),'MEMORY_RESTART_MISMATCH');
     const first=decide(onDisk,{self_items:inventory(grower,'wheat'),
       partner_barrel_items:initial.brick_barrel,garden_dry:true});
+    console.log('DISCERNMENT_DECISION_INPUT',JSON.stringify({
+      round,prior:onDisk,items:inventory(grower,'wheat'),
+      partner_items:initial.brick_barrel,first}));
     let offeredFirst=false;
     const creatureTrace=[{step:'first_decision',actual_input:{
       self_items:initial.self_inventory,partner_barrel_items:initial.brick_barrel,
