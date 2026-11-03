@@ -145,40 +145,34 @@ try{
   for(let round=1;round<=6;round++){
     const card=shockCard(round),endowment=card;
     // Reset the SOURCE GAME island and original 007 reusable mechanism.
-    // This is exogenous material flow, not a self-sustaining economy.
+    // Each episode has its own freshly provisioned finite resource budget.
     for(const cmd of [
       'setblock 104 65 16 minecraft:air',
       'setblock 114 65 16 minecraft:air',
       'setblock 109 66 16 minecraft:air',
       'function lantern:events/prepare',
       'function lantern:events/drought',
-      'function lantern:cooperation/setup',
-      'clear AidGrower','clear AidMason'
+      'function lantern:cooperation/setup'
     ])await command(cmd);
-    // The server-side clear and resulting client inventory update MUST both
-    // settle before assigning next episode's independently observable supply.
-    await until(async()=>itemCount(clients.grower,'wheat')===0,
-      'CLEAR_ACK_GROWER_'+round,70,180);
-    await until(async()=>itemCount(clients.mason,'stone_bricks')===0,
-      'CLEAR_ACK_MASON_'+round,70,180);
-    await command('item replace entity AidGrower hotbar.0 with minecraft:wheat '+card.grower.inventory);
-    await command('item replace entity AidMason hotbar.0 with minecraft:stone_bricks '+card.mason.inventory);
-    // Prior runs exposed a stale client-side Mineflayer inventory: after
-    // clear+new supply the bot sometimes reported 5 when the declared
-    // server slot was 4. The authoritative owner/server and player socket
-    // must be reconciled BEFORE the next voluntary item movement.
-    await sleep(500);
-    for(const role of names){
-      const oldClient=clients[role];
-      oldClient.quit();
-    }
-    await sleep(1050);
+    // Mineflayer's open/close container protocol can leave an item stack
+    // pending in the client cursor through a server-side inventory clear.
+    // DISCONNECT first, let the server settle that cursor, then clear all
+    // actual online inventory slots only AFTER the new client reconnects.
+    for(const role of names)clients[role].quit();
+    await sleep(1100);
     clients.grower=await spawn('AidGrower');
     clients.mason=await spawn('AidMason');
-    await clients.grower.waitForChunksToLoad();
-    await clients.mason.waitForChunksToLoad();
-    await sleep(500);
-    console.log('PRESSURE_PROVISION_AFTER_FRESH_LOGIN',JSON.stringify({round,
+    for(const role of names)await clients[role].waitForChunksToLoad();
+    await command('clear AidGrower');
+    await command('clear AidMason');
+    await until(async()=>itemCount(clients.grower,'wheat')===0,
+      'CLEAR_AFTER_RELOGIN_GROWER_'+round,70,180);
+    await until(async()=>itemCount(clients.mason,'stone_bricks')===0,
+      'CLEAR_AFTER_RELOGIN_MASON_'+round,70,180);
+    await command('item replace entity AidGrower hotbar.0 with minecraft:wheat '+card.grower.inventory);
+    await command('item replace entity AidMason hotbar.0 with minecraft:stone_bricks '+card.mason.inventory);
+    await sleep(850);
+    console.log('PRESSURE_PROVISION_POST_RELOGIN_AND_CLEAR',JSON.stringify({round,
       grower_client:itemCount(clients.grower,'wheat'),
       mason_client:itemCount(clients.mason,'stone_bricks'),
       declared:card}));
