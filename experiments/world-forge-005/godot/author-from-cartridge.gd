@@ -56,7 +56,8 @@ func _execute() -> void:
     if environment.get("instance","") != "gamma" or environment.get("engine","") != "godot-4.4.1":
         _abort("unknown sandbox")
         return
-    if environment.get("position",[]) != [37,90,22]:
+    var coords: Array = environment.get("position", [])
+    if coords.size() != 3 or float(coords[0]) != 37.0 or float(coords[1]) != 90.0 or float(coords[2]) != 22.0:
         _abort("unexpected sandbox geometry")
         return
     var base_material: String = str(environment.get("base_material",""))
