@@ -1,0 +1,77 @@
+name: WORLD-FORGE-009 signed-owner-grant to native local proposal-only receiver
+
+on:
+  push:
+    branches:
+      - experiment/world-forge-009-verified-local-delegation-bridge
+    paths:
+      - 'experiments/world-forge-009/**'
+      - '.github/workflows/world-forge-009-local-delegation-bridge.yml'
+  pull_request:
+    paths:
+      - 'experiments/world-forge-009/**'
+      - '.github/workflows/world-forge-009-local-delegation-bridge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bridge:
+    name: synthetic P256 owner signature + explicit local pin + native R3 HOLD REFUSE
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install unmodified native reLATTE dependencies
+        run: npm install
+      - name: Validate bridge JavaScript syntax
+        run: |
+          node --check experiments/world-forge-009/src/local-bridge.mjs
+          node --check experiments/world-forge-009/src/cli.mjs
+          node --check experiments/world-forge-009/tests/bridge.test.mjs
+      - name: Run synthetic signer, native receipt and revocation hostile tests
+        run: |
+          set -euo pipefail
+          node --experimental-strip-types --test experiments/world-forge-009/tests/bridge.test.mjs
+      - name: Build direct offline user enrollment preview from synthetic grant only
+        run: |
+          node --experimental-strip-types experiments/world-forge-009/tests/cli-smoke.mjs
+      - name: Check NO personal owner public key or private file embedded in code
+        run: |
+          set -euo pipefail
+          test ! -e experiments/world-forge-009/user-grant.json
+          test ! -e experiments/world-forge-009/private-jwk.json
+          test ! -e experiments/world-forge-009/real-owner-enrollment.json
+
+  source-limits:
+    name: explicit source and authority boundary contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Ensure original WF008 local-owner signature validator stays unchanged
+        run: |
+          node --input-type=module - <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const src=readFileSync('experiments/world-forge-009/src/local-bridge.mjs','utf8');
+          const core=readFileSync('experiments/world-forge-008/src/delegation-core.mjs','utf8');
+          if(!core.includes('OWNER_GRANT_SIGNATURE_INVALID') &&
+             !src.includes('OWNER_GRANT_SIGNATURE_INVALID'))throw Error('signed owner grant gate missing');
+          if(!src.includes("import {LocalReceiver} from '../../../src/receiver.ts'"))throw Error('not using native reLATTE receiver');
+          if(!src.includes("import {sealOpaqueOrganCrossing,verifyOpaqueOrganCrossing} from '../../../src/organ.ts'"))
+            throw Error('not using native signed crossing');
+          if(!src.includes("automatic_execution:false,automatic_merge:false,automatic_admission:false"))
+            throw Error('review-only contract missing');
+          console.log('WF009_BOUNDARY_CONTRACT_OK: owner remains nonextractable, bridge signer separate, ADMIT denied');
+          NODE
