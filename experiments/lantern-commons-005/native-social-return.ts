@@ -16,7 +16,7 @@ for(const spec of need){
  const root='work/lantern005-inputs/lantern-005-'+spec.label;
  const bytes=await readFile(root+'/observation.json');
  const report=JSON.parse(bytes.toString('utf8'));
- const meta=JSON.parse(await readFile(root+'/meta.json','utf8'));
+ const meta=JSON.parse(await readFile(root+'/world-meta.json','utf8'));
  requireIt(report.schema==='lantern.society-five-live-v0','BAD_SOURCE_SCHEMA');
  requireIt(report.label===spec.label&&report.seed===spec.seed,'WRONG_WORLD');
  requireIt(report.constitution===spec.constitution&&JSON.stringify(report.budget)===JSON.stringify(spec.budget),'BUDGET_OR_CONSTITUTION');
