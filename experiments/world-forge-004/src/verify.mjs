@@ -1,5 +1,5 @@
 // Bounded cross-engine scene-state comparison. No receipt from this module confers admission.
-import {readFileSync, writeFileSync} from 'node:fs';
+import {readFileSync, writeFileSync, existsSync} from 'node:fs';
 import {join} from 'node:path';
 export const FORMAT='world-forge/independent-visual-observation/v0';
 export const HASH='a8a7862f462a6927e1983cf299f930368a5745751695e8f4755a2c476f560966';
@@ -62,8 +62,14 @@ export function compareEvidence(items){
 if(process.argv[1]&&import.meta.url.endsWith(process.argv[1].replaceAll('\\','/'))&&process.argv.length===4){
   const dir=process.argv[2],out=process.argv[3],inputs=[];
   for(const engine of ['minecraft','godot'])for(const world of ['alpha','beta']){
-    const path=join(dir,'world-forge-004-'+engine+'-'+world,engine+'-'+world+'.json');
-    inputs.push(JSON.parse(readFileSync(path,'utf8')));
+    const root=join(dir,'world-forge-004-'+engine+'-'+world);
+    const filename=engine+'-'+world+'.json';
+    // upload-artifact preserves root-relative work/ paths when mixed with
+    // snapshot folders outside work/. Use a fixed allowlist, never glob/guess.
+    const candidates=[join(root,filename),join(root,'work',engine==='godot'?'world-forge-004':'minecraft-probe',filename)];
+    const present=candidates.filter(p=>existsSync(p));
+    if(present.length!==1)throw Error('expected one unambiguous engine evidence file for '+engine+'/'+world);
+    inputs.push(JSON.parse(readFileSync(present[0],'utf8')));
   }
   const comparison=compareEvidence(inputs);
   writeFileSync(out,JSON.stringify(comparison,null,2)+'\n');
