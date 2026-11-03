@@ -130,10 +130,10 @@ try{
     // every episode. In SCARCITY, changed partner capacity is explicit.
     const brickSupply=scenario==='SCARCITY'&&round===1?1:2;
     for(const c of [
-      'function lantern:events/prepare',
-      'function lantern:events/drought',
       'function lantern:cooperation/setup',
       'setblock 109 66 16 minecraft:air',
+      'function lantern:events/prepare',
+      'function lantern:events/drought',
       'clear AidGrower','clear AidMason',
       'give AidGrower minecraft:wheat 2',
       'give AidMason minecraft:stone_bricks '+brickSupply,
