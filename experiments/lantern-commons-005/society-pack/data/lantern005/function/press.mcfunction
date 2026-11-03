@@ -1,0 +1,1 @@
+execute if entity @s[tag=l5_member] if entity @s[x=26,y=64,z=-25,distance=..14] if score #project l5_project matches 3 if block -20 65 -10 minecraft:smoker run scoreboard players set #cartridge l5_project 1
