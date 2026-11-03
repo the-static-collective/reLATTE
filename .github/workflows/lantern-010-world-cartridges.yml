@@ -1,0 +1,347 @@
+name: 'LANTERN-010 immutable full Minecraft world cartridges and branch copies'
+
+on:
+  push:
+    branches:
+      - experiment/lantern-commons-010-world-cartridges
+    paths:
+      - 'experiments/lantern-commons-010/**'
+      - '.github/workflows/lantern-010-world-cartridges.yml'
+  pull_request:
+    paths:
+      - 'experiments/lantern-commons-010/**'
+      - '.github/workflows/lantern-010-world-cartridges.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  cartridge-security:
+    name: Offline world-cartridge archiving, derivation and hostile test gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Test complete-world content-addressing and safe fork extraction
+        run: python3 -m unittest discover -v -s experiments/lantern-commons-010 -p test_world_cartridge.py
+      - name: Syntax-check the branch-observer
+        run: node --check experiments/lantern-commons-010/live_branch.mjs
+
+  snapshot-root:
+    name: Save real Minecraft base as immutable world cartridge v0.1.0
+    needs: [cartridge-security]
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Install original Minecraft player protocol libraries
+        run: |
+          npm install --ignore-scripts
+          npm install --no-save --ignore-scripts mineflayer@4.39.0 rcon-client@4.2.5 vec3@0.2.0
+      - name: Download official Mojang Java 26.1.1 with verified SHA-1
+        run: |
+          set -euo pipefail
+          mkdir -p work/lantern/server
+          python3 - <<'PY'
+          import json, pathlib, urllib.request, hashlib
+          root=pathlib.Path('work/lantern')
+          manifest=json.load(urllib.request.urlopen('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json'))
+          item=next(x for x in manifest['versions'] if x['id']=='26.1.1')
+          meta=json.load(urllib.request.urlopen(item['url']))
+          entry=meta['downloads']['server']
+          raw=urllib.request.urlopen(entry['url']).read()
+          if hashlib.sha1(raw).hexdigest()!=entry['sha1']: raise ValueError('Mojang official SHA-1 mismatch')
+          (root/'server'/'server.jar').write_bytes(raw)
+          (root/'server-meta.json').write_text(json.dumps({'id':meta['id'],'jar_sha1':entry['sha1']})+'\n')
+          print('Verified original official server',meta['id'],entry['sha1'])
+          PY
+      - name: Provision original disposable world and embed all tested 006 + 007 rules
+        run: |
+          set -euo pipefail
+          mkdir -p work/lantern/server/world/datapacks/lantern-006-world-events
+          cp -R experiments/lantern-commons-006/datapack/. work/lantern/server/world/datapacks/lantern-006-world-events/
+          mkdir -p work/lantern/server/world/datapacks/lantern-007-cooperation
+          cp -R experiments/lantern-commons-007/datapack/. work/lantern/server/world/datapacks/lantern-007-cooperation/
+          cat > work/lantern/server/server.properties <<EOF
+          server-ip=127.0.0.1
+          server-port=25565
+          online-mode=false
+          enforce-secure-profile=false
+          gamemode=survival
+          force-gamemode=true
+          difficulty=peaceful
+          spawn-protection=0
+          generate-structures=false
+          level-type=minecraft:flat
+          level-seed=314159265
+          view-distance=8
+          simulation-distance=8
+          allow-flight=true
+          op-permission-level=4
+          enable-rcon=true
+          rcon.port=25575
+          rcon.password=lantern-ci-only
+          motd=Lantern Commons 010 root world cartridge
+          EOF
+          echo 'eula=true' > work/lantern/server/eula.txt
+      - name: Boot actual Mojang server and generate region/chunk world data
+        run: |
+          set -euo pipefail
+          cd work/lantern/server
+          java -Xms1G -Xmx2G -jar server.jar nogui > server.log 2>&1 &
+          echo $! > server.pid
+          for i in $(seq 1 120); do
+            if grep -q 'Done (' server.log; then echo 'Official Minecraft server READY'; exit 0; fi
+            if ! kill -0 "$(cat server.pid)" 2>/dev/null; then cat server.log; exit 1; fi
+            sleep 1
+          done
+          cat server.log
+          exit 1
+      - name: Create drought-garden starting point and independently observe its game blocks
+        env:
+          MC_RCON_PASSWORD: lantern-ci-only
+          WORLD_CARTRIDGE_MODE: root
+          WORLD_CARTRIDGE_SEED: '314159265'
+        run: node experiments/lantern-commons-010/live_branch.mjs
+      - name: Save and shut down the world before snapshotting immutable save files
+        if: always()
+        env:
+          MC_RCON_PASSWORD: lantern-ci-only
+        run: |
+          node --input-type=module - <<'JS' || true
+          import {Rcon} from 'rcon-client';
+          const r=await Rcon.connect({host:'127.0.0.1',port:25575,password:process.env.MC_RCON_PASSWORD});
+          await r.send('save-all flush'); await r.send('stop'); r.end();
+          JS
+          for i in $(seq 1 45); do
+            if ! kill -0 "$(cat work/lantern/server/server.pid)" 2>/dev/null; then break; fi
+            sleep 1
+          done
+      - name: Seal complete root world save, version and exact per-file byte hashes
+        run: |
+          set -euo pipefail
+          mkdir -p work/world-cartridge
+          GAME_SHA="$(sha256sum work/world-cartridge/game-observation.json | cut -d' ' -f1)"
+          SOURCE_SHA="$(printf '%s' "$GITHUB_SHA" | sha256sum | cut -d' ' -f1)"
+          JAR_SHA="$(python3 -c "import json; print(json.load(open('work/lantern/server-meta.json'))['jar_sha1'])")"
+          python3 experiments/lantern-commons-010/world_cartridge.py pack             --world work/lantern/server/world             --out work/world-cartridge/root.zip             --version 0.1.0 --branch main --seed 314159265             --mojang-sha1 "$JAR_SHA" --source-sha256 "$SOURCE_SHA"             --observation-sha256 "$GAME_SHA"             --action 'PREPARE_DROUGHT_AND_OPEN_VOLUNTARY_COMMONS'
+          python3 experiments/lantern-commons-010/world_cartridge.py verify work/world-cartridge/root.zip
+      - name: Save versioned complete immutable parent cartridge (not just level.dat)
+        uses: actions/upload-artifact@v4
+        with:
+          name: lantern-world-010-root-v0.1.0
+          if-no-files-found: error
+          retention-days: 90
+          path: |
+            work/world-cartridge/root.zip
+            work/world-cartridge/root.zip.receipt.json
+            work/world-cartridge/game-observation.json
+            work/lantern/server-meta.json
+
+  copy-and-evolve:
+    name: Checkout identical immutable v0.1.0 and evolve branch ${{ matrix.choice }}
+    needs: [snapshot-root]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        choice: [mercy, abstain, mutual_aid]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Install original game-protocol and inventory clients
+        run: |
+          npm install --ignore-scripts
+          npm install --no-save --ignore-scripts mineflayer@4.39.0 rcon-client@4.2.5 vec3@0.2.0
+      - uses: actions/download-artifact@v4
+        with:
+          name: lantern-world-010-root-v0.1.0
+          path: work/source-cartridge
+      - name: Verify and copy root world; require absent destination (no overwrite)
+        run: |
+          set -euo pipefail
+          python3 experiments/lantern-commons-010/world_cartridge.py verify work/source-cartridge/root.zip
+          mkdir -p work/lantern/server
+          python3 experiments/lantern-commons-010/world_cartridge.py checkout             work/source-cartridge/root.zip work/lantern/server/world
+          python3 - <<'PY' >> "$GITHUB_ENV"
+          import importlib.util
+          from pathlib import Path
+          p=Path('experiments/lantern-commons-010/world_cartridge.py')
+          spec=importlib.util.spec_from_file_location('wc010',p)
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          root,_=m.inspect('work/source-cartridge/root.zip')
+          print('WORLD_CARTRIDGE_PARENT_ID='+root['cartridge_id'])
+          PY
+      - name: Download same exact official Mojang server; verify engine against immutable parent
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, pathlib, urllib.request, hashlib, importlib.util
+          root=pathlib.Path('work/lantern')
+          manifest=json.load(urllib.request.urlopen('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json'))
+          item=next(x for x in manifest['versions'] if x['id']=='26.1.1')
+          meta=json.load(urllib.request.urlopen(item['url']))
+          entry=meta['downloads']['server']
+          raw=urllib.request.urlopen(entry['url']).read()
+          if hashlib.sha1(raw).hexdigest()!=entry['sha1']: raise ValueError('Official Mojang SHA mismatch')
+          spec=importlib.util.spec_from_file_location('wc010','experiments/lantern-commons-010/world_cartridge.py')
+          wc=importlib.util.module_from_spec(spec);spec.loader.exec_module(wc)
+          old,_=wc.inspect('work/source-cartridge/root.zip')
+          if old['mojang_server_sha1']!=entry['sha1']: raise ValueError('Parent and fork engine version differ')
+          (root/'server'/'server.jar').write_bytes(raw)
+          (root/'server-meta.json').write_text(json.dumps({'id':meta['id'],'jar_sha1':entry['sha1']})+'\n')
+          PY
+      - name: Configure cloned game server with original world state
+        run: |
+          cat > work/lantern/server/server.properties <<EOF
+          server-ip=127.0.0.1
+          server-port=25565
+          online-mode=false
+          enforce-secure-profile=false
+          gamemode=survival
+          force-gamemode=true
+          difficulty=peaceful
+          spawn-protection=0
+          generate-structures=false
+          level-type=minecraft:flat
+          level-seed=314159265
+          view-distance=8
+          simulation-distance=8
+          allow-flight=true
+          op-permission-level=4
+          enable-rcon=true
+          rcon.port=25575
+          rcon.password=lantern-ci-only
+          motd=Lantern Commons 010 verified parent checkout
+          EOF
+          echo 'eula=true' > work/lantern/server/eula.txt
+      - name: Boot copied world from verified archive instead of regenerating the save
+        run: |
+          set -euo pipefail
+          cd work/lantern/server
+          java -Xms1G -Xmx2G -jar server.jar nogui > server.log 2>&1 &
+          echo $! > server.pid
+          for i in $(seq 1 120); do
+            if grep -q 'Done (' server.log; then echo 'Cloned Minecraft world READY'; exit 0; fi
+            if ! kill -0 "$(cat server.pid)" 2>/dev/null; then cat server.log; exit 1; fi
+            sleep 1
+          done
+          cat server.log
+          exit 1
+      - name: Witness identical parent baseline; apply ONLY this fork's world events and item transactions
+        env:
+          MC_RCON_PASSWORD: lantern-ci-only
+          WORLD_CARTRIDGE_MODE: ${{ matrix.choice }}
+          WORLD_CARTRIDGE_SEED: '314159265'
+        run: node experiments/lantern-commons-010/live_branch.mjs
+      - name: Stop game before sealing completed child world
+        if: always()
+        env:
+          MC_RCON_PASSWORD: lantern-ci-only
+        run: |
+          node --input-type=module - <<'JS' || true
+          import {Rcon} from 'rcon-client';
+          const r=await Rcon.connect({host:'127.0.0.1',port:25575,password:process.env.MC_RCON_PASSWORD});
+          await r.send('save-all flush'); await r.send('stop'); r.end();
+          JS
+          for i in $(seq 1 45); do
+            if ! kill -0 "$(cat work/lantern/server/server.pid)" 2>/dev/null; then break; fi
+            sleep 1
+          done
+      - name: Version this full fork as an immutable direct child of root v0.1.0
+        env:
+          BRANCH: ${{ matrix.choice }}
+        run: |
+          set -euo pipefail
+          GAME_SHA="$(sha256sum work/world-cartridge/game-observation.json | cut -d' ' -f1)"
+          SOURCE_SHA="$(printf '%s' "$GITHUB_SHA" | sha256sum | cut -d' ' -f1)"
+          JAR_SHA="$(python3 -c "import json; print(json.load(open('work/lantern/server-meta.json'))['jar_sha1'])")"
+          python3 experiments/lantern-commons-010/world_cartridge.py pack             --world work/lantern/server/world             --out "work/world-cartridge/branch-$BRANCH.zip"             --version 0.1.1 --branch "$BRANCH" --seed 314159265             --parent work/source-cartridge/root.zip             --mojang-sha1 "$JAR_SHA" --source-sha256 "$SOURCE_SHA"             --observation-sha256 "$GAME_SHA"             --action "FORK_${BRANCH}_FROM_IMMUTABLE_PARENT"
+          python3 experiments/lantern-commons-010/world_cartridge.py verify             "work/world-cartridge/branch-$BRANCH.zip"
+      - name: Preserve independent versioned full-save child cartridge
+        uses: actions/upload-artifact@v4
+        with:
+          name: lantern-world-010-${{ matrix.choice }}-v0.1.1
+          if-no-files-found: error
+          retention-days: 90
+          path: |
+            work/world-cartridge/branch-*.zip
+            work/world-cartridge/branch-*.zip.receipt.json
+            work/world-cartridge/game-observation.json
+            work/lantern/server-meta.json
+
+  verify-lineage:
+    name: Reassemble immutable root + three independently changed whole-world branches
+    needs: [copy-and-evolve]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lantern-world-010-*
+          path: work/all-cartridges
+          merge-multiple: false
+      - name: Cross-verify root ID, three parent links, complete save bytes and branch-difference witnesses
+        run: |
+          set -euo pipefail
+          python3 experiments/lantern-commons-010/world_cartridge.py lineage             --root work/all-cartridges/lantern-world-010-root-v0.1.0/root.zip             --children               work/all-cartridges/lantern-world-010-mercy-v0.1.1/branch-mercy.zip               work/all-cartridges/lantern-world-010-abstain-v0.1.1/branch-abstain.zip               work/all-cartridges/lantern-world-010-mutual_aid-v0.1.1/branch-mutual_aid.zip             --out work/world-lineage/lineage.json
+          python3 - <<'PY'
+          import hashlib,importlib.util,json,pathlib
+          base=pathlib.Path('work/all-cartridges')
+          spec=importlib.util.spec_from_file_location('wc010','experiments/lantern-commons-010/world_cartridge.py')
+          wc=importlib.util.module_from_spec(spec);spec.loader.exec_module(wc)
+          expected={'root':('redstone_block','air','air','air'),
+                    'mercy':('emerald_block','water','wheat','air'),
+                    'abstain':('redstone_block','air','air','air'),
+                    'mutual_aid':('emerald_block','water','wheat','bell')}
+          for branch,(marker,pond,crop,bell) in expected.items():
+              suffix='root-v0.1.0' if branch=='root' else branch+'-v0.1.1'
+              folder=base/('lantern-world-010-'+suffix)
+              filename='root.zip' if branch=='root' else 'branch-'+branch+'.zip'
+              m,_=wc.inspect(folder/filename)
+              report_bytes=(folder/'game-observation.json').read_bytes()
+              report=json.loads(report_bytes)
+              assert m['observation_sha256']==hashlib.sha256(report_bytes).hexdigest()
+              assert report['mode']==branch and report['after']['marker']==marker
+              assert report['after']['pond']==pond and report['after']['crop']==crop
+              assert report['after']['bell']==bell
+              assert report['before']['marker']=='redstone_block'
+              assert report['before']['pond']=='air'
+              receipt=json.loads((folder/(filename+'.receipt.json')).read_text())
+              assert receipt['cartridge_id']==m['cartridge_id']
+              assert receipt['archive_sha256']==hashlib.sha256((folder/filename).read_bytes()).hexdigest()
+              assert receipt['world_tree_sha256']==m['world_tree_sha256']
+              print(branch,m['cartridge_id'],m['world_tree_sha256'],'game witness OK')
+          PY
+      - name: Archive versioned world genealogy and exact immutable hashes
+        uses: actions/upload-artifact@v4
+        with:
+          name: lantern-world-010-complete-version-lineage
+          if-no-files-found: error
+          retention-days: 90
+          path: work/world-lineage/lineage.json
