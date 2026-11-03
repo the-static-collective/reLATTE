@@ -21,7 +21,7 @@ jobs:
           node-version: '22'
       - run: node --test experiments/world-forge-003/tests/reconcile.test.mjs
       - run: |
-          node -e "const p=require('./experiments/world-forge-003/minecraft/pack.mcmeta'); if(JSON.stringify(p.pack.min_format)!=='[101,1]') process.exit(1)"
+          node -e "const fs=require('node:fs'); const p=JSON.parse(fs.readFileSync('experiments/world-forge-003/minecraft/pack.mcmeta','utf8')); if(JSON.stringify(p.pack.min_format)!=='[101,1]'||JSON.stringify(p.pack.max_format)!=='[101,1]') process.exit(1)"
   godot-real-runtime:
     runs-on: ubuntu-latest
     timeout-minutes: 12
