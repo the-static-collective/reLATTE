@@ -39,7 +39,7 @@ async function main(){
   const world=process.env.LANTERN_WORLD_ID;
   const seed=process.env.LANTERN_SEED;
   const originX=24, originZ=24; // new receiver-selected site, different from 004 origin
-  fail(['A','B'].includes(world)&&/^\d+$/.test(seed),'WORLD_PARAMS');
+  fail(world==='C'&&/^\d+$/.test(seed),'WORLD_PARAMS');
   const texts={};
   for(const [file,digest] of Object.entries(exact)){
     const body=await readFile(root+file);
@@ -50,7 +50,7 @@ async function main(){
   fail(expected.size===466,'EXPECTED_466');
   const rcon=await Rcon.connect({host:'127.0.0.1',port:25575,password:process.env.MC_RCON_PASSWORD});
   const commandTrace=[
-    'forceload add -40 -20 80 20',
+    'forceload add -40 -20 125 50',
     `execute positioned ${originX} 64 ${originZ} run function lantern:build/kitchen`,
     `execute positioned ${originX} 64 ${originZ} run function lantern:seed/construct_kitchen`
   ];
