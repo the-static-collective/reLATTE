@@ -223,6 +223,7 @@ jobs:
           node --experimental-strip-types \
             experiments/riff-raft-minecraft-003/two-world-replay.mjs \
             ../work/pr101-signed-inputs ../work/pr101-return/riff-raft-return-bundle.json
+          cd ..
           test -s work/pr101-return/riff-raft-return-bundle.json
       - name: Independent source check reruns original code and both original P256 proofs
         run: |
@@ -319,16 +320,16 @@ jobs:
           node --experimental-strip-types \
             experiments/world-forge-007/src/native-source.mjs source-check \
             pr101 work/pr101-raw \
-            work/pr101-return/work/pr101-return/riff-raft-return-bundle.json \
+            work/pr101-return/riff-raft-return-bundle.json \
             work/wf007-local/pinned-source-verified.json
           node --experimental-strip-types \
             experiments/world-forge-007/src/native-source.mjs policy \
-            pr101 work/pr101-return/work/pr101-return/riff-raft-return-bundle.json \
+            pr101 work/pr101-return/riff-raft-return-bundle.json \
             "$WF_POLICY_MODE" work/wf007-local/trust-policy.json
           node --experimental-strip-types \
             experiments/world-forge-007/src/native-source.mjs receive \
             pr101 work/pr101-raw \
-            work/pr101-return/work/pr101-return/riff-raft-return-bundle.json \
+            work/pr101-return/riff-raft-return-bundle.json \
             work/wf007-local/trust-policy.json \
             work/wf007-private-local-receiver \
             "work/wf007-local/choice-$WF_POLICY_LABEL.json"
