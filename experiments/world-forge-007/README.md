@@ -1,0 +1,7 @@
+# WORLD-FORGE-007 — Pinned source verification and receiver-local trust
+
+This is a draft experiment stacked on WORLD-FORGE-006 (#145). It checks out RIFF-RAFT-MINECRAFT-003 PR #101 at commit `4943f14fd28d5b0bdb1b6d11bad035a009afe8b4`, not merely its title. Separate official Minecraft Java 26.1.1 runners reproduce its nine-lamp sequence and generate source-native signed evidence. A verification job rechecks raw artifacts with the original PR #101 importer and a pinned GHoT read-only verifier. Two new receiving CI worlds then apply different signer-recognition policies to the same signed source: one HOLDs for review under exact pinned CI provenance and one REFUSEs because no previously enrolled signer identity exists. Both issue native signed local receipts; neither admits or executes.
+
+Run policy tests: `node --experimental-strip-types --test experiments/world-forge-007/tests/native-source.test.mjs` after `npm install`. The full workflow is `.github/workflows/world-forge-007-pinned-native-source-policy.yml`.
+
+**Limits:** Valid signatures prove object integrity, not ownership by a named human or organization. Source signer keys are ephemeral, and receivers are simulated CI operators, not human participants. PR #101's redstone observations are distinct from the material repair procedure in WORLD-FORGE-005; verifying PR #101 does not establish ancestry for the WORLD-FORGE-005 material procedure. The result is not an unrestricted cross-engine skill or automatic permission. Source, generalization, reproduction and permission remain separate.
