@@ -1,0 +1,212 @@
+name: 'LANTERN-007 radical cooperation: gift, refusal and false-claim proof'
+
+on:
+  push:
+    branches:
+      - experiment/lantern-commons-007-radical-cooperation
+    paths:
+      - 'experiments/lantern-commons-007/**'
+      - '.github/workflows/lantern-007-cooperation.yml'
+  pull_request:
+    paths:
+      - 'experiments/lantern-commons-007/**'
+      - '.github/workflows/lantern-007-cooperation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  official-vanilla:
+    name: Two finite game actors ${{ matrix.scenario }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - scenario: GIFT
+            seed: '314159265'
+          - scenario: REFUSE
+            seed: '271828182'
+          - scenario: SPOOF
+            seed: '161803398'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Install locked runtime and protocol clients
+        run: |
+          npm install --ignore-scripts
+          npm install --no-save --ignore-scripts mineflayer@4.39.0 rcon-client@4.2.5 vec3@0.2.0
+      - name: Verify exact Lantern 003 source functions
+        run: |
+          test "$(sha256sum experiments/lantern-commons-004/native-game-pack/data/lantern/function/build/kitchen.mcfunction | cut -d' ' -f1)" = "8cb40cb03c34ef29146d513ee553ac922a34f29fb334896b5a7945d7c99ad353"
+          test "$(sha256sum experiments/lantern-commons-004/native-game-pack/data/lantern/function/seed/construct_kitchen.mcfunction | cut -d' ' -f1)" = "60033123ddf1cc63f3f8579230f3c0ac5162e55b3443f75fb44468dfb4803c22"
+      - name: Fetch official 26.1.1 server with Mojang SHA-1 verification
+        run: |
+          set -euo pipefail
+          mkdir -p work/lantern/server
+          python3 - <<'PY'
+          import json, pathlib, urllib.request, hashlib
+          root=pathlib.Path('work/lantern')
+          manifest=json.load(urllib.request.urlopen('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json'))
+          item=next(x for x in manifest['versions'] if x['id']=='26.1.1')
+          meta=json.load(urllib.request.urlopen(item['url']))
+          entry=meta['downloads']['server']
+          raw=urllib.request.urlopen(entry['url']).read()
+          if hashlib.sha1(raw).hexdigest()!=entry['sha1']: raise ValueError('Official Mojang jar SHA-1 mismatch')
+          (root/'server'/'server.jar').write_bytes(raw)
+          (root/'server-meta.json').write_text(json.dumps({'id':meta['id'],'jar_sha1':entry['sha1']})+'\n')
+          print('Verified',meta['id'],entry['sha1'])
+          PY
+      - name: Prepare blank isolated Survival Superflat world and cooperation rules
+        env:
+          SEED: ${{ matrix.seed }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/lantern/server/world/datapacks/lantern-004-source-slice
+          cp -R experiments/lantern-commons-004/native-game-pack/. work/lantern/server/world/datapacks/lantern-004-source-slice/
+          mkdir -p work/lantern/server/world/datapacks/lantern-006-world-events
+          cp -R experiments/lantern-commons-006/datapack/. work/lantern/server/world/datapacks/lantern-006-world-events/
+          mkdir -p work/lantern/server/world/datapacks/lantern-007-cooperation
+          cp -R experiments/lantern-commons-007/datapack/. work/lantern/server/world/datapacks/lantern-007-cooperation/
+          cat > work/lantern/server/server.properties <<EOF
+          server-port=25565
+          online-mode=false
+          enforce-secure-profile=false
+          gamemode=survival
+          force-gamemode=true
+          difficulty=peaceful
+          spawn-protection=0
+          generate-structures=false
+          level-type=minecraft:flat
+          level-seed=$SEED
+          view-distance=8
+          simulation-distance=8
+          allow-flight=true
+          op-permission-level=4
+          enable-rcon=true
+          rcon.port=25575
+          rcon.password=lantern-ci-only
+          motd=Lantern Commons 004 source-derived kitchen practice
+          EOF
+          echo 'eula=true' > work/lantern/server/eula.txt
+      - name: Boot the official vanilla server
+        run: |
+          set -euo pipefail
+          cd work/lantern/server
+          java -Xms1G -Xmx2G -jar server.jar nogui > server.log 2>&1 &
+          echo $! > server.pid
+          for i in $(seq 1 120); do
+            if grep -q 'Done (' server.log; then echo 'Official Minecraft server READY'; exit 0; fi
+            if ! kill -0 "$(cat server.pid)" 2>/dev/null; then cat server.log; exit 1; fi
+            sleep 1
+          done
+          cat server.log
+          exit 1
+      - name: Two non-OP agents opt in or refuse real inventory gifts; independent observer checks public benefit
+        env:
+          MC_RCON_PASSWORD: lantern-ci-only
+          LANTERN_COOP_SCENARIO: ${{ matrix.scenario }}
+          LANTERN_COOP_SEED: ${{ matrix.seed }}
+        run: |
+          mkdir -p work/lantern
+          mkdir -p work/cooperation
+          node experiments/lantern-commons-007/live-cooperation.mjs
+      - name: Flush and close Minecraft save
+        if: always()
+        env:
+          MC_RCON_PASSWORD: lantern-ci-only
+        run: |
+          node --input-type=module - <<'JS' || true
+          import {Rcon} from 'rcon-client';
+          const rcon=await Rcon.connect({host:'127.0.0.1',port:25575,password:process.env.MC_RCON_PASSWORD});
+          await rcon.send('save-all flush');
+          await rcon.send('stop');
+          rcon.end();
+          JS
+          for i in $(seq 1 30); do
+            if ! kill -0 "$(cat work/lantern/server/server.pid)" 2>/dev/null; then break; fi
+            sleep 1
+          done
+      - name: Pin on-disk save digest and server version
+        if: always()
+        env:
+          SEED: ${{ matrix.seed }}
+          SCENARIO: ${{ matrix.scenario }}
+        run: |
+          python3 - <<'PY'
+          import json,hashlib,os,pathlib
+          root=pathlib.Path('work/lantern')
+          src=root/'server'/'world'/'level.dat'
+          if not src.is_file(): raise ValueError('Missing actual Mojang level.dat')
+          meta=json.loads((root/'server-meta.json').read_text())
+          evidence={'scenario':os.environ['SCENARIO'],'world_seed':os.environ['SEED'],
+                    'minecraft_version':meta['id'],'official_jar_sha1':meta['jar_sha1'],
+                    'world_level_dat_sha256':hashlib.sha256(src.read_bytes()).hexdigest()}
+          (root/'world-meta.json').write_text(json.dumps(evidence,indent=2)+'\n')
+          print(json.dumps(evidence))
+          PY
+      - name: Retain official world evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lantern-cooperation-${{ matrix.scenario }}
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            work/cooperation/game-evidence.json
+            work/lantern/world-meta.json
+            work/lantern/server-meta.json
+            work/lantern/server/server.log
+            work/lantern/server/world/level.dat
+
+  reLATTE-signed-cooperation-candidate:
+    name: Compare three outcomes, preserve refusal and sign source-native HOLD
+    runs-on: ubuntu-latest
+    needs: [official-vanilla]
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install original reLATTE runtime
+        run: npm install --ignore-scripts
+      - name: Download original signed 006 world-event parent receipt
+        uses: actions/download-artifact@v4
+        with:
+          name: lantern-006-world-events-signed-hold
+          repository: the-static-collective/reLATTE
+          run-id: 41696307079
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: work/parent-world-event
+      - name: Retrieve all three independently generated Minecraft worlds
+        uses: actions/download-artifact@v4
+        with:
+          pattern: lantern-cooperation-*
+          path: work/cooperation-worlds
+          merge-multiple: false
+      - name: Validate material gifts, reversible refusal and spoof denial; native reLATTE signed HOLD
+        run: node --experimental-strip-types experiments/lantern-commons-007/cooperation-compare.ts
+      - name: Preserve cooperative practice candidate and native source-bound receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lantern-007-cooperation-signed-held-candidate
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            work/cooperation-return/cartridge-candidate.json
+            work/cooperation-return/signed-held-return.json

@@ -1,0 +1,13 @@
+{
+  "pack": {
+    "description": "Lantern Commons 007: voluntary gifts -> game-owned irrigation recovery",
+    "min_format": [
+      101,
+      1
+    ],
+    "max_format": [
+      101,
+      1
+    ]
+  }
+}
