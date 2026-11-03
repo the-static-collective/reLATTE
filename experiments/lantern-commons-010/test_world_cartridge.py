@@ -22,10 +22,10 @@ class TestWorldCartridge(unittest.TestCase):
         self.addCleanup(self.t.cleanup)
         self.root = Path(self.t.name)
         self.world = self.root / "source-world"
-        (self.world / "region").mkdir(parents=True)
+        (self.world / "dimensions" / "minecraft" / "overworld" / "region").mkdir(parents=True)
         (self.world / "datapacks" / "lantern" ).mkdir(parents=True)
         (self.world / "level.dat").write_bytes(b"synthetic-level-not-a-minecraft-save")
-        (self.world / "region" / "r.0.0.mca").write_bytes(b"synthetic-anvil-not-valid-minecraft")
+        (self.world / "dimensions" / "minecraft" / "overworld" / "region" / "r.0.0.mca").write_bytes(b"synthetic-anvil-not-valid-minecraft")
         (self.world / "datapacks" / "lantern" / "pack.mcmeta").write_text('{"pack":{}}')
         (self.world / "session.lock").write_bytes(b"ephemeral-process-lock")
 
