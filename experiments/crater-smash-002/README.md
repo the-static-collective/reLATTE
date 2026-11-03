@@ -42,7 +42,7 @@ The project ZIP includes `world-forge-001/` because the generator imports the **
 1. Copy `dist/minecraft/` into the new world's `datapacks/crater-smash-002/` such that `pack.mcmeta` is at the datapack root.
 2. Use the Minecraft **Java 26.1.1-specific** format chosen by WORLD-FORGE-001. This format has not been independently confirmed or loaded in this build.
 3. In game, stand at a deliberately chosen anchor, run `/reload`, `/function worldforge:build_alpha`, then `/function crater:impact_alpha` **without moving**.
-4. Use `crater:visual_repair_alpha_garden` and similar commands to recolor the corresponding pedestal. These commands are *visual-only*: Minecraft inventory, salvage, and recipient decisions are **not** implemented in the datapack.
+4. Use `crater:visual_repair_alpha_garden` and similar commands to restore that station’s original bounded 3×3 foundation and marker. This does not repair all crater terrain. These commands are *visual-only*: Minecraft inventory, salvage, and recipient decisions are **not** implemented in the datapack. The restoration is operator-triggered and visual only.
 
 The crater is a **stylized surface scar**, not a physical void carved through the ground. It places blocks at a finite bounded area. It does not secretly issue player commands, integrate a server, or import independent gameplay observations.
 
@@ -65,9 +65,9 @@ All world events are created locally, recorded as `LOCAL_MODEL_SIMULATION`, and 
 
 ## Results
 
-- **37/37** Node test cases passed at build time, including independent world separation, deterministic damage, salvage inventory, repair and reconstruction, signature nonclaims, tamper refusal, and refusal blocking.
+- **39/39** Node test cases passed after a Godot-string/Minecraft-pad repair regression fix, including independent world separation, deterministic damage, salvage inventory, repair and reconstruction, signature nonclaims, tamper refusal, and refusal blocking.
 - Chromium desktop/mobile UI clickthrough exercised the impact, scavenging, repair, candidate construction, cross-world rehearsal and REFUSE; **zero page errors** and **no horizontal overflow at a 390px mobile viewport**.
-- Minecraft 26.1.1 and Godot 4.x engine-runtime tests are **not yet performed**. Generated outputs are *candidate adapters*, not validated cross-engine witness.
+- Minecraft Java 26.1.1 game-engine execution remains **unverified**. Godot 4.4.1 real headless CI import and author-operated impact/visual repair smoke tests passed on both ALPHA and BETA in GitHub Actions run 41685257912. This is not independent observation, procedural parity, or real-world recovery.
 
 ## Next actual engineering gate
 

@@ -1,7 +1,7 @@
 import {readFile, writeFile, mkdir, cp} from 'node:fs/promises';
 import {dirname,join,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {validateCartridge,digest,project,INSTANCES,minecraftFunction} from '../../world-forge-001/src/worldforge.mjs';
+import {validateCartridge,digest,project,INSTANCES,minecraftFunction,MATERIALS} from '../../world-forge-001/src/worldforge.mjs';
 import {IMPACTS,damageAt,CRATER_FORMAT,freshWorld,strike,summary} from './crater-core.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const original=resolve(root,'../world-forge-001');
@@ -48,8 +48,12 @@ function makeCraterFunc(scene){const imp=IMPACTS[scene.world_instance],out=[
 for(const [id,scene] of Object.entries(scenes)){
   await write(`minecraft/data/crater/function/impact_${id}.mcfunction`,makeCraterFunc(scene));
   const statuses=scene.stations.map(s=>({id:s.id,status:damageAt(s.x,s.z,IMPACTS[id]).condition}));
-  for(const s of statuses)await write(`minecraft/data/crater/function/visual_repair_${id}_${s.id}.mcfunction`,
-    `# Stage-only visual repair; NO inventory or provenance validation.\n# Only run at same world anchor used for build/impact commands.\nsetblock ${mcoord(scene.stations.find(x=>x.id===s.id).x)} ~ ${mcoord(scene.stations.find(x=>x.id===s.id).z)} minecraft:sea_lantern\ntellraw @s {"text":"${s.id} visual repair requested (${id}). Not evidence of recovery.","color":"aqua"}\n`);
+  for(const s of statuses){
+    const station=scene.stations.find(x=>x.id===s.id);
+    const block=MATERIALS[station.material].minecraft;
+    await write(`minecraft/data/crater/function/visual_repair_${id}_${s.id}.mcfunction`,
+      `# Stage-only visual repair; restores a bounded 3x3 station pad, NOT crater terrain.\n# No inventory, consent, or provenance validation. Use the SAME world anchor for all commands.\nfill ${mcoord(station.x-1)} ~-1 ${mcoord(station.z-1)} ${mcoord(station.x+1)} ~-1 ${mcoord(station.z+1)} ${block}\nsetblock ${mcoord(station.x)} ~ ${mcoord(station.z)} minecraft:sea_lantern\ntellraw @s {"text":"${s.id} station pad visually restored (${id}); no witnessed salvage or real repair.","color":"aqua"}\n`);
+  }
   await write(`godot-${id}/project.godot`,`config_version=5\n\n[application]\nconfig/name="CRATER SMASH 002 · ${id}"\nrun/main_scene="res://main.tscn"\n\n[rendering]\nrenderer/rendering_method="gl_compatibility"\nrenderer/rendering_method.mobile="gl_compatibility"\n`);
   await write(`godot-${id}/main.tscn`,`[gd_scene load_steps=2 format=3]\n\n[ext_resource type="Script" path="res://main.gd" id="1"]\n\n[node name="Crater" type="Node3D"]\nscript = ExtResource("1")\n`);
   await write(`godot-${id}/main.gd`,godotScript(scene));

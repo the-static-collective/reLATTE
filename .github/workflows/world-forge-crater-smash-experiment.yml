@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Run 53 model assertions
+      - name: Run 55 model / adapter assertions
         run: |
           node --test experiments/world-forge-001/tests/worldforge.test.mjs
           node --test experiments/crater-smash-002/tests/crater.test.mjs
