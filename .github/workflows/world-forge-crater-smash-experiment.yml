@@ -1,0 +1,88 @@
+name: World Forge / Crater Smash experimental checks
+on:
+  pull_request:
+    paths:
+      - 'experiments/world-forge-001/**'
+      - 'experiments/crater-smash-002/**'
+      - 'experiments/WORLD-FORGE-CRATER-SMASH.md'
+      - '.github/workflows/world-forge-crater-smash-experiment.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  model-and-generation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run 53 model assertions
+        run: |
+          node --test experiments/world-forge-001/tests/worldforge.test.mjs
+          node --test experiments/crater-smash-002/tests/crater.test.mjs
+      - name: Generate both engine adapters
+        run: |
+          node experiments/world-forge-001/src/build.mjs
+          node experiments/crater-smash-002/src/build.mjs
+      - name: Verify artifact paths and Minecraft metadata
+        run: |
+          test -s experiments/crater-smash-002/dist/CRATER-SMASH-002-PLAY.html
+          test -s experiments/crater-smash-002/dist/minecraft/data/crater/function/impact_alpha.mcfunction
+          test -s experiments/crater-smash-002/dist/godot-alpha/main.gd
+          node - <<'NODE'
+          const fs = require('node:fs');
+          for(const id of ['alpha','beta']){
+            const gd = fs.readFileSync('experiments/crater-smash-002/dist/godot-'+id+'/main.gd','utf8');
+            if(!gd.includes('WASD move · I impact · E visual repair near station\\nFICTIONAL'))
+              throw new Error('GDScript quoted newline escape broken in '+id);
+          }
+          console.log('Generated Godot GDScript string literal QA passed');
+          NODE
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const pack = JSON.parse(fs.readFileSync('experiments/crater-smash-002/dist/minecraft/pack.mcmeta'));
+          if (JSON.stringify(pack.pack.min_format) !== '[101,1]' ||
+              JSON.stringify(pack.pack.max_format) !== '[101,1]') {
+            throw new Error('Minecraft 26.1.1 datapack format changed; require manual engine review');
+          }
+          console.log('Generated pack metadata: 101.1; not game-engine runtime verified');
+          NODE
+
+  godot-headless-import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    needs: model-and-generation
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate Godot scenes
+        run: |
+          node experiments/world-forge-001/src/build.mjs
+          node experiments/crater-smash-002/src/build.mjs
+      - name: Download pinned official Godot editor (4.4.1)
+        run: |
+          curl --fail --location --retry 2 --silent --show-error \
+            https://github.com/godotengine/godot-builds/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip -o /tmp/godot.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.4.1-stable_linux.x86_64
+          /tmp/Godot_v4.4.1-stable_linux.x86_64 --version
+      - name: Headless editor import and 3-frame scene smoke checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          for instance in alpha beta; do
+            scene="experiments/crater-smash-002/dist/godot-$instance"
+            /tmp/Godot_v4.4.1-stable_linux.x86_64 --headless --path "$scene" --editor --import --quit 2>&1 | tee "/tmp/godot-import-$instance.log"
+            /tmp/Godot_v4.4.1-stable_linux.x86_64 --headless --path "$scene" --quit-after 3 2>&1 | tee "/tmp/godot-run-$instance.log"
+            if grep -Eiq '(SCRIPT ERROR|Parser Error|Parse Error)' "/tmp/godot-import-$instance.log" "/tmp/godot-run-$instance.log"; then
+              echo "Godot parser error in $instance"
+              exit 1
+            fi
+          done
+          echo "Godot headless import/smoke attempted for both generated variants."

@@ -1,6 +1,6 @@
 # WORLD-FORGE-003 — Cross-engine admission gate (draft experiment)
 
-This is a **small, reviewable, executable integration seam**, not a replacement for the owner-authored WORLD-FORGE-001 and CRATER-SMASH-002 source bundles. Original local bundles were previously provided to the owner; **they are not transplanted into this PR**. This experiment reuses their pinned fixture digest only as an ancestry reference.
+This is a **small, reviewable, executable integration seam**, not a replacement for the owner-authored WORLD-FORGE-001 and CRATER-SMASH-002 source bundles. The **original WORLD-FORGE-001 and CRATER-SMASH-002 source files are now included as sibling experimental directories in this PR**, with the Godot quoted-newline generator correction. This separate 003 gate reuses their pinned fixture digest as an ancestry reference, without admitting the game cartridges as reLATTE authority.
 
 ## What is tested
 
@@ -25,6 +25,6 @@ Minecraft Java 26.1.1: place `minecraft/` contents in a **disposable** world dat
 3. Compare intermediate causal transitions, raw bytes, version and signatures from pinned sources, not merely claims in JSON.
 4. Obtain receiver-local HOLD/REFUSE and never auto-admit or confer authority.
 
-Canonical doors: reLATTE #132, #134, #136, draft #101. Source from current conversation is not automatically merged.
+Canonical doors: reLATTE #132, #134, #136, draft #101. Source files are staged on this draft branch for review, not merged into main.
 
 **WITNESS != GENERALIZATION != REPRODUCTION != PERMISSION.**

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WORLD-FORGE-001 · A World That Can Walk</title>
+<style>
+:root{color-scheme:dark;--ink:#eaf0e6;--muted:#aab8ac;--accent:#b9edaa;--line:#335145;--amber:#f2cb79;--bg:#081511;--panel:#13251f}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#1d4032 0%,#07130f 60%);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header,main,footer{max-width:1180px;margin:auto;padding:18px 24px}header{padding-top:34px;display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+.kicker{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:2px}h1{margin:4px 0;font-size:clamp(28px,4vw,50px);letter-spacing:-1.7px;line-height:1.05}h2{font-size:21px;margin:0 0 12px}h3{font-size:17px;margin:0 0 8px}p{margin:7px 0;color:var(--muted)}.pill{border:1px solid #47735d;background:#1b382c;color:#c7efbc;border-radius:99px;padding:8px 14px;font-size:12px;font-weight:700}
+.layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,1fr);gap:18px}.panel{border:1px solid var(--line);background:linear-gradient(140deg,#142a22,#0c1d18);border-radius:18px;padding:18px;box-shadow:0 10px 40px #0004}.top{display:flex;justify-content:space-between;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+select,button{font:inherit;border-radius:10px;cursor:pointer}select{background:#122920;color:#fff;border:1px solid #53816a;padding:9px 12px}button{background:#263f33;color:var(--ink);padding:12px 14px;border:1px solid #4f725e;font-weight:650}button:hover,button:focus-visible{background:#375941;outline:2px solid #95d6a0;outline-offset:1px}button.primary{background:#c1efb1;color:#17301e;border-color:#c1efb1}button.secondary{background:#182b24;color:#e6ede6}button.danger{border-color:#9a715d;color:#eac4ad}
+#map{width:100%;height:auto;border-radius:14px;border:1px solid #3d6455;display:block;background:#0b1b16;touch-action:manipulation}svg text{font-family:system-ui,sans-serif;pointer-events:none}svg .node{cursor:pointer;outline:none}svg .node:focus-visible circle{stroke:#fff;stroke-width:4}svg .node:hover circle{stroke:#fff;stroke-width:3}.small{font-size:12px;color:var(--muted)}.footnote{font-size:13px;color:#b7bcaf}.status{display:inline-block;background:#503d1e;color:#ffda90;border:1px solid #a67b36;padding:3px 10px;border-radius:7px;font-weight:800;font-size:12px}.bar{height:9px;background:#264033;border-radius:99px;overflow:hidden;margin:12px 0 16px}.bar>div{height:100%;background:#a8e4a0;width:0;transition:width .3s}.current{min-height:125px;padding:18px;background:#0d2019;border:1px solid #2f5341;border-radius:12px;margin-bottom:12px}.current h3{font-size:23px} .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.card-grid button{padding:11px 8px;font-size:13px}.card-grid button.active{background:#3a6047;border-color:#b9edaa}.detail{border-left:3px solid var(--amber);padding:10px 15px;background:#1c2c22;border-radius:0 8px 8px 0;margin:12px 0}.ledger{max-height:240px;overflow:auto;background:#091912;padding:10px;border-radius:10px;border:1px solid #345246;font-size:12px;line-height:1.65;white-space:pre-wrap;color:#c5d3c9}.actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.muted{color:var(--muted)}footer{font-size:12px;color:#849a8b;padding-bottom:38px}.bordered{border-top:1px solid var(--line);margin-top:20px;padding-top:18px}code{color:#e7d09b}a{color:var(--accent)}@media(max-width:800px){.layout{grid-template-columns:1fr}.panel{padding:14px}header{flex-direction:column}header,main,footer{padding-left:14px;padding-right:14px}.card-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header><div><div class="kicker">STATIC COLLECTIVE / EXPERIMENT 001</div><h1>A WORLD THAT CAN WALK</h1><p>One seven-station Jubilee Garden · two independent fictional layouts · one portable design.</p></div><div class="pill">LOCAL-FIRST · NO LOGIN · NO NETWORK</div></header>
+<main><div class="layout">
+<section class="panel"><div class="top"><h2>01 / EXPLORE THE WORLD</h2><label class="small">Instance <select id="world"><option value="alpha">ALPHA · original</option><option value="beta">BETA · rotated + shifted</option></select></label></div>
+<svg id="map" viewBox="0 0 600 530" role="img" aria-label="Interactive map of seven Jubilee Garden stations"></svg>
+<p class="small" id="mapHint">Tap a glowing station to inspect it. Follow the illuminated route.</p>
+<div class="bordered"><h3>Translation boundary</h3><p>Same cartridge semantics → different coordinates. Minecraft uses blocks and function commands; Godot uses a 3D scene; this browser uses a 2D clickable map. <strong>No engine has yet independently verified either other engine.</strong></p></div>
+</section>
+<section class="panel"><h2>02 / WALK THE SEVEN ROOMS</h2><div class="small">Fictional local progress. Never a claim of physical service, payment, permission, or verified skill.</div><div class="bar"><div id="progress"></div></div>
+<div class="current"><div class="kicker" id="phase">NEXT STATION</div><h3 id="stationTitle"></h3><p id="stationText"></p></div>
+<div class="actions"><button class="primary" id="action">Visit next station</button><button class="secondary" id="reset">Restart this world</button></div><div id="message" class="detail" role="status" aria-live="polite">Fictional rehearsal, no external effects.</div>
+<div class="bordered"><h3>03 / WITNESS → FORGE → OFFER TO A ROOM</h3><div class="card-grid"><button id="witness">WITNESS</button><button id="forge">FORGE</button><button id="offer">OFFER TO ROOM</button></div>
+<p class="small">These three doors produce <em>modelled</em> receipts only. An offer cannot grant itself authority.</p><div class="actions"><button id="hold" class="secondary">Receiver: HOLD</button><button id="refuse" class="danger">Receiver: REFUSE</button><button id="export">Export local receipt JSON</button></div>
+<div class="small">Local ledger · no cryptographic signature or external witness</div><div id="ledger" class="ledger"></div></div>
+</section>
+</div></main>
+<footer>WORLD-FORGE-001 · <span id="sha"></span> · Fictional test scene by design · Non-normative adapter for reLATTE issue #132 · No automatic admission, monetary instruments, tracking, or community publication.</footer>
+<script>
+// Embedded at build time. No fetch, external packages, or account required.
+const BUNDLE = /*__BUNDLE__*/;
+const source = BUNDLE.cartridge;
+const scenes = BUNDLE.scenes;
+const receiptFormat = 'world-forge/local-rehearsal-receipt/v0';
+let states={alpha:{stage:0,decision:'HOLD',events:[]},beta:{stage:0,decision:'HOLD',events:[]}};
+let active='alpha';
+const $=id=>document.getElementById(id);
+const state=()=>states[active];
+function log(type, detail){state().events.push({sequence:state().events.length+1,type,detail,evidence_class:'LOCAL_UI_SIMULATION',world_instance:active});render();}
+function status(t){$('message').textContent=t;}
+function pick(index){const s=scenes[active].stations[index];if(index!==state().stage){status('INSPECT ONLY · '+s.label+'. Visit steps in order.');return;} status(s.label+': '+s.verb+' is ready. Use Visit next station.');}
+function walk(){if(state().stage>=7){status('Complete. Final disposition is '+state().decision+'.');return;}const s=scenes[active].stations[state().stage];state().stage++;state().decision='HOLD';log('FICTIONAL_STEP',s.verb+': '+s.message);status(s.message);}
+function renderMap(){const scene=scenes[active], root=$('map');while(root.firstChild)root.removeChild(root.firstChild);
+const svgNS='http://www.w3.org/2000/svg';
+function node(tag, attrs, parent=root){const el=document.createElementNS(svgNS,tag);for(const [k,v] of Object.entries(attrs))el.setAttribute(k,String(v));parent.appendChild(el);return el;}
+for(let a=0;a<=600;a+=40)node('line',{x1:a,y1:0,x2:a,y2:530,stroke:'#24453a','stroke-width':'0.8'});
+for(let a=0;a<=530;a+=40)node('line',{x1:0,y1:a,x2:600,y2:a,stroke:'#24453a','stroke-width':'0.8'});
+const coords=scene.stations.map(s=>({x:300+s.x*16,y:265+s.z*16}));
+const poly=coords.map(p=>`${p.x},${p.y}`).join(' ');node('polyline',{points:poly,stroke:'#8dc7aa','stroke-width':3,fill:'none','stroke-dasharray':'8 8',opacity:'.7'});
+scene.stations.forEach((s,i)=>{const {x,y}=coords[i];const group=node('g',{class:'node',tabindex:0,role:'button','aria-label':`${i+1} ${s.label}`,style:'cursor:pointer'});group.addEventListener('click',()=>pick(i));group.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(i);}});
+node('circle',{cx:x,cy:y,r:29,fill:i<state().stage?'#3e7e53':i===state().stage?'#a6eaaa':'#274a3a',stroke:i===state().stage?'#f0fcdf':'#65816f','stroke-width':2},group);
+node('text',{x,y:y+6,'text-anchor':'middle',fill:'#102118','font-size':19,'font-weight':900},group).textContent=String(i+1);
+node('text',{x,y:y+49,'text-anchor':'middle',fill:'#e4eee2','font-size':13,'font-weight':650},group).textContent=s.label;
+});
+}
+function render(){const s=state(), next=scenes[active].stations[s.stage];$('progress').style.width=(s.stage/7*100)+'%';$('stationTitle').textContent=next?next.label:'Crossing held';$('stationText').textContent=next?next.message:'The quest was completed in this fictional instance. An external receiver still decides independently.';$('phase').textContent=next?`STEP ${s.stage+1} OF 7 · ${next.verb}`:'7 / 7 · HOLD';$('action').disabled=s.stage>=7; $('ledger').textContent=s.events.length?s.events.map(e=>`${e.sequence}. ${e.type} · ${e.detail}`).join('\n'):'No events yet. Try visiting The Garden.';renderMap();}
+$('world').onchange=e=>{active=e.target.value;render();status('Viewing '+active.toUpperCase()+'. Separate local fictional history; no linked authority.');};
+$('action').onclick=walk;$('reset').onclick=()=>{states[active]={stage:0,decision:'HOLD',events:[]};render();status('Local rehearsal restarted.');};
+$('witness').onclick=()=>{log('MODEL_WITNESS','Observed '+state().stage+' in-browser steps, not an independent witness.');status('MODEL WITNESS · the local ledger is inspectable, not signed.');};
+$('forge').onclick=()=>{if(state().stage!==7){status('HOLD · finish all seven fictional steps before drafting a candidate.');return;}log('CANDIDATE_DRAFT','Source-bound demonstration only. Proposed cartridge held without execution.');status('Candidate drafted: HOLD. No transferrable skill or real-world right asserted.');};
+$('offer').onclick=()=>{log('LOCAL_OFFER','Fictional receiving room notified; default HOLD.');status('Offer delivered to the fictional local room. It remains HOLD until that receiver decides.');};
+$('hold').onclick=()=>{state().decision='HOLD';log('LOCAL_RECEIVER','HOLD (default).');status('HOLD · no side effects.');};
+$('refuse').onclick=()=>{state().decision='REFUSE';log('LOCAL_RECEIVER','REFUSE. No side effects.');status('REFUSE · invitation withdrawn. No side effects.');};
+$('export').onclick=()=>{const documentBody={format:receiptFormat,source_sha256:BUNDLE.sha256,evidence_class:'LOCAL_UI_SIMULATION',world_instance:active,stages_completed:state().stage,receiver_disposition:state().decision,signature:null,independent_observer:null,external_effect:false,events:state().events,nonclaims:BUNDLE.report.does_not_claim};const blob=new Blob([JSON.stringify(documentBody,null,2)+'\n'],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='world-forge-'+active+'-LOCAL-SIMULATION.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);status('Exported an unsigned model receipt (NOT proof of external events).');};
+$('sha').textContent='SHA-256 '+BUNDLE.sha256.slice(0,16)+'…';render();
+</script></body></html>
