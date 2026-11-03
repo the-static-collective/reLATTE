@@ -3,5 +3,6 @@
 setblock 104 65 16 minecraft:barrel[facing=north]
 setblock 114 65 16 minecraft:barrel[facing=north]
 setblock 109 65 16 minecraft:stone_bricks
+scoreboard objectives add lc_store dummy
 data modify storage lantern:cooperation history set value []
 data modify storage lantern:cooperation history append value {event:"GIFT_STATIONS_OPEN",wheat_role:"AidGrower",bricks_role:"AidMason",minimum_gift_count:2,permission:"VOLUNTARY",effects:"NONE"}
