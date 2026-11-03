@@ -1,0 +1,131 @@
+name: World Forge official Minecraft runtime gate
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/world-forge-001/**'
+      - 'experiments/crater-smash-002/**'
+      - '.github/workflows/world-forge-minecraft-runtime-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  vanilla-operator-smoke:
+    name: official Minecraft 26.1.1 / ${{ matrix.world }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {world: alpha, station: garden, x: -8, z: -7, base: minecraft:moss_block, seed: 381654729}
+          - {world: beta, station: forge, x: 12, z: -3, base: minecraft:cut_copper, seed: 918273645}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Build reproducible fictional world datapack
+        run: |
+          node experiments/world-forge-001/src/build.mjs
+          node experiments/crater-smash-002/src/build.mjs
+      - name: Install pinned RCON client
+        run: npm install --no-save --ignore-scripts rcon-client@4.2.5
+      - name: Download and SHA1 verify official Mojang 26.1.1 server
+        run: |
+          set -euo pipefail
+          mkdir -p work/minecraft-probe/server
+          python3 - <<'PY'
+          import json, hashlib, pathlib, urllib.request
+          root=pathlib.Path('work/minecraft-probe')
+          with urllib.request.urlopen('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json') as response:
+              manifest=json.load(response)
+          version=next(v for v in manifest['versions'] if v['id']=='26.1.1')
+          with urllib.request.urlopen(version['url']) as response:
+              data=json.load(response)
+          server=data['downloads']['server']
+          payload=urllib.request.urlopen(server['url']).read()
+          actual=hashlib.sha1(payload).hexdigest()
+          if actual!=server['sha1']:raise RuntimeError('official jar SHA1 mismatch')
+          (root/'server/server.jar').write_bytes(payload)
+          meta={'id':data['id'],'server_sha1':actual,'releaseTime':data['releaseTime'],'server_size':len(payload),'version_url':version['url']}
+          (root/'server-version.json').write_text(json.dumps(meta,indent=2)+'\n')
+          print('Pinned official Mojang server', meta)
+          PY
+      - name: Configure a throwaway offline local-only world
+        env:
+          WORLD_SEED: ${{ matrix.seed }}
+        run: |
+          set -euo pipefail
+          root=work/minecraft-probe/server
+          mkdir -p "$root/world/datapacks/crater-smash-002"
+          cp -r experiments/crater-smash-002/dist/minecraft/. "$root/world/datapacks/crater-smash-002/"
+          test -s "$root/world/datapacks/crater-smash-002/pack.mcmeta"
+          cat > "$root/server.properties" <<EOF
+          level-name=world
+          server-port=25565
+          server-ip=127.0.0.1
+          online-mode=false
+          enforce-secure-profile=false
+          gamemode=creative
+          force-gamemode=true
+          difficulty=peaceful
+          generate-structures=false
+          level-type=minecraft:flat
+          level-seed=$WORLD_SEED
+          view-distance=5
+          simulation-distance=5
+          enable-rcon=true
+          enable-query=false
+          rcon.port=25575
+          rcon.password=worldforge-ephemeral-ci
+          motd=World Forge ephemeral CI smoke; no public server
+          EOF
+          # Ephemeral, disposable CI-only Mojang server test; running it accepts the
+          # official Minecraft Java server EULA for this instance.
+          # This is not a general acceptance on behalf of other server operators.
+          echo 'eula=true' > "$root/eula.txt"
+      - name: Start official Minecraft server and wait for ready
+        run: |
+          set -euo pipefail
+          cd work/minecraft-probe/server
+          java -Xms512M -Xmx2G -jar server.jar nogui >server.log 2>&1 &
+          echo $! >server.pid
+          for i in $(seq 1 120); do
+            if grep -q 'Done (' server.log; then echo 'Official Mojang server ready';exit 0;fi
+            if ! kill -0 "$(cat server.pid)" 2>/dev/null; then cat server.log;exit 1;fi
+            sleep 1
+          done
+          tail -100 server.log
+          exit 1
+      - name: Execute bounded build impact repair, observe exact block states
+        env:
+          WF_WORLD: ${{ matrix.world }}
+          WF_STATION: ${{ matrix.station }}
+          WF_X: ${{ matrix.x }}
+          WF_Z: ${{ matrix.z }}
+          WF_BASE: ${{ matrix.base }}
+          WF_SEED: ${{ matrix.seed }}
+          WF_RCON_PASSWORD: worldforge-ephemeral-ci
+        run: |
+          node experiments/crater-smash-002/ci/minecraft-runtime-probe.mjs
+          test -s work/minecraft-probe/runtime-probe.json
+      - name: Preserve exact runtime evidence and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-forge-minecraft-${{ matrix.world }}
+          path: |
+            work/minecraft-probe/runtime-probe.json
+            work/minecraft-probe/failed-operator-trace.json
+            work/minecraft-probe/server-version.json
+            work/minecraft-probe/server/server.log
+          if-no-files-found: warn

@@ -1,0 +1,15 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {compare,FORMAT,SOURCE_SHA256,validateProbe} from '../src/reconcile.mjs';
+const p = (engine='godot-4',instance='alpha')=>({format:FORMAT,source_sha256:SOURCE_SHA256,engine,instance,station:'garden',states:['BREACHED','RESTORED','RESTORED'],actions:['SALVAGE','REPAIR'],evidence_class:'ENGINE_SELF_REPORT',signature:null,observer:null,receiver:'HOLD'});
+test('bounded self-report cannot be auto-admitted',()=>{assert.equal(validateProbe(p()),true);const r=compare(p(),p('minecraft-java-26.1.1','beta'));assert.equal(r.same_procedure,true);assert.equal(r.receiver,'HOLD');assert.equal(r.actual_external_replay_proven,false);assert.equal(r.independent_observer_verified,false);});
+test('distinct engines/worlds required',()=>{assert.throws(()=>compare(p(),p('godot-4','beta')));assert.throws(()=>compare(p(),p('minecraft-java-26.1.1','alpha')));});
+test('foreign source rejected',()=>{const v=p();v.source_sha256='0'.repeat(64);assert.throws(()=>validateProbe(v));});
+test('final-only evidence rejected',()=>{const v=p();v.actions=['REPAIR'];assert.throws(()=>validateProbe(v));});
+test('state bypass rejected',()=>{const v=p();v.states=['BREACHED','BREACHED','RESTORED'];assert.throws(()=>validateProbe(v));});
+test('auto-admission rejected',()=>{const v=p();v.receiver='ADMIT';assert.throws(()=>validateProbe(v));});
+test('self-claimed external observer rejected',()=>{const v=p();v.observer='observer-claim';assert.throws(()=>validateProbe(v));});
+test('unknown fields rejected',()=>{const v=p();v.command='run arbitrary code';assert.throws(()=>validateProbe(v));});
+test('missing fields rejected',()=>{const v=p();delete v.station;assert.throws(()=>validateProbe(v));});
+test('station mismatch rejected',()=>{const v=p('minecraft-java-26.1.1','beta');v.station='forge';assert.throws(()=>compare(p(),v));});
+test('unverified authority class rejected',()=>{const v=p();v.evidence_class='INDEPENDENTLY_VERIFIED';assert.throws(()=>validateProbe(v));});

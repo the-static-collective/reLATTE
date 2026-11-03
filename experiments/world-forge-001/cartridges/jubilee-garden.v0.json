@@ -1,0 +1,23 @@
+{
+  "format": "world-forge/scene-cartridge/v0",
+  "id": "jubilee-garden-001",
+  "title": "Jubilee Garden — The World That Can Walk",
+  "evidence": {
+    "class": "FICTIONAL_DESIGN",
+    "claimed_external_observation": false,
+    "author": "Static Collective / WORLD-FORGE-001 demonstration",
+    "source": "new, authored example; not imported from Minecraft witness #101",
+    "license": "CC0-1.0",
+    "admission": "HOLD"
+  },
+  "quest": "Bring a seed through seven rooms without mistaking an offer for an accomplished act.",
+  "stations": [
+    {"id":"garden","label":"The Garden","x":-8,"z":-7,"material":"moss","verb":"OFFER","message":"A seed is offered. Nothing has been planted outside this fictional world."},
+    {"id":"forge","label":"Cartridge Forge","x":0,"z":-9,"material":"copper","verb":"BUILD","message":"A candidate practice is drafted. This is a model, not a verified transferable skill."},
+    {"id":"press","label":"Lemon Press","x":8,"z":-7,"material":"birch","verb":"PRINT","message":"A fictional paper field-card is prepared for review; it is not published."},
+    {"id":"tree","label":"Giving Tree","x":10,"z":1,"material":"leaves","verb":"GIVE","message":"A voluntary gift is recorded as an in-game gesture. No payment or debt exists."},
+    {"id":"council","label":"Council Fire","x":7,"z":9,"material":"brick","verb":"ASK","message":"The local room is asked. No human consent is inferred."},
+    {"id":"gate","label":"Crossing Gate","x":-1,"z":10,"material":"amethyst","verb":"WITNESS","message":"An in-game crossing receipt is observed. External reality remains unverified."},
+    {"id":"arcade","label":"World Machine","x":-10,"z":4,"material":"gold","verb":"RECEIVE","message":"The proposed cartridge arrives at HOLD. A receiving world may refuse it."}
+  ]
+}
