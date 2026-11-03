@@ -1,0 +1,13 @@
+{
+  "pack": {
+    "description": "Lantern 011: verified inherited game materials across immutable world generations",
+    "min_format": [
+      101,
+      1
+    ],
+    "max_format": [
+      101,
+      1
+    ]
+  }
+}
