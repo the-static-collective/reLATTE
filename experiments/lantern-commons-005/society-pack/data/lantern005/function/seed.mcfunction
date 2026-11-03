@@ -1,0 +1,1 @@
+execute if entity @s[tag=l5_member] if entity @s[x=0,y=64,z=-35,distance=..14] if score #project l5_project matches 3 if score #cartridge l5_project matches 1 if score #seed l5_seed matches 0 run function lantern005:seed_pass
