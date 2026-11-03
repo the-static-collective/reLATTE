@@ -42,6 +42,26 @@ jobs:
       - name: Build direct offline user enrollment preview from synthetic grant only
         run: |
           node --experimental-strip-types experiments/world-forge-009/tests/cli-smoke.mjs
+      - name: Bundle a standalone local Node 22 receiver CLI (source only — NO user grant)
+        run: |
+          set -euo pipefail
+          npm install --no-save esbuild@0.25.12
+          mkdir -p work/wf009-public-code
+          ./node_modules/.bin/esbuild experiments/world-forge-009/src/cli.mjs \
+            --bundle --platform=node --target=node22 --format=esm \
+            --outfile=work/wf009-public-code/WF009-LOCAL-RECEIVER-CLI.mjs
+          test -s work/wf009-public-code/WF009-LOCAL-RECEIVER-CLI.mjs
+          test "$(wc -c < work/wf009-public-code/WF009-LOCAL-RECEIVER-CLI.mjs)" -gt 3000
+      - name: Re-run fresh synthetic owner signature to native receiver through BUNDLED executable
+        env:
+          WF009_CLI_BUNDLED: work/wf009-public-code/WF009-LOCAL-RECEIVER-CLI.mjs
+        run: node --experimental-strip-types experiments/world-forge-009/tests/cli-smoke.mjs
+      - name: Save portable LOCAL CLI public source, never real user grant/key
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-forge-009-public-local-receiver-cli
+          path: work/wf009-public-code/WF009-LOCAL-RECEIVER-CLI.mjs
+          retention-days: 14
       - name: Check NO personal owner public key or private file embedded in code
         run: |
           set -euo pipefail
