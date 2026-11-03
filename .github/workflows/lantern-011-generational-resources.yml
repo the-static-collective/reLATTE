@@ -145,7 +145,7 @@ jobs:
             --out "work/inheritance/$BRANCH-v0.1.2.zip" --parent work/parent/branch-mutual_aid.zip \
             --version 0.1.2 --branch "$BRANCH" --seed 314159265 \
             --mojang-sha1 "$JAR_SHA" --source-sha256 "$SRC_SHA" \
-            --observation-sha256 "$OBS_SHA" --action "GENERATION_011_$BRANCH_NO_REPROVISION"
+            --observation-sha256 "$OBS_SHA" --action "GENERATION_011_${BRANCH}_NO_REPROVISION"
           python3 experiments/lantern-commons-010/world_cartridge.py verify "work/inheritance/$BRANCH-v0.1.2.zip"
       - name: Keep the entire distinct child saved world, game observations and byte receipt
         uses: actions/upload-artifact@v4
