@@ -199,6 +199,8 @@ try{
 
     const partner=await independentPartnerPolicy({round,creatureGift:offeredFirst,
       brickInventory:inventory(mason,'stone_bricks'),mason});
+    if(partner.moved)await until(async()=>await barrel('brick')===2,
+      'PARTNER_GIFT_CLIENT_TO_SERVER_ACK_'+round,50,160);
     const actualPartnerItems=await barrel('brick');
     assert(actualPartnerItems===(partner.moved?2:0),
       'PARTNER_PHYSICAL_CONTRADICTION_'+round);
