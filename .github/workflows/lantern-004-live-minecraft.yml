@@ -1,0 +1,193 @@
+name: LANTERN-004 official Minecraft two-world reproduction
+
+on:
+  push:
+    branches:
+      - experiment/lantern-commons-004-two-world-hold
+    paths:
+      - 'experiments/lantern-commons-004/**'
+      - '.github/workflows/lantern-004-live-minecraft.yml'
+  pull_request:
+    paths:
+      - 'experiments/lantern-commons-004/**'
+      - '.github/workflows/lantern-004-live-minecraft.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  official-vanilla:
+    name: official Mojang world ${{ matrix.world }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - world: A
+            seed: '381654729'
+          - world: B
+            seed: '918273645'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Install locked runtime and protocol clients
+        run: |
+          npm ci
+          npm install --no-save --ignore-scripts mineflayer@4.39.0 rcon-client@4.2.5 vec3@0.2.0
+      - name: Verify exact Lantern 003 source functions
+        run: |
+          test "$(sha256sum experiments/lantern-commons-004/native-game-pack/data/lantern/function/build/kitchen.mcfunction | cut -d' ' -f1)" = "8cb40cb03c34ef29146d513ee553ac922a34f29fb334896b5a7945d7c99ad353"
+          test "$(sha256sum experiments/lantern-commons-004/native-game-pack/data/lantern/function/seed/construct_kitchen.mcfunction | cut -d' ' -f1)" = "60033123ddf1cc63f3f8579230f3c0ac5162e55b3443f75fb44468dfb4803c22"
+      - name: Fetch official 26.1.1 server with Mojang SHA-1 verification
+        run: |
+          set -euo pipefail
+          mkdir -p work/lantern/server
+          python3 - <<'PY'
+          import json, pathlib, urllib.request, hashlib
+          root=pathlib.Path('work/lantern')
+          manifest=json.load(urllib.request.urlopen('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json'))
+          item=next(x for x in manifest['versions'] if x['id']=='26.1.1')
+          meta=json.load(urllib.request.urlopen(item['url']))
+          entry=meta['downloads']['server']
+          raw=urllib.request.urlopen(entry['url']).read()
+          if hashlib.sha1(raw).hexdigest()!=entry['sha1']: raise ValueError('Official Mojang jar SHA-1 mismatch')
+          (root/'server'/'server.jar').write_bytes(raw)
+          (root/'server-meta.json').write_text(json.dumps({'id':meta['id'],'jar_sha1':entry['sha1']})+'\n')
+          print('Verified',meta['id'],entry['sha1'])
+          PY
+      - name: Prepare blank isolated Creative Superflat world and partial 003 game pack
+        env:
+          SEED: ${{ matrix.seed }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/lantern/server/world/datapacks/lantern-004-source-slice
+          cp -R experiments/lantern-commons-004/native-game-pack/. work/lantern/server/world/datapacks/lantern-004-source-slice/
+          cat > work/lantern/server/server.properties <<EOF
+          server-port=25565
+          online-mode=false
+          enforce-secure-profile=false
+          gamemode=creative
+          force-gamemode=true
+          difficulty=peaceful
+          spawn-protection=0
+          generate-structures=false
+          level-type=minecraft:flat
+          level-seed=$SEED
+          view-distance=8
+          simulation-distance=8
+          allow-flight=true
+          op-permission-level=4
+          enable-rcon=true
+          rcon.port=25575
+          rcon.password=lantern-ci-only
+          motd=Lantern Commons 004 source-derived kitchen practice
+          EOF
+          echo 'eula=true' > work/lantern/server/eula.txt
+      - name: Boot the official vanilla server
+        run: |
+          set -euo pipefail
+          cd work/lantern/server
+          java -Xms1G -Xmx2G -jar server.jar nogui > server.log 2>&1 &
+          echo $! > server.pid
+          for i in $(seq 1 120); do
+            if grep -q 'Done (' server.log; then echo 'Official Minecraft server READY'; exit 0; fi
+            if ! kill -0 "$(cat server.pid)" 2>/dev/null; then cat server.log; exit 1; fi
+            sleep 1
+          done
+          cat server.log
+          exit 1
+      - name: Execute exact source-derived Minecraft functions and observe 466 blocks using fresh non-OP client
+        env:
+          MC_RCON_PASSWORD: lantern-ci-only
+          LANTERN_WORLD_ID: ${{ matrix.world }}
+          LANTERN_SEED: ${{ matrix.seed }}
+        run: |
+          mkdir -p work/lantern
+          node experiments/lantern-commons-004/live-observer.mjs
+      - name: Flush and close Minecraft save
+        if: always()
+        env:
+          MC_RCON_PASSWORD: lantern-ci-only
+        run: |
+          node --input-type=module - <<'JS' || true
+          import {Rcon} from 'rcon-client';
+          const rcon=await Rcon.connect({host:'127.0.0.1',port:25575,password:process.env.MC_RCON_PASSWORD});
+          await rcon.send('save-all flush');
+          await rcon.send('stop');
+          rcon.end();
+          JS
+          for i in $(seq 1 30); do
+            if ! kill -0 "$(cat work/lantern/server/server.pid)" 2>/dev/null; then break; fi
+            sleep 1
+          done
+      - name: Pin on-disk save digest and server version
+        if: always()
+        env:
+          SEED: ${{ matrix.seed }}
+          WORLD: ${{ matrix.world }}
+        run: |
+          python3 - <<'PY'
+          import json,hashlib,os,pathlib
+          root=pathlib.Path('work/lantern')
+          src=root/'server'/'world'/'level.dat'
+          if not src.is_file(): raise ValueError('Missing actual Mojang level.dat')
+          meta=json.loads((root/'server-meta.json').read_text())
+          evidence={'world_label':os.environ['WORLD'],'declared_seed':os.environ['SEED'],
+                    'minecraft_version':meta['id'],'official_jar_sha1':meta['jar_sha1'],
+                    'world_level_dat_sha256':hashlib.sha256(src.read_bytes()).hexdigest()}
+          (root/'world-meta.json').write_text(json.dumps(evidence,indent=2)+'\n')
+          print(json.dumps(evidence))
+          PY
+      - name: Retain official world evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lantern-native-world-${{ matrix.world }}
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            work/lantern/observation.json
+            work/lantern/world-meta.json
+            work/lantern/server-meta.json
+            work/lantern/server/server.log
+            work/lantern/server/world/level.dat
+
+  reLATTE-signed-return:
+    name: Compare two native worlds and obtain signed R3_HOLD
+    runs-on: ubuntu-latest
+    needs: [official-vanilla]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install original reLATTE runtime
+        run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lantern-native-world-*
+          path: work/lantern-inputs
+      - name: Compare independently provisioned worlds and source-native sign held evidence
+        run: node --experimental-strip-types experiments/lantern-commons-004/native-compare.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lantern-native-two-world-signed-hold
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            work/lantern-return/candidate.json
+            work/lantern-return/signed-held-return.json
