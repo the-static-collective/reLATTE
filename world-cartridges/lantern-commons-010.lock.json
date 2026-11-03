@@ -1,0 +1,71 @@
+{
+  "schema": "relatte.world-cartridge-registry/v0",
+  "project": "LANTERN_COMMONS_010",
+  "captured_at": "2026-11-03",
+  "source_commit": "4fa2906421a11201dfa218cad02cc7b5d08165b1",
+  "generated_and_verified_ci": "https://github.com/the-static-collective/reLATTE/actions/runs/41722731806",
+  "minecraft_java_version": "26.1.1",
+  "world_seed": "314159265",
+  "status": "VERIFIED_SOURCE_AND_FULL_WORLD_BYTES_NOT_SIGNED_NATIVE_RELATTE",
+  "lineage_schema": "lantern.world-lineage/v1",
+  "worlds": [
+    {
+      "branch": "main",
+      "version": "0.1.0",
+      "parent_cartridge_id": null,
+      "cartridge_id": "73d87bd717845498a1fc2cec556b4cc7cd681a125d35149b1eb6181d5ab46cad",
+      "world_tree_sha256": "659fd8c9c6003f9734a1e0b77d7d85fa84f38897297d9bf6870c950e1e6531df",
+      "archive_sha256": "a40b94dc80b5f1c9c2c53019b3d2d463776dd208f6c008af74bd99356b59a46e",
+      "github_actions_artifact_id": 13272907922,
+      "archive_name": "root.zip",
+      "world_files": 52,
+      "world_event": "original drought, empty voluntary commons"
+    },
+    {
+      "branch": "mercy",
+      "version": "0.1.1",
+      "parent_cartridge_id": "73d87bd717845498a1fc2cec556b4cc7cd681a125d35149b1eb6181d5ab46cad",
+      "cartridge_id": "fd9f2118aedd1b699df0c03f893eb7c43c6a15a9083407fc0ab933bef362e635",
+      "world_tree_sha256": "eb37b5818e9360cae6af17aedb3141150d21766edcb4811427dffe127006c9a0",
+      "archive_sha256": "66c8dd41fc5bf233d8437073e1b5d9a33cefc7d473abb0552cb34f4f6d2abf7d",
+      "github_actions_artifact_id": 13271523828,
+      "archive_name": "branch-mercy.zip",
+      "world_files": 52,
+      "world_event": "direct mercy, crops and irrigation restored"
+    },
+    {
+      "branch": "abstain",
+      "version": "0.1.1",
+      "parent_cartridge_id": "73d87bd717845498a1fc2cec556b4cc7cd681a125d35149b1eb6181d5ab46cad",
+      "cartridge_id": "88ca1074baf8e258af995ccccc7f70b445d24f4dabc437f52cd2cfde97667862",
+      "world_tree_sha256": "3e02b3e9e6298365202ac1aac3e2463d78e62311a0e5b77a0c02888f83a59c8d",
+      "archive_sha256": "159680c0c23e89e8c0dc11c3ae0904045eda933b748d2e24dda6c25fdc9d5121",
+      "github_actions_artifact_id": 13271438967,
+      "archive_name": "branch-abstain.zip",
+      "world_files": 52,
+      "world_event": "recorded abstention, drought persists"
+    },
+    {
+      "branch": "mutual_aid",
+      "version": "0.1.1",
+      "parent_cartridge_id": "73d87bd717845498a1fc2cec556b4cc7cd681a125d35149b1eb6181d5ab46cad",
+      "cartridge_id": "b45537517d670812a7dc337c4e4881918ff2f477b2b2de7ddc253a7e86f5c5c6",
+      "world_tree_sha256": "4fe455dbb9b5079dccc467f051e1ec150c9f7e56f2e8d3038aa1d03db49f190d",
+      "archive_sha256": "44dc48343105b243264fa6d24797ddc30d1ef3589c31854f9940e6b2673bf5ae",
+      "github_actions_artifact_id": 13272923066,
+      "archive_name": "branch-mutual_aid.zip",
+      "world_files": 60,
+      "world_event": "two actual game accounts deposited finite wheat/stone bricks, 007 public garden and bell restored"
+    }
+  ],
+  "evidence_lineage_artifact_id": 13272403242,
+  "ci_artifact_expires_at": "2027-02-01T21:32:32Z",
+  "available_as": "GitHub Actions artifacts; separate user-downloadable conversation kit, not a GitHub Release",
+  "immutable_storage_policy": "Hash-pinned source-only registry; world bytes require separately stored ZIP assets after CI artifact expiry.",
+  "limits": [
+    "All versions are branches of ONE SAME-SEED world, not independently founded civilizations",
+    "Full saved game world contains 006/007 experimental sandbox, not entire older uncommitted 003 world",
+    "Content hashes and game observations are NOT source-native signed reLATTE acceptance/permission",
+    "No verified humans or real-world economics, and no automatic authority or ADMIT"
+  ]
+}
