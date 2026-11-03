@@ -78,6 +78,7 @@ async function move(bot,name,side,withdraw=false,count=2){
   assert(!!kind,'ITEM_TYPE_'+name);
   const place=bot.blockAt(sites[side]);
   assert(place?.name==='barrel','MISSING_BARREL_'+side+':'+place?.name);
+  console.log('DISCERNMENT_ACTOR_POSITION',bot.username,JSON.stringify(bot.entity.position), 'container',JSON.stringify(at), 'round',records.length+1);
   const window=await bot.openContainer(place);
   try{
     if(withdraw)await window.withdraw(kind.id,null,count);
@@ -136,13 +137,17 @@ try{
       'function lantern:events/prepare',
       'function lantern:events/drought',
       'function lantern:cooperation/setup',
+      'tp AidGrower 104 65 14',
+      'tp AidMason 114 65 14',
+      'tp CoopWitness 109 68 8',
       'clear AidGrower','clear AidMason',
       'give AidGrower minecraft:wheat 2',
       'give AidMason minecraft:stone_bricks '+brickSupply,
     ])await command(c);
     await until(async()=>inventory(grower,'wheat')===2,'SELF_INVENTORY_ROUND_'+round);
     await until(async()=>inventory(mason,'stone_bricks')===brickSupply,'PARTNER_INVENTORY_ROUND_'+round);
-    await sleep(500);
+    await sleep(900);
+    for(const b of bots)await b.waitForChunksToLoad();
     const initial={blocks:blocks(witness),self_inventory:inventory(grower,'wheat'),
       partner_inventory:inventory(mason,'stone_bricks'),
       wheat_barrel:await barrel('wheat'),brick_barrel:await barrel('brick')};
