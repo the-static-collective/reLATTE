@@ -2,7 +2,7 @@
 // No chat user's signed grant, identity, or private key enters GitHub Actions.
 import {mkdtempSync,mkdirSync,rmSync,readFileSync,writeFileSync,existsSync} from 'node:fs';
 import {tmpdir} from 'node:os';
-import {join} from 'node:path';
+import {join,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import assert from 'node:assert/strict';
@@ -10,7 +10,7 @@ import {
  createGrantBody,createRevocationBody,normalizePublicKey,signBody,grantDigest,
  publicFingerprint,randomNonce
 } from '../../world-forge-008/src/delegation-core.mjs';
-const cli=fileURLToPath(new URL('../src/cli.mjs',import.meta.url));
+const cli=process.env.WF009_CLI_BUNDLED ? resolve(process.env.WF009_CLI_BUNDLED) : fileURLToPath(new URL('../src/cli.mjs',import.meta.url));
 const root=mkdtempSync(join(tmpdir(),'wf009-cli-'));
 const source=join(root,'synthetic-public-signed-grant.json');
 const trustRoot=join(root,'receiver-trust');
