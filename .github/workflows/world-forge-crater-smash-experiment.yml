@@ -80,7 +80,10 @@ jobs:
             scene="experiments/crater-smash-002/dist/godot-$instance"
             /tmp/Godot_v4.4.1-stable_linux.x86_64 --headless --path "$scene" --editor --import --quit 2>&1 | tee "/tmp/godot-import-$instance.log"
             /tmp/Godot_v4.4.1-stable_linux.x86_64 --headless --path "$scene" --quit-after 3 2>&1 | tee "/tmp/godot-run-$instance.log"
-            if grep -Eiq '(SCRIPT ERROR|Parser Error|Parse Error)' "/tmp/godot-import-$instance.log" "/tmp/godot-run-$instance.log"; then
+            cp experiments/crater-smash-002/ci/godot-runtime-probe.gd "$scene/ci_probe.gd"
+            /tmp/Godot_v4.4.1-stable_linux.x86_64 --headless --path "$scene" --script res://ci_probe.gd 2>&1 | tee "/tmp/godot-probe-$instance.log"
+            grep '^WORLD_FORGE_CRATER_PROBE=' "/tmp/godot-probe-$instance.log"
+            if grep -Eiq '(SCRIPT ERROR|Parser Error|Parse Error)' "/tmp/godot-import-$instance.log" "/tmp/godot-run-$instance.log" "/tmp/godot-probe-$instance.log"; then
               echo "Godot parser error in $instance"
               exit 1
             fi
