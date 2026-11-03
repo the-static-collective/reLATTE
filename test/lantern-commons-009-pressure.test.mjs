@@ -22,7 +22,9 @@ test('protected personal need outranks a promise of public benefit',()=>{
 });
 test('actual other barrel material outranks earlier refusal even after bad history',()=>{
   let m=newMemory('mason');
-  m=learn(m,facts(m));
+  // Record a real previous reversible but unreciprocated first offer.
+  // Without a prior offer, the game is free to initiate a fresh trial.
+  m=learn(m,facts(m,{own_gift:true}));
   assert.equal(choose(m,obs(m,{partner_deposit:0})).act,'WAIT_FOR_EVIDENCE');
   assert.equal(choose(m,obs(m,{partner_deposit:2})).act,'RECIPROCATE_MATERIAL');
 });
