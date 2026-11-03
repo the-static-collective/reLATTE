@@ -82,7 +82,7 @@ def read_world(world):
         result["world/" + relative] = data
     if "world/level.dat" not in result:
         fail("MISSING_LEVEL_DAT")
-    if not any(k.startswith("world/region/") and k.endswith(".mca") for k in result):
+    # Java 26.1 moved Overworld Anvil chunks into dimensions/minecraft/overworld/region.\n    if not any(k.startswith("world/dimensions/minecraft/overworld/region/") and k.endswith(".mca") for k in result):
         fail("MISSING_GENERATED_CHUNKS")
     if not any(k.startswith("world/datapacks/") and k.endswith("/pack.mcmeta") for k in result):
         fail("MISSING_EMBEDDED_DATAPACKS")
@@ -164,7 +164,7 @@ def inspect(archive):
         if manifest.get("cartridge_id") != expected:
             fail("TAMPERED_MANIFEST")
         if ("world/level.dat" not in content or
-           not any(x.startswith("world/region/") and x.endswith(".mca") for x in content)):
+           not any(x.startswith("world/dimensions/minecraft/overworld/region/") and x.endswith(".mca") for x in content)):
             fail("INCOMPLETE_WORLD")
         if not any(x.startswith("world/datapacks/") and x.endswith("/pack.mcmeta") for x in content):
             fail("NO_DATAPACK")
