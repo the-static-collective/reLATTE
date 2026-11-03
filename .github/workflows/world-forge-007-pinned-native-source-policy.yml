@@ -1,0 +1,375 @@
+name: WORLD-FORGE-007 pinned original Minecraft signed ancestry + sovereign signer policies
+
+on:
+  push:
+    branches:
+      - experiment/world-forge-007-pinned-native-source-policy
+    paths:
+      - 'experiments/world-forge-007/**'
+      - '.github/workflows/world-forge-007-pinned-native-source-policy.yml'
+  pull_request:
+    paths:
+      - 'experiments/world-forge-007/**'
+      - '.github/workflows/world-forge-007-pinned-native-source-policy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hostile:
+    name: native pinning / source signer policy hostile tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install
+      - run: node --experimental-strip-types --test experiments/world-forge-007/tests/native-source.test.mjs
+
+  original-official:
+    name: original pinned PR101 Minecraft signed world ${{ matrix.world }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    needs: hostile
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {world: A, seed: "381654729"}
+          - {world: B, seed: "918273645"}
+    steps:
+      - name: Read original #101 SOURCE from exact pinned commit (NOT from 006 branch)
+        uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/reLATTE
+          ref: 4943f14fd28d5b0bdb1b6d11bad035a009afe8b4
+          path: pr101
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Enforce exact pinned #101 source SHA and unchanged normative core
+        run: |
+          test "$(git -C pr101 rev-parse HEAD)" = 4943f14fd28d5b0bdb1b6d11bad035a009afe8b4
+          test "$(git -C pr101 rev-parse HEAD:src)" = c0e4d2c59481e0fb2a4bf4bb294f373907fd2b76
+      - name: Install original reLATTE dependency set
+        working-directory: pr101
+        run: npm install
+      - name: Install pinned Minecraft protocol dependencies
+        working-directory: pr101
+        run: npm install --no-save --ignore-scripts mineflayer@4.39.0 rcon-client@4.2.5 vec3@0.2.0
+      - name: Original source code / type verification
+        working-directory: pr101
+        run: npm run verify
+      - name: Resolve official Mojang 26.1.1 server with independently verified SHA-1
+        working-directory: pr101
+        run: |
+          set -euo pipefail
+          mkdir -p work/composition-instance/server
+          python3 - <<'PY'
+          import json, hashlib, pathlib, urllib.request
+          root=pathlib.Path('work/composition-instance')
+          manifest=json.load(urllib.request.urlopen('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json'))
+          version=next(v for v in manifest['versions'] if v['id']=='26.1.1')
+          data=json.load(urllib.request.urlopen(version['url']))
+          server=data['downloads']['server']
+          blob=urllib.request.urlopen(server['url']).read()
+          actual=hashlib.sha1(blob).hexdigest()
+          assert actual==server['sha1'],'official jar hash mismatch'
+          assert actual=='49c8195703ad0ba4f0a4efbccfd85a4a8ca57431','unrecognized official release jar'
+          (root/'server/server.jar').write_bytes(blob)
+          (root/'server-version.json').write_text(json.dumps({
+            'id':data['id'],'type':data['type'],'releaseTime':data['releaseTime'],
+            'server_url':server['url'],'server_sha1':actual,'server_size':server['size'],
+            'version_metadata_url':version['url']
+          },indent=2)+'\n')
+          print('Official Mojang jar pinned',actual)
+          PY
+      - name: Start separate, disposable, local-only official Minecraft server
+        working-directory: pr101
+        env:
+          MC_SEED: ${{ matrix.seed }}
+        run: |
+          set -euo pipefail
+          cat > work/composition-instance/server/server.properties <<EOF
+          server-port=25565
+          server-ip=127.0.0.1
+          online-mode=false
+          enforce-secure-profile=false
+          gamemode=creative
+          force-gamemode=true
+          difficulty=peaceful
+          spawn-protection=0
+          generate-structures=false
+          level-type=minecraft:flat
+          level-seed=$MC_SEED
+          view-distance=8
+          simulation-distance=8
+          allow-flight=true
+          op-permission-level=4
+          enable-rcon=true
+          rcon.port=25575
+          rcon.password=wf007-ephemeral-ci
+          motd=WF007 original pinned PR101 no-public-network
+          EOF
+          echo 'eula=true' > work/composition-instance/server/eula.txt
+          cd work/composition-instance/server
+          java -Xms1G -Xmx2G -jar server.jar nogui >server.log 2>&1 &
+          echo $! > server.pid
+          for i in $(seq 1 120); do
+            if grep -q 'Done (' server.log; then echo 'official original PR101 world ready'; exit 0;fi
+            if ! kill -0 "$(cat server.pid)" 2>/dev/null; then tail -100 server.log;exit 1;fi
+            sleep 1
+          done
+          tail -120 server.log;exit 1
+      - name: Execute ORIGINAL PR101 redstone source + fresh non-OP client observer
+        working-directory: pr101
+        env:
+          MC_HOST: 127.0.0.1
+          MC_PORT: "25565"
+          MC_RCON_PORT: "25575"
+          MC_RCON_PASSWORD: wf007-ephemeral-ci
+          MC_BOT_NAME: WorldBuilder
+          MC_WORLD_GOAL: MAKE GROUND IN A REHEARSAL WORLD
+          MC_RIFF_RAFT_PLAN: "1"
+          MC_RIFF_RAFT_REDSTONE: "1"
+          MC_RIFF_RAFT_REDSTONE_FAULT: "1"
+          MC_LEVEL_SEED: ${{ matrix.seed }}
+          MC_RIFF_RAFT_WORLD_ID: ${{ matrix.world }}
+          MC_VERSION_META: work/composition-instance/server-version.json
+          COMPOSITION_INSTANCE_OUT_DIR: work/composition-instance
+          RUNTIME_EVIDENCE_OUT: work/composition-instance/runtime-evidence.json
+          RUNTIME_MAP_OUT: work/composition-instance/runtime-world-map.txt
+          COMPOSITION_EVIDENCE_OUT: work/composition-instance/composition-evidence.json
+        run: |
+          node --experimental-strip-types experiments/composition-instance-001/minecraft-runtime.mjs
+          test -s work/composition-instance/composition-evidence.json
+          test -s work/composition-instance/runtime-evidence.json
+          test -s work/composition-instance/runtime-world-map.txt
+      - name: Stage only proof artifacts (no private keys or actual valuable worlds)
+        if: always()
+        env:
+          WF_WORLD: ${{ matrix.world }}
+        run: |
+          mkdir -p "work/wf007-pr101-$WF_WORLD"
+          for x in composition-evidence.json runtime-evidence.json server-version.json; do
+            test ! -f "pr101/work/composition-instance/$x" || cp "pr101/work/composition-instance/$x" "work/wf007-pr101-$WF_WORLD/$x"
+          done
+          test ! -f pr101/work/composition-instance/server/server.log || cp pr101/work/composition-instance/server/server.log "work/wf007-pr101-$WF_WORLD/server.log"
+      - name: Preserve actual pinned PR101 native-signed world results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wf007-pr101-${{ matrix.world }}
+          path: work/wf007-pr101-${{ matrix.world }}/*
+          if-no-files-found: warn
+          retention-days: 7
+
+  native-return:
+    name: verify original A/B source signatures and assemble native two-world return
+    needs: original-official
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Exact pin of original PR #101 source to verify / sign return
+        uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/reLATTE
+          ref: 4943f14fd28d5b0bdb1b6d11bad035a009afe8b4
+          path: pr101
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install original protocol dependencies
+        working-directory: pr101
+        run: npm install
+      - name: Download both fresh native Minecraft signed source evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: wf007-pr101-*
+          path: work/pr101-raw
+          merge-multiple: false
+      - name: Recreate original #101 artifact layout, no changes to source bytes
+        run: |
+          set -euo pipefail
+          test "$(git -C pr101 rev-parse HEAD)" = 4943f14fd28d5b0bdb1b6d11bad035a009afe8b4
+          test "$(git -C pr101 rev-parse HEAD:src)" = c0e4d2c59481e0fb2a4bf4bb294f373907fd2b76
+          for world in A B; do
+            from="work/pr101-raw/wf007-pr101-$world"
+            to="work/pr101-signed-inputs/riff-raft-minecraft-003-$world"
+            mkdir -p "$to"
+            test -s "$from/composition-evidence.json"
+            test -s "$from/runtime-evidence.json"
+            cp "$from/composition-evidence.json" "$to/composition-evidence.json"
+            cp "$from/runtime-evidence.json" "$to/runtime-evidence.json"
+          done
+          mkdir -p work/pr101-return
+      - name: ORIGINAL signed reLATTE two-world source parser and assembler
+        run: |
+          cd pr101
+          node --experimental-strip-types \
+            experiments/riff-raft-minecraft-003/two-world-replay.mjs \
+            ../work/pr101-signed-inputs ../work/pr101-return/riff-raft-return-bundle.json
+          test -s work/pr101-return/riff-raft-return-bundle.json
+      - name: Independent source check reruns original code and both original P256 proofs
+        run: |
+          npm install
+          node --experimental-strip-types \
+            experiments/world-forge-007/src/native-source.mjs source-check \
+            pr101 work/pr101-raw work/pr101-return/riff-raft-return-bundle.json \
+            work/pr101-return/native-source-check.json
+      - name: Independent pinned GHoT Python read-only return verification
+        uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/GHoT
+          ref: 494a6fc6ddf9c850ec2a9930af54196e2d5fd168
+          path: ghot-pinned
+          persist-credentials: false
+      - name: GHoT verifies P256 and original two causal signatures independently
+        run: |
+          python3 ghot-pinned/ghot/riff_raft_minecraft_return.py \
+            work/pr101-return/riff-raft-return-bundle.json \
+            > work/pr101-return/ghot-reception.json
+          python3 - <<'PY'
+          import json
+          x=json.load(open('work/pr101-return/ghot-reception.json'))
+          assert x['disposition']=='HOLD'
+          assert x['world_count']==2
+          assert x['crossing_signature_valid'] is True
+          assert x['receipt_signature_valid'] is True
+          assert all(y['source_verified'] is True for y in x['verified_sources'])
+          assert x['owner_admitted'] is False
+          assert x['physical_actuation'] is False
+          print('WF007_GHOT_PINNED_SOURCE_VERIFIED: two native Minecraft donor signatures, receiver HOLD')
+          PY
+      - name: Preserve native-signed two-world source packet and independent audits
+        uses: actions/upload-artifact@v4
+        with:
+          name: wf007-pr101-original-native-return
+          path: |
+            work/pr101-return/riff-raft-return-bundle.json
+            work/pr101-return/native-source-check.json
+            work/pr101-return/ghot-reception.json
+          retention-days: 7
+
+  signer-policy:
+    name: independent receiver signer policy ${{ matrix.label }}
+    needs: native-return
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: REVIEW_HOLD
+            mode: RECOGNIZE_PINNED_CI_PROVENANCE
+          - label: NOT_ENROLLED_REFUSE
+            mode: REQUIRE_PRE_ENROLLED_SIGNER
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/reLATTE
+          ref: 4943f14fd28d5b0bdb1b6d11bad035a009afe8b4
+          path: pr101
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install local receiver and pinned source verification dependencies
+        run: |
+          npm install
+          cd pr101
+          npm install
+      - name: Receive original two raw independent Minecraft source artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: wf007-pr101-*
+          path: work/pr101-raw
+          merge-multiple: false
+      - name: Receive one identical native P256 source packet
+        uses: actions/download-artifact@v4
+        with:
+          name: wf007-pr101-original-native-return
+          path: work/pr101-return
+      - name: Explicit CI policy recognizes pinned Git code OR refuses unenrolled signer
+        env:
+          WF_POLICY_MODE: ${{ matrix.mode }}
+          WF_POLICY_LABEL: ${{ matrix.label }}
+        run: |
+          set -euo pipefail
+          mkdir -p work/wf007-local
+          # Source signature / source bytes are independently checked again
+          # before any local receiver side effects.
+          node --experimental-strip-types \
+            experiments/world-forge-007/src/native-source.mjs source-check \
+            pr101 work/pr101-raw \
+            work/pr101-return/work/pr101-return/riff-raft-return-bundle.json \
+            work/wf007-local/pinned-source-verified.json
+          node --experimental-strip-types \
+            experiments/world-forge-007/src/native-source.mjs policy \
+            pr101 work/pr101-return/work/pr101-return/riff-raft-return-bundle.json \
+            "$WF_POLICY_MODE" work/wf007-local/trust-policy.json
+          node --experimental-strip-types \
+            experiments/world-forge-007/src/native-source.mjs receive \
+            pr101 work/pr101-raw \
+            work/pr101-return/work/pr101-return/riff-raft-return-bundle.json \
+            work/wf007-local/trust-policy.json \
+            work/wf007-private-local-receiver \
+            "work/wf007-local/choice-$WF_POLICY_LABEL.json"
+          test -s "work/wf007-local/choice-$WF_POLICY_LABEL.json"
+          # Never upload the private receiver JWK, journal, or held packet bytes.
+      - name: Export signed public disposition only
+        uses: actions/upload-artifact@v4
+        with:
+          name: wf007-public-choice-${{ matrix.label }}
+          path: work/wf007-local/choice-${{ matrix.label }}.json
+          retention-days: 7
+
+  reconcile-policies:
+    name: verify two local signer policies and cryptographic receiver decisions
+    needs: signer-policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: wf007-public-choice-*
+          path: work/wf007-dispositions
+          merge-multiple: false
+      - name: Verify same native source and two sovereign opposite local choices
+        run: |
+          node --experimental-strip-types \
+            experiments/world-forge-007/src/native-source.mjs compare \
+            work/wf007-dispositions/wf007-public-choice-REVIEW_HOLD/choice-REVIEW_HOLD.json \
+            work/wf007-dispositions/wf007-public-choice-NOT_ENROLLED_REFUSE/choice-NOT_ENROLLED_REFUSE.json \
+            work/wf007-final-reconciliation.json
+          test -s work/wf007-final-reconciliation.json
+      - name: Preserve signed native #101 source and explicit local nonadmitting choices
+        uses: actions/upload-artifact@v4
+        with:
+          name: wf007-original-native-p256-signer-policy-final
+          path: work/wf007-final-reconciliation.json
+          retention-days: 7
