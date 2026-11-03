@@ -10,6 +10,7 @@ const source={
 async function main(){
   const parent=JSON.parse(await readFile('work/lantern-parent/signed-held-return.json','utf8'));
   must(parent.schema==='lantern.native-cross-world-held-candidate/v0','PARENT_SCHEMA');
+  must(parent.crossing?.crossing_id==='relatte-crossing-v0:6bd956845b0608528671915446b6a68d81bff339bbeac646b4240f03ffa2b914','UNTRUSTED_PARENT');
   must(await verifyCrossingEnvelope(parent.crossing),'PARENT_CROSSING_SIG');
   for(const r of [parent.received_receipt,parent.held_receipt,parent.custody_receipt])
     must(await verifyReceipt(r),'PARENT_RECEIPT_SIG');
