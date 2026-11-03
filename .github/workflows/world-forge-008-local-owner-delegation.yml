@@ -1,0 +1,77 @@
+name: WORLD-FORGE-008 local owner key and bounded AI project delegation
+
+on:
+  push:
+    branches:
+      - experiment/world-forge-008-local-human-key-delegation
+    paths:
+      - 'experiments/world-forge-008/**'
+      - '.github/workflows/world-forge-008-local-owner-delegation.yml'
+  pull_request:
+    paths:
+      - 'experiments/world-forge-008/**'
+      - '.github/workflows/world-forge-008-local-owner-delegation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-ceremony:
+    name: P-256 signed bounded delegation, expiry, non-impersonation and revocation
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify signed delegation and fail-closed authority
+        run: node --test experiments/world-forge-008/tests/delegation.test.mjs
+      - name: Build a single-file, no-network, no-CDN owner console
+        run: |
+          node experiments/world-forge-008/src/build.mjs
+          test -s experiments/world-forge-008/dist/WORLD-FORGE-008-OWNER-CONSOLE.html
+      - name: Preserve PUBLIC-only offline owner console artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-forge-008-offline-owner-console
+          path: experiments/world-forge-008/dist/WORLD-FORGE-008-OWNER-CONSOLE.html
+          retention-days: 14
+
+  browser-ceremony:
+    name: actual Chromium key-storage, grant/revoke, signature and no-network click-through
+    needs: native-ceremony
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install pinned Playwright with Chromium for actual browser observation
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install chromium
+      - name: Rebuild same offline owner console source
+        run: node experiments/world-forge-008/src/build.mjs
+      - name: Launch disposable localhost-only origin
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory experiments/world-forge-008/dist >/tmp/wf008-http.log 2>&1 &
+          echo $! > /tmp/wf008-http.pid
+          for i in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:8765/WORLD-FORGE-008-OWNER-CONSOLE.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/wf008-http.log
+          exit 1
+      - name: Click real browser local signer, signed grant, reload, revoke and verify
+        run: node experiments/world-forge-008/tests/browser-smoke.mjs
+      - name: Stop disposable origin
+        if: always()
+        run: |
+          if test -f /tmp/wf008-http.pid; then kill "$(cat /tmp/wf008-http.pid)" || true; fi
