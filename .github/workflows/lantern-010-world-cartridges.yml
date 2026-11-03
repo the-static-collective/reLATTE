@@ -149,7 +149,6 @@ jobs:
             work/world-cartridge/root.zip
             work/world-cartridge/root.zip.receipt.json
             work/world-cartridge/game-observation.json
-            work/lantern/server-meta.json
 
   copy-and-evolve:
     name: Checkout identical immutable v0.1.0 and evolve branch ${{ matrix.choice }}
@@ -290,7 +289,6 @@ jobs:
             work/world-cartridge/branch-*.zip
             work/world-cartridge/branch-*.zip.receipt.json
             work/world-cartridge/game-observation.json
-            work/lantern/server-meta.json
 
   verify-lineage:
     name: Reassemble immutable root + three independently changed whole-world branches
