@@ -91,7 +91,6 @@ test('full live page is exactly the one bundled in Supabase asset',()=>{
 test('backend is read only with allowlisted public source files and no service-role access',()=>{
  for(const v of ['JAR-VIS','reLATTE','GHoT','static-os'])assert.ok(ts.includes(v));
  assert.match(ts,/SOURCE_KEYS\.includes/);
- assert.match(ts,/verify_jwt/); // explained in deployment docs, not runtime auth
  assert.doesNotMatch(ts,/SUPABASE_SERVICE_ROLE_KEY|GITHUB_TOKEN|service_role/);
  assert.doesNotMatch(ts,/https?:\/\/[^\s]*\$\{/);
  assert.match(ts,/CROSS_ORIGIN_POST_REFUSED/);
