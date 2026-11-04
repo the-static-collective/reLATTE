@@ -131,3 +131,20 @@ test('REAL server test: two independent signed cartridges complete an isolated n
  const repeat=await http('ack',{offerId,secret:guestSecret,packet:ack});assert.equal(repeat.status,409);
  assert.equal(app.api.state().learning.trials.length,0,'synthetic signed relay cannot count as actual field work');
 });
+
+test('live SPAWN 024 public download serves the actual executable application, not a placeholder or false HTML host',async()=>{
+ const root='https://kbhqacsdvjsstzyplqij.supabase.co/functions/v1/relatte-app-024';
+ const health=await fetch(root+'?health=1',{signal:AbortSignal.timeout(16000)});
+ assert.equal(health.status,200);const meta=await health.json();
+ assert.equal(meta.version,24);assert.equal(meta.delivery,'HTML_ATTACHMENT_ONLY');assert.equal(meta.userConsentRequired,true);
+ const out=await fetch(root+'/download',{signal:AbortSignal.timeout(16000)});
+ assert.equal(out.status,200);
+ assert.match(out.headers.get('content-disposition')||'',/attachment/);
+ assert.match(out.headers.get('content-type')||'',/application\/octet-stream/);
+ const live=await out.text();
+ assert.ok(live.length>175000);
+ assert.match(live,/<title>JAR;VIS SPAWN 024 — Opt-in Live Relay Between World Cartridges<\/title>/);
+ assert.match(live,/function worldRelayRuntime/);
+ assert.match(live,/function portableWorldHtml/);
+ assert.match(live,/SPAWN 024 · Live reLATTE Relay/);
+});
