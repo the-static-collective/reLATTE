@@ -110,7 +110,9 @@ async function deposit(b,loc,item,n){
  must(block(b,loc)==='barrel','DEST_NOT_REAL_BARREL_'+loc);
  must(countInventory(b,item)>=n,'NO_OWNER_INVENTORY_FOR_DEPOSIT_'+item);
  const p=positions[loc];
- await move(b,p.x,p.y,p.z+2);
+ // The saved synthetic island ends at z=18. Stand inside the inherited
+ // world, not two blocks beyond it (which can be void on Superflat servers).
+ await move(b,p.x,p.y,p.z-2);
  const win=await b.openContainer(b.blockAt(p));
  try{await win.deposit(b.registry.itemsByName[item].id,null,n);}
  finally{win.close();}
@@ -121,7 +123,9 @@ async function withdraw(b,loc,item,n){
  const existing=await countBank(loc,item);
  must(existing>=n,'PARENT_STOCK_NOT_PRESENT_'+loc+'_'+item);
  const p=positions[loc];
- await move(b,p.x,p.y,p.z+2);
+ // The saved synthetic island ends at z=18. Stand inside the inherited
+ // world, not two blocks beyond it (which can be void on Superflat servers).
+ await move(b,p.x,p.y,p.z-2);
  const win=await b.openContainer(b.blockAt(p));
  try{await win.withdraw(b.registry.itemsByName[item].id,null,n);}
  finally{win.close();}
