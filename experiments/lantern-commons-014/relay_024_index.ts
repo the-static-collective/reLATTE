@@ -77,7 +77,7 @@ async function quota(req,action,holder=""){
  const now=new Date(),day=now.toISOString().slice(0,10),hour=now.toISOString().slice(0,13).replace("T",":");
  const ip=(req.headers.get("cf-connecting-ip")||req.headers.get("x-real-ip")||req.headers.get("x-forwarded-for")?.split(",")[0]||"unknown").slice(0,64);
  const fingerprint=(await sha("relatte-024|"+KEY+"|"+day+"|"+ip)).slice(0,24);
- const globalMax={publish:120,interest:300,discover:5000,status:10000,decision:300,ack:300,withdraw:120};
+ const globalMax={publish:120,interest:300,discover:1000,status:1000,decision:300,ack:300,withdraw:120};
  const limit=action==="publish"?8:action==="interest"?30:action==="status"?200:action==="discover"?400:50;
  const checks=[["r24:"+action+":g",day,globalMax[action]||1000],["r24:"+action+":ip:"+fingerprint,action==="status"?hour:day,limit]];
  if(holder)checks.push(["r24:"+action+":k:"+(await sha(holder)).slice(0,24),hour,action==="status"?90:25]);
