@@ -1,0 +1,52 @@
+{
+  "schema": "jarvis.capability-passport/v1",
+  "repository": "the-static-collective/reLATTE",
+  "version": "2026-11-04.1",
+  "authority": "PUBLIC_DESCRIPTION_ONLY_NOT_RUNTIME_OR_PERMISSION",
+  "availability": "NOT_OBSERVED",
+  "capabilities": [
+    {
+      "id": "relatte.commuter",
+      "title": "Plan a consent-aware storefront-to-email connection",
+      "intents": [
+        "grownby",
+        "squarespace",
+        "sync orders",
+        "sync email",
+        "mailing list",
+        "newsletter integration",
+        "connect systems",
+        "automate a farm",
+        "crm integration"
+      ],
+      "readiness": "LOCAL_LIBRARY",
+      "delivers": "A source/receiver library prototype supports signed, owner-decided changes in synthetic tests; no live farm or email adapter.",
+      "entry": {
+        "kind": "SOURCE_REFERENCE",
+        "href": "https://github.com/the-static-collective/reLATTE/blob/main/docs/COMMUTER-001.md"
+      },
+      "sourcePath": "docs/COMMUTER-001.md",
+      "requires": "Requires provider credentials owned by the operator, opt-in and suppression checks, and a separately authorized destination."
+    },
+    {
+      "id": "relatte.receiver",
+      "title": "Inspect a separately decided signed crossing",
+      "intents": [
+        "signed receipt",
+        "cryptographic crossing",
+        "independent admission",
+        "message trust",
+        "verify crossing",
+        "hold refuse admit"
+      ],
+      "readiness": "LOCAL_LIBRARY",
+      "delivers": "Documents local receiver HOLD/ADMIT/REFUSE and signed evidence, not a public claims service.",
+      "entry": {
+        "kind": "SOURCE_REFERENCE",
+        "href": "https://github.com/the-static-collective/reLATTE/blob/main/docs/LOCAL-RECEIVER-001.md"
+      },
+      "sourcePath": "docs/LOCAL-RECEIVER-001.md",
+      "requires": "Ownership, signatures and receiver policy are required; no automatic acceptance."
+    }
+  ]
+}
