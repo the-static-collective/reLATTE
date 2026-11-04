@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - experiment/lantern-commons-014-solo-desk
+      - experiment/lantern-014-public-pages
     paths:
       - 'experiments/lantern-commons-014/**'
       - '.github/workflows/lantern-014-solo-desk.yml'
@@ -15,6 +16,8 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 jobs:
   offline-solo-utility:
@@ -53,3 +56,116 @@ jobs:
           retention-days: 90
           if-no-files-found: error
           path: experiments/lantern-commons-014/Lantern_014_The_Solo_Desk.html
+
+  live-readiness:
+    name: Inspect public Pages availability without changing repository settings
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    outputs:
+      safe: ${{ steps.inspect.outputs.safe }}
+    steps:
+      - name: Confirm Pages is enabled and no unrelated site would be overwritten
+        id: inspect
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,urllib.request,urllib.error,json
+          repo=os.environ["GITHUB_REPOSITORY"]
+          r=urllib.request.Request("https://api.github.com/repos/"+repo+"/pages",
+            headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],
+              "Accept":"application/vnd.github+json",
+              "X-GitHub-Api-Version":"2022-11-28",
+              "User-Agent":"Lantern014-Safe-Pages-Check"})
+          with open(os.environ["GITHUB_OUTPUT"],"a") as out:
+            try:
+              with urllib.request.urlopen(r,timeout=15) as response:
+                page=json.load(response)
+            except urllib.error.HTTPError as e:
+              if e.code in (403,404):
+                print("PAGES_NOT_YET_ENABLED:",e.code,
+                  "One-time owner step: https://github.com/"+repo+"/settings/pages",
+                  "Choose Build and deployment -> GitHub Actions.",
+                  "No unrelated infrastructure has been changed.")
+                print("safe=false",file=out)
+                raise SystemExit(0)
+              raise
+            link=page.get("html_url") or ""
+            print("CURRENT_GITHUB_PAGES",json.dumps({
+              "url":link,"cname":page.get("cname"),
+              "build_type":page.get("build_type")},sort_keys=True))
+            if page.get("cname") or not link.lower().rstrip("/").endswith("/relatte"):
+              print("REFUSE_UNEXPECTED_OR_EXISTING_CUSTOM_DOMAIN")
+              print("safe=false",file=out)
+              raise SystemExit(0)
+            try:
+              with urllib.request.urlopen("https://the-static-collective.github.io/reLATTE/",timeout=15) as response:
+                previous=response.read(170000).decode("utf-8","replace")
+                if "LANTERN 014" not in previous:
+                  print("REFUSE_TO_REPLACE_UNRELATED_EXISTING_PAGES_SITE")
+                  print("safe=false",file=out)
+                  raise SystemExit(0)
+            except urllib.error.HTTPError as e:
+              if e.code!=404: raise
+            print("safe=true",file=out)
+            print("SAFE_PAGES_UPDATE_CAN_PROCEED")
+          PY
+
+  publish-live:
+    needs: [offline-solo-utility, live-readiness]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/experiment/lantern-014-public-pages' && needs.live-readiness.outputs.safe == 'true'
+    name: Publish standalone JAR;VIS to free public GitHub Pages
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Copy exact single-file tested app with no remote dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p site
+          cp experiments/lantern-commons-014/Lantern_014_The_Solo_Desk.html site/index.html
+          touch site/.nojekyll
+          test "$(sha256sum site/index.html | cut -d' ' -f1)" = "$(sha256sum experiments/lantern-commons-014/Lantern_014_The_Solo_Desk.html | cut -d' ' -f1)"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+      - name: Publish to independent free static host
+        uses: actions/deploy-pages@v4
+        id: deploy
+
+  verify-live-public-https:
+    needs: [publish-live]
+    if: github.event_name == 'push'
+    name: Independently inspect public HTTPS after successful deployment
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Require HTTP 200 and exact JAR;VIS executable offers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import time,urllib.request,urllib.error
+          url="https://the-static-collective.github.io/reLATTE/"
+          for i in range(36):
+            try:
+              req=urllib.request.Request(url,headers={"User-Agent":"Lantern014-Live-HTTP-Probe"})
+              with urllib.request.urlopen(req,timeout=15) as response:
+                body=response.read(200000).decode("utf-8","replace")
+                if (response.status == 200 and "<title>LANTERN 014" in body
+                    and "JAR;VIS · executable offers" in body
+                    and "Lantern_JARVIS_Work_Tracker.csv" in body):
+                  print("VERIFIED_PUBLIC_LANTERN_014_HTTPS",url, "bytes",len(body))
+                  break
+                print("WRONG_PUBLIC_CONTENT",response.status,len(body))
+            except urllib.error.URLError as e:
+              print("WAITING_FOR_PAGES_PROPAGATION",i+1,str(e)[:180])
+            time.sleep(5)
+          else:
+            raise SystemExit("LIVE_PUBLIC_HTTPS_UNVERIFIED")
+          PY
