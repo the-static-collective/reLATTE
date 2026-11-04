@@ -3,10 +3,10 @@
 // Data is private behind RLS. Opted-in sanitized offer projections are the only public discovery data.
 import {createClient} from "npm:@supabase/supabase-js@2.78.0";
 
-const URL=Deno.env.get("SUPABASE_URL")||"";
+const PROJECT_URL=Deno.env.get("SUPABASE_URL")||"";
 const KEY=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"";
-if(!URL||!KEY)throw Error("RELAY_SERVER_NOT_CONFIGURED");
-const db=createClient(URL,KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+if(!PROJECT_URL||!KEY)throw Error("RELAY_SERVER_NOT_CONFIGURED");
+const db=createClient(PROJECT_URL,KEY,{auth:{persistSession:false,autoRefreshToken:false}});
 const BASE="/functions/v1/relatte-relay-024";
 const ORIGINS="*"; // Non-cookie capability requests; permits manually opened file:// cartridges.
 const HEAD={"content-type":"application/json; charset=utf-8","cache-control":"no-store, private","referrer-policy":"no-referrer","x-content-type-options":"nosniff",
