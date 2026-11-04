@@ -516,3 +516,39 @@ test('learning ledger UI exposes task-bound evidence and user review without aut
  assert.equal(b.api.state().learning.trials[0].status,'draft');
  assert.equal(b.api.state().projects.flatMap(p=>p.tasks).filter(t=>t.state==='done').length,0);
 });
+
+test('a real failed experiment proposes a new but untested counter-rule without inventing success',()=>{
+ const b=browser();b.get('seed-three').click();
+ const idea=b.api.imagineWorlds(b.api.state().projects,{mode:'grounded'}).ideas[0];
+ b.api.captureTrial(idea);const t=b.api.state().learning.trials[0];
+ assert.equal(b.api.suggestNextRule(t.id).ok,false,'no hypothesis mutation before a real trial');
+ const p=b.api.state().projects.find(p=>p.id===t.projectId);
+ const task=p.tasks.find(x=>x.id===t.taskId);
+ task.state='blocked';task.observation='Tested a paper exchange; item was unavailable';
+ const marked=b.api.recordTrial(t.id,'failed','I tried the exchange and the requested item was missing in the actual test.','Remove the missing supply');
+ assert.equal(marked.ok,true);
+ const suggestion=b.api.suggestNextRule(t.id);
+ assert.equal(suggestion.ok,true);
+ assert.equal(suggestion.mode,'single');
+ assert.equal(suggestion.sourceTrialId,'','a failed trial is not a confirmed positive rule source');
+ assert.match(suggestion.firstTest,/reversible/);
+ assert.match(suggestion.reason,/UNTESTED/);
+ assert.equal(b.api.state().learning.rules.length,0,'suggestion does not self-install');
+ const newRule=b.api.addLearningRule(suggestion);
+ assert.equal(newRule.ok,true,'operator may explicitly accept a tested counterfactual, still a hypothesis');
+ assert.ok(b.api.learnedRuleCandidates(b.api.state().projects).every(x=>x.origin.includes('no successful trial yet')));
+});
+test('a successful test offers a differently situated follow-on rule with task-bound provenance',()=>{
+ const b=browser();b.get('seed-three').click();
+ const idea=b.api.imagineWorlds(b.api.state().projects,{mode:'grounded'}).ideas[0];
+ b.api.captureTrial(idea);const trial=b.api.state().learning.trials[0];
+ const task=b.api.state().projects.find(p=>p.id===trial.projectId).tasks.find(x=>x.id===trial.taskId);
+ task.state='done';task.observation='Actual paper cards created and matched';
+ b.api.recordTrial(trial.id,'worked','I used two cards and there was an actual demonstrable fit.','Test portability with the other hat');
+ const suggestion=b.api.suggestNextRule(trial.id);
+ assert.equal(suggestion.ok,true);
+ assert.equal(suggestion.mode,'pair');
+ assert.equal(suggestion.sourceTrialId,trial.id);
+ assert.match(suggestion.name,/\{\{B\}\}/);
+ assert.equal(b.api.state().learning.rules.length,0);
+});
