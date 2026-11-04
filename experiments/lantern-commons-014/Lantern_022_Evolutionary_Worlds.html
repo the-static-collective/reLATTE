@@ -863,6 +863,165 @@ $('learn-add').addEventListener('click',()=>{
  note('learn-status',result.reason);
 });
 
+
+/* WORLD 022: pure, reversible virtual simulation. No real inventory changes or external execution. */
+const WORLD_STRATEGIES={
+ generosity:{label:'Generosity',order:['bridge','build','document','replicate','inspect'],weights:[2,2,5,2]},
+ efficiency:{label:'Efficiency',order:['document','build','replicate','bridge','inspect'],weights:[3,5,2,2]},
+ autonomy:{label:'Independence',order:['replicate','document','build','inspect','bridge'],weights:[5,4,1,2]},
+ cooperation:{label:'Cooperation',order:['bridge','replicate','build','document','inspect'],weights:[2,2,5,4]}
+};
+const WORLD_KEYS=['writing','time','materials','device','resources','instrument','space','contact','content','labels','transport'];
+const WORLD_STATUSES=['unknown','found','missing'];
+function worldInitial(){return {turn:0,artifacts:0,bridges:0,methods:0,rehearsals:0,questions:0,history:[]};}
+function worldModelTick(bp,sim){
+ // Shared by the main desk and the exported offline cartridge, with no network capability.
+ const state=sim||worldInitial(),inputs=bp.inputs||{},roles=bp.roles||[];
+ const can=key=>inputs[key]==='found';
+ const steps=WORLD_STRATEGIES[bp.strategy].order;
+ if(state.turn>=12)return {ok:false,reason:'Twelve-turn safety/clarity cap reached. Reset or fork before exploring more.'};
+ let action=null,description='';
+ for(const kind of steps){
+  if(kind==='build'&&can('writing')&&can('time')&&state.artifacts<2){action='build';description='VIRTUAL: one sample work card was constructed inside the model. No real artifact was produced.';state.artifacts++;break;}
+  if(kind==='bridge'&&roles.length>=2&&state.artifacts>state.bridges&&can('writing')){action='bridge';description='VIRTUAL: one paper handoff was modeled between two hats of ONE operator. No actual resource moved.';state.bridges++;break;}
+  if(kind==='document'&&state.artifacts>state.methods&&can('writing')){action='document';description='VIRTUAL: a hypothetical process was written down. No outside party received a method.';state.methods++;break;}
+  if(kind==='replicate'&&state.methods>state.rehearsals&&can('time')){action='replicate';description='VIRTUAL: a second run of a method was modeled. No second person or independent adoption exists.';state.rehearsals++;break;}
+  if(kind==='inspect'){
+    const next=Object.keys(inputs).find(key=>inputs[key]!=='found'&&!state.history.some(h=>h.key===key&&h.action==='inspect'));
+    if(next){action='inspect';description='QUESTION ONLY: check the real availability of '+next+'. No object or permission is generated.';state.questions++;break;}
+  }
+ }
+ if(!action)return {ok:false,reason:'No additional virtual move is available under the recorded starting conditions. Change a real input or fork a strategy.'};
+ const key=action==='inspect'?Object.keys(inputs).find(k=>inputs[k]!=='found'&&!state.history.some(h=>h.key===k&&h.action==='inspect')):null;
+ state.turn++;
+ state.history.push({turn:state.turn,action,key,description});
+ if(state.history.length>12)state.history=state.history.slice(-12);
+ return {ok:true,action,reason:description,sim:state};
+}
+function worldScore(w){
+ const s=w.sim;
+ // Editorial indicators, not real impact or a forecast.
+ const values=[s.rehearsals*3+s.methods*2+s.artifacts,s.artifacts*2+s.methods*3,s.bridges*4,s.bridges*3+s.rehearsals*2];
+ const weights=WORLD_STRATEGIES[w.blueprint.strategy].weights;
+ return {score:Math.round(values.reduce((v,x,i)=>v+x*weights[i],0)),capacity:values[0],efficiency:values[1],generosity:values[2],cooperation:values[3],turns:s.turn,known:Object.values(w.blueprint.inputs).filter(x=>x==='found').length};
+}
+function validWorldBlueprint(b){
+ if(!b||b.schema!=='abundent/world-cartridge/v1'||b.version!==1||!Object.hasOwn(WORLD_STRATEGIES,b.strategy))return false;
+ if(typeof b.goal!=='string'||b.goal.length<8||b.goal.length>130||b.goal.trim().length<8)return false;
+ if(!Array.isArray(b.roles)||b.roles.length<1||b.roles.length>8||!b.roles.every(t=>typeof t==='string'&&Object.hasOwn(T,t)))return false;
+ if(!b.inputs||typeof b.inputs!=='object'||Array.isArray(b.inputs))return false;
+ const entries=Object.entries(b.inputs);if(entries.length<2||entries.length>11||!b.inputs.writing||!b.inputs.time)return false;
+ if(!entries.every(([key,value])=>WORLD_KEYS.includes(key)&&WORLD_STATUSES.includes(value)))return false;
+ if(b.privacy!=='Review goal before sharing; role labels are generic, observations and private notes excluded.')return false;
+ return Object.keys(b).sort().join(',')==='goal,inputs,privacy,roles,schema,strategy,version';
+}
+function validWorldSim(v){
+ return !!(v&&Number.isInteger(v.turn)&&v.turn>=0&&v.turn<=12&&
+  ['artifacts','bridges','methods','rehearsals','questions'].every(k=>Number.isInteger(v[k])&&v[k]>=0&&v[k]<=12)&&
+  Array.isArray(v.history)&&v.history.length<=12&&v.history.every(h=>h&&Number.isInteger(h.turn)&&h.turn>=1&&h.turn<=12&&
+    ['inspect','build','bridge','document','replicate'].includes(h.action)&&
+    (h.key===null||typeof h.key==='string'&&WORLD_KEYS.includes(h.key))&&
+    typeof h.description==='string'&&h.description.length<=240));
+}
+function validWorldState(v){
+ return !!(v&&Array.isArray(v.forks)&&v.forks.length<=40&&(v.selected===null||typeof v.selected==='string'&&v.selected.length<=100)&&v.forks.every(w=>w&&typeof w.id==='string'&&w.id.length<=100&&
+  typeof w.groupId==='string'&&w.groupId.length<=100&&
+  (w.parentId===null||typeof w.parentId==='string'&&w.parentId.length<=100)&&
+  Number.isInteger(w.revision)&&w.revision>=1&&w.revision<=40&&
+  typeof w.createdAt==='string'&&w.createdAt.length<50&&validWorldBlueprint(w.blueprint)&&validWorldSim(w.sim))&&
+  (v.selected===null||v.forks.some(w=>w.id===v.selected))&&
+  new Set(v.forks.map(w=>w.id)).size===v.forks.length);
+}
+function worldBlueprint(roles,goal,strategy='cooperation',rawInputs={}){
+ const safeRoles=roles.slice(0,8).map(p=>typeof p==='string'?p:p.type).filter(t=>Object.hasOwn(T,t));
+ const inputs={writing:'unknown',time:'unknown',materials:'unknown',device:'unknown',resources:'unknown',instrument:'unknown',space:'unknown',contact:'unknown'};
+ for(const k of Object.keys(inputs))if(WORLD_STATUSES.includes(rawInputs[k]))inputs[k]=rawInputs[k];
+ return {schema:'abundent/world-cartridge/v1',version:1,goal:clean(goal,130),roles:safeRoles,strategy,inputs,privacy:'Review goal before sharing; role labels are generic, observations and private notes excluded.'};
+}
+function newWorld(bp,groupId,parentId=null,revision=1){
+ return {id:id(),groupId,parentId,revision,createdAt:new Date().toISOString(),blueprint:JSON.parse(JSON.stringify(bp)),sim:worldInitial()};
+}
+function createWorldFamily(projects,goal,inheritChecks=false){
+ if(state.worlds.forks.length+4>40)return {ok:false,reason:'40-fork local limit reached; save a private backup before starting another family.'};
+ const ps=projects.slice(0,8);if(!ps.length)return {ok:false,reason:'Create one real operation first; no fictional hats can be seeded.'};
+ const inputs={};
+ if(inheritChecks){
+  for(const key of WORLD_KEYS){
+   const reports=ps.map(p=>state.glean.answers[p.id+':'+key]?.status);
+   inputs[key]=reports.includes('found')?'found':reports.includes('missing')?'missing':'unknown';
+  }
+ }
+ const bp=worldBlueprint(ps,goal,'cooperation',inputs);
+ if(!validWorldBlueprint(bp))return {ok:false,reason:'Enter an eight-character or longer purpose without private identifiers.'};
+ const group=id(),orders=Object.keys(WORLD_STRATEGIES);
+ const created=orders.map(strategy=>newWorld({...bp,strategy},group));
+ state.worlds.forks.push(...created);state.worlds.selected=created[0].id;refresh();
+ return {ok:true,forks:created,reason:'Created four versions of ONE hypothetical world. Their inputs are identical and outcomes untested.'};
+}
+function worldFork(sourceId,strategy){
+ const parent=state.worlds.forks.find(w=>w.id===sourceId);
+ if(!parent)return {ok:false,reason:'Source world was not found.'};
+ if(state.worlds.forks.length>=40)return {ok:false,reason:'40-fork cap reached.'};
+ if(!Object.hasOwn(WORLD_STRATEGIES,strategy))return {ok:false,reason:'Unknown world law.'};
+ const bp={...parent.blueprint,strategy,inputs:{...parent.blueprint.inputs}},w=newWorld(bp,parent.groupId,parent.id,parent.revision+1);
+ if(w.revision>40)return {ok:false,reason:'40 revisions per lineage is the maximum.'};
+ state.worlds.forks.push(w);state.worlds.selected=w.id;refresh();
+ return {ok:true,world:w,reason:'Forked a new version from the same inputs, without any simulated or real-world results. Parent world remains unchanged.'};
+}
+function worldSetInput(sourceId,key,value){
+ const w=state.worlds.forks.find(x=>x.id===sourceId);
+ if(!w||!WORLD_KEYS.includes(key)||!Object.hasOwn(w.blueprint.inputs,key)||!WORLD_STATUSES.includes(value))return {ok:false,reason:'Unknown world, input or status.'};
+ const family=state.worlds.forks.filter(x=>x.groupId===w.groupId);
+ for(const x of family){
+  x.blueprint.inputs[key]=value;
+  x.sim=worldInitial();
+ }
+ refresh();
+ return {ok:true,reason:'Changed '+key+' to '+value+' in '+family.length+' comparable world versions. All VIRTUAL scores reset, no physical supply or evidence records changed.'};
+}
+function worldStep(sourceId){
+ const w=state.worlds.forks.find(x=>x.id===sourceId);if(!w)return {ok:false,reason:'Unknown world.'};
+ const result=worldModelTick(w.blueprint,w.sim);
+ if(result.ok)refresh();
+ return result;
+}
+function runWorldComparison(sourceId,turns=4){
+ const w=state.worlds.forks.find(x=>x.id===sourceId);if(!w)return {ok:false,reason:'Select a world to compare.'};
+ const group=state.worlds.forks.filter(x=>x.groupId===w.groupId);
+ if(group.length>40)return {ok:false,reason:'Too many variants.'};
+ const requested=Number.isInteger(turns)?Math.max(1,Math.min(12,turns)):4;
+ for(const item of group){item.sim=worldInitial();for(let i=0;i<requested;i++){if(!worldModelTick(item.blueprint,item.sim).ok)break;}}
+ refresh();
+ const compared=group.map(x=>({id:x.id,strategy:x.blueprint.strategy,...worldScore(x)}))
+ .sort((a,b)=>b.score-a.score||a.strategy.localeCompare(b.strategy)||a.id.localeCompare(b.id));
+ return {ok:true,results:compared,reason:'Compared '+group.length+' forks after up to '+requested+' VIRTUAL turns each with identical resource inputs. Ranking is a planning heuristic; NO physical outcome occurred.'};
+}
+function stageWorldFieldTest(sourceId){
+ const world=state.worlds.forks.find(w=>w.id===sourceId);
+ if(!world)return {ok:false,reason:'Select a world before staging a field test.'};
+ const p=state.projects.find(p=>world.blueprint.roles.includes(p.type))||state.projects[0];
+ if(!p)return {ok:false,reason:'A real operator hat is needed to perform any actual field test.'};
+ const test=clean('Make a one-person tabletop demonstration of the '+WORLD_STRATEGIES[world.blueprint.strategy].label+' world; check one real ingredient, one proposed handoff, and record what actually happens.',180);
+ const idForTrial='world:'+world.id;
+ const result=captureTrial({id:idForTrial,projectId:p.id,name:'Field-test a '+world.blueprint.strategy+' world cartridge',lens:'world-'+world.blueprint.strategy,firstTest:test});
+ if(result.ok)refresh();
+ return result;
+}
+function portableBlueprint(world){
+ const bp=JSON.parse(JSON.stringify(world.blueprint));
+ for(const k of Object.keys(bp.inputs))bp.inputs[k]='unknown';
+ return bp;
+}
+function importWorld(raw){
+ let bp=raw;
+ if(typeof raw==='string'){if(raw.length>12000)return {ok:false,reason:'Cartridge exceeds 12,000 characters.'};try{bp=JSON.parse(raw)}catch(e){return {ok:false,reason:'Invalid JSON. Nothing imported.'}}}
+ if(!validWorldBlueprint(bp))return {ok:false,reason:'Cartridge rejected: wrong schema, unsafe fields, unknown resource or unbounded value.'};
+ if(state.worlds.forks.length>=40)return {ok:false,reason:'World limit reached.'};
+ const safe=portableBlueprint({blueprint:bp}),world=newWorld(safe,id());
+ state.worlds.forks.push(world);state.worlds.selected=world.id;refresh();
+ return {ok:true,world,reason:'Imported one unstarted, isolated hypothetical world. All resource statuses were reset to unknown; no code or outcome was imported.'};
+}
+
 window.SPAWN_022=Object.freeze({templates:T,cartridge:cartridge,validCartridge:validCartridge,validBackup:validBackup,matches:matches,deriveKit:deriveKit,gleaningScore:gleaningScore,validGlean:validGlean,gleanQuestions:gleanQuestions,recordGlean:recordGlean,composeMaximum:composeMaximum,stageMaximum:stageMaximum,maximumCandidates:maximumCandidates,imagineWorlds:imagineWorlds,imagineForks:imagineForks,stageImagination:stageImagination,captureTrial:captureTrial,recordTrial:recordTrial,suggestNextRule:suggestNextRule,learnedRuleCandidates:learnedRuleCandidates,learnedLensWeight:learnedLensWeight,addLearningRule:addLearningRule,validLearning:validLearning,worldBlueprint:worldBlueprint,validWorldBlueprint:validWorldBlueprint,validWorldState:validWorldState,createWorldFamily:createWorldFamily,worldStep:worldStep,runWorldComparison:runWorldComparison,worldFork:worldFork,worldSetInput:worldSetInput,worldScore:worldScore,portableWorldHtml:portableWorldHtml,importWorld:importWorld,stageWorldFieldTest:stageWorldFieldTest,csvCell:csvCell,htmlEscape:htmlEscape,state:()=>state});
 refresh();
 })();
