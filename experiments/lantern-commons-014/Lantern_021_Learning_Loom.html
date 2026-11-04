@@ -747,6 +747,31 @@ function toggleLearningRule(ruleId){
  if(!r)return {ok:false,reason:'Unknown recipe.'};
  r.enabled=!r.enabled;refresh();return {ok:true,reason:'Transformation '+(r.enabled?'enabled':'disabled')+'. Previously recorded tests are unchanged.'};
 }
+
+function suggestNextRule(trialId){
+ const t=state.learning.trials.find(t=>t.id===trialId);
+ if(!t||!verifiedSelfReport(t))return {ok:false,reason:'A documented done/blocked first test is required before deriving a counterfactual move.'};
+ const failed=t.status==='failed',mixed=t.status==='mixed';
+ const mode=failed?'single':state.projects.length>=2?'pair':'single';
+ const pair=mode==='pair';
+ const name=failed?'Find the useful remainder of {{A}} after a blocked test':mixed?'Split {{A}} into a smaller verified input for {{B}}':pair?'Make the tested method of {{A}} useful for {{B}}':'Make the observed method of {{A}} repeatable alone';
+ const firstTest=failed?'Write down the actual failure in {{A}}, remove one unverified dependency, then run a reversible paper or physical check.':mixed?'Identify what actually worked in {{A}} and test only that narrow component as an input to {{B}}.':pair?'Choose one observed output of {{A}} and independently try it as one input to {{B}}; record any mismatch.':'Write an exact repeatable recipe for {{A}} and run its first instruction yourself.';
+ const refute=failed?'Removing the dependency still cannot produce an observable first result.':mixed?'The component reported usable in the first test fails when isolated.':'The method cannot be repeated or is unsuitable in the receiving context.';
+ return {ok:true,mode,name,firstTest,refute,needs:['writing','time'],sourceTrialId:t.status==='worked'?t.id:'',
+  reason:(failed?'Generated a counter-rule from a blocked experiment. It is deliberately UNTESTED; the failure does not count as proof of a replacement.':mixed?'Generated a narrower untested counter-rule from a mixed outcome.':'Generated a candidate replication rule from a reported working result.')+' Review and approve it explicitly; nothing was added yet.'};
+}
+function fillLearningSuggestion(trialId){
+ const suggestion=suggestNextRule(trialId);
+ if(!suggestion.ok){note('learn-status',suggestion.reason);return suggestion;}
+ $('learn-mode').value=suggestion.mode;
+ $('learn-name').value=suggestion.name;
+ $('learn-test').value=suggestion.firstTest;
+ $('learn-refute').value=suggestion.refute;
+ $('learn-need').value='writing';
+ $('learn-source').value=suggestion.sourceTrialId;
+ note('learn-status',suggestion.reason);
+ return suggestion;
+}
 function learnedRuleCandidates(projects){
  const ps=(projects||[]).slice(0,12),out=[];
  for(const rule of state.learning.rules.filter(x=>x.enabled)){
@@ -784,14 +809,8 @@ function renderLearning(){
    for(const x of [['worked','Test worked (self-reported)'],['failed','Test failed (self-reported)'],['mixed','Partial / mixed result']]){
     actions.append(button(x[1],()=>{const r=recordTrial(t.id,x[0],observed.value,next.value);note('learn-status',r.reason)},x[0]==='worked'?'secondary':'ghost'));
    }
-   if(t.status==='worked'&&verifiedSelfReport(t)){
-    actions.append(button('Derive a possible new move',()=>{
-      $('learn-source').value=t.id;$('learn-mode').value='pair';
-      $('learn-name').value='Adapt {{A}} into a reusable method for {{B}}';
-      $('learn-test').value='Use a real output from {{A}} as one input to {{B}}, then document whether it actually fits.';
-      $('learn-refute').value='The real output fails to serve the receiving role.';
-      note('learn-status','Prefilled a hypothetical reusable transformation from a reported test. Review and edit every field before adding it.');
-    },'ghost'));
+   if(verifiedSelfReport(t)){
+    actions.append(button(t.status==='failed'?'Invent a counter-rule from this failure':t.status==='mixed'?'Isolate the useful part':'Derive a possible new move',()=>fillLearningSuggestion(t.id),'ghost'));
    }
    card.append(actions);registry.append(card);
  }
@@ -814,7 +833,7 @@ $('learn-add').addEventListener('click',()=>{
  note('learn-status',result.reason);
 });
 
-window.SPAWN_021=Object.freeze({templates:T,cartridge:cartridge,validCartridge:validCartridge,validBackup:validBackup,matches:matches,deriveKit:deriveKit,gleaningScore:gleaningScore,validGlean:validGlean,gleanQuestions:gleanQuestions,recordGlean:recordGlean,composeMaximum:composeMaximum,stageMaximum:stageMaximum,maximumCandidates:maximumCandidates,imagineWorlds:imagineWorlds,imagineForks:imagineForks,stageImagination:stageImagination,captureTrial:captureTrial,recordTrial:recordTrial,learnedRuleCandidates:learnedRuleCandidates,learnedLensWeight:learnedLensWeight,addLearningRule:addLearningRule,validLearning:validLearning,csvCell:csvCell,htmlEscape:htmlEscape,state:()=>state});
+window.SPAWN_021=Object.freeze({templates:T,cartridge:cartridge,validCartridge:validCartridge,validBackup:validBackup,matches:matches,deriveKit:deriveKit,gleaningScore:gleaningScore,validGlean:validGlean,gleanQuestions:gleanQuestions,recordGlean:recordGlean,composeMaximum:composeMaximum,stageMaximum:stageMaximum,maximumCandidates:maximumCandidates,imagineWorlds:imagineWorlds,imagineForks:imagineForks,stageImagination:stageImagination,captureTrial:captureTrial,recordTrial:recordTrial,suggestNextRule:suggestNextRule,learnedRuleCandidates:learnedRuleCandidates,learnedLensWeight:learnedLensWeight,addLearningRule:addLearningRule,validLearning:validLearning,csvCell:csvCell,htmlEscape:htmlEscape,state:()=>state});
 refresh();
 })();
 </script></body></html>
