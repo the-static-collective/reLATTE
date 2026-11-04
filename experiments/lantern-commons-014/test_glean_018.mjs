@@ -117,6 +117,7 @@ test('nothing guessed present, even under a different hat, until the operator ma
 });
 test('missing is a productive answer, not falsely counted as confirmed material',()=>{
  const b=browser();b.get('seed-three').click();const p=b.api.state().projects[2];
+ b.get('glean-project').value=p.id;b.get('glean-project').events.change();
  const q=b.api.gleanQuestions(p).questions[0];
  b.api.recordGlean(p,q,'missing','not in instrument case');
  const result=b.api.gleaningScore(b.api.state().projects,b.api.state().glean);
