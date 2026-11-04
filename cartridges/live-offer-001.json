@@ -1,0 +1,284 @@
+{
+  "schema": "relatte.live-offer-cartridge/v0",
+  "id": "jubilee-live-offer-001",
+  "version": "0.1.0",
+  "owner": "the-static-collective/webZ",
+  "authority": "PROPOSAL_ONLY",
+  "remote_execution": false,
+  "description": "Deterministic now-first actions that turn a contribution into an artifact or an explicitly consented review offer.",
+  "patterns": {
+    "music": [
+      "guitar",
+      "music",
+      "musician",
+      "sing",
+      "song",
+      "play a set",
+      "play piano",
+      "drum",
+      "bass",
+      "ukulele",
+      "voice",
+      "performance",
+      "perform"
+    ],
+    "food": [
+      "food",
+      "vegetable",
+      "vegetables",
+      "produce",
+      "soup",
+      "cook",
+      "kitchen",
+      "meal",
+      "grocer",
+      "garden"
+    ],
+    "transport": [
+      "ride",
+      "drive",
+      "transport",
+      "truck",
+      "deliver",
+      "pickup"
+    ],
+    "tools": [
+      "repair",
+      "fix",
+      "build",
+      "code",
+      "website",
+      "computer",
+      "tool",
+      "design",
+      "help with tech"
+    ],
+    "question": [
+      "question",
+      "wonder",
+      "ask",
+      "how do i",
+      "why",
+      "what if",
+      "can you"
+    ],
+    "general": []
+  },
+  "actions": [
+    {
+      "id": "record-audio",
+      "label": "Record audio now",
+      "kinds": [
+        "music",
+        "general",
+        "question"
+      ],
+      "times": [
+        "now",
+        "unspecified",
+        "soon"
+      ],
+      "mode": "local_media",
+      "effect": "audio-file",
+      "next": [
+        "catalog",
+        "art",
+        "private-offer"
+      ],
+      "requires": [
+        "microphone"
+      ],
+      "available": true
+    },
+    {
+      "id": "record-video",
+      "label": "Record video now",
+      "kinds": [
+        "music",
+        "general",
+        "question"
+      ],
+      "times": [
+        "now",
+        "unspecified",
+        "soon"
+      ],
+      "mode": "local_media",
+      "effect": "video-file",
+      "next": [
+        "catalog",
+        "art",
+        "private-offer"
+      ],
+      "requires": [
+        "camera",
+        "microphone"
+      ],
+      "available": true
+    },
+    {
+      "id": "art",
+      "label": "Make a cover / invitation card",
+      "kinds": [
+        "music",
+        "food",
+        "transport",
+        "tools",
+        "question",
+        "general"
+      ],
+      "times": [
+        "now",
+        "unspecified",
+        "soon",
+        "later"
+      ],
+      "mode": "local_art",
+      "effect": "png-file",
+      "next": [
+        "announce",
+        "catalog",
+        "private-offer"
+      ],
+      "requires": [],
+      "available": true
+    },
+    {
+      "id": "catalog",
+      "label": "Catalog this contribution",
+      "kinds": [
+        "music",
+        "food",
+        "transport",
+        "tools",
+        "question",
+        "general"
+      ],
+      "times": [
+        "now",
+        "unspecified",
+        "soon",
+        "later"
+      ],
+      "mode": "local_manifest",
+      "effect": "json-file",
+      "next": [
+        "art",
+        "announce",
+        "private-offer"
+      ],
+      "requires": [],
+      "available": true
+    },
+    {
+      "id": "announce",
+      "label": "Prepare an announcement",
+      "kinds": [
+        "music",
+        "food",
+        "transport",
+        "tools",
+        "general"
+      ],
+      "times": [
+        "now",
+        "unspecified",
+        "soon",
+        "later"
+      ],
+      "mode": "local_announcement",
+      "effect": "copyable-text",
+      "next": [
+        "private-offer",
+        "catalog"
+      ],
+      "requires": [],
+      "available": true
+    },
+    {
+      "id": "private-offer",
+      "label": "Offer to a real human reviewer",
+      "kinds": [
+        "music",
+        "food",
+        "transport",
+        "tools",
+        "question",
+        "general"
+      ],
+      "times": [
+        "now",
+        "unspecified",
+        "soon",
+        "later"
+      ],
+      "mode": "explicit_review",
+      "effect": "private-receipt",
+      "next": [],
+      "requires": [
+        "review-consent"
+      ],
+      "available": true
+    },
+    {
+      "id": "later",
+      "label": "Put it on my calendar",
+      "kinds": [
+        "music",
+        "food",
+        "transport",
+        "tools",
+        "question",
+        "general"
+      ],
+      "times": [
+        "now",
+        "unspecified",
+        "soon",
+        "later"
+      ],
+      "mode": "local_calendar",
+      "effect": "ics-file",
+      "next": [
+        "art",
+        "private-offer"
+      ],
+      "requires": [
+        "chosen-time"
+      ],
+      "available": true
+    },
+    {
+      "id": "stream",
+      "label": "Announce my existing livestream",
+      "kinds": [
+        "music",
+        "general"
+      ],
+      "times": [
+        "now",
+        "unspecified",
+        "soon",
+        "later"
+      ],
+      "mode": "external_stream_link",
+      "effect": "copyable-text",
+      "next": [
+        "catalog",
+        "private-offer"
+      ],
+      "requires": [
+        "own-stream-url"
+      ],
+      "available": true
+    }
+  ],
+  "laws": [
+    "NOW_IS_PROPOSED_NOT_ASSUMED",
+    "OFFER_IS_NOT_CONSENT",
+    "DRAFT_IS_NOT_PUBLICATION",
+    "LOCAL_CAPTURE_IS_NOT_UPLOAD",
+    "RECEIPT_IS_NOT_ACCEPTANCE",
+    "CARTRIDGE_IS_NOT_AUTHORITY"
+  ]
+}
