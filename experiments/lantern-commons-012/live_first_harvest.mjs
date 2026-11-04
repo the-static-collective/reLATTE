@@ -336,7 +336,8 @@ try{
  if(mode==='harvest')must(last.stock.harvest_wheat===8&&
    last.stock.harvested_seeds>=2&&last.blocks.marker==='gold_block',
    'FIRST_HARVEST_INCORRECT');
- if(mode==='heir')must(last.stock.harvest_wheat===6&&
+ if(mode==='heir')must(last.stock.harvest_wheat===first.stock.harvest_wheat-3&&
+   last.stock.regrown_wheat===1&&
    last.stock.harvested_seeds>=1&&last.blocks.heirMarker==='emerald_block'&&
    last.blocks.replanted==='air',
    'INHERITED_SEED_GROWTH_OR_REAL_FOOD_USE_INCORRECT:'+JSON.stringify(last));
