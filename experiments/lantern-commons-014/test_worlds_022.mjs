@@ -595,7 +595,7 @@ test('same checked resources propagate to every variant and invalidate old synth
  assert.equal(ps.flatMap(p=>p.tasks).some(t=>t.state==='done'),false);
 });
 test('forking branches method rather than copying its virtual events or increasing real participants',()=>{
- const b=browser();b.get('seed-three').click();const initial=b.api.createWorldFamily((b.get('seed-three').click(),b.api.state().projects),'Portable independent cooperation');
+ const b=browser();b.get('seed-three').click();const initial=b.api.createWorldFamily(b.api.state().projects,'Portable independent cooperation');
  const base=initial.forks[0];b.api.worldStep(base.id);
  const sourceTurn=base.sim.turn;
  const copy=b.api.worldFork(base.id,'autonomy');
