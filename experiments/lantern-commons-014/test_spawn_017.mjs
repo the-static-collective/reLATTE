@@ -80,3 +80,13 @@ test('user creates a fourth arbitrary operation; all state stays local',()=>{
  assert.ok(b.storage.has('jarvis_spawn_017_v1'));
  assert.match(b.get('seed-status').textContent,/Operation created/);
 });
+
+test('private backup restores only from the matching bounded schema',()=>{
+ const b=browser();b.get('seed-three').click();const current=b.api.state();
+ const privateCopy=JSON.parse(JSON.stringify(current));
+ privateCopy.projects[0].tasks[0].observation='A personal note';
+ privateCopy.projects[0].tasks[0].state='done';
+ assert.equal(b.api.validBackup(privateCopy),true);
+ assert.equal(b.api.validBackup({...privateCopy,schema:'other'}),false);
+ assert.equal(b.api.validBackup({...privateCopy,projects:[{...privateCopy.projects[0],tasks:[{...privateCopy.projects[0].tasks[0],observation:'z'.repeat(501)}]}]}),false);
+});
