@@ -1160,7 +1160,7 @@ function worldCrossingRuntime(){
  async function makeIdentity(){
   if(own)return {publicKey:own.pub,fingerprint:own.fingerprint};
   if(!crypto||!crypto.subtle||!crypto.getRandomValues||!crypto.randomUUID)fail('SECURE_BROWSER_CRYPTO_REQUIRED');
-  const keys=await crypto.subtle.generateKey({name:'ECDSA',namedCurve:'P-256'},true,['sign','verify']);
+  const keys=await crypto.subtle.generateKey({name:'ECDSA',namedCurve:'P-256'},false,['sign','verify']); // Private key intentionally non-extractable
   const jwk=await crypto.subtle.exportKey('jwk',keys.publicKey);
   const pub={kty:'EC',crv:'P-256',x:jwk.x,y:jwk.y};
   own={keys,pub,fingerprint:(await digest(JSON.stringify(pub))).slice(0,16)};
@@ -1233,7 +1233,7 @@ function worldCrossingRuntime(){
   if(!STATES.includes(decision))fail('INVALID_PROVIDER_DECISION');
   const link={offerId:localOffer.id,offerHash:await digest(JSON.stringify(localOffer)),
     interestId:remoteInterest.id,interestHash:await digest(JSON.stringify(remoteInterest))};
-  const note=decision==='ADMIT'?'Permission for scoped review or one test only; no physical delivery.':
+  const note=decision==='ADMIT'?'Permission for exactly the OFFER scope only; no physical delivery.':
     decision==='REFUSE'?'Permission refused; do not proceed with any proposed use.':
     'Hold for explicit further review; no permission to proceed yet.';
   localDecision=await sign('DECISION',link,{decision,note});
