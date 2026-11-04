@@ -1,0 +1,141 @@
+name: 'LANTERN-015 public connected JAR;VIS — source, privacy and real HTTPS execution'
+
+on:
+  push:
+    branches:
+      - experiment/lantern-commons-015-connected-jarvis
+    paths:
+      - 'experiments/lantern-commons-015/**'
+      - '.github/workflows/lantern-015-connected-live.yml'
+  pull_request:
+    paths:
+      - 'experiments/lantern-commons-015/**'
+      - '.github/workflows/lantern-015-connected-live.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-contracts:
+    name: Test honest source-owned remote registry, explicit consent and in-tab privacy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --test experiments/lantern-commons-015/test-connected.mjs
+      - name: Ensure exact reviewed JAR;VIS source and source-owned cartridge are unchanged
+        run: |
+          set -euo pipefail
+          test "$(git hash-object experiments/lantern-commons-015/server/live-offer-router.mjs)" = "92835c17c2cfba84d1e67acca03338af1d91ff1a"
+          test "$(git hash-object experiments/lantern-commons-015/server/live-offer-001.json)" = "bf04098596d469f0e8a6bd7fa7fc81205f6ab9c2"
+          echo 'EXACT_JARVIS_SOURCE_CUSTODY_VERIFIED'
+
+  actual-public-execution:
+    needs: [source-contracts]
+    name: Verify official live public app, actual GitHub reads, actual POST actions and security refusal
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Exercise real hosted HTTPS with no passwords or privileged tokens
+        env:
+          LANTERN_URL: https://kbhqacsdvjsstzyplqij.supabase.co/functions/v1/jarvis-solo-live-017
+        run: |
+          python3 - <<'PY'
+          import json,os,time,urllib.request,urllib.error,hashlib
+          BASE=os.environ['LANTERN_URL']
+          def call(path,body=None,headers=None):
+              extra=headers or {}
+              if body is not None:
+                  data=json.dumps(body).encode('utf8')
+                  headers={**extra,'Content-Type':'application/json'}
+              else:
+                  data=None
+                  headers=extra
+              req=urllib.request.Request(BASE+path,headers={
+                  'User-Agent':'Lantern015-Public-Real-HTTP-Oracle',
+                  'Accept':'application/json, text/html',**headers
+              },data=data)
+              try:
+                  with urllib.request.urlopen(req,timeout=22) as r:
+                      data=r.read(170000)
+                      return r.status,data,r.headers
+              except urllib.error.HTTPError as e:
+                  return e.code,e.read(7000),e.headers
+
+          status,raw,headers=call('')
+          assert status==200,(status,raw[:300])
+          html=raw.decode('utf8')
+          assert '<title>LANTERN 015' in html
+          assert '03b / JAR;VIS · live connected tools' in html
+          assert 'sessionStore=new Map()' in html
+          assert 'localStorage.' not in html
+          assert 'id="connected-consent"' in html
+          print('LIVE_HTML_HTTP_200',len(raw),hashlib.sha256(raw).hexdigest())
+
+          st,b,_=call('/health')
+          health=json.loads(b)
+          assert st==200 and health['ok'] is True
+          assert health['github']=='PUBLIC_READ_ONLY'
+          assert health['private_data_collected']==0
+          print('LIVE_HEALTH',health['schema'])
+
+          st,b,_=call('/capabilities')
+          caps=json.loads(b)
+          assert st==200 and caps['schema']=='jarvis.connected-capability-registry/v1'
+          assert len(caps['connected'])==4
+          assert all(x['state']=='CONNECTED_READ_ONLY' and len(x['source_sha'])==40
+                    for x in caps['connected']),caps
+          assert caps['no_github_writes'] is True
+          print('ACTUAL_GITHUB_SOURCES_READY',
+                [(x['id'],x['source_sha'][:12]) for x in caps['connected']])
+
+          for src in ('jarvis','world','ghot','static_os'):
+              st,b,_=call('/execute',{'action':'source_report','source':src})
+              d=json.loads(b)
+              assert st==200 and d['performed']=='REMOTE_GITHUB_SOURCE_FETCH_AND_COMPILE'
+              assert d['writes']==0 and len(d['report']['github_source_blob_sha'])==40
+              if src=='jarvis':
+                  assert d['report']['kind']=='REAL_JARVIS_PACKAGE_SCRIPTS'
+                  assert 'live:offer' in d['report']['scripts']
+              elif src=='world':
+                  assert len(d['report']['children'])==3
+                  assert d['report']['kind']=='VERIFIED_WORLD_CARTRIDGE_LOCK'
+              print('REAL_REMOTE_SOURCE_REPORT_EXECUTED',src,d['report']['github_source_blob_sha'])
+
+          st,b,_=call('/execute',{'action':'route_offer',
+                                   'offer':'I can play guitar for 15 minutes right now'})
+          plan=json.loads(b)
+          assert st==200 and plan['ok'] is True
+          assert plan['performed']=='SOURCE_OWNED_LIVE_OFFER_ROUTER_EVALUATED'
+          assert plan['plan']['intent']['kind']=='music'
+          assert plan['plan']['intent']['when']=='now'
+          assert plan['plan']['actions'][0]['id']=='record-audio'
+          assert plan['action_executed_on_person_or_device'] is False
+          assert plan['inputs_retained'] is False and plan['writes']==0
+          print('ACTUAL_REMOTE_JARVIS_ROUTER_EXECUTED',plan['plan']['actions'][0]['id'])
+
+          st,b,_=call('/execute',{'action':'route_offer',
+                                  'offer':'I will play guitar next week'})
+          later=json.loads(b)
+          assert st==200 and later['plan']['intent']['when']=='later'
+          assert all(x['id'] not in ('record-audio','record-video') for x in later['plan']['actions'])
+          print('NO_AUTO_RECORDING_WHEN_REQUEST_IS_LATER')
+
+          st,b,_=call('/execute',{'action':'source_report','source':'../../private'})
+          assert st==422 and json.loads(b)['reason']=='UNSUPPORTED_SOURCE'
+          st,b,_=call('/execute',{'action':'source_report','source':'jarvis'},
+                       headers={'Origin':'https://evil.invalid'})
+          assert st==403 and json.loads(b)['reason']=='CROSS_ORIGIN_POST_REFUSED'
+          st,b,_=call('/execute',{'action':'route_offer','offer':'a'*241})
+          assert st==422 and json.loads(b)['reason']=='OFFER_TEXT_REQUIRED_4_TO_240'
+          st,b,_=call('/execute',{'action':'execute_arbitrary_shell','command':'rm -rf /'})
+          assert st==422 and json.loads(b)['reason']=='ACTION_NOT_ALLOWED'
+          print('HOSTILE_INPUTS_REFUSED_NO_GITHUB_WRITE')
+          print('LANTERN_015_ACTUAL_PUBLIC_READ_ONLY_JARVIS_CONNECTED_MILESTONE_VERIFIED')
+          PY
