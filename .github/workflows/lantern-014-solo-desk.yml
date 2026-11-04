@@ -50,6 +50,8 @@ jobs:
         run: node --test experiments/lantern-commons-014/test_learning_021.mjs
       - name: Verify SPAWN 022 executable world cartridges, shared-input tournaments, and reality boundaries
         run: node --test experiments/lantern-commons-014/test_worlds_022.mjs
+      - name: Verify SPAWN 023 independently signed, permissioned reLATTE cartridge crossing
+        run: node --test experiments/lantern-commons-014/test_crossing_023.mjs
       - name: Verify standalone HTML, no remote assets, and no automatic completion claims
         run: |
           python3 - <<'PY'
