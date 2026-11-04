@@ -176,7 +176,7 @@ function deriveKit(p){
  if(/website|newsletter|web page|publish|flyer|poster|social post|email/.test(hay)){add(['device','content','internet']);slice='Make one usable draft page or message locally before publishing.';}
  if(/equipment|repair|circuit|controller|adapter|midi|cable|light/.test(hay)){add(['cable','power','device']);slice='Test one safe part of the signal chain before buying equipment.';}
  const essentials=BASE[p.type].slice(0,2);
- const selected=[...essentials,...parts.filter(x=>!essentials.includes(x))].slice(0,11);
+ const domain=parts.filter(x=>!BASE[p.type].includes(x));const selected=[...essentials,...domain,...parts.filter(x=>!essentials.includes(x)&&!domain.includes(x))].slice(0,11);
  return {slice:slice,questions:selected.map((key,index)=>({...KINDS[key],key:key,essential:index<2}))};
 }
 function gleaningScore(projects,glean){
@@ -226,7 +226,7 @@ function renderGlean(){
  $('glean-world').textContent=world.confirmed+' materials / opportunities self-reported found';
  $('glean-progress').textContent=world.answered+' questions answered · '+world.pending+' to investigate';
  $('glean-slices').textContent=world.completedTasks+' completed actions (self-reported)';
- const p=state.projects.find(p=>p.id===choice.value);
+ const p=state.projects.find(p=>p.id===choice.value)||state.projects[0];if(p)choice.value=p.id;
  const quest=$('glean-quest'),questions=$('glean-questions'),next=$('glean-next');questions.replaceChildren();
  if(!p){quest.textContent='Create one operation first. Your smallest real action will appear here.';next.textContent='No imaginary people or materials are seeded.';return;}
  const kit=gleanQuestions(p);quest.replaceChildren();quest.append(el('div','THE SMALLEST VIABLE SLICE · '+p.title,'tag'),el('h3',kit.slice),el('p','We are checking for the ingredients, not assuming you own them. Answer any tiny question; adjust the slice if something is missing.','small'));
@@ -261,7 +261,7 @@ function renderGlean(){
 }
 $('glean-project').addEventListener('change',renderGlean);
 $('glean-create').addEventListener('click',()=>{
- const p=state.projects.find(p=>p.id===$('glean-project').value);if(!p){note('glean-status','Create an operation before adding a quest.');return;}
+ const p=state.projects.find(p=>p.id===$('glean-project').value)||state.projects[0];if(!p){note('glean-status','Create an operation before adding a quest.');return;}
  const label=clean($('glean-custom').value,90),where=clean($('glean-hint').value,120),alt=clean($('glean-alternative').value,160);
  if(label.length<3){note('glean-status','Name the little thing you want to look for (three characters minimum).');return;}
  const list=state.glean.custom[p.id]||(state.glean.custom[p.id]=[]);
