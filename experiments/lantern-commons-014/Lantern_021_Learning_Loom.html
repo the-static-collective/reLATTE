@@ -727,6 +727,7 @@ function validRuleTemplate(name,test,mode){
  return true;
 }
 function addLearningRule(input){
+ if(!input||typeof input.name!=='string'||input.name.length>145||typeof input.firstTest!=='string'||input.firstTest.length>180||typeof input.refute!=='string'||input.refute.length>180)return {ok:false,reason:'A learning rule exceeds its text limits or has invalid fields.'};
  if(state.learning.rules.length>=18)return {ok:false,reason:'18-rule local limit reached. Disable an old rule before adding more.'};
  const mode=input.mode,source=clean(input.sourceTrialId||'',100),name=clean(input.name,145),firstTest=clean(input.firstTest,180),refute=clean(input.refute,180),needs=Array.isArray(input.needs)?input.needs:[];
  if(!['single','pair','triple'].includes(mode))return {ok:false,reason:'Choose one, two or three existing roles.'};
