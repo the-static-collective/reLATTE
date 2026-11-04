@@ -14,7 +14,7 @@ create table if not exists public.relatte_relay_024_offers (
   quantity smallint not null check (quantity between 1 and 20),
   packet_id uuid not null unique,
   packet_hash text not null unique check (packet_hash ~ '^[a-f0-9]{64}$'),
-  packet jsonb not null,
+  packet text not null check (char_length(packet) <= 3000),
   owner_hash text not null check (owner_hash ~ '^[a-f0-9]{64}$'),
   check (expires_at > created_at and expires_at <= created_at + interval '65 minutes')
 );
@@ -27,11 +27,11 @@ create table if not exists public.relatte_relay_024_interests (
   created_at timestamptz not null default now(),
   packet_id uuid not null unique,
   packet_hash text not null unique check (packet_hash ~ '^[a-f0-9]{64}$'),
-  packet jsonb not null,
+  packet text not null check (char_length(packet) <= 3000),
   guest_hash text not null check (guest_hash ~ '^[a-f0-9]{64}$'),
-  decision_packet jsonb,
+  decision_packet text check (decision_packet is null or char_length(decision_packet) <= 3000),
   decision_hash text check (decision_hash is null or decision_hash ~ '^[a-f0-9]{64}$'),
-  ack_packet jsonb,
+  ack_packet text check (ack_packet is null or char_length(ack_packet) <= 3000),
   ack_hash text check (ack_hash is null or ack_hash ~ '^[a-f0-9]{64}$'),
   check ((decision_packet is null) = (decision_hash is null)),
   check ((ack_packet is null) = (ack_hash is null)),
