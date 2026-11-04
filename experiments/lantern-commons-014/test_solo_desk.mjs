@@ -7,7 +7,7 @@ const html=readFileSync(new URL('./Lantern_014_The_Solo_Desk.html',import.meta.u
 const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
 
 function browser(){
-  const nodes=new Map(),disk=new Map(),downloads=[];
+  const nodes=new Map(),disk=new Map(),downloads=[],blobs=[];
   function element(id){
     if(!nodes.has(id)){
       const n={id,value:'',checked:false,dataset:{},textContent:'',style:{},children:[],events:{},
@@ -33,11 +33,11 @@ function browser(){
   const window={scrollTo(){},print(){}};
   const localStorage={getItem(k){return disk.get(k)||null},setItem(k,v){disk.set(k,String(v))}};
   const context=createContext({document,window,localStorage,console,Blob,Date,Math,
-    URL:{createObjectURL(){return 'blob:offline'},revokeObjectURL(){}},
+    URL:{createObjectURL(blob){blobs.push(blob);return 'blob:offline'},revokeObjectURL(){}},
     navigator:{clipboard:{writeText:async()=>{}}},
     setTimeout(){return 1},clearTimeout(){},confirm(){return true}});
   new Script(scripts[0][1],{filename:'solo-desk.js'}).runInContext(context);
-  return {element,window,disk,downloads};
+  return {element,window,disk,downloads,blobs};
 }
 
 test('fully embedded: no remote runtime dependencies or data submission',()=>{
@@ -102,4 +102,64 @@ test('user strings render as literal text, not evaluated HTML',()=>{
   c.element('build').click();
   assert.match(c.element('action-body').textContent,/<img src=x/);
   assert.equal(c.element('action-body').children.length,0);
+});
+
+test('Step 03 offers only executable local abilities, and all buttons are wired',()=>{
+  const c=browser();
+  const offers=c.window.LANTERN014.offers();
+  assert.equal(offers.length,4);
+  assert.deepEqual([...offers].map(x=>x.id),['checklist','tracker','page','audit']);
+  for(const x of offers)assert.ok(c.element('jarvis-'+x.id).events.click);
+  assert.equal(c.element('jarvis').id,'jarvis');
+  assert.match(c.element('jarvis-context').textContent,/Create or restore/);
+});
+test('JAR;VIS checklist modifies working note but cannot mark external tasks done',()=>{
+  const c=browser();
+  c.element('problem').value='Find ten useful photos';
+  c.element('finish').value='ten selected photos';
+  c.element('build').click();
+  const before=c.window.LANTERN014.status().active.note;
+  c.element('jarvis-checklist').click();
+  const after=c.window.LANTERN014.status().active;
+  assert.ok(after.note.length>before.length);
+  assert.match(after.note,/JAR;VIS · EXECUTED CHECKLIST/);
+  assert.match(after.note,/- \[ \]/);
+  assert.equal(after.completed,false);
+  assert.match(c.element('jarvis-response').textContent,/DONE HERE/);
+});
+test('JAR;VIS creates a real downloadable CSV with a usable structured task table',async()=>{
+  const c=browser();c.element('mode-decide').click();
+  c.element('problem').value='Decide which photo set to publish';
+  c.element('build').click();
+  c.element('jarvis-tracker').click();
+  assert.equal(c.downloads.at(-1),'Lantern_JARVIS_Work_Tracker.csv');
+  const csv=await c.blobs.at(-1).text();
+  assert.match(csv,/Project","Task","Status","Evidence","Date/);
+  assert.match(csv,/Not started/);
+  assert.equal(csv.split('\\r\\n').length,7);
+  assert.equal(c.window.LANTERN014.status().active.completed,false);
+});
+test('JAR;VIS produces a standalone HTML work card and encodes user-supplied markup',async()=>{
+  const c=browser();
+  c.element('problem').value='<img src=x onerror=alert(1)> photos';
+  c.element('build').click();
+  c.element('jarvis-page').click();
+  assert.equal(c.downloads.at(-1),'Lantern_JARVIS_Work_Card.html');
+  const html=await c.blobs.at(-1).text();
+  assert.match(html,/<ol>/);
+  assert.match(html,/type="checkbox"/);
+  assert.match(html,/&lt;img src=x onerror=alert\(1\)&gt;/);
+  assert.doesNotMatch(html,/<img src=x onerror/);
+  assert.doesNotMatch(html,/<script.*src=/i);
+  assert.equal(c.window.LANTERN014.status().active.completed,false);
+});
+test('JAR;VIS structural audit reports gaps, but never claims to verify outside outcomes',()=>{
+  const c=browser();
+  c.element('problem').value='Fix a broken screen';
+  c.element('build').click();
+  c.element('jarvis-audit').click();
+  assert.match(c.element('jarvis-response').textContent,/\/4 document checks passed/);
+  assert.match(c.element('jarvis-response').textContent,/Missing: one concrete desired outcome/);
+  assert.match(c.element('jarvis-response').textContent,/structural check only/);
+  assert.equal(c.window.LANTERN014.status().active.completed,false);
 });
