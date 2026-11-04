@@ -262,7 +262,13 @@ try{
   await deposit(farmer,'bank','wheat',1);
   // Three genuine wheat items are physically spent on a vanilla 3-wheat
   // bread recipe. This establishes real Minecraft material transformation.
-  await withdraw(farmer,'bank','wheat',3);
+  // Mineflayer's partial-withdraw packet can leave a ghost count when
+  // withdrawing only three items from a larger Minecraft barrel stack.
+  // Instead take the REAL full original stack, craft the bread, then return
+  // every remaining item to its source barrel (all custody is rechecked).
+  const fullBankWheat=await countBank('bank','wheat');
+  must(fullBankWheat===first.stock.harvest_wheat+1,'UNEXPECTED_GROWTH_ITEM_LEDGER');
+  await withdraw(farmer,'bank','wheat',fullBankWheat);
   await move(farmer,112,65,16);
   const table=farmer.blockAt(positions.table);
   must(table?.name==='crafting_table','MISSING_REAL_CRAFTING_TABLE');
@@ -271,7 +277,11 @@ try{
   must(recipes.length>0,'VANILLA_BREAD_RECIPE_UNAVAILABLE');
   await farmer.craft(recipes[0],1,table);
   await until(async()=>countInventory(farmer,'bread')===1,'BREAD_NOT_ACTUALLY_CRAFTED');
-  await until(async()=>countInventory(farmer,'wheat')===0,'WHEAT_NOT_SPENT_ON_BREAD');
+  await until(async()=>countInventory(farmer,'wheat')===fullBankWheat-3,
+    'WHEAT_NOT_SPENT_ON_BREAD');
+  await deposit(farmer,'bank','wheat',fullBankWheat-3);
+  must(await countBank('bank','wheat')===fullBankWheat-3,
+    'UNSPENT_WHEAT_NOT_RETURNED_TO_PUBLIC_STORAGE');
   farmerActions.push({action:'VANILLA_CRAFT_BREAD',wheat_spent:3,bread_created:1,
     recipe_source:'minecraft:bread',raw_wheat_initial_harvest_bank:first.stock.harvest_wheat,
     planted_and_reharvested_wheat:1});
