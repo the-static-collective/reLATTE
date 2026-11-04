@@ -31,6 +31,7 @@ const positions={
   originalWheat:new Vec3(117,65,17),bricks:new Vec3(116,65,17),
   originalSiloWheat:new Vec3(113,65,17),
   bank:new Vec3(110,65,18),seeds:new Vec3(111,65,18),
+  regrowthBank:new Vec3(113,65,18),
   bread:new Vec3(112,65,18),table:new Vec3(112,65,17),
   marker:new Vec3(110,66,19),heirMarker:new Vec3(112,66,19),
   pond:new Vec3(107,64,8),publicBell:new Vec3(109,66,16),
@@ -70,7 +71,7 @@ function countInventory(b,name){
  return b.inventory.items().filter(x=>x.type===id).reduce((n,x)=>n+x.count,0);
 }
 async function countBank(name,item){
- if(!['originalWheat','bricks','originalSiloWheat','bank','seeds','bread'].includes(name))
+ if(!['originalWheat','bricks','originalSiloWheat','bank','seeds','bread','regrowthBank'].includes(name))
    throw Error('BAD_CONTAINER');
  const pos=positions[name];
  const key='#012'+name+item;
@@ -90,6 +91,7 @@ async function snapshot(b){
   silo_wheat:await countBank('originalSiloWheat','wheat'),
   harvest_wheat:block(b,'bank')==='barrel'?await countBank('bank','wheat'):0,
   harvested_seeds:block(b,'seeds')==='barrel'?await countBank('seeds','wheat_seeds'):0,
+  regrown_wheat:block(b,'regrowthBank')==='barrel'?await countBank('regrowthBank','wheat'):0,
   bread:block(b,'bread')==='barrel'?await countBank('bread','bread'):0,
  };
  return {blocks:state,stock};
@@ -109,6 +111,7 @@ async function move(b,x,y,z){
 async function deposit(b,loc,item,n){
  must(block(b,loc)==='barrel','DEST_NOT_REAL_BARREL_'+loc);
  must(countInventory(b,item)>=n,'NO_OWNER_INVENTORY_FOR_DEPOSIT_'+item);
+ const previousCount=await countBank(loc,item);
  const p=positions[loc];
  // The saved synthetic island ends at z=18. Stand inside the inherited
  // world, not two blocks beyond it (which can be void on Superflat servers).
@@ -116,7 +119,7 @@ async function deposit(b,loc,item,n){
  const win=await b.openContainer(b.blockAt(p));
  try{await win.deposit(b.registry.itemsByName[item].id,null,n);}
  finally{win.close();}
- await until(async()=>await countBank(loc,item)>=n,'NO_SERVER_DEPOSIT_'+loc);
+ await until(async()=>await countBank(loc,item)===previousCount+n,'NO_SERVER_DEPOSIT_'+loc);
  movements.push({actor:b.username,action:'ACTUAL_GAME_DEPOSIT',item,amount:n,into:loc});
 }
 async function withdraw(b,loc,item,n){
@@ -269,15 +272,17 @@ try{
   must(heirWheat>=1,'REPLANTED_CROP_ITEM_DROP_NOT_RECOVERED');
   await cmd('gamerule random_tick_speed 3');
   must(countInventory(farmer,'wheat')>=1,'NO_ACTUAL_SECOND_GENERATION_WHEAT');
-  await deposit(farmer,'bank','wheat',1);
-  // Three genuine wheat items are physically spent on a vanilla 3-wheat
-  // bread recipe. This establishes real Minecraft material transformation.
-  // Mineflayer's partial-withdraw packet can leave a ghost count when
-  // withdrawing only three items from a larger Minecraft barrel stack.
-  // Instead take the REAL full original stack, craft the bread, then return
-  // every remaining item to its source barrel (all custody is rechecked).
+  // Store naturally regrown wheat in its own EMPTY provenance vault:
+  // this avoids server/client ambiguity when merging one item into a larger
+  // existing wheat stack. The older harvest stays independently countable.
+  await deposit(farmer,'regrowthBank','wheat',1);
+  must(await countBank('regrowthBank','wheat')===1,
+    'ACTUAL_REGROWN_WHEAT_NOT_DEPOSITED');
+  // Three genuine wheat are spent on a vanilla three-wheat bread recipe.
+  // Take the entire inherited wheat stack, then return every unspent item.
   const fullBankWheat=await countBank('bank','wheat');
-  must(fullBankWheat===first.stock.harvest_wheat+1,'UNEXPECTED_GROWTH_ITEM_LEDGER');
+  must(fullBankWheat===first.stock.harvest_wheat,
+    'INHERITED_FIRST_HARVEST_BANK_CHANGED_WITHOUT_ACTOR');
   await withdraw(farmer,'bank','wheat',fullBankWheat);
   await move(farmer,112,65,16);
   const table=farmer.blockAt(positions.table);
