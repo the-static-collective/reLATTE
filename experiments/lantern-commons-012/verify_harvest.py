@@ -100,7 +100,8 @@ def verify(stage,archive,observation,parent):
              crop[1]["operator_setblock_wheat"] is False and
              crop[2]["crop_origin"]=="PLAYER_PLANTED_AND_RANDOM_TICK_MATURED",
              "FAKE_CROP_GENERATION")
-        need(end["stock"]["harvest_wheat"]==start["stock"]["harvest_wheat"]-2 and
+        need(end["stock"]["harvest_wheat"]==start["stock"]["harvest_wheat"]-3 and
+             end["stock"]["regrown_wheat"]==1 and
              end["stock"]["harvested_seeds"]>=1 and
              end["blocks"]["replanted"]=="air" and
              end["blocks"]["heirMarker"]=="emerald_block","FOOD_AND_CROP_LEDGER")
@@ -116,8 +117,8 @@ def verify(stage,archive,observation,parent):
         need([(x["action"],x["item"],x["amount"]) for x in moves]==[
             ("ACTUAL_GAME_WITHDRAW","wheat_seeds",1),
             ("ACTUAL_GAME_DEPOSIT","wheat",1),
-            ("ACTUAL_GAME_WITHDRAW","wheat",source_bank+1),
-            ("ACTUAL_GAME_DEPOSIT","wheat",source_bank-2)],
+            ("ACTUAL_GAME_WITHDRAW","wheat",source_bank),
+            ("ACTUAL_GAME_DEPOSIT","wheat",source_bank-3)],
             "ILLEGAL_HEIR_RESOURCES")
     return {"branch":stage,"version":full["version"],"cartridge_id":full["cartridge_id"],
         "parent_cartridge_id":parent["cartridge_id"],"world_tree_sha256":full["world_tree_sha256"],
@@ -154,7 +155,9 @@ def main(a):
         "heir_additional_crops_from_player_seed":1,
         "grain_converted_and_eaten_as_bread":3,
         "operator_inventory_item_minting":0,
-        "final_heir_wheat":{"vault":2,"harvest_bank":heir["ending_stock"]["harvest_wheat"]},
+        "final_heir_wheat":{"vault":2,
+            "harvest_bank":heir["ending_stock"]["harvest_wheat"],
+            "second_generation_bank":heir["ending_stock"]["regrown_wheat"]},
         "claims_limit":["Game-only virtual farming and consumption",
           "Parent standing ripe field is inherited from older authored game construction",
           "Natural crop random ticking accelerated from default to 1800",
@@ -168,7 +171,7 @@ def main(a):
         "versions":[{k:x[k] for k in ("branch","version","cartridge_id","parent_cartridge_id")} for x in ms],
         "wheat_original":2,"wheat_harvested_in_old_field":harvest["ending_stock"]["harvest_wheat"],
         "wheat_harvested_from_player_seed":1,
-        "wheat_eaten_as_bread_equivalent":3,"wheat_final":2+heir["ending_stock"]["harvest_wheat"],
+        "wheat_eaten_as_bread_equivalent":3,"wheat_final":2+heir["ending_stock"]["harvest_wheat"]+heir["ending_stock"]["regrown_wheat"],
         "operator_new_item_grants":0},sort_keys=True))
 
 if __name__=="__main__":
