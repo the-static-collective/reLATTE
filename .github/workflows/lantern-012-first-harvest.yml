@@ -1,0 +1,188 @@
+name: 'LANTERN-012 first actual Minecraft crop harvest and saved-world seed replant'
+
+on:
+  push:
+    branches:
+      - experiment/lantern-commons-012-first-harvest
+    paths:
+      - 'experiments/lantern-commons-012/**'
+      - '.github/workflows/lantern-012-first-harvest.yml'
+  pull_request:
+    paths:
+      - 'experiments/lantern-commons-012/**'
+      - '.github/workflows/lantern-012-first-harvest.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-safety:
+    name: Reject simulated harvests, injected resources, and unsafe world-copy code
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify full-world cartridge ZIP implementation
+        run: |
+          python3 -m unittest discover -v -s experiments/lantern-commons-010 -p test_world_cartridge.py
+          python3 -m py_compile experiments/lantern-commons-012/verify_harvest.py experiments/lantern-commons-012/ci_overlay.py
+          node --check experiments/lantern-commons-012/live_first_harvest.mjs
+          bash -n experiments/lantern-commons-012/run_world.sh
+      - name: Refuse game-source item minting or pre-grown wheat blocks
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          funcs=Path('experiments/lantern-commons-012/datapack/data/lantern/function/harvest')
+          for f in funcs.glob('*.mcfunction'):
+              for line in f.read_text().splitlines():
+                  l=line.strip()
+                  if not l or l.startswith('#'):continue
+                  if l.split()[0] not in {'setblock','data','execute'}:
+                      raise ValueError(f'Unapproved game-source command in {f}: {l}')
+                  if re.search(r'\b(?:give|clear|loot|item replace|clone|summon)\b',l,re.I):
+                      raise ValueError(f'Item minting forbidden: {l}')
+                  if re.search(r'\bsetblock\s+\S+\s+\S+\s+\S+\s+minecraft:wheat\b',l,re.I):
+                      raise ValueError('Crop must grow in game, not via setblock')
+          print('SOURCE_FORBIDS_OPERATOR_CROP_OR_ITEM_MINTING')
+          PY
+
+  parent-forks:
+    name: Copy exact inherited 011 seed-vault world → ${{ matrix.stage }} v0.1.4
+    needs: [source-safety]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        stage: [harvest, reserve]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Install first-party Minecraft game client
+        run: |
+          npm install --ignore-scripts
+          npm install --no-save --ignore-scripts mineflayer@4.39.0 rcon-client@4.2.5 vec3@0.2.0
+      - name: Retrieve exact previously verified 011 silo heir FULL world-save bytes
+        uses: actions/download-artifact@v4
+        with:
+          name: lantern-world-011-silo_heir-v0.1.3
+          repository: the-static-collective/reLATTE
+          run-id: 41727936592
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: work/parent
+      - name: Checkout complete parent and create physically observed game-only fork
+        env:
+          STAGE: ${{ matrix.stage }}
+          VERSION: '0.1.4'
+          PARENT_ARCHIVE: work/parent/silo_heir-v0.1.3.zip
+        run: bash experiments/lantern-commons-012/run_world.sh
+      - name: Preserve distinct complete world SAVE ZIP, manifest receipt, actual game witness
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lantern-world-012-${{ matrix.stage }}-v0.1.4
+          if-no-files-found: warn
+          retention-days: 90
+          path: |
+            work/first-harvest/*.zip
+            work/first-harvest/*.receipt.json
+            work/first-harvest/game-observation.json
+
+  heir:
+    name: Inherit exact Harvest save; replant, regrow, craft and actually eat bread
+    needs: [parent-forks]
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Install official game client and Java runtime dependencies
+        run: |
+          npm install --ignore-scripts
+          npm install --no-save --ignore-scripts mineflayer@4.39.0 rcon-client@4.2.5 vec3@0.2.0
+      - name: Download the actual harvested world from first independent job
+        uses: actions/download-artifact@v4
+        with:
+          name: lantern-world-012-harvest-v0.1.4
+          path: work/parent
+      - name: Checkout verified harvested parent world; grow and consume actual descendant food
+        env:
+          STAGE: heir
+          VERSION: '0.1.5'
+          PARENT_ARCHIVE: work/parent/harvest-v0.1.4.zip
+        run: bash experiments/lantern-commons-012/run_world.sh
+      - name: Preserve full 0.1.5 second-generation food world and actual game observations
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lantern-world-012-heir-v0.1.5
+          if-no-files-found: warn
+          retention-days: 90
+          path: |
+            work/first-harvest/*.zip
+            work/first-harvest/*.receipt.json
+            work/first-harvest/game-observation.json
+
+  verify-world-lineage:
+    name: Re-prove root → harvested first crop → actually planted next crop and eaten bread
+    needs: [heir]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Recover immutable exact original 011 saved-world predecessor
+        uses: actions/download-artifact@v4
+        with:
+          name: lantern-world-011-silo_heir-v0.1.3
+          repository: the-static-collective/reLATTE
+          run-id: 41727936592
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: work/original
+      - name: Recover every fully changed child snapshot and independent game witness
+        uses: actions/download-artifact@v4
+        with:
+          pattern: lantern-world-012-*
+          path: work/descendants
+          merge-multiple: false
+      - name: Independently verify all saved-world bytes, exact parents, real crops, bread and no new inventory grants
+        run: |
+          set -euo pipefail
+          python3 experiments/lantern-commons-012/verify_harvest.py \
+            --parent work/original/silo_heir-v0.1.3.zip \
+            --harvest work/descendants/lantern-world-012-harvest-v0.1.4/harvest-v0.1.4.zip \
+            --harvest-observation work/descendants/lantern-world-012-harvest-v0.1.4/game-observation.json \
+            --reserve work/descendants/lantern-world-012-reserve-v0.1.4/reserve-v0.1.4.zip \
+            --reserve-observation work/descendants/lantern-world-012-reserve-v0.1.4/game-observation.json \
+            --heir work/descendants/lantern-world-012-heir-v0.1.5/heir-v0.1.5.zip \
+            --heir-observation work/descendants/lantern-world-012-heir-v0.1.5/game-observation.json \
+            --out work/first-harvest-lineage/lineage.json
+      - name: Preserve signed-free, SHA-bound real world geneaology evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: lantern-world-012-actual-harvest-genealogy
+          if-no-files-found: error
+          retention-days: 90
+          path: work/first-harvest-lineage/lineage.json

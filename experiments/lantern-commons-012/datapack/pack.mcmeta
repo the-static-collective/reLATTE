@@ -1,0 +1,13 @@
+{
+  "pack": {
+    "description": "Lantern Commons 012: first real game harvest, inherited seeds, naturally grown crop, controlled food use",
+    "min_format": [
+      101,
+      1
+    ],
+    "max_format": [
+      101,
+      1
+    ]
+  }
+}
