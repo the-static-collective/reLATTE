@@ -1098,6 +1098,188 @@ const CROSSING_PORTABLE_HTML=
  '<p id="cross-result" role="status" aria-live="polite"></p>'+
  '<p><small>Cryptographic packet integrity is not evidence of physical exchange. For separate real local OFFER/NEED matching, operators may deliberately open the <a href="https://kbhqacsdvjsstzyplqij.supabase.co/functions/v1/now-route-live" target="_blank" rel="noopener noreferrer">NOW ROUTE pilot</a>. It has independent consent and confirmation rules; these signed packets are not automatically synchronized there.</small></p></div>';
 
+
+/* Signed crossing protocol: *integrity and key continuity*, not verified identity, inventory or delivery.
+   Standalone browser runtime; no service, CDN, credential, network, or outside world mutation. */
+function worldCrossingRuntime(){
+ 'use strict';
+ const S='relatte/crossing-packet/v1';
+ const CATEGORIES=['tools','materials','method','art','skill','digital'];
+ const SCOPES=['review','test','copy'];
+ const STATES=['HOLD','ADMIT','REFUSE'];
+ const UNIT='one bounded item/use';
+ const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
+ const hex=/^[0-9a-f]{64}$/;
+ const b64pat=/^[A-Za-z0-9_-]+$/;
+ const unsafe=/(?:https?:\/\/|www\.|[^\s]+@[^\s]+\.[^\s]+|(?:\+?\d[\d\s().-]{8,}\d)|<|>|(?:\b(?:password|secret key|private key|home address|bank account|account number|ssn|case number)\b)|(?:\b\d{1,5}\s+[a-z]+\s+(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln)\b))/i;
+ const get=id=>document.getElementById(id);
+ let own=null,latestOutbound=null,remoteOffer=null,localOffer=null,remoteInterest=null,localInterest=null,remoteDecision=null,localDecision=null,remoteAck=null;
+ const asText=x=>String(x==null?'':x).trim();
+ function fail(message){throw Error(message)}
+ function exactly(value,keys){
+  return value&&typeof value==='object'&&!Array.isArray(value)&&
+   Object.keys(value).sort().join('|')===keys.slice().sort().join('|');
+ }
+ function textSafe(x,min=8,max=100){
+  return typeof x==='string'&&x.trim().length>=min&&x.length<=max&&!unsafe.test(x);
+ }
+ function base64(bytes){let str='';for(const x of new Uint8Array(bytes))str+=String.fromCharCode(x);return btoa(str).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');}
+ function unbase64(x){if(typeof x!=='string'||!b64pat.test(x)||x.length>150)fail('BAD_SIGNATURE_ENCODING');const padded=x.replaceAll('-','+').replaceAll('_','/');const bin=atob(padded+'='.repeat((4-padded.length%4)%4));return Uint8Array.from(bin,ch=>ch.charCodeAt(0));}
+ async function digest(text){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text))),x=>x.toString(16).padStart(2,'0')).join('');}
+ function pubOk(v){return exactly(v,['kty','crv','x','y'])&&v.kty==='EC'&&v.crv==='P-256'&&typeof v.x==='string'&&typeof v.y==='string'&&v.x.length===43&&v.y.length===43&&b64pat.test(v.x)&&b64pat.test(v.y);}
+ function sameActor(a,b){return !!a&&!!b&&a.x===b.x&&a.y===b.y;}
+ function bodyOk(kind,b){
+  if(kind==='OFFER')return exactly(b,['category','label','quantity','unit','scope'])&&CATEGORIES.includes(b.category)&&textSafe(b.label,12,100)&&Number.isInteger(b.quantity)&&b.quantity>=1&&b.quantity<=20&&b.unit===UNIT&&SCOPES.includes(b.scope);
+  if(kind==='INTEREST')return exactly(b,['quantity','unit','reason'])&&Number.isInteger(b.quantity)&&b.quantity>=1&&b.quantity<=20&&b.unit===UNIT&&textSafe(b.reason,12,100);
+  if(kind==='DECISION')return exactly(b,['decision','note'])&&STATES.includes(b.decision)&&textSafe(b.note,12,100);
+  if(kind==='ACK')return exactly(b,['status','note'])&&b.status==='SEEN_NOT_DELIVERED'&&textSafe(b.note,12,100);
+  return false;
+ }
+ function linkOk(kind,l){
+  if(kind==='OFFER')return l===null;
+  if(kind==='INTEREST')return exactly(l,['offerId','offerHash'])&&uuid.test(l.offerId)&&hex.test(l.offerHash);
+  if(kind==='DECISION')return exactly(l,['offerId','offerHash','interestId','interestHash'])&&uuid.test(l.offerId)&&uuid.test(l.interestId)&&hex.test(l.offerHash)&&hex.test(l.interestHash);
+  if(kind==='ACK')return exactly(l,['offerId','offerHash','interestId','interestHash','decisionId','decisionHash'])&&uuid.test(l.offerId)&&uuid.test(l.interestId)&&uuid.test(l.decisionId)&&hex.test(l.offerHash)&&hex.test(l.interestHash)&&hex.test(l.decisionHash);
+  return false;
+ }
+ function structural(p){
+  if(!exactly(p,['schema','version','kind','id','issuedAt','expiresAt','issuer','link','body','signature'])||p.schema!==S||p.version!==1||!['OFFER','INTEREST','DECISION','ACK'].includes(p.kind)||!uuid.test(p.id)||!pubOk(p.issuer)||!bodyOk(p.kind,p.body)||!linkOk(p.kind,p.link)||typeof p.signature!=='string'||p.signature.length!==86||!b64pat.test(p.signature))return false;
+  const at=Date.parse(p.issuedAt),end=Date.parse(p.expiresAt),now=Date.now();
+  return Number.isFinite(at)&&Number.isFinite(end)&&at<=now+300000&&at>=now-7200000&&end>now&&end-at>0&&end-at<=3600000+60000;
+ }
+ function unsigned(p){const {signature, ...bare}=p;return bare;}
+ async function verify(packet){
+  let p=packet;if(typeof p==='string'){if(p.length>5500)fail('PACKET_TOO_LARGE');try{p=JSON.parse(p)}catch{fail('INVALID_JSON_PACKET')}}
+  if(!structural(p))fail('INVALID_OR_EXPIRED_PACKET');
+  const bare=unsigned(p);
+  const key=await crypto.subtle.importKey('jwk',{...p.issuer,ext:true,key_ops:['verify']},{name:'ECDSA',namedCurve:'P-256'},false,['verify']);
+  const verified=await crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},key,unbase64(p.signature),new TextEncoder().encode(JSON.stringify(bare)));
+  if(!verified)fail('SIGNATURE_MISMATCH');
+  return {packet:p,hash:await digest(JSON.stringify(p)),verified:'SIGNATURE_INTEGRITY_ONLY'};
+ }
+ async function makeIdentity(){
+  if(own)return {publicKey:own.pub,fingerprint:own.fingerprint};
+  if(!crypto||!crypto.subtle||!crypto.getRandomValues||!crypto.randomUUID)fail('SECURE_BROWSER_CRYPTO_REQUIRED');
+  const keys=await crypto.subtle.generateKey({name:'ECDSA',namedCurve:'P-256'},true,['sign','verify']);
+  const jwk=await crypto.subtle.exportKey('jwk',keys.publicKey);
+  const pub={kty:'EC',crv:'P-256',x:jwk.x,y:jwk.y};
+  own={keys,pub,fingerprint:(await digest(JSON.stringify(pub))).slice(0,16)};
+  return {publicKey:pub,fingerprint:own.fingerprint};
+ }
+ async function sign(kind,link,body){
+  await makeIdentity();
+  if(!bodyOk(kind,body)||!linkOk(kind,link))fail('INVALID_SCOPE_OR_CONTENT');
+  const at=new Date(),expires=new Date(at.getTime()+3600000);
+  const bare={schema:S,version:1,kind,id:crypto.randomUUID(),issuedAt:at.toISOString(),expiresAt:expires.toISOString(),issuer:own.pub,link,body};
+  const signature=base64(await crypto.subtle.sign({name:'ECDSA',hash:'SHA-256'},own.keys.privateKey,new TextEncoder().encode(JSON.stringify(bare))));
+  const packet={...bare,signature};
+  if(!structural(packet))fail('LOCAL_SIGNING_FAILED');
+  return packet;
+ }
+ async function makeOffer({category,label,quantity,scope,consent}){
+  if(consent!==true)fail('EXPLICIT_OFFER_CONSENT_REQUIRED');
+  if(!CATEGORIES.includes(category)||!textSafe(label,12,100)||!Number.isInteger(quantity)||quantity<1||quantity>20||!SCOPES.includes(scope))fail('INVALID_OFFER_FIELDS');
+  if(localOffer&&localDecision?.body?.decision==='ADMIT')fail('ONE_CROSSING_ALREADY_ADMITTED');
+  localInterest=null;remoteInterest=null;localDecision=null;remoteDecision=null;remoteAck=null;
+  localOffer=await sign('OFFER',null,{category,label,quantity,unit:UNIT,scope});
+  latestOutbound=localOffer;return localOffer;
+ }
+ async function importPacket(raw){
+  const v=await verify(raw),p=v.packet;
+  if(p.kind==='OFFER'){
+   if(own&&sameActor(own.pub,p.issuer))fail('USE_AN_INDEPENDENT_CARTRIDGE');
+   remoteOffer=p;localInterest=null;remoteDecision=null;
+   return {ok:true,kind:p.kind,hash:v.hash,notice:'Signed OFFER from a different session key. The material and person remain UNVERIFIED.'};
+  }
+  if(p.kind==='INTEREST'){
+   if(!localOffer||!own||!sameActor(own.pub,localOffer.issuer))fail('NO_LOCAL_OFFER');
+   if(!sameActor(own.pub,localOffer.issuer)||sameActor(localOffer.issuer,p.issuer))fail('SAME_SESSION_NOT_ALLOWED');
+   if(p.link.offerId!==localOffer.id||p.link.offerHash!==(await digest(JSON.stringify(localOffer)))||p.body.quantity>localOffer.body.quantity)fail('INTEREST_NOT_SCOPED_TO_OFFER');
+   if(remoteInterest&&remoteInterest.id!==p.id)fail('ONE_INTEREST_PER_OFFER_IN_PILOT');
+   remoteInterest=p;
+   return {ok:true,kind:p.kind,hash:v.hash,notice:'Signature and exact offer reference verified. Participation and real material are not independently verified.'};
+  }
+  if(p.kind==='DECISION'){
+   if(!remoteOffer||!localInterest||!sameActor(remoteOffer.issuer,p.issuer))fail('PROVIDER_SIGNATURE_REQUIRED');
+   if(p.link.offerId!==remoteOffer.id||p.link.offerHash!==(await digest(JSON.stringify(remoteOffer)))||
+     p.link.interestId!==localInterest.id||p.link.interestHash!==(await digest(JSON.stringify(localInterest))))fail('DECISION_CHAIN_MISMATCH');
+   remoteDecision=p;return {ok:true,kind:p.kind,decision:p.body.decision,hash:v.hash,notice:'Signed provider decision verified. ADMIT permits only the stated review/test; NO physical delivery or identity was verified.'};
+  }
+  if(p.kind==='ACK'){
+   if(!localOffer||!remoteInterest||!localDecision||!sameActor(remoteInterest.issuer,p.issuer))fail('INTEREST_HOLDER_SIGNATURE_REQUIRED');
+   if(p.link.offerId!==localOffer.id||p.link.offerHash!==(await digest(JSON.stringify(localOffer)))||
+      p.link.interestId!==remoteInterest.id||p.link.interestHash!==(await digest(JSON.stringify(remoteInterest)))||
+      p.link.decisionId!==localDecision.id||p.link.decisionHash!==(await digest(JSON.stringify(localDecision))))fail('ACK_CHAIN_MISMATCH');
+   if(remoteAck&&remoteAck.id!==p.id)fail('ACK_ALREADY_REGISTERED');
+   remoteAck=p;
+   return {ok:true,kind:p.kind,decision:localDecision.body.decision,hash:v.hash,notice:'Two independent session keys signed linked permission packets. NO goods, money, consent of third parties, identity, or delivery were verified.'};
+  }
+  fail('UNKNOWN_PACKET_KIND');
+ }
+ async function makeInterest({reason,consent}){
+  if(consent!==true)fail('EXPLICIT_INTEREST_CONSENT_REQUIRED');
+  if(!remoteOffer)fail('VERIFY_A_REMOTE_OFFER_FIRST');
+  if(localInterest)fail('INTEREST_ALREADY_SIGNED');
+  await makeIdentity();
+  if(sameActor(own.pub,remoteOffer.issuer))fail('USE_INDEPENDENT_SESSION');
+  if(!textSafe(reason,12,100))fail('SAFE_REASON_REQUIRED');
+  const link={offerId:remoteOffer.id,offerHash:await digest(JSON.stringify(remoteOffer))};
+  localInterest=await sign('INTEREST',link,{quantity:1,unit:UNIT,reason});
+  latestOutbound=localInterest;return localInterest;
+ }
+ async function makeDecision(decision){
+  if(!remoteInterest||!localOffer)fail('VERIFY_AN_INTEREST_FIRST');
+  if(localDecision)fail('DECISION_ALREADY_SIGNED');
+  if(!STATES.includes(decision))fail('INVALID_PROVIDER_DECISION');
+  const link={offerId:localOffer.id,offerHash:await digest(JSON.stringify(localOffer)),
+    interestId:remoteInterest.id,interestHash:await digest(JSON.stringify(remoteInterest))};
+  const note=decision==='ADMIT'?'Permission for scoped review or one test only; no physical delivery.':
+    decision==='REFUSE'?'Permission refused; do not proceed with any proposed use.':
+    'Hold for explicit further review; no permission to proceed yet.';
+  localDecision=await sign('DECISION',link,{decision,note});
+  latestOutbound=localDecision;return localDecision;
+ }
+ async function makeAck(){
+  if(!remoteDecision||!remoteOffer||!localInterest)fail('VERIFY_A_PROVIDER_DECISION_FIRST');
+  const link={offerId:remoteOffer.id,offerHash:await digest(JSON.stringify(remoteOffer)),
+    interestId:localInterest.id,interestHash:await digest(JSON.stringify(localInterest)),
+    decisionId:remoteDecision.id,decisionHash:await digest(JSON.stringify(remoteDecision))};
+  const packet=await sign('ACK',link,{status:'SEEN_NOT_DELIVERED',note:'I saw the signed decision; no goods or service delivery is asserted.'});
+  latestOutbound=packet;return packet;
+ }
+ function ledger(){return {hasKey:!!own,localOffer:localOffer?.id||null,remoteOffer:remoteOffer?.id||null,
+   localInterest:localInterest?.id||null,remoteInterest:remoteInterest?.id||null,
+   localDecision:localDecision?.body.decision||null,remoteDecision:remoteDecision?.body.decision||null,
+   remoteAck:remoteAck?.id||null,outbound:latestOutbound};}
+ function show(packet,label){get('cross-out').value=JSON.stringify(packet,null,2);get('cross-result').textContent=label+' SIGNED. Copy the whole JSON into the other cartridge. Nothing was transmitted.';}
+ function handle(cb){return async()=>{try{await cb()}catch(e){get('cross-result').textContent='NOT ACCEPTED: '+(e?.message||'UNAVAILABLE');}}}
+ get('cross-key').addEventListener('click',handle(async()=>{
+  const result=await makeIdentity();
+  get('cross-identity').textContent='SESSION fingerprint '+result.fingerprint+' · private key stays in this open page. Not verified human identity.';
+ }));
+ get('cross-make-offer').addEventListener('click',handle(async()=>{
+  const packet=await makeOffer({category:get('cross-category').value,label:asText(get('cross-label').value),
+    quantity:Number(get('cross-qty').value),scope:get('cross-scope').value,consent:get('cross-offer-consent').checked});
+  show(packet,'OFFER');
+ }));
+ get('cross-import').addEventListener('click',handle(async()=>{
+  const result=await importPacket(get('cross-in').value);
+  get('cross-seen').textContent=result.notice;
+  get('cross-result').textContent='VERIFIED: '+result.kind+' signature and expected packet references. '+(result.decision||'')+' · Nothing has been transferred.';
+ }));
+ get('cross-respond').addEventListener('click',handle(async()=>{
+  const packet=await makeInterest({reason:asText(get('cross-reason').value),consent:get('cross-reply-consent').checked});
+  show(packet,'INTEREST');
+ }));
+ get('cross-decide').addEventListener('click',handle(async()=>{
+  const packet=await makeDecision(get('cross-decision').value);show(packet,'DECISION '+packet.body.decision);
+ }));
+ get('cross-ack').addEventListener('click',handle(async()=>{
+  const packet=await makeAck();show(packet,'ACK (not a delivery receipt)');
+ }));
+ globalThis.RELATTE_CROSSING_023=Object.freeze({makeIdentity,makeOffer,makeInterest,makeDecision,makeAck,importPacket,verify,ledger});
+}
+
 function portableWorldHtml(world){
  const bp=portableBlueprint(world);
  if(!validWorldBlueprint(bp))throw Error('Cannot export an invalid world blueprint.');
