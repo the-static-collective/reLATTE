@@ -1289,6 +1289,35 @@ function worldCrossingRuntime(){
  globalThis.RELATTE_CROSSING_023=Object.freeze({makeIdentity,makeOffer,makeInterest,makeDecision,makeAck,importPacket,verify,ledger});
 }
 
+
+const RELAY_PORTABLE_HTML=
+ '<div class="panel" id="relay-dock"><h2>SPAWN 024 · Live reLATTE Relay</h2>'+
+ '<p><strong>Opt-in network pilot, not a physical exchange.</strong> Signed public capabilities can be discovered for up to 60 minutes. Only a button you press publishes or sends anything. Messages never carry private notes, real identity or exact locations. Public summaries can be copied by anybody; do not enter identifying text.</p>'+
+ '<p><small>Two independent operator sessions can discover and negotiate without manually moving JSON. No account or payment required. Session keys and relay secrets vanish when you close this tab; keep it open during the crossing.</small></p>'+
+ '<button type="button" id="relay-health">Check relay connection</button><p id="relay-health-out" role="status"></p>'+
+ '<h3>Provider · Post one real, self-reported capability</h3>'+
+ '<p><small>First use the reLATTE Crossing panel above to sign an OFFER, including its separate consent. Then check this box to authorize public publication of that exact signed packet. If it is physical, inspect it for permission and safety before posting.</small></p>'+
+ '<label><input type="checkbox" id="relay-publish-consent"> I expressly authorize publishing my current signed OFFER description to the public discovery list for up to one hour. It contains no private details.</label>'+
+ '<button type="button" id="relay-publish">Publish my signed OFFER to relay</button>'+
+ '<h3>Discover · Actual opted-in listings (self-reported)</h3>'+
+ '<label>Category</label><select id="relay-category"><option value="all">All public categories</option>'+
+ '<option value="tools">Tools</option><option value="materials">Materials</option><option value="method">Methods</option>'+
+ '<option value="art">Original art</option><option value="skill">Skills</option><option value="digital">Digital</option></select>'+
+ '<button type="button" id="relay-discover">Find recent opt-in offers</button><div id="relay-list" aria-live="polite"></div>'+
+ '<h3>Recipient · Send deliberate interest</h3>'+
+ '<p><small>Choose a discovered offer above, verify its signed packet, then use the reLATTE Crossing panel to sign an INTEREST. Check the box below to send that exact packet to the provider; there is no automatic enrollment.</small></p>'+
+ '<label><input type="checkbox" id="relay-interest-consent"> I independently authorize sending my signed interest for the selected offer only.</label>'+
+ '<button type="button" id="relay-send-interest">Send signed INTEREST</button>'+
+ '<h3>Exchange · Check for counterpart response</h3>'+
+ '<button type="button" id="relay-refresh">Refresh my private inbox</button>'+
+ '<label><input type="checkbox" id="relay-auto">Automatically check my private inbox every 45 seconds while this tab is open</label>'+
+ '<p><small>Provider: after seeing and verifying an INTEREST, choose and sign HOLD, ADMIT or REFUSE in the crossing panel above, then send it below. Recipient: after verifying a decision, sign an ACK in the crossing panel, then send below. All decisions are explicit.</small></p>'+
+ '<button type="button" id="relay-decision">Relay my signed provider DECISION</button>'+
+ '<button type="button" id="relay-ack">Relay my signed ACK (NOT delivery)</button>'+
+ '<button type="button" id="relay-withdraw">Withdraw my offer from discovery</button>'+
+ '<p id="relay-status" role="status" aria-live="polite"></p>'+
+ '<p><small>PROOF LIMIT: The relay checks P-256 signatures and matching packet references, not the person, item, or physical result. An ADMIT authorizes only the narrow original scope. An ACK says SEEN_NOT_DELIVERED. The server retains hashes of session secrets, never raw secret tokens. No geographical matchmaking, no push notifications and no sale or delivery workflow.</small></p></div>';
+
 function portableWorldHtml(world){
  const bp=portableBlueprint(world);
  if(!validWorldBlueprint(bp))throw Error('Cannot export an invalid world blueprint.');
