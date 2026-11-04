@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10211b"><meta name="referrer" content="no-referrer">
+<title>JAR;VIS SPAWN 019 — Smallest step, largest reach</title>
+<meta name="description" content="Run multiple independent projects yourself. Do one useful thing, record what happened, reproduce your method, and connect capabilities only when you choose.">
+<style>
+:root{color-scheme:dark;--bg:#101e19;--ink:#f7f2e6;--muted:#bfcbc0;--lime:#cbe8a6;--gold:#f1d494;--panel:#1d3329;--line:#50745e}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(ellipse at 20% 0%,#30543b 0,transparent 40%),var(--bg);color:var(--ink)}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}a{color:var(--gold)}:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+main,.mast,footer{max-width:1100px;padding:0 18px;margin:auto}.mast{padding-top:22px;padding-bottom:20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.stamp{font-size:.8rem;letter-spacing:.16em;font-weight:850;text-transform:uppercase}.mast small{color:var(--muted)}
+.hero{padding:35px 0 14px}.eyebrow{font-size:.8rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;font-weight:800}h1{font:normal clamp(2.8rem,7vw,5.4rem)/1.02 Georgia,serif;letter-spacing:-.045em;margin:11px 0}h1 em{color:var(--lime)}h2{font:normal 1.9rem/1.15 Georgia,serif;margin:4px 0 12px}h3{margin:0;font-size:1.15rem}p{margin:8px 0 13px}.lede{max-width:790px;font-size:1.12rem;color:#d7e5d5}.muted{color:var(--muted)}.small{font-size:.87rem}.box{margin:20px 0;border:1px solid var(--line);padding:22px;border-radius:18px;background:linear-gradient(145deg,#213c2e,#142820)}.box>.eyebrow{margin-bottom:7px}
+label{display:block;margin:9px 0 5px;font-size:.92rem;font-weight:700}input,select,textarea{width:100%;min-width:0;color:var(--ink);background:#10251b;border:1px solid #71917a;border-radius:9px;padding:11px}textarea{min-height:65px;resize:vertical}.button{border-radius:10px;min-height:44px;padding:10px 15px;border:1px solid #b1ca98;background:var(--lime);color:#172819;font-weight:800;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}.button.secondary{background:#284737;color:var(--ink);border-color:#76997d}.button.ghost{background:transparent;color:var(--ink);border-color:#5e8468}.button.danger{border-color:#d3aa96;color:#f8d7c5}.button:hover{filter:brightness(1.08)}.line{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.line>*{max-width:100%}.line>.button{flex:0 1 auto}.two{display:grid;grid-template-columns:1fr 1fr;gap:17px}.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.hat{background:#152b21;border:1px solid #527460;border-radius:13px;padding:17px;margin:12px 0}.hat[data-type="gather"]{border-left:5px solid #e6b96b}.hat[data-type="grow"]{border-left:5px solid #a5d493}.hat[data-type="art"]{border-left:5px solid #a8bdda}.hathead{display:flex;justify-content:space-between;align-items:start;gap:12px;flex-wrap:wrap}.tag{font-size:.71rem;text-transform:uppercase;color:var(--gold);letter-spacing:.12em;font-weight:800}.task{padding:12px 0;border-top:1px solid #3e634a}.task:first-of-type{margin-top:12px}.task strong{display:block;margin-bottom:5px}.task .small{margin:3px 0}.task textarea{margin:4px 0 8px;min-height:55px}.task select{width:auto;max-width:200px}.status{margin-top:10px;white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid #718d73;background:#0d261a;border-radius:10px;padding:12px}.status:empty{display:none}.empty{padding:22px;color:var(--muted);border:1px dashed #6c8c6f;border-radius:12px}.cap{padding:12px;background:#153025;border:1px solid #51765c;border-radius:10px;margin:10px 0}.cap .tag{margin-bottom:5px}.cap p{overflow-wrap:anywhere}.board{margin:9px 0 0}.board strong{color:var(--lime)}.counter{display:inline-block;padding:5px 9px;border:1px solid #637e62;border-radius:40px;font-size:.83rem;color:#e4eedc}
+#import-file{max-width:330px}.preview{max-height:250px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:#071c12;padding:13px;border:1px solid #6f9974;border-radius:10px;font:12px/1.5 ui-monospace,monospace}
+footer{padding:22px 18px 55px;border-top:1px solid var(--line);color:var(--muted)}[hidden]{display:none!important}
+@media(max-width:720px){.two,.three{grid-template-columns:1fr}.box{padding:16px}.hero{padding-top:23px}.line>.button{flex:1 1 auto}.hat{padding:12px}h1{font-size:clamp(2.6rem,12vw,4rem)}}
+.glean-item{margin:11px 0;padding:14px;border-radius:13px;background:#13291f;border:1px solid #496e58}
+.glean-item[data-state="found"]{border-left:5px solid #afd98e}.glean-item[data-state="missing"]{border-left:5px solid #d5a276}.glean-item[data-state="check"]{border-left:5px solid #9fb5d9}
+.glean-item .line{margin-top:9px}.glean-item .button{min-height:39px;font-size:.86rem;padding:8px 10px}.glean-item input{max-width:400px}.badge{display:inline-block;font-size:.77rem;text-transform:uppercase;font-weight:bold;color:var(--gold);letter-spacing:.1em}
+.glean-item .small{margin:5px 0;color:var(--muted)}.metric{font-size:.88rem;color:var(--lime);font-weight:750}
+.maximum-card h3{color:var(--lime);margin:6px 0 9px}.maximum-card p{font-size:.94rem}.maximum-card .line{margin-top:8px}.reqrow{padding:6px 0;border-top:1px solid #456b54;font-size:.88rem}.reqrow:first-child{border-top:0}.reqrow strong{color:var(--gold)}.max-gap{color:#f2bcaa}
+</style></head><body>
+<header class="mast"><span class="stamp">✳ JAR;VIS / SPAWN 019</span><small>ONE PERSON · MANY HATS · LOCAL FIRST</small></header>
+<main>
+<section class="hero"><div class="eyebrow">An operator, not an organization chart</div><h1>One person.<br><em>Many operations.</em></h1>
+<p class="lede">You're the organizer, grower, artist, and whatever else needs doing. Run each operation yourself first. Record real attempts, reuse working methods, and see where your own capabilities can connect.</p>
+<p class="small muted">No login, model, payments or collaborators required. This file works offline. Notes are stored only in this browser until you export them. Do not keep sensitive notes on a shared/public-preview browser.</p></section>
+<section class="box" id="seed"><div class="eyebrow">01 / Start with what you have</div><h2>Open your workbench</h2>
+<p>These are <strong>your hats</strong>, not fictional people or enrolled partners. Pick all three and adjust them, or add any operation.</p>
+<div class="line"><button type="button" class="button" id="seed-three">Load my organizer + grower + artist hats</button><span class="counter" id="count">0 operations</span></div>
+<div class="two"><div><label for="kind">Add an operation</label><select id="kind"><option value="gather">Community / gathering</option><option value="grow">Grower / resource steward</option><option value="art">Artist / maker</option><option value="other">Something else</option></select></div><div><label for="mission">Name it</label><input id="mission" maxlength="90" placeholder="e.g. Friday Fellowship"></div></div>
+<label for="goal">What would success look like? (optional, private)</label><input id="goal" maxlength="180" placeholder="One specific, observable change"><div class="line" style="margin-top:12px"><button type="button" class="button secondary" id="add">Create this operation</button></div><div class="status" id="seed-status" role="status"></div></section>
+<section class="box"><div class="eyebrow">02 / Actually do something</div><h2>Independent operations</h2><p class="muted">Each hat has real starter tasks. You can finish, block, or revisit any task. Nothing is marked completed just because a document was generated.</p>
+<div id="focus" class="board" aria-live="polite"></div><div id="projects"><div class="empty">Your workbench is empty. Load the three starter hats or create one above.</div></div></section>
+<section class="box"><div class="eyebrow">03 / Your internal commons</div><h2>Make your own hats interoperable</h2><p>Record an <strong>actual</strong> available offer or a real need. JAR;VIS can show possible connections between your operations. A common category is a lead, not proof of fit or a completed delivery.</p>
+<div class="two"><div><label for="cap-project">Which operation?</label><select id="cap-project"></select></div><div><label for="cap-direction">Offer or need?</label><select id="cap-direction"><option value="offer">I can offer this</option><option value="need">This operation needs it</option></select></div></div>
+<div class="two"><div><label for="cap-category">Capability</label><select id="cap-category"><option value="food">Food / produce</option><option value="music">Music / art</option><option value="space">Space / venue</option><option value="transport">Transport</option><option value="tools">Tools / materials</option><option value="labor">Time / labor</option><option value="digital">Digital / publishing</option><option value="other">Other</option></select></div><div><label for="cap-detail">Concrete details</label><input id="cap-detail" maxlength="180" placeholder="Only what is actually available or required"></div></div>
+<div class="line" style="margin-top:12px"><button type="button" class="button secondary" id="cap-add">Record this capability</button></div>
+<div id="cap-status" class="status" role="status"></div><h3 style="margin-top:22px">Your current signals</h3><div id="caps" aria-live="polite"></div><h3 style="margin-top:22px">Possible internal connections</h3><div id="connections" aria-live="polite"></div></section>
+
+<section class="box" id="gleaning"><div class="eyebrow">04 / The gleaning field</div><h2>What do we already have?</h2>
+<p class="lede">The cheapest supply may be sitting in a drawer, a garage, a bag, or a relationship you could ask. JAR;VIS proposes the <strong>smallest useful ingredients</strong> for one real action. You confirm what exists. Nothing is assumed or shared.</p>
+<div class="line"><span class="counter" id="glean-world">0 materials confirmed</span><span class="counter" id="glean-progress">0 questions answered</span><span class="counter" id="glean-slices">0 completed actions (self-reported)</span></div>
+<label for="glean-project">Which operation are we trying to move forward?</label><select id="glean-project"></select>
+<div id="glean-quest" class="cap" aria-live="polite">Pick an operation to find its smallest viable starting slice.</div>
+<h3>Gleaning quests</h3><p class="small muted">Have it? Mark it. Not sure? Go look. Missing? Try the cheaper substitute or scale the task down. Answers become your <strong>private</strong> inventory of possibilities, not public offers.</p>
+<div id="glean-questions" aria-live="polite"></div>
+<div class="cap" id="glean-next" role="status"></div>
+<h3 style="margin-top:22px">An odd little thing we haven't asked about?</h3>
+<p class="small muted">Add your own material, usable skill, access, free time, or possible consent-based connection. No names, exact locations, contact information or private credentials are needed.</p>
+<div class="two"><div><label for="glean-custom">What is the smallest missing ingredient?</label><input id="glean-custom" maxlength="90" placeholder="e.g. An old USB-to-MIDI cable"></div>
+<div><label for="glean-hint">Where might you look? (optional)</label><input id="glean-hint" maxlength="120" placeholder="e.g. the spare cable box"></div></div>
+<label for="glean-alternative">Cheapest substitute / smaller version? (optional)</label><input id="glean-alternative" maxlength="160" placeholder="e.g. test with a keyboard before buying anything">
+<div class="line" style="margin-top:10px"><button type="button" class="button secondary" id="glean-create">Add a tiny gleaning quest</button></div>
+<div class="status" id="glean-status" role="status"></div>
+<p class="small muted">Gleaning is about finding and testing resources already under your control. A contact is merely a possible person to ask—with their consent—not a partner or commitment. Do not infer food safety, electrical safety, access permission, or ownership from a checkmark.</p></section>
+<section class="box" id="maximum">
+<div class="eyebrow">05 / The other direction</div><h2>What is the <em>largest responsible action</em> we could reach?</h2>
+<p class="lede">Don't only minimize the next step. Also find the highest-leverage move your current resources could support—or the largest frontier worth investigating. This is a <strong>bounded search of possible actions</strong>, not a claim to know the biggest conceivable thing.</p>
+<div class="two"><div><label for="max-scope">Who gets to participate?</label><select id="max-scope"><option value="all">All my hats (still one person)</option></select></div>
+<div><label for="max-horizon">How far ahead?</label><select id="max-horizon"><option value="1">Today</option><option value="7" selected>Next 7 days</option><option value="30">Next 30 days</option></select></div></div>
+<label for="max-value">What should "largest" mean?</label>
+<select id="max-value"><option value="reuse">Most reusable / lasting capacity</option><option value="reach">Widest possible reach</option><option value="connect">Most cross-hat connections</option></select>
+<label for="max-vision">My own big direction (optional; private)</label>
+<input id="max-vision" maxlength="160" placeholder="e.g. Create a working cooperative exchange anyone can reproduce">
+<p class="small muted">We compare explicitly named candidate actions using an editable priority and time horizon. A higher rank is a transparent planning heuristic, not a quantitative prediction or evidence of real impact.</p>
+<div class="line"><button type="button" class="button secondary" id="max-search">Search the largest responsible move</button><span class="counter" id="max-count">0 candidates</span></div>
+<div class="two" style="margin-top:13px"><div class="cap" id="max-ready" aria-live="polite">No resources checked yet.</div><div class="cap" id="max-frontier" aria-live="polite">Choose your horizon.</div></div>
+<h3 style="margin-top:17px">Seek the next constraint</h3><div class="cap" id="max-question" aria-live="polite">One small question can unlock a much larger move.</div>
+<h3 style="margin-top:17px">Why this frontier?</h3><div id="max-evidence" class="cap" aria-live="polite"></div>
+<div class="status" id="max-status" role="status"></div>
+<p class="small muted">Only the operator can authorize publication, venue use, purchases, contact, food handling or real-world handoffs. Even when all items are self-reported available, a proposed high-impact action is not independently verified safe or feasible. No automatic invitations, network discovery or external effects.</p>
+</section>
+<section class="box"><div class="eyebrow">06 / Reproduce and connect</div><h2>Make your work portable</h2>
+<p class="muted">Back up private work separately from a reusable cartridge. A cartridge copies the method, not your completion claims, observation notes, offers, or contacts. Review its task titles before sharing.</p>
+<div class="line"><button class="button secondary" id="backup" type="button">Download private backup (JSON)</button><button class="button secondary" id="tracker" type="button">Download tracker (CSV)</button></div>
+<label for="import-file">Load someone else's method cartridge (local JSON file)</label><input type="file" id="import-file" accept=".json,application/json">
+<label for="restore-file">Restore my private backup (replaces the workbench after confirmation)</label><input type="file" id="restore-file" accept=".json,application/json">
+<div class="status" id="export-status" role="status"></div>
+<h3 style="margin-top:18px">Connect beyond your own hats—only when useful</h3><p>No notes or capability records are sent automatically. For public discovery, review, or an invitation, open our existing Commons Desk separately and choose whether to submit or publish anything.</p>
+<a class="button ghost" href="https://kbhqacsdvjsstzyplqij.supabase.co/functions/v1/jarvis-connected-registry-001" target="_blank" rel="noopener noreferrer">Open JAR;VIS Commons Desk ↗</a>
+<p class="small muted">That connected service has independent privacy and participation rules. It is not synchronized with this offline workbench.</p></section>
+</main><footer>SPAWN 019 · A copied method is not a transferred identity or a verified physical outcome. The person remains in control of every crossing.</footer>
+<script>
+(function(){
+'use strict';
+var KEY='jarvis_spawn_018_v1',MAX=24;
+var T={
+ gather:{label:'Community organizer',title:'Community gathering',goal:'Prepare one small, feasible gathering',tasks:['Write down the actual space, time and permissions already available.','Draft a simple run of show from what is confirmed.','List supplies already on hand and what is genuinely missing.','Make one concrete artifact (schedule, sign or handout) that you can use.','Check which decisions require another person; do everything independent first.']},
+ grow:{label:'Grower / resource steward',title:'Grower operation',goal:'Account for real resources and a practical use',tasks:['Inspect and count what is actually available; do not assume surplus.','Record condition, storage limits and timing; hold unsafe food.','Make a stock list with quantities and dates.','Prepare a practical handoff or use plan without publishing a private address.']},
+ art:{label:'Artist / maker',title:'Artist operation',goal:'Produce one useful creative contribution',tasks:['Choose a small, deliverable piece or 20-minute set.','Rehearse or make a first version and note what really happened.','Check equipment, transport and time constraints.','Make a simple performance sheet or public-ready description.']},
+ other:{label:'Independent operation',title:'New operation',goal:'Complete one observable action',tasks:['Name one change you can make without a new collaborator.','Produce a tangible first artifact or action.','Try it once and record what happened.','Choose a next action based on the observation, not wishful completion.']}
+};
+function clean(v,n){return String(v==null?'':v).trim().slice(0,n||180)}
+function id(){if(globalThis.crypto&&crypto.randomUUID)return crypto.randomUUID();if(globalThis.crypto&&crypto.getRandomValues){var a=new Uint8Array(16);crypto.getRandomValues(a);return Array.from(a,b=>b.toString(16).padStart(2,'0')).join('')}throw Error('Secure random ID unavailable');}
+function project(kind,title,goal,method,parent){var t=T[kind]||T.other;return {id:id(),parentId:parent||null,type:t===T.other?'other':kind,title:clean(title||t.title,90),goal:clean(goal||t.goal,180),createdAt:new Date().toISOString(),tasks:(method||t.tasks).slice(0,30).map(x=>({id:id(),title:clean(x,180),state:'todo',observation:'',updatedAt:null})),caps:[]};}
+function cartridge(p){return {schema:'abundent/operator-cartridge/v1',version:1,type:p.type,title:clean(p.title,90),goal:clean(p.goal,180),tasks:p.tasks.map(t=>clean(t.title,180)),gleaningQuestions:(state.glean.custom[p.id]||[]).map(x=>({label:x.label,where:x.where,alt:x.alt})),privacy:'Review titles and goal before sharing; this contains no observations, owner keys, or recorded capabilities.'};}
+function validCartridge(c){return c&&c.schema==='abundent/operator-cartridge/v1'&&c.version===1&&Object.hasOwn(T,c.type)&&typeof c.title==='string'&&c.title.length>0&&c.title.length<=90&&typeof c.goal==='string'&&c.goal.length<=180&&Array.isArray(c.tasks)&&c.tasks.length>0&&c.tasks.length<=30&&c.tasks.every(t=>typeof t==='string'&&t.trim().length>0&&t.length<=180)&&(!('gleaningQuestions' in c)||(Array.isArray(c.gleaningQuestions)&&c.gleaningQuestions.length<=12&&c.gleaningQuestions.every(q=>q&&typeof q.label==='string'&&q.label.length>=3&&q.label.length<=90&&typeof q.where==='string'&&q.where.length<=120&&typeof q.alt==='string'&&q.alt.length<=160)));}
+function validBackup(b){return !!(b&&b.schema==='abundent/spawn-state/v1'&&b.version===1&&Array.isArray(b.projects)&&b.projects.length<=MAX&&b.projects.every(p=>p&&typeof p.id==='string'&&Object.hasOwn(T,p.type)&&typeof p.title==='string'&&p.title.length<=90&&typeof p.goal==='string'&&p.goal.length<=180&&Array.isArray(p.tasks)&&p.tasks.length<=30&&p.tasks.every(t=>t&&typeof t.id==='string'&&typeof t.title==='string'&&t.title.length<=180&&['todo','done','blocked'].includes(t.state)&&typeof t.observation==='string'&&t.observation.length<=500)&&Array.isArray(p.caps)&&p.caps.length<=24&&p.caps.every(c=>c&&typeof c.id==='string'&&['offer','need'].includes(c.direction)&&['food','music','space','transport','tools','labor','digital','other'].includes(c.category)&&typeof c.detail==='string'&&c.detail.length<=180))&&(!b.glean||validGlean(b.glean)));}
+function matches(ps){var out=[];for(const n of ps){for(const need of n.caps){if(need.direction!=='need')continue;for(const o of ps){if(o.id===n.id)continue;for(const offer of o.caps){if(offer.direction==='offer'&&offer.category===need.category){out.push({key:offer.id+':'+need.id,from:o,to:n,offer:offer,need:need});}}}}}return out.slice(0,60);}
+function csvCell(v){var s=String(v==null?'':v);if(/^[\s]*[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
+function htmlEscape(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+var state={schema:'abundent/spawn-state/v1',version:1,projects:[],glean:{answers:{},custom:{}}};
+try{var raw=localStorage.getItem(KEY);if(raw){var parsed=JSON.parse(raw);if(parsed.schema===state.schema&&Array.isArray(parsed.projects)&&parsed.projects.length<=MAX){state.projects=parsed.projects.filter(p=>p&&typeof p.id==='string'&&Object.hasOwn(T,p.type)&&Array.isArray(p.tasks)&&Array.isArray(p.caps));if(validGlean(parsed.glean))state.glean=parsed.glean;}}}catch(e){}
+var $=s=>document.getElementById(s);
+function el(tag,txt,cls){var e=document.createElement(tag);if(txt!==undefined)e.textContent=txt;if(cls)e.className=cls;return e;}
+function button(label,fn,cls){var b=el('button',label,'button '+(cls||'secondary'));b.type='button';b.addEventListener('click',fn);return b}
+function note(name,msg){$(name).textContent=msg}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));return true}catch(e){note('export-status','Browser storage unavailable or full. Download a private backup before leaving.');return false}}
+function download(filename,body,mime){var blob=new Blob([body],{type:mime});var u=URL.createObjectURL(blob);var a=el('a');a.href=u;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),10000);}
+function refresh(){save();$('count').textContent=state.projects.length+' operation'+(state.projects.length===1?'':'s');renderProjects();renderCaps();renderGlean();renderMaximum();}
+function addProject(kind,title,goal,method,parent){if(state.projects.length>=MAX)throw Error('24-operation local limit reached. Export a backup first.');var p=project(kind,title,goal,method,parent);state.projects.push(p);refresh();return p;}
+function renderProjects(){var root=$('projects');root.replaceChildren();var focus=$('focus');focus.replaceChildren();if(!state.projects.length){root.append(el('div','Your workbench is empty. Load the three starter hats or create one above.','empty'));return}
+var todo=state.projects.flatMap(p=>p.tasks.filter(t=>t.state==='todo').slice(0,1).map(t=>({p:p,t:t})));
+if(todo.length){var f=el('p');f.append(el('strong','DO NOW · '),document.createTextNode(todo[0].p.title+' → '+todo[0].t.title));focus.append(f);}
+for(const p of state.projects){
+ var card=el('article',undefined,'hat');card.dataset.type=p.type;var top=el('div',undefined,'hathead'),heading=el('div');heading.append(el('div',T[p.type].label,'tag'),el('h3',p.title),el('p',p.goal,'small muted'));top.append(heading);
+ var tools=el('div',undefined,'line');
+ tools.append(button('Work card ↓',()=>workCard(p),'ghost'),button('Preview cartridge',()=>previewCartridge(p),'ghost'),button('Fork this operation',()=>{try{var fork=addProject(p.type,p.title+' · fork',p.goal,p.tasks.map(t=>t.title),p.id);state.glean.custom[fork.id]=(state.glean.custom[p.id]||[]).map(q=>({key:'custom-'+id(),label:q.label,where:q.where,alt:q.alt}));refresh();note('seed-status','Created a separate unstarted fork, carrying reusable questions only. No answers, outcomes or offers copied.')}catch(e){note('seed-status',e.message)}},'secondary'));
+ card.append(top,tools);
+ var completed=p.tasks.filter(t=>t.state==='done').length;card.append(el('p',completed+' of '+p.tasks.length+' actions self-reported done · '+p.tasks.filter(t=>t.state==='blocked').length+' blocked','small muted'));
+ for(const t of p.tasks){var row=el('div',undefined,'task');row.append(el('strong',t.title));var form=el('div',undefined,'two');
+ var obsWrap=el('div');var lab=el('label','What actually happened?');const obs=el('textarea');obs.maxLength=500;obs.placeholder='Evidence, attempt, obstacle, or result (private local note)';obs.value=clean(t.observation,500);lab.append(obs);obsWrap.append(lab);
+ var statusWrap=el('div');var lb=el('label','Your report');const sel=el('select');for(const st of [['todo','Not yet'],['done','Done (self-reported)'],['blocked','Blocked / not achieved']]){var op=el('option',st[1]);op.value=st[0];if(t.state===st[0])op.selected=true;sel.append(op)}lb.append(sel);statusWrap.append(lb);
+ statusWrap.append(button('Record this attempt',()=>{var report=clean(obs.value,500);if(sel.value!=='todo'&&report.length<4){note('seed-status','For done or blocked, record what actually happened (at least four characters).');return;}t.state=sel.value;t.observation=report;t.updatedAt=new Date().toISOString();refresh();note('seed-status','Saved your own report, not an independent verification.');},'secondary'));
+ form.append(obsWrap,statusWrap);row.append(form);
+ if(t.updatedAt)row.append(el('div','Recorded '+t.state+' · '+t.updatedAt.slice(0,16).replace('T',' '),'small muted'));
+ card.append(row);}
+ var addline=el('div',undefined,'line');const custom=el('input');custom.placeholder='Add a practical action to this hat';custom.maxLength=180;custom.setAttribute('aria-label','New action for '+p.title);
+ addline.append(custom,button('Add action',()=>{var s=clean(custom.value,180);if(s.length<4){note('seed-status','Write a specific action with at least four characters.');return;}if(p.tasks.length>=30){note('seed-status','30-action limit for this hat.');return;}p.tasks.push({id:id(),title:s,state:'todo',observation:'',updatedAt:null});refresh();},'ghost'));
+ card.append(addline);root.append(card);
+}
+}
+function workCard(p){var tasks=p.tasks.map(t=>'<li><label><input type="checkbox"> '+htmlEscape(t.title)+'</label></li>').join('');
+var s='<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Work card</title><style>body{font:17px/1.5 system-ui;max-width:760px;margin:35px auto;padding:20px}li{padding:9px 0}textarea{width:100%;min-height:160px}input{width:20px;height:20px}@media print{textarea{border:1px solid #aaa}}</style><h1>'+htmlEscape(p.title)+'</h1><p>'+htmlEscape(p.goal)+'</p><p>Action card: checkboxes are yours to mark. This file contains no evidence of real-world completion.</p><ol>'+tasks+'</ol><h2>What happened?</h2><textarea placeholder="Write your observations here."></textarea></html>';
+ download('SPAWN_Work_Card.html',s,'text/html;charset=utf-8');note('seed-status','Downloaded a working HTML action card. No tasks were automatically marked done.');}
+function previewCartridge(p){var c=cartridge(p);var old=$('preview');if(old)old.remove();var wrap=el('div',undefined,'cap');wrap.id='preview';wrap.append(el('h3','Review before sharing: '+p.title),el('p','The title, goal and action titles below could still contain personal details. Nothing is sent or published automatically.','small muted'),el('pre',JSON.stringify(c,null,2),'preview'));
+ wrap.append(button('Download reviewed method JSON',()=>{download('SPAWN_Method_Cartridge.json',JSON.stringify(c,null,2),'application/json');note('export-status','Downloaded a local method cartridge. Sharing it elsewhere is your separate decision.');},'secondary'));
+ $('export-status').after(wrap);wrap.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function renderCaps(){
+ var sel=$('cap-project'),old=sel.value;sel.replaceChildren();for(const p of state.projects){var op=el('option',p.title);op.value=p.id;sel.append(op)}if(state.projects.some(p=>p.id===old))sel.value=old;
+ var box=$('caps');box.replaceChildren();var count=0;for(const p of state.projects){for(const c of p.caps){count++;var row=el('div',undefined,'cap');row.append(el('span',(c.direction==='offer'?'OFFER':'NEED')+' · '+c.category+' · '+p.title,'tag'),el('p',c.detail));row.append(button('Remove',()=>{p.caps=p.caps.filter(x=>x.id!==c.id);refresh()},'ghost'));box.append(row);}}
+ if(!count)box.append(el('p','No real capabilities recorded. Suggested roles alone do not count as available goods, space, time, or labor.','empty'));
+ var connected=$('connections');connected.replaceChildren();var m=matches(state.projects);
+ if(!m.length){connected.append(el('p','No cross-hat matches yet. A matching offer and need recorded under different hats will appear here.','empty'));return;}
+ for(const c of m){var wrap=el('div',undefined,'cap');wrap.append(el('div',c.from.title+' → '+c.to.title+' · '+c.offer.category,'tag'),el('p','Possible fit: "'+c.offer.detail+'" for "'+c.need.detail+'". This is still one operator planning, not two people agreeing.'));
+ var existing=c.to.tasks.some(t=>t.linkKey===c.key);var btn=button(existing?'Coordination task already created':'Create verification task',()=>{if(c.to.tasks.length>=30){note('cap-status','30-action limit in receiving operation.');return}if(c.to.tasks.some(t=>t.linkKey===c.key))return;c.to.tasks.push({id:id(),title:'Check actual fit and plan the '+c.offer.category+' transfer from '+c.from.title+' to '+c.to.title,state:'todo',observation:'',updatedAt:null,linkKey:c.key});refresh();note('cap-status','Created an uncompleted verification task. No goods, rights, money or messages moved.');},'secondary');btn.disabled=existing;wrap.append(btn);connected.append(wrap);}
+}
+$('seed-three').addEventListener('click',()=>{var remaining=MAX-state.projects.length;if(remaining<3){note('seed-status','Need three available operation slots; maximum is 24.');return;}for(const kind of ['gather','grow','art'])addProject(kind);note('seed-status','Three independent hats created for one operator. None is claimed accomplished.');});
+$('add').addEventListener('click',()=>{try{var kind=$('kind').value;var name=clean($('mission').value,90)||T[kind].title;addProject(kind,name,$('goal').value);$('mission').value='';$('goal').value='';note('seed-status','Operation created. Start with one action you can do yourself.')}catch(e){note('seed-status',e.message)}});
+$('cap-add').addEventListener('click',()=>{var p=state.projects.find(p=>p.id===$('cap-project').value);var detail=clean($('cap-detail').value,180);if(!p){note('cap-status','Create an operation first.');return}if(detail.length<5){note('cap-status','Record a real, specific capability (five characters minimum).');return}if(p.caps.length>=24){note('cap-status','24 signals per operation maximum.');return}p.caps.push({id:id(),direction:$('cap-direction').value,category:$('cap-category').value,detail:detail});$('cap-detail').value='';refresh();note('cap-status','Saved locally. No public listing, reservation, or human match was created.');});
+$('backup').addEventListener('click',()=>{download('SPAWN_Private_Backup.json',JSON.stringify(state,null,2),'application/json');note('export-status','Private backup saved to your device. It contains your observations and real capability descriptions. Do not publish it.');});
+$('tracker').addEventListener('click',()=>{var rows=[['Operation','Action','Self-reported status','Self-reported observation','Recorded at']];state.projects.forEach(p=>p.tasks.forEach(t=>rows.push([p.title,t.title,t.state,t.observation,t.updatedAt||''])));download('SPAWN_Operation_Tracker.csv',rows.map(row=>row.map(csvCell).join(',')).join('\r\n'),'text/csv;charset=utf-8');note('export-status','Downloaded editable CSV tracker. No external report was submitted.');});
+$('import-file').addEventListener('change',async e=>{var file=e.target.files[0];if(!file)return;if(file.size>30000){note('export-status','Cartridge too large (30 KB maximum).');return}try{var c=JSON.parse(await file.text());if(!validCartridge(c))throw Error('Not a valid SPAWN v1 method cartridge');var p=addProject(c.type,c.title,c.goal,c.tasks);if(Array.isArray(c.gleaningQuestions)){state.glean.custom[p.id]=c.gleaningQuestions.map(q=>({key:'custom-'+id(),label:q.label,where:q.where,alt:q.alt}));refresh();}note('export-status','Imported a new unstarted operation. No author identity, evidence or capability was imported.');}catch(err){note('export-status','Import refused: '+clean(err.message,120))}finally{e.target.value=''}});
+$('restore-file').addEventListener('change',async e=>{var file=e.target.files[0];if(!file)return;if(file.size>400000){note('export-status','Backup too large (400 KB maximum).');e.target.value='';return}try{var b=JSON.parse(await file.text());if(!validBackup(b))throw Error('Not a valid SPAWN v1 private backup');if(!window.confirm('Replace all existing local SPAWN work with the private backup? Export your current backup first if needed.')){note('export-status','Restoration canceled; current operations unchanged.');return}state.projects=b.projects;state.glean=validGlean(b.glean)?b.glean:{answers:{},custom:{}};refresh();note('export-status','Restored your private workbench locally. No data was uploaded.');}catch(err){note('export-status','Backup restore refused: '+clean(err.message,120))}finally{e.target.value=''}});
+
+/* GLEAN 018: offline question catalogue; all suggestions remain unverified until the operator answers. */
+const KINDS={
+ writing:{kind:'tools',label:'Something to make a record with',question:'Do you have a notebook and pen, or a phone/device you can type on?',where:'Pocket, backpack, desk, scrap-paper drawer.',alt:'Use the offline work card or write on scrap paper.'},
+ time:{kind:'opportunity',label:'One uninterrupted 10-minute window',question:'Can you use ten minutes of your own time for a concrete first attempt?',where:'Check your own schedule, not someone else’s availability.',alt:'Shrink the attempt to two minutes.'},
+ details:{kind:'access',label:'Only the details that are actually confirmed',question:'Do you have confirmed timing, place, or permission for the planned gathering?',where:'Your own notes or permission already received.',alt:'Draft a clearly provisional one-page schedule; do not announce unconfirmed details.'},
+ space:{kind:'access',label:'A space you may actually use',question:'Is there a room, safe outdoor spot, or table you are permitted to use?',where:'Home, shared space, known venue terms.',alt:'Build the plan or a one-person tabletop demonstration first.'},
+ surface:{kind:'materials',label:'A flat clean surface or folding table',question:'Do you already have a clean table, counter or other usable surface?',where:'Kitchen, garage, work area.',alt:'Shrink the setup to a clean tray or small work surface.'},
+ box:{kind:'materials',label:'A reusable box, tote, bag or jar',question:'Are there clean, suitable containers already available?',where:'Closet, pantry, garage, reused packaging.',alt:'Start by inventorying one item without packing it.'},
+ labels:{kind:'materials',label:'Scrap paper, tape or a marker',question:'Have you already got anything for simple labels or a hand-written sign?',where:'Stationery drawer, toolbox, packaging.',alt:'Keep the first inventory digitally.'},
+ resources:{kind:'materials',label:'One real thing to inventory',question:'Can you physically identify one item or batch you actually control?',where:'Existing supplies, storage shelves, garden.',alt:'Start with a written empty inventory; do not claim surplus.'},
+ safefood:{kind:'materials',label:'Food or produce confirmed safe and available',question:'Is any food genuinely available, suitable, and within safe storage limits?',where:'Refrigerator or pantry, only if you may handle it.',alt:'Plan a non-food gathering or make a food-needs list. Do not share uncertain or perishable food through NOW ROUTE.'},
+ storage:{kind:'materials',label:'Suitable clean storage space',question:'Do you have storage appropriate for the actual materials and time window?',where:'Available shelving or food-safe storage, condition checked.',alt:'Limit the pilot to what can be used immediately and safely.'},
+ instrument:{kind:'tools',label:'One instrument, voice, or creative tool',question:'Is there a working instrument, voice, or other creative tool ready for a tiny first set?',where:'Your own instruments, case, sketch kit.',alt:'Use an unaccompanied voice, body percussion or a handwritten draft.'},
+ recording:{kind:'tools',label:'Something that can record or document the attempt',question:'Do you have a phone, pencil, or another way to note what happens?',where:'Phone, notebook, laptop, pocket recorder.',alt:'Write a short observation afterward from memory.'},
+ cable:{kind:'tools',label:'One known cable or adapter',question:'Do you already have a cable or adapter needed for the next test?',where:'Spare-cable box, instrument case, electronics drawer.',alt:'Test one component without the full signal chain; never improvise unsafe electrical wiring.'},
+ power:{kind:'access',label:'A safe compatible power source',question:'Do you have safe power appropriate for the equipment?',where:'Existing approved adapters and safe outlets.',alt:'Try an unplugged or battery-powered test. Do not bypass electrical safety.'},
+ camera:{kind:'tools',label:'Camera or usable phone camera',question:'Do you already have a working camera or phone camera?',where:'Phone, bag, existing camera kit.',alt:'Start with a shot list and one image already on your device.'},
+ reader:{kind:'tools',label:'Reader, cable or other way to transfer photos',question:'Do you have a card reader or existing transfer cable that works?',where:'Camera bag, adapter drawer.',alt:'Process one existing JPEG already on the computer.'},
+ device:{kind:'tools',label:'Usable phone or computer',question:'Do you have a device capable of making the first draft or tiny test?',where:'A device you already control.',alt:'Draft the content on paper first.'},
+ internet:{kind:'access',label:'Optional internet connection for publication',question:'Is there an internet connection you can actually use when publishing?',where:'Existing available connection.',alt:'Prepare everything offline and publish later.'},
+ content:{kind:'materials',label:'One piece of text, image or finished material',question:'Do you already have a short paragraph, picture or item you have rights to use?',where:'Your original drafts and permitted content.',alt:'Create a three-sentence draft from scratch.'},
+ transport:{kind:'opportunity',label:'A feasible way to move one item',question:'Is there a safe, lawful transport option already available to you?',where:'Your own transport, walking distance, or scheduled trip.',alt:'Keep the first exchange at the existing location; do not promise delivery.'},
+ contact:{kind:'connection',label:'A person you could ask (not an enrolled partner)',question:'Is there someone you could voluntarily ask for one bounded thing?',where:'Relationships you already have; do not record their private details here.',alt:'Design a version you can complete alone. Any invitation requires a separate choice.'},
+ materials:{kind:'materials',label:'Any suitable scrap or reusable materials',question:'Are there supplies on hand that could make the smallest prototype?',where:'Scrap box, garage, household supplies.',alt:'Build a paper or digital proof first.'}
+};
+const BASE={
+ gather:['writing','details','time','surface','labels','space','contact'],
+ grow:['resources','writing','box','labels','storage','safefood','transport'],
+ art:['instrument','time','recording','cable','power','space','contact'],
+ other:['writing','time','materials','recording','device','contact']
+};
+function deriveKit(p){
+ const hay=[p.title,p.goal,...p.tasks.slice(0,20).map(t=>t.title)].join(' ').toLowerCase();
+ const parts=BASE[p.type]?BASE[p.type].slice():BASE.other.slice();
+ const add=(ids)=>{for(const x of ids){if(!parts.includes(x))parts.push(x)}};
+ let slice={gather:'Draft one provisional run-of-show using only verified details.',grow:'Inventory one real resource with quantity, condition and a usable next step.',art:'Rehearse, write, or capture one short creative piece.',other:'Make one small, testable first version using what you already control.'}[p.type];
+ if(/music|song|band|concert|midi|audio|guitar|record|worship|performance|dance/.test(hay)){add(['instrument','cable','recording','power']);slice='Make one tiny, independently testable music or performance artifact.';}
+ if(/garden|food|vegetable|supper|dinner|potluck|farm|produce|grocery|harvest/.test(hay))add(['safefood','box','labels','surface','storage']);
+ if(/photo|image|jpeg|camera|raw\b|film/.test(hay)){add(['camera','reader','device','content']);slice='Sort or prepare one actual photo with tools already on hand.';}
+ if(/website|newsletter|web page|publish|flyer|poster|social post|email/.test(hay)){add(['device','content','internet']);slice='Make one usable draft page or message locally before publishing.';}
+ if(/equipment|repair|circuit|controller|adapter|midi|cable|light/.test(hay)){add(['cable','power','device']);slice='Test one safe part of the signal chain before buying equipment.';}
+ const essentials=BASE[p.type].slice(0,2);
+ const domain=parts.filter(x=>!BASE[p.type].includes(x));const selected=[...essentials,...domain,...parts.filter(x=>!essentials.includes(x)&&!domain.includes(x))].slice(0,11);
+ return {slice:slice,questions:selected.map((key,index)=>({...KINDS[key],key:key,essential:index<2}))};
+}
+function gleaningScore(projects,glean){
+ const totalTasks=projects.reduce((sum,p)=>sum+p.tasks.filter(t=>t.state==='done'&&t.observation?.trim().length>=4).length,0);
+ const qs=Object.values(glean.answers||{});
+ return {confirmed:qs.filter(x=>x.status==='found').length,answered:qs.filter(x=>x.status==='found'||x.status==='missing'||x.status==='skip').length,pending:qs.filter(x=>x.status==='check').length,completedTasks:totalTasks};
+}
+function validGlean(g){
+ if(!g||typeof g!=='object'||!g.answers||!g.custom||Array.isArray(g.answers)||Array.isArray(g.custom))return false;
+ const ans=Object.entries(g.answers),custom=Object.entries(g.custom);
+ if(ans.length>550||custom.length>MAX)return false;
+ if(!ans.every(([k,v])=>k.length<180&&v&&['found','check','missing','skip'].includes(v.status)&&typeof v.note==='string'&&v.note.length<=120&&typeof v.updatedAt==='string'&&v.updatedAt.length<50))return false;
+ return custom.every(([k,list])=>k.length<100&&Array.isArray(list)&&list.length<=12&&list.every(v=>v&&typeof v.key==='string'&&v.key.length<100&&typeof v.label==='string'&&v.label.length>=3&&v.label.length<=90&&typeof v.where==='string'&&v.where.length<=120&&typeof v.alt==='string'&&v.alt.length<=160));
+}
+function gleanQuestions(p){
+ const kit=deriveKit(p);
+ const custom=(state.glean.custom[p.id]||[]).map(c=>({key:c.key,kind:'custom',label:c.label,question:'Do you already have or know how to access '+c.label+'?',where:c.where||'Look through what you already have.',alt:c.alt||'Can you make an even smaller demonstration without it?',essential:false}));
+ const included=new Set(kit.questions.map(x=>x.key).concat(custom.map(x=>x.key)));
+ const sought=Object.keys(state.glean.answers).filter(k=>k.startsWith(p.id+':')).map(k=>k.slice(p.id.length+1)).filter(k=>KINDS[k]&&!included.has(k)).slice(0,8).map(key=>({...KINDS[key],key,essential:false}));
+ return {slice:kit.slice,questions:kit.questions.concat(custom,sought).slice(0,24)};
+}
+function queryKey(p,key){return p.id+':'+key;}
+function answerFor(p,q){return state.glean.answers[queryKey(p,q.key)]||{status:'unasked',note:'',updatedAt:''};}
+function recordGlean(p,q,status,where){
+ if(!['found','check','missing','skip'].includes(status))return false;
+ state.glean.answers[queryKey(p,q.key)]={status:status,note:clean(where,120),updatedAt:new Date().toISOString()};
+ refresh();note('glean-status',status==='found'?'Recorded as available by your report only. Other hats may suggest reusing it; nothing was shared or transferred.':'Saved the answer. Missing is useful information—it can lead to a smaller slice or substitute.');
+ return true;
+}
+function reuseCandidates(p,q){
+ const out=[];
+ for(const other of state.projects){
+  if(other.id===p.id)continue;
+  const questions=gleanQuestions(other).questions;
+  for(const oq of questions){
+   const seen=answerFor(other,oq);
+   if(seen.status==='found'&&((q.key===oq.key)||(q.kind==='custom'&&oq.label.toLowerCase()===q.label.toLowerCase()))){
+     out.push(other.title);
+   }
+  }
+ }
+ return [...new Set(out)].slice(0,3);
+}
+function renderGlean(){
+ const choice=$('glean-project'),selected=choice.value;choice.replaceChildren();
+ for(const p of state.projects){const opt=el('option',p.title);opt.value=p.id;choice.append(opt);}
+ if(state.projects.some(p=>p.id===selected))choice.value=selected;
+ const world=gleaningScore(state.projects,state.glean);
+ $('glean-world').textContent=world.confirmed+' materials / opportunities self-reported found';
+ $('glean-progress').textContent=world.answered+' questions answered · '+world.pending+' to investigate';
+ $('glean-slices').textContent=world.completedTasks+' completed actions (self-reported)';
+ const p=state.projects.find(p=>p.id===choice.value)||state.projects[0];if(p)choice.value=p.id;
+ const quest=$('glean-quest'),questions=$('glean-questions'),next=$('glean-next');questions.replaceChildren();
+ if(!p){quest.textContent='Create one operation first. Your smallest real action will appear here.';next.textContent='No imaginary people or materials are seeded.';return;}
+ const kit=gleanQuestions(p);quest.replaceChildren();quest.append(el('div','THE SMALLEST VIABLE SLICE · '+p.title,'tag'),el('h3',kit.slice),el('p','We are checking for the ingredients, not assuming you own them. Answer any tiny question; adjust the slice if something is missing.','small'));
+ quest.append(button(p.tasks.some(t=>t.title===kit.slice)?'Slice already on workboard':'Put this slice on my workboard',()=>{if(p.tasks.some(t=>t.title===kit.slice))return;if(p.tasks.length>=30){note('glean-status','This operation has 30 tasks; complete or simplify one first.');return;}p.tasks.push({id:id(),title:kit.slice,state:'todo',observation:'',updatedAt:null});refresh();note('glean-status','Added an unfinished, testable slice to the workboard above. You decide if it really happens.');},'secondary'));
+ const statuses=kit.questions.map(q=>({q:q,a:answerFor(p,q)}));
+ for(const {q,a} of statuses){
+   const card=el('article',undefined,'glean-item');card.dataset.state=a.status;
+   card.append(el('span',(q.essential?'FIRST INGREDIENT':'OPTION / OPPORTUNITY')+' · '+q.kind,'badge'),el('h3',q.label),el('p',q.question));
+   card.append(el('p','Look: '+q.where,'small'),el('p','Less expensive/smaller: '+q.alt,'small'));
+   const noteWrap=el('div'),lab=el('label','Optional private note about what you checked'),noteInput=el('input');
+   noteInput.maxLength=120;noteInput.placeholder='e.g. found an old cable in spare box';noteInput.value=a.note;lab.append(noteInput);noteWrap.append(lab);card.append(noteWrap);
+   const btns=el('div',undefined,'line');
+   for(const x of [['found','I have it'],['check','Go look'],['missing','Not available'],['skip','Not relevant']]){
+     btns.append(button(x[1],()=>recordGlean(p,q,x[0],noteInput.value),x[0]==='found'?'secondary':'ghost'));
+   }
+   card.append(btns,el('p','Current: '+({unasked:'not checked yet',found:'self-reported available',check:'investigate next',missing:'missing or unavailable',skip:'skipped'}[a.status]),'metric'));
+   const elsewhere=reuseCandidates(p,q);
+   if(elsewhere.length)card.append(el('p','Possible reuse: you reported something like this under '+elsewhere.join(', ')+'. Verify it is free, compatible, and permitted before reusing.','small'));
+   if(a.status==='found'){
+      card.append(button('Offer this across my own hats',()=>{
+        const category={safefood:'food',instrument:'music',space:'space',transport:'transport',contact:'labor',time:'labor',internet:'digital',device:'digital',content:'digital'}[q.key]||'tools';
+        if(p.caps.some(x=>x.gleanKey===q.key&&x.direction==='offer')){note('glean-status','Already listed as an internal offer under this hat.');return;}
+        if(p.caps.length>=24){note('glean-status','This operation already has 24 capability signals.');return;}
+        p.caps.push({id:id(),direction:'offer',category,detail:q.label,gleanKey:q.key});
+        refresh();note('glean-status','Added an internal offer only. No public posting, reservation, or real-world handoff.');
+      },'ghost'));
+   }
+   questions.append(card);
+ }
+ const essential=statuses.filter(x=>x.q.essential),notfound=essential.filter(x=>x.a.status!=='found');
+ if(notfound.length){const first=notfound[0];next.textContent='NEXT TINY QUEST: '+(first.a.status==='missing'?'Try the smaller alternative: '+first.q.alt:first.q.question)+' No purchase or new volunteer is assumed.';}
+ else next.textContent='The two starter ingredients have been self-reported found. Try the smallest slice: '+kit.slice+' Record what actually happened in the operation above. This is not independent proof of readiness or success.';
+}
+$('glean-project').addEventListener('change',renderGlean);
+$('glean-create').addEventListener('click',()=>{
+ const p=state.projects.find(p=>p.id===$('glean-project').value)||state.projects[0];if(!p){note('glean-status','Create an operation before adding a quest.');return;}
+ const label=clean($('glean-custom').value,90),where=clean($('glean-hint').value,120),alt=clean($('glean-alternative').value,160);
+ if(label.length<3){note('glean-status','Name the little thing you want to look for (three characters minimum).');return;}
+ const list=state.glean.custom[p.id]||(state.glean.custom[p.id]=[]);
+ if(list.length>=12){note('glean-status','This operation has twelve custom questions; finish or simplify existing ones.');return;}
+ if(list.some(x=>x.label.toLowerCase()===label.toLowerCase())){note('glean-status','Already looking for that in this operation.');return;}
+ list.push({key:'custom-'+id(),label,where,alt});$('glean-custom').value='';$('glean-hint').value='';$('glean-alternative').value='';
+ refresh();note('glean-status','Added a local gleaning question. No resource has been assumed or advertised.');
+});
+
+
+/* MAX 019. Deterministic horizon discovery: bounded candidates, explicitly stated assumptions, no unreviewed execution. */
+const MAX_BANDS={
+ gather:[
+  {slug:'runbook',name:'Prepare a reusable gathering runbook',days:1,weight:[2,4,2],need:['writing','details'],proof:'Produce a one-page run-of-show with confirmed and unconfirmed details clearly separated.',why:'A real reusable script can be made without announcing an event.',external:false},
+  {slug:'host-plan',name:'Prepare a consented one-table community pilot',days:7,weight:[3,3,3],need:['writing','details','time','space','labels'],proof:'Produce a one-table venue checklist and clearly marked permission requests before promising a gathering.',why:'A small physical gathering could connect several needs, but permission and safety come first.',external:true}
+ ],
+ grow:[
+  {slug:'single-resource',name:'Make one item publicly usable later by documenting it now',days:1,weight:[2,3,2],need:['resources','writing'],proof:'Inventory one actual item with quantity, condition and a private, non-identifying next-use plan.',why:'One accounted-for resource is more useful than speculative surplus.',external:false},
+  {slug:'resource-hub',name:'Prepare a reusable resource gleaning station',days:7,weight:[3,5,3],need:['resources','box','labels','writing','storage','time'],proof:'Make a physical or paper sorting station and an accurate private inventory of three inspected items.',why:'A reusable station can turn many existing objects into discoverable resources.',external:false}
+ ],
+ art:[
+  {slug:'short-piece',name:'Produce one transferable creative demonstration',days:1,weight:[2,3,2],need:['instrument','time','recording'],proof:'Complete one short song, performance plan or recorded demonstration and note what actually happened.',why:'A usable demonstration can travel farther than an unfinished idea.',external:false},
+  {slug:'reusable-show',name:'Prepare a portable public-ready art set',days:7,weight:[3,4,3],need:['instrument','time','recording','device','content'],proof:'Create a rehearsed 20-minute set, simple equipment list and an original public-ready description.',why:'A repeatable set can serve more than one future gathering.',external:false}
+ ],
+ other:[
+  {slug:'first-prototype',name:'Ship one reproducible first-version artifact',days:1,weight:[2,4,2],need:['writing','time','materials'],proof:'Create one small demonstrable artifact and document a real attempt.',why:'A real tested first version becomes a reusable starting point.',external:false},
+  {slug:'portable-operation',name:'Prepare a portable, testable operating kit',days:7,weight:[3,5,3],need:['writing','time','device','content'],proof:'Create one runnable or printable kit and a short instruction sheet for repeating the test.',why:'Portability creates durable capacity before recruitment.',external:false}
+ ]
+};
+function maxRank(action,priority){const [reach,reuse,connections]=action.weight;return priority==='reach'?reach*5+reuse+connections:priority==='connect'?connections*5+reach+reuse:reuse*5+reach+connections;}
+function maximumCandidates(projects,options={}){
+ const ps=projects||[],horizon=Number(options.days)||7,eligible=[],goal=clean(options.vision||'',160);
+ for(const p of ps){
+   for(const band of MAX_BANDS[p.type]||MAX_BANDS.other){
+    if(band.days>horizon)continue;
+    eligible.push({...band,id:p.id+'-'+band.slug,projectId:p.id,projects:[p],needs:band.need.map(key=>({key,projectId:p.id})),kind:'single'});
+   }
+   const about=(p.title+' '+p.goal).toLowerCase();
+   if(/photo|picture|camera|jpeg|image|raw\b/.test(about)){
+    eligible.push({id:p.id+'-photo',name:'Turn a photo into a reproducible archive sample',days:1,weight:[2,5,2],kind:'single',projectId:p.id,projects:[p],needs:[{key:'device',projectId:p.id},{key:'content',projectId:p.id}],proof:'Prepare one actual image and a filename/selection note that can be repeated on a second image.',why:'A one-image workflow can be multiplied without extra people.',external:false});
+   }
+ }
+ if(ps.length>1){
+   const anchor=ps[0];
+   if(horizon>=7){
+    eligible.push({id:'cross-kit',name:'Build a reusable kit linking your independent operations',days:7,weight:[3,5,5],kind:'cross',projects:ps,projectId:anchor.id,needs:['writing','time','device','content'].map(key=>({key,projectId:null})),proof:'Build one downloadable method pack with an independent first step for each hat and a recorded test of one crossing.',why:'A repeatable cross-hat system can give another individual the same starting capabilities.',external:false});
+    if(matches(ps).length){
+      eligible.push({id:'cross-match',name:'Test one internally matched offer and need without a second person',days:7,weight:[3,4,5],kind:'cross',projects:ps,projectId:anchor.id,needs:[{key:'writing',projectId:null},{key:'time',projectId:null}],proof:'Record one bounded offer/need match and independently check quantity, permissions and actual fitness before any handoff.',why:'There is an explicitly recorded offer/need overlap, but no completed transfer.',external:false});
+    }
+   }
+ }
+ const gather=ps.find(p=>p.type==='gather'),grow=ps.find(p=>p.type==='grow'),art=ps.find(p=>p.type==='art');
+ if(gather&&grow&&art){
+  if(horizon>=7)eligible.push({id:'three-pilot',name:'Stage one-person food + art + gathering demonstration',days:7,weight:[4,4,5],kind:'cross',projects:[gather,grow,art],projectId:gather.id,needs:[{key:'writing',projectId:gather.id},{key:'details',projectId:gather.id},{key:'space',projectId:gather.id},{key:'time',projectId:null},{key:'resources',projectId:grow.id},{key:'instrument',projectId:art.id}],proof:'Make one bounded demonstration pack: real inventory, rehearsal plan, provisional run-of-show, and explicit permission/safety checklist.',why:'Three complementary hats can produce a richer demonstration without claiming three workers.',external:true});
+  if(horizon>=30)eligible.push({id:'three-network',name:'Prepare a reproducible community commons launch kit',days:30,weight:[5,5,5],kind:'cross',projects:[gather,grow,art],projectId:gather.id,needs:[{key:'writing',projectId:null},{key:'time',projectId:null},{key:'device',projectId:null},{key:'content',projectId:null},{key:'internet',projectId:null},{key:'resources',projectId:grow.id},{key:'instrument',projectId:art.id},{key:'details',projectId:gather.id}],proof:'Create a portable multi-role field kit, test it alone, and prepare a separately consented public invitation draft.',why:'An exportable cooperative kit could multiply independent operators; no participants or outcomes are assumed.',external:true});
+ }
+ if(goal.length>=8&&ps.length&&horizon>=7){
+   const p=ps[0];
+   eligible.push({id:'user-vision',name:'Produce the largest testable first chapter of your own vision',days:7,weight:[3,5,4],kind:'vision',projects:ps,projectId:p.id,needs:['writing','time','device','content'].map(key=>({key,projectId:null})),proof:'Create a runnable or printable single-user proof of "'+goal.slice(0,90)+'" and document one genuine attempt.',why:'Your aspiration guides this candidate, but no impact or capability is inferred from the words.',external:false});
+ }
+ return eligible;
+}
+function evidenceFor(action,projects,requirement){
+ const key=requirement.key;
+ const p=requirement.projectId?projects.find(x=>x.id===requirement.projectId):null;
+ let chosen=p;
+ if(!chosen){
+   chosen=projects.find(x=>state.glean.answers[x.id+':'+key]?.status==='found')||
+     projects.find(x=>gleanQuestions(x).questions.some(q=>q.key===key))||projects[0];
+ }
+ const here=chosen&&state.glean.answers[chosen.id+':'+key];
+ let status=here?.status||'unasked',elsewhere=null;
+ if(status!=='found'){
+   elsewhere=projects.find(x=>x.id!==chosen?.id&&state.glean.answers[x.id+':'+key]?.status==='found');
+   if(elsewhere)status='reuse-check';
+ }
+ return {key,project:chosen,status,elsewhere};
+}
+function inspectAction(action,projects,priority){
+ const resources=action.needs.map(req=>evidenceFor(action,projects,req));
+ const have=resources.filter(r=>r.status==='found').length;
+ const gaps=resources.filter(r=>r.status!=='found');
+ return {...action,resources,have,gaps,score:maxRank(action,priority),resourceCount:resources.length,reportedReady:gaps.length===0};
+}
+function composeMaximum(projects,options={}){
+ const days=[1,7,30].includes(Number(options.days))?Number(options.days):7;
+ const priority=['reach','reuse','connect'].includes(options.priority)?options.priority:'reuse';
+ const all=maximumCandidates(projects,{days,vision:options.vision}).map(c=>inspectAction(c,projects,priority));
+ all.sort((a,b)=>b.score-a.score||b.have-a.have||a.gaps.length-b.gaps.length||a.id.localeCompare(b.id));
+ const ready=all.filter(c=>c.reportedReady&&!c.external).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id))[0]||null;
+ const frontier=all[0]||null;
+ return {days,priority,count:all.length,ready,frontier,ranked:all};
+}
+function stageMaximum(action){
+ const p=state.projects.find(x=>x.id===action?.projectId);
+ if(!p)return {ok:false,reason:'Operation unavailable'};
+ if(p.tasks.length>=30)return {ok:false,reason:'This operation has 30 tasks. Complete or simplify existing work before adding more.'};
+ const title=clean(action.proof,180);
+ if(p.tasks.some(t=>t.maxId===action.id||t.title===title))return {ok:false,reason:'This proof is already on the workboard.'};
+ p.tasks.push({id:id(),title,state:'todo',observation:'',updatedAt:null,maxId:action.id});
+ refresh();
+ return {ok:true,reason:'Added an uncompleted physical/digital proof task under '+p.title+'. This does not contact people, grant permissions, transfer resources, or verify real impact.'};
+}
+function maximumSummary(action){
+ const label=action.external?'Requires separate real-world permission/review':'Locally staged work; not independently verified';
+ return action.name+'\n\nImpact lens: reach '+action.weight[0]+'/5 · reuse '+action.weight[1]+'/5 · cross-hat '+action.weight[2]+'/5 (heuristic, not measured).\n'+
+ action.have+'/'+action.resourceCount+' necessary ingredients self-reported found; '+action.gaps.length+' unresolved.\n'+label+'\nFirst usable proof: '+action.proof;
+}
+function renderMaximum(){
+ const scope=$('max-scope'),prev=scope.value;scope.replaceChildren();const all=el('option','All my hats (still one person)');all.value='all';scope.append(all);
+ for(const p of state.projects){const opt=el('option',p.title+' only');opt.value=p.id;scope.append(opt);}
+ scope.value=(prev==='all'||state.projects.some(p=>p.id===prev))?prev:'all';
+ const projects=scope.value==='all'?state.projects:state.projects.filter(p=>p.id===scope.value);
+ const res=composeMaximum(projects,{days:$('max-horizon').value,priority:$('max-value').value,vision:$('max-vision').value});
+ $('max-count').textContent=res.count+' considered actions';
+ const ready=$('max-ready');ready.replaceChildren();ready.append(el('div','LARGEST STARTABLE PROOF · given self-reports','tag'));
+ if(res.ready){
+   ready.append(el('h3',res.ready.name),el('p',res.ready.have+'/'+res.ready.resourceCount+' necessary questions reported found. This means you can consider a controlled first test—not that feasibility or impact was independently verified.','small'));
+   ready.append(button('Put this proof on my workboard',()=>{const x=stageMaximum(res.ready);note('max-status',x.reason)},'secondary'));
+ }else ready.append(el('h3','Not established yet'),el('p','There is no high-reach candidate with all of its necessary ingredients self-reported present and no external approval gate. Glean one missing ingredient or choose the smallest test above.','small'));
+ const front=$('max-frontier');front.replaceChildren();front.append(el('div','HIGHEST FRONTIER IN THIS CATALOGUE · NOT A PROMISE','tag'));
+ const seek=$('max-question'),why=$('max-evidence');seek.replaceChildren();why.replaceChildren();
+ if(!res.frontier){front.append(el('h3','Create an operation to begin'));seek.textContent='No imaginary resource is assumed.';why.textContent='There is no global maximum over unknown possibilities.';return;}
+ const f=res.frontier;front.append(el('h3',f.name),el('p',f.why,'small'),el('p',f.have+'/'+f.resourceCount+' necessary ingredients self-reported found · '+f.gaps.length+' need attention.','metric'));
+ front.append(button('Stage the first actual proof',()=>{const x=stageMaximum(f);note('max-status',x.reason)},'secondary'));
+ front.append(button('Download a one-page frontier brief',()=>downloadMaximum(f),'ghost'));
+ const names={found:'reported present',missing:'reported missing',check:'still to investigate',unasked:'not asked',skip:'skipped', 'reuse-check':'found under another hat; reuse unverified'};
+ for(const q of f.resources){
+   const row=el('div',undefined,'reqrow');row.append(el('strong',q.status==='found'?'✓ ':q.status==='reuse-check'?'↔ ':'? '),document.createTextNode((KINDS[q.key]?.label||q.key)+' — '+names[q.status]));
+   if(q.elsewhere)row.append(el('span',' (possibly reusable from '+q.elsewhere.title+')','small'));
+   why.append(row);
+ }
+ why.append(el('p','Ranking: '+res.priority+' priority · '+res.days+'-day planning horizon · editorial 1–5 dimension weights. No forecast or universal largest-action claim.','small'));
+ const gap=f.gaps.find(x=>x.status==='check'||x.status==='reuse-check'||x.status==='unasked')||f.gaps[0];
+ if(!gap){
+   seek.append(el('h3','All listed ingredients self-reported found'),el('p','The question is now whether this bigger proposal is safe, permitted, feasible for one person, and actually useful. No external action is authorized.','small'));
+   return;
+ }
+ const resource=KINDS[gap.key],target=gap.project||projects[0];
+ seek.append(el('div','ONE QUESTION TO OPEN THE NEXT HORIZON','tag'),el('h3',resource.question),el('p','Look: '+resource.where,'small'),el('p','If missing: '+resource.alt,'small'),el('p','For: '+target.title+(gap.elsewhere?' · reported under '+gap.elsewhere.title+'; verify permission, compatibility and availability.':''),'small'));
+ const noteInput=el('input');noteInput.maxLength=120;noteInput.placeholder='Optional private note';noteInput.setAttribute('aria-label','Private note about this frontier resource');seek.append(noteInput);
+ const actions=el('div',undefined,'line');
+ for(const [v,label] of [['found','I checked; available'],['check','Go look'],['missing','Missing; try smaller']]){
+    actions.append(button(label,()=>recordGlean(target,{key:gap.key},v,noteInput.value),'ghost'));
+ }
+ seek.append(actions);
+}
+function downloadMaximum(action){
+ const rows=action.resources.map(x=>'<li>'+htmlEscape(KINDS[x.key]?.label||x.key)+' — '+htmlEscape(x.status==='found'?'self-reported available':x.status==='reuse-check'?'possible reuse: verify first':'unverified / missing')+'</li>').join('');
+ const html='<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SPAWN frontier brief</title><style>body{font:17px/1.5 system-ui;max-width:760px;margin:35px auto;padding:20px}li{margin:10px 0}</style><h1>'+htmlEscape(action.name)+'</h1><p>'+htmlEscape(action.why)+'</p><h2>Candidate requirements (not verified)</h2><ul>'+rows+'</ul><h2>First real proof</h2><p>'+htmlEscape(action.proof)+'</p><h2>Observed result (fill in after trying)</h2><textarea style="width:100%;height:130px"></textarea><p>Generated locally from user self-reports. Not a safety clearance, verified impact or permission to contact others.</p></html>';
+ download('SPAWN_019_Frontier_Brief.html',html,'text/html;charset=utf-8');
+ note('max-status','Downloaded a printable frontier brief. Its requirements are self-reported/unverified; nothing outside your browser was changed.');
+}
+$('max-search').addEventListener('click',renderMaximum);
+$('max-scope').addEventListener('change',renderMaximum);
+$('max-horizon').addEventListener('change',renderMaximum);
+$('max-value').addEventListener('change',renderMaximum);
+$('max-vision').addEventListener('change',renderMaximum);
+
+window.SPAWN_019=Object.freeze({templates:T,cartridge:cartridge,validCartridge:validCartridge,validBackup:validBackup,matches:matches,deriveKit:deriveKit,gleaningScore:gleaningScore,validGlean:validGlean,gleanQuestions:gleanQuestions,recordGlean:recordGlean,composeMaximum:composeMaximum,stageMaximum:stageMaximum,maximumCandidates:maximumCandidates,csvCell:csvCell,htmlEscape:htmlEscape,state:()=>state});
+refresh();
+})();
+</script></body></html>
