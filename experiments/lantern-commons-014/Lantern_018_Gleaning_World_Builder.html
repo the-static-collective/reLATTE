@@ -96,7 +96,7 @@ if(todo.length){var f=el('p');f.append(el('strong','DO NOW · '),document.create
 for(var p of state.projects){
  var card=el('article',undefined,'hat');card.dataset.type=p.type;var top=el('div',undefined,'hathead'),heading=el('div');heading.append(el('div',T[p.type].label,'tag'),el('h3',p.title),el('p',p.goal,'small muted'));top.append(heading);
  var tools=el('div',undefined,'line');
- tools.append(button('Work card ↓',()=>workCard(p),'ghost'),button('Preview cartridge',()=>previewCartridge(p),'ghost'),button('Fork this operation',()=>{try{addProject(p.type,p.title+' · fork',p.goal,p.tasks.map(t=>t.title),p.id);note('seed-status','Created a separate, unstarted fork. No outcome or offer was copied.')}catch(e){note('seed-status',e.message)}},'secondary'));
+ tools.append(button('Work card ↓',()=>workCard(p),'ghost'),button('Preview cartridge',()=>previewCartridge(p),'ghost'),button('Fork this operation',()=>{try{var fork=addProject(p.type,p.title+' · fork',p.goal,p.tasks.map(t=>t.title),p.id);state.glean.custom[fork.id]=(state.glean.custom[p.id]||[]).map(q=>({key:'custom-'+id(),label:q.label,where:q.where,alt:q.alt}));refresh();note('seed-status','Created a separate unstarted fork, carrying reusable questions only. No answers, outcomes or offers copied.')}catch(e){note('seed-status',e.message)}},'secondary'));
  card.append(top,tools);
  var completed=p.tasks.filter(t=>t.state==='done').length;card.append(el('p',completed+' of '+p.tasks.length+' actions self-reported done · '+p.tasks.filter(t=>t.state==='blocked').length+' blocked','small muted'));
  for(var t of p.tasks){var row=el('div',undefined,'task');row.append(el('strong',t.title));var form=el('div',undefined,'two');
@@ -230,6 +230,7 @@ function renderGlean(){
  const quest=$('glean-quest'),questions=$('glean-questions'),next=$('glean-next');questions.replaceChildren();
  if(!p){quest.textContent='Create one operation first. Your smallest real action will appear here.';next.textContent='No imaginary people or materials are seeded.';return;}
  const kit=gleanQuestions(p);quest.replaceChildren();quest.append(el('div','THE SMALLEST VIABLE SLICE · '+p.title,'tag'),el('h3',kit.slice),el('p','We are checking for the ingredients, not assuming you own them. Answer any tiny question; adjust the slice if something is missing.','small'));
+ quest.append(button(p.tasks.some(t=>t.title===kit.slice)?'Slice already on workboard':'Put this slice on my workboard',()=>{if(p.tasks.some(t=>t.title===kit.slice))return;if(p.tasks.length>=30){note('glean-status','This operation has 30 tasks; complete or simplify one first.');return;}p.tasks.push({id:id(),title:kit.slice,state:'todo',observation:'',updatedAt:null});refresh();note('glean-status','Added an unfinished, testable slice to the workboard above. You decide if it really happens.');},'secondary'));
  const statuses=kit.questions.map(q=>({q:q,a:answerFor(p,q)}));
  for(const {q,a} of statuses){
    const card=el('article',undefined,'glean-item');card.dataset.state=a.status;
