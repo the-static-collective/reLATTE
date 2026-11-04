@@ -35,7 +35,7 @@ if __name__=="__main__":
     if len(matches)!=1:raise ValueError("MISSING_UNIQUE_SERVER_DIFFICULTY")
     lines[matches[0]]="difficulty=normal"
     lines.append("spawn-monsters=false")
-    settings.write_text("\\n".join(lines)+"\\n")
+    settings.write_text("\n".join(lines)+"\n")
     print("GAME_DIFFICULTY_SET_TO_NORMAL_BEFORE_BOOT_FOR_REAL_HUNGER")
     if TARGET.exists():
         if tree(TARGET)!=tree(LOCAL):
