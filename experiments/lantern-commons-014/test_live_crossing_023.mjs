@@ -7,10 +7,12 @@ const controller=()=>AbortSignal.timeout(16000);
 test('live SPAWN 023 read-only launch serves full offline tool, not a substitute page',async()=>{
  const res=await fetch(URL,{headers:{accept:'text/html'},signal:controller()});
  assert.equal(res.status,200);
+ const body=await res.text();
+ console.log('LIVE_HTTP_DIAGNOSTIC',JSON.stringify({contentType:res.headers.get('content-type'),contentLength:body.length,starts:body.slice(0,140),csp:res.headers.get('content-security-policy'),status:res.status}));
  assert.match(res.headers.get('content-type')||'',/text\/html/);
  assert.match(res.headers.get('content-security-policy')||'',/connect-src 'none'/);
  assert.match(res.headers.get('cache-control')||'',/no-store/);
- const html=await res.text();
+ const html=body;
  assert.match(html,/<title>JAR;VIS SPAWN 023 — reLATTE Permissioned Crossings<\/title>/);
  assert.match(html,/function worldCrossingRuntime/);
  assert.match(html,/function portableWorldHtml/);
