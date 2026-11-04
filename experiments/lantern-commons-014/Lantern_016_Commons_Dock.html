@@ -53,13 +53,14 @@ textarea,input,select{width:100%;min-width:0;background:#0c211a;color:var(--ink)
 <div><h3>Find conversations people already opened</h3><p class="fine">Discover public conversation threads. These are self-declared proposals, not verified offers or completed exchanges.</p>
 <div class="row"><button class="btn alt" type="button" id="threads-discover">Find current conversations →</button><button class="btn soft" type="button" id="threads-refresh">Read selected thread →</button></div>
 <div id="threads-status" class="result hidden" role="status"></div><div id="threads-list"></div>
-<div id="thread-view" class="hidden"><h3 id="thread-title"></h3><div id="thread-posts"></div>
+<div id="thread-view" class="hidden"><h3 id="thread-title"></h3><div id="thread-posts"></div><button class="btn soft" type="button" id="thread-report">Report unsafe public conversation</button>
 <form id="reply-form"><label for="reply-kind">My response is…</label><select id="reply-kind"><option value="open">A thought</option><option value="offer">An offer</option><option value="need">A need</option><option value="question">A question</option><option value="act">An action I propose</option></select>
 <label for="reply-words">Reply publicly</label><textarea id="reply-words" minlength="5" maxlength="240" required></textarea>
 <label class="check" for="reply-consent"><input id="reply-consent" type="checkbox" required><span>Publish my reply publicly; no personal contact information.</span></label>
 <button class="btn alt" id="reply-send" type="submit">Post actual reply →</button></form>
 <div id="reply-status" class="result hidden" role="status"></div></div></div>
-</div></section>
+
+<details class="card"><summary>Withdraw a public conversation you own</summary><p>Paste your saved private owner key and the thread ID. This sends the key only to the existing invitation backend for verification. It will close the public thread here, but cannot retrieve copies others have saved.</p><label for="withdraw-id">Public thread ID</label><input id="withdraw-id" autocomplete="off" spellcheck="false" placeholder="xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx"><label for="withdraw-key">Private owner key (never shared in the public URL)</label><input id="withdraw-key" type="password" autocomplete="off" spellcheck="false"><button class="btn soft" type="button" id="withdraw-thread">Withdraw this public conversation</button><div id="withdraw-status" class="result hidden" role="status"></div></details></section>
 <section class="card"><div class="tag">06 / Other built tools</div><h2>The wider workshop is still here.</h2>
 <div class="list"><article class="tool"><h3>Source-backed JAR;VIS</h3><p>Live read-only inspection of public JAR;VIS scripts, world cartridges, GHoT and STATIC OS source evidence.</p><a class="btn soft" href="/functions/v1/jarvis-solo-live-017" target="_blank" rel="noopener noreferrer">Open source workshop →</a></article>
 <article class="tool"><h3>Social Porch</h3><p>Review existing community social copy and independently drafted calendar material. This does not post to social media.</p><a class="btn soft" href="https://doors.abundent.org/social-porch/" target="_blank" rel="noopener noreferrer">Open Social Porch →</a></article>
@@ -152,6 +153,30 @@ async function readFeed(){
  }catch(err){view('feed-status','Could not read the reviewed public feed: '+safe(err.message,100),true)}
  finally{$('feed-read').disabled=false}
 }
+
+async function withdrawPublic(){
+ const id=safe($('withdraw-id').value,60),key=safe($('withdraw-key').value,100);
+ if(!UUID.test(id)||!/^[A-Za-z0-9_-]{43}$/.test(key))return view('withdraw-status','Enter a valid thread ID and its private owner key.',true);
+ if(!confirm('Close this public thread? Existing copies elsewhere cannot be recalled.'))return;
+ $('withdraw-thread').disabled=true;view('withdraw-status','Checking owner receipt and requesting withdrawal…');
+ try{
+  const r=await request(API.network,{action:'withdraw',threadId:id,postId:null,key});
+  if(r.state!=='WITHDRAWN')throw Error('WITHDRAWAL_NOT_VERIFIED');
+  $('withdraw-key').value='';receipt.thread=null;
+  $('thread-receipt').classList.add('hidden');$('thread-view').classList.add('hidden');
+  view('withdraw-status','WITHDRAWN. The thread is no longer public in this service. Shared copies may remain elsewhere.');
+ }catch(err){view('withdraw-status','Withdrawal not verified: '+safe(err.message,100),true)}
+ finally{$('withdraw-thread').disabled=false}
+}
+async function reportPublic(){
+ if(!UUID.test(state.selectedThread))return;
+ if(!confirm('Report this public conversation for safety review? Reporting does not immediately remove it.'))return;
+ $('thread-report').disabled=true;
+ try{const r=await request(API.network,{action:'report',threadId:state.selectedThread,postId:null,reason:'unsafe'});
+   view('threads-status','Safety report submitted for review. This does not mean the conversation was automatically removed.');
+ }catch(err){view('threads-status','Report not confirmed: '+safe(err.message,100),true)}
+ finally{$('thread-report').disabled=false}
+}
 function publicPermalink(id){return new URL(location.pathname+'?thread='+encodeURIComponent(id),location.origin).href}
 async function publish(e){
  e.preventDefault();if(!$('thread-consent').checked)return view('thread-status','Explicit public publication consent is required.',true);
@@ -161,6 +186,7 @@ async function publish(e){
  try{const r=await request(API.network,{action:'publish',invitationId,words,lane:$('thread-lane').value,timing:$('thread-time').value,intent:$('thread-intent').value,consent:true});
   if(r.schema!=='abundent/invitation-thread-v1'||!UUID.test(r.thread?.id)||!r.ownerKey||!/^[A-Za-z0-9_-]{43}$/.test(r.ownerKey))throw Error('PUBLIC_RECEIPT_INVALID');
   receipt.thread={publicLink:publicPermalink(r.thread.id),threadId:r.thread.id,privateOwnerKey:r.ownerKey};
+  $('withdraw-id').value=r.thread.id;$('withdraw-key').value=r.ownerKey;
   privateLine('thread-keys',receipt.thread);$('thread-receipt').classList.remove('hidden');$('thread-consent').checked=false;
   view('thread-status','PUBLISHED PUBLICLY. This real thread can be opened and replied to for up to 30 days. Save your owner key. This does not send notifications outside the app.');
   await readThread(r.thread.id);
@@ -225,6 +251,8 @@ $('thread-form').addEventListener('submit',publish);
 $('thread-copy').addEventListener('click',async()=>{
  if(!receipt.thread)return;const ok=await copyReceipt(receipt.thread,'PUBLIC THREAD AND PRIVATE OWNER RECEIPT');view('thread-status',ok?'Link and private owner key copied.':'Clipboard unavailable. Select the receipt text above.',!ok);
 });
+$('withdraw-thread').addEventListener('click',withdrawPublic);
+$('thread-report').addEventListener('click',reportPublic);
 $('threads-discover').addEventListener('click',discover);
 $('threads-refresh').addEventListener('click',()=>state.selectedThread?readThread(state.selectedThread):view('threads-status','First select a public conversation.',true));
 $('reply-form').addEventListener('submit',reply);
