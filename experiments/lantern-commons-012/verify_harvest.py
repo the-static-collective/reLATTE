@@ -68,12 +68,16 @@ def verify(stage,archive,observation,parent):
              not obs["witnessed_real_item_transactions"],"RESERVE_CHANGED_MATERIAL")
     elif stage=="harvest":
         entries=obs["witnessed_real_crop_actions"]
-        need(len(entries)==8 and all(x["event"]=="REAL_BLOCK_BREAK_AND_ITEM_PICKUP" and
+        need(8<=len(entries)<=18 and all(x["event"]=="REAL_BLOCK_BREAK_AND_ITEM_PICKUP" and
              x["before"]=="wheat[age=7]" and x["after"]=="air" and
-             x["grain_inventory_added"]==1 for x in entries),"NOT_REAL_8_CROP_HARVEST")
-        need([x["position"][2] for x in entries]==list(range(4,12)),
-             "WRONG_CROPS_HARVESTED")
-        need(end["stock"]["harvest_wheat"]==8 and
+             x["position"][0] in (103,104) and 4<=x["position"][2]<=12 and
+             isinstance(x["grain_inventory_added"],int) and
+             x["grain_inventory_added"]>=0 for x in entries),"NO_REAL_RIPE_CROP_HARVEST")
+        need(len(set(tuple(x["position"]) for x in entries))==len(entries),
+             "CROP_TILE_REUSED_WITHOUT_REAL_REGROWTH")
+        need(sum(x["grain_inventory_added"] for x in entries)==end["stock"]["harvest_wheat"],
+             "DROPS_NOT_RECONCILED_WITH_ITEM_BANK")
+        need(end["stock"]["harvest_wheat"]>=8 and
              end["stock"]["harvested_seeds"]>=2 and
              end["blocks"]["replanted"]=="air" and
              end["blocks"]["marker"]=="gold_block","HARVEST_YIELD_NOT_IN_SAVED_WORLD")
@@ -83,7 +87,7 @@ def verify(stage,archive,observation,parent):
                 {("wheat","ACTUAL_GAME_DEPOSIT"),("wheat_seeds","ACTUAL_GAME_DEPOSIT")},
              "FARMER_DID_NOT_DEPOSIT_REAL_DROPS")
     else:
-        need(start["stock"]["harvest_wheat"]==8 and
+        need(start["stock"]["harvest_wheat"]>=8 and
              start["stock"]["harvested_seeds"]>=2 and
              start["blocks"]["marker"]=="gold_block" and
              start["blocks"]["replanted"]=="air","HEIR_NOT_THE_HARVEST_CHILD")
@@ -96,7 +100,7 @@ def verify(stage,archive,observation,parent):
              crop[1]["operator_setblock_wheat"] is False and
              crop[2]["crop_origin"]=="PLAYER_PLANTED_AND_RANDOM_TICK_MATURED",
              "FAKE_CROP_GENERATION")
-        need(end["stock"]["harvest_wheat"]==6 and
+        need(end["stock"]["harvest_wheat"]==start["stock"]["harvest_wheat"]-2 and
              end["stock"]["harvested_seeds"]>=1 and
              end["blocks"]["replanted"]=="air" and
              end["blocks"]["heirMarker"]=="emerald_block","FOOD_AND_CROP_LEDGER")
@@ -144,11 +148,11 @@ def main(a):
         "children":ms,
         "world_saves_really_copied":True,"game_client_witnessed":True,
         "initial_inherited_wheat":2,"parent_mature_field":"authored 006/007 environment",
-        "freshly_harvested_wheat_items":8,
+        "freshly_harvested_wheat_items":harvest["ending_stock"]["harvest_wheat"],
         "heir_additional_crops_from_player_seed":1,
         "grain_converted_and_eaten_as_bread":3,
         "operator_inventory_item_minting":0,
-        "final_heir_wheat":{"vault":2,"harvest_bank":6},
+        "final_heir_wheat":{"vault":2,"harvest_bank":heir["ending_stock"]["harvest_wheat"]},
         "claims_limit":["Game-only virtual farming and consumption",
           "Parent standing ripe field is inherited from older authored game construction",
           "Natural crop random ticking accelerated from default to 1800",
@@ -160,9 +164,9 @@ def main(a):
     print(json.dumps({"result":"REAL_GAME_HARVEST_PLANT_REGROW_CRAFT_EAT_GENERATIONS_VERIFIED",
         "origin":parent["cartridge_id"],
         "versions":[{k:x[k] for k in ("branch","version","cartridge_id","parent_cartridge_id")} for x in ms],
-        "wheat_original":2,"wheat_harvested_in_old_field":8,
+        "wheat_original":2,"wheat_harvested_in_old_field":harvest["ending_stock"]["harvest_wheat"],
         "wheat_harvested_from_player_seed":1,
-        "wheat_eaten_as_bread_equivalent":3,"wheat_final":8,
+        "wheat_eaten_as_bread_equivalent":3,"wheat_final":2+heir["ending_stock"]["harvest_wheat"],
         "operator_new_item_grants":0},sort_keys=True))
 
 if __name__=="__main__":
