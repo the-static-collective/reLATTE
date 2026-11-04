@@ -41,4 +41,5 @@ assert.equal(paradox.b.cards[0].status,'ADMIT');
 assert.equal(paradox.c.cards[0].status,'REFUSE');
 assert.notEqual(paradox.b.stateHash,paradox.c.stateHash);
 assert.ok(html.includes('id="boot-data"'));
+assert.ok(html.includes("'card-list','proof-feedback'"), 'Child export must scrub live DOM content');
 console.log('PASS: SHA-256 fixtures, replay, tamper rejection, idempotence gate, admission boundaries, child non-inheritance, packet validation, divergent worlds.');
