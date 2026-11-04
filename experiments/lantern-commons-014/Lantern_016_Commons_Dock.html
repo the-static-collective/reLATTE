@@ -16,7 +16,8 @@ textarea,input,select{width:100%;min-width:0;background:#0c211a;color:var(--ink)
 <label for="intent">One useful thing, in your own words</label><textarea id="intent" maxlength="500" placeholder="Example: I have some shelf-stable food to give away today."></textarea>
 <div class="row"><button class="btn" id="route" type="button">Find the next real action →</button><button class="btn alt" id="make-card" type="button">Make a printable action card</button></div>
 <div class="quick"><button type="button" data-suggest="have">I have extra <small>Give something useful</small></button><button type="button" data-suggest="need">I need help <small>Find a real starting point</small></button><button type="button" data-suggest="gather">Bring people together <small>Invite & organize</small></button><button type="button" data-suggest="create">Make something <small>A useful artifact now</small></button></div>
-<div id="route-result" class="result hidden" role="status" aria-live="polite"></div></section>
+<div id="route-result" class="result hidden" role="status" aria-live="polite"></div>
+<div class="shortcuts"><button class="btn soft" id="source-route" type="button">Ask our existing JAR;VIS source-owned router →</button><span class="fine">Optional: sends only your confirmed short description (maximum 240 characters) to our existing live router. No background execution.</span></div><div id="source-result" class="result hidden" role="status"></div><div id="source-actions"></div></section>
 <section class="card" id="direct"><div class="tag">02 / Actual machinery</div><h2>Choose a useful crossing</h2><p>These are already deployed applications. Opening one never sends the text you typed above. The next application has its own participation rules.</p>
 <div class="list">
  <article class="tool"><span class="kind">REAL-TIME · INVITE-ONLY</span><h3>Give or receive locally</h3><p>NOW ROUTE coordinates Waseca-area offers, needs, proposals and agreed handoffs. Shelf-stable goods only; requires a pilot invitation.</p><a class="btn alt" id="launch-now" href="/functions/v1/now-route-live" target="_blank" rel="noopener noreferrer">Open NOW ROUTE →</a></article>
@@ -65,12 +66,13 @@ textarea,input,select{width:100%;min-width:0;background:#0c211a;color:var(--ink)
 <div class="list"><article class="tool"><h3>Source-backed JAR;VIS</h3><p>Live read-only inspection of public JAR;VIS scripts, world cartridges, GHoT and STATIC OS source evidence.</p><a class="btn soft" href="/functions/v1/jarvis-solo-live-017" target="_blank" rel="noopener noreferrer">Open source workshop →</a></article>
 <article class="tool"><h3>Social Porch</h3><p>Review existing community social copy and independently drafted calendar material. This does not post to social media.</p><a class="btn soft" href="https://doors.abundent.org/social-porch/" target="_blank" rel="noopener noreferrer">Open Social Porch →</a></article>
 <article class="tool"><h3>Still Here · Porch Doors</h3><p>Explore existing public support doors and re-entry tools, with no automatic personal-case intake.</p><a class="btn soft" href="https://doors.abundent.org/porch/" target="_blank" rel="noopener noreferrer">Open Porch →</a></article></div>
+<div class="card" style="margin-top:15px" id="table-feed"><div class="tag">The First Table / admitted public history</div><h3>Read the shared room here</h3><p>See the actual admitted contributions from our existing human/AI Commons. This does not submit anything. A seat token is still required to contribute, through the separate original tool.</p><button class="btn soft" id="table-read" type="button">Read First Table contributions →</button><div id="table-status" class="result hidden" role="status"></div><div id="table-items"></div></div>
 <p class="notice">These doors lead to distinct applications with their own authority. Neither a button nor a receipt proves a person responded or outside work occurred.</p></section>
 </main><footer class="footer">JAR;VIS · Commons Desk 002 · The Static Collective / Abundent · Public fields and private consent remain distinct. <a href="?classic=1">Original connected registry</a></footer></div>
 <script id="app-js">
 'use strict';
 (()=>{
-const ROOT='/functions/v1/',API={garden:ROOT+'garden-signal',network:ROOT+'invitation-network-002'};
+const ROOT='/functions/v1/',API={garden:ROOT+'garden-signal',network:ROOT+'invitation-network-002',table:ROOT+'agent-commons-014/rooms/first-table',jarvis:ROOT+'jarvis-solo-live-017/execute'};
 const $=id=>document.getElementById(id);
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const receipt={garden:null,thread:null,reply:null},state={selectedThread:null,threads:[]};
@@ -177,6 +179,50 @@ async function reportPublic(){
  }catch(err){view('threads-status','Report not confirmed: '+safe(err.message,100),true)}
  finally{$('thread-report').disabled=false}
 }
+
+function handoff(id,label){
+ const b=mk('button',label+' →','btn soft');b.type='button';
+ b.addEventListener('click',()=>{
+  const words=safe($('intent').value,240);
+  if(id==='announce'){$('thread-words').value=words;navigate('conversation');return;}
+  if(id==='private-offer'){$('garden-body').value=words;$('garden-kind').value='offer';navigate('garden-submit');return;}
+  if(id==='catalog'||id==='later'){makeCard();return;}
+  if(id==='art'){navigate('direct');return;}
+  if(id==='record-audio'||id==='record-video'){const a=mk('a','Open existing recording tool ↗','btn alt');a.href=ROOT+'jarvis-solo-live-017';a.target='_blank';a.rel='noopener noreferrer';$('source-actions').append(a);view('source-result','The existing recorder requires a separate device permission. Click its link to open the tool. No recording has started.');return;}
+  view('source-result','No available executor for this proposed action. Nothing was performed.',true);
+ });
+ return b;
+}
+async function sourceRoute(){
+ const offer=safe($('intent').value,500);
+ if(offer.length<4||offer.length>240)return view('source-result','Use a 4–240 character description for the source-owned router. No text was sent.',true);
+ if(!confirm('Send this exact text to the existing JAR;VIS routing service for an ephemeral proposal? No other notes or files will be sent:\n\n'+offer))return;
+ $('source-route').disabled=true;view('source-result','Asking the existing remote source-owned router. Its response is a proposal only, not work done.');
+ try{const data=await request(API.jarvis,{action:'route_offer',offer});
+  if(data.schema!=='jarvis.remote-live-offer-receipt/v1'||data.performed!=='SOURCE_OWNED_LIVE_OFFER_ROUTER_EVALUATED'||data.writes!==0||!Array.isArray(data.plan?.actions))throw Error('UNVERIFIED_ROUTER_RECEIPT');
+  const list=$('source-actions');list.replaceChildren();
+  for(const a of data.plan.actions.slice(0,5)){
+   if(!['announce','private-offer','catalog','later','art','record-audio','record-video'].includes(a.id))continue;
+   const c=mk('article',undefined,'entry');c.append(mk('div',safe(a.label||a.id,110)+' · PROPOSED ONLY','kind'),mk('p','Available executor is a separate user action; nothing has been launched.'));c.append(handoff(a.id,'Use '+safe(a.label||a.id,70)));list.append(c);
+  }
+  view('source-result','SOURCE-OWNED ROUTER RESPONDED. Its proposed actions are linked to local artifacts or existing tools below. No outside action occurred.');
+ }catch(err){view('source-result','Router read not verified: '+safe(err.message,100),true)}
+ finally{$('source-route').disabled=false}
+}
+async function readTable(){
+ $('table-read').disabled=true;view('table-status','Reading actual admitted First Table history…');
+ try{const response=await request(API.table);
+ if(!Array.isArray(response.events))throw Error('UNVERIFIED_TABLE_FEED');
+ const list=$('table-items');list.replaceChildren();
+ for(const e of response.events.slice(-16)){
+  const n=mk('article',undefined,'entry');n.append(mk('div',safe(e.by?.label||'Unverified participant',70)+' · '+safe(e.kind||'note',30),'kind'),mk('p',safe(e.text||'',1600)));
+  n.append(mk('small',e.in_reply_to?'In reply to another contribution':'First contribution'));list.append(n);
+ }
+ if(!list.children.length)list.append(mk('p','No admitted contributions returned. Held drafts remain private.'));
+ view('table-status',response.events.length+' admitted items returned from the existing First Table. Contributors and provider identity are self-declared.');
+ }catch(e){view('table-status','Could not verify First Table history: '+safe(e.message,100),true)}
+ finally{$('table-read').disabled=false}
+}
 function publicPermalink(id){return new URL(location.pathname+'?thread='+encodeURIComponent(id),location.origin).href}
 async function publish(e){
  e.preventDefault();if(!$('thread-consent').checked)return view('thread-status','Explicit public publication consent is required.',true);
@@ -236,6 +282,8 @@ async function reply(e){
  }catch(err){view('reply-status','Reply not confirmed: '+safe(err.message,120),true)}
  finally{$('reply-send').disabled=false}
 }
+$('source-route').addEventListener('click',sourceRoute);
+$('table-read').addEventListener('click',readTable);
 $('route').addEventListener('click',route);
 $('make-card').addEventListener('click',makeCard);
 document.querySelectorAll('[data-suggest]').forEach(b=>b.addEventListener('click',()=>{
