@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LANTERN 013 — The Living Commons</title>
+<meta name="description" content="A playable, offline, persistent and forkable village simulation. Four buttons, a village, decisions and immutable browser cartridges.">
+<style>
+:root{color-scheme:dark;--bg:#0b1517;--ink:#f4f1dc;--ink2:#c2d2c5;--dim:#8ba99a;--gold:#ead097;--mint:#a9dbb7;--ochre:#bc805a;--panel:#132628;--panel2:#1b3231;--stroke:#365652;--red:#dca18c;--glow:0 18px 60px #0006}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#2c5049 0%,#0b1517 56%),var(--bg);color:var(--ink);font:15px/1.54 system-ui,-apple-system,Segoe UI,sans-serif}button,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:3px}a{color:var(--gold)}.wrap{max-width:1260px;margin:auto;padding:0 22px 90px}.top{border-bottom:1px solid #34544b;display:flex;gap:16px;align-items:center;justify-content:space-between;padding:24px 0 15px;flex-wrap:wrap}.top strong{font:700 .75rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.2em;color:var(--mint)}.top small{color:var(--dim)}.badges{display:flex;gap:8px;flex-wrap:wrap}.badge{border:1px solid var(--stroke);background:#17312d;padding:5px 10px;border-radius:999px;color:var(--mint);font-size:.75rem;letter-spacing:.04em}.badge.model{color:#f2d9a6;border-color:#8b704b;background:#403323}.hero{padding:48px 0 20px;display:grid;grid-template-columns:1.05fr .95fr;gap:32px;align-items:center}.eyebrow{font-size:.76rem;letter-spacing:.25em;color:var(--mint);font-weight:750}.hero h1{font-family:Georgia,Times New Roman,serif;font-size:clamp(3.1rem,7.4vw,6.8rem);line-height:.88;letter-spacing:-.056em;margin:18px 0 24px}.hero h1 span{color:var(--gold);font-style:italic}.lede{font-size:1.1rem;line-height:1.62;color:var(--ink2);max-width:610px;margin:0 0 26px}.tiny{color:var(--dim);font-size:.83rem}.world-art{height:345px;position:relative;border:1px solid #557465;border-radius:22px;background:radial-gradient(ellipse at 58% 0%,#467768 0%,#2d4e48 36%,#213b38 62%,#20352a 100%);overflow:hidden;box-shadow:var(--glow)}.world-art:before{content:'';position:absolute;width:520px;height:300px;border-radius:50%;background:#d7bc77;opacity:.17;top:70px;left:-90px;transform:rotate(-12deg)}.world-art:after{content:'';position:absolute;width:530px;height:220px;border-radius:50%;background:#507c54;bottom:-130px;right:-70px;box-shadow:-260px 55px 0 80px #304f41}.sun{position:absolute;right:44px;top:33px;width:90px;height:90px;border-radius:100%;background:#ebcf8c;box-shadow:0 0 50px #f0c87565}.mountain{position:absolute;bottom:120px;width:230px;height:190px;background:#305a4a;transform:rotate(45deg);border-radius:20px;z-index:1}.mountain.a{left:-50px}.mountain.b{left:125px;bottom:105px;background:#3a6653}.pond{position:absolute;bottom:25px;left:28px;width:220px;height:65px;border-radius:55%;background:repeating-linear-gradient(175deg,#96c9b6 0 12px,#669e9a 12px 15px);transform:rotate(-7deg);z-index:4;opacity:.88}.hut{position:absolute;width:108px;height:81px;bottom:77px;right:83px;z-index:4;background:#d1aa78;border:6px solid #6d5941;border-radius:4px 4px 8px 8px;box-shadow:inset 0 -17px #aa8965}.hut:before{content:'';position:absolute;width:85px;height:85px;transform:rotate(45deg);background:#805e46;top:-49px;left:7px;z-index:-1;border-radius:6px}.hut:after{content:'';position:absolute;width:24px;height:41px;bottom:-6px;left:39px;background:#4b3b30;border-radius:5px 5px 0 0}.plot-art{position:absolute;left:53%;bottom:42px;display:flex;gap:8px;z-index:5;transform:rotate(-10deg)}.plot-art i{display:block;width:16px;height:56px;border-radius:60% 60% 10% 10%;background:linear-gradient(90deg,#a8b36f,#d7c478,#72894d);transform:skew(-8deg)}.scene-label{position:absolute;z-index:8;bottom:14px;right:17px;background:#0d2321df;padding:6px 11px;border-radius:9px;border:1px solid #749179;color:var(--mint);font:650 .73rem ui-monospace,monospace;letter-spacing:.05em}
+.controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}.bigbtn{text-align:left;border-radius:17px;background:linear-gradient(145deg,#264338,#182f30);color:var(--ink);border:1px solid #527165;padding:17px 16px;min-height:132px;box-shadow:0 8px 35px #0003;transition:transform .15s,background .15s}.bigbtn:hover{transform:translateY(-2px);background:linear-gradient(145deg,#3b5a46,#1b3e39)}.bigbtn.active{border-color:var(--gold);background:#59462b}.bigbtn b{display:block;font-size:1.05rem;margin:13px 0 3px}.bigbtn small{color:var(--ink2);font-size:.81rem}.bigbtn .symbol{font:700 1.55rem Georgia,serif;color:var(--gold)}.panel{background:linear-gradient(145deg,#1c3533,#122424);border:1px solid var(--stroke);border-radius:19px;padding:22px;box-shadow:0 4px 28px #0003}.events{margin:0 0 20px}.events.hidden{display:none}.events h2{margin:0 0 7px;font:600 1.3rem Georgia,serif}.events p{margin:0 0 13px;color:var(--ink2)}.choice-row{display:flex;gap:9px;flex-wrap:wrap}.pill{background:#29473e;border:1px solid #577768;color:var(--ink);padding:10px 14px;border-radius:40px}.pill:hover{background:#476447}.section-title{display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:34px 0 13px}.section-title h2{font:600 clamp(1.55rem,3vw,2.1rem) Georgia,serif;letter-spacing:-.025em;margin:0}.section-title p{color:var(--dim);margin:0}.statbar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px}.stat{background:#132827;border:1px solid #32504c;padding:12px;border-radius:12px}.stat strong{display:block;color:var(--gold);font:500 1.7rem Georgia,serif}.stat span{font-size:.76rem;color:var(--ink2)}.world-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:14px}.field-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;padding:16px;border-radius:13px;background:#284735;border:1px solid #547558;margin:15px 0}.tile{aspect-ratio:1;border:1px solid #907950;border-radius:8px;background:linear-gradient(135deg,#7c6746,#5a4c39);color:#d8d6a9;font:600 1.2rem Georgia,serif}.tile.seed{background:#436a42}.tile.shoot{background:#6e8a46}.tile.ripe{background:#bb9b59;color:#253021}.tile:hover{filter:brightness(1.16)}.needs{border-top:1px solid var(--stroke);padding-top:13px;margin-top:15px;display:flex;gap:12px;flex-wrap:wrap;color:var(--ink2);font-size:.85rem}.subtle{color:var(--dim);font-size:.84rem}.people{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.person{min-height:112px;text-align:left;background:#172d2c;color:var(--ink);border:1px solid #395b52;border-radius:13px;padding:11px}.person.selected{border-color:var(--gold);background:#374737}.person.departed{opacity:.58}.person strong{display:block}.person span{display:block;font-size:.79rem;color:var(--ink2)}.person .avatar{float:right;color:var(--gold);font:500 1.8rem Georgia,serif}.chat{display:flex;flex-direction:column;gap:10px;min-height:260px}.chat-thread{height:210px;overflow:auto;border:1px solid #35554e;background:#0e2121;border-radius:12px;padding:11px}.bubble{padding:8px 10px;border-radius:10px;max-width:93%;margin:6px 0;background:#29433b;font-size:.88rem}.bubble.user{background:#5c4a31;margin-left:auto;text-align:right}.chat-form{display:flex;gap:8px}.chat-form input{flex:1;min-width:0;background:#0c1f1e;border:1px solid #527468;color:var(--ink);border-radius:9px;padding:11px}.btn{border:1px solid #6d8d78;background:#e6d096;color:#18302a;border-radius:10px;padding:11px 15px;font-weight:720}.btn.secondary{color:var(--ink);background:#25413a}.btn.danger{border-color:#a76860;background:#583e35;color:#f7ded0}.btn:hover{filter:brightness(1.08)}.days{display:flex;gap:9px;margin-top:15px;flex-wrap:wrap}.journal{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}.eventline{padding:9px 0;border-bottom:1px solid #294b44;display:grid;grid-template-columns:60px 1fr;gap:8px;color:var(--ink2)}.eventline b{color:var(--gold);font:700 .75rem ui-monospace,monospace}.shelf{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:11px}.cartridge{background:#142c2b;border:1px solid var(--stroke);border-radius:14px;padding:15px;min-width:0}.cartridge.active{border-color:var(--gold)}.cartridge h3{font:550 1.15rem Georgia,serif;margin:6px 0}.cartridge p{margin:6px 0;color:var(--ink2);font-size:.84rem}.hash{font:650 .76rem ui-monospace,monospace;color:var(--mint);overflow-wrap:anywhere;line-height:1.6}.cartridge .actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.cartridge button{padding:7px 10px;border:1px solid #617c6b;background:#29483f;color:var(--ink);border-radius:8px}.comparison{background:#20372f;border:1px solid #597467;margin:12px 0;padding:14px;border-radius:12px;line-height:1.75;color:var(--ink2)}.support{padding:22px;background:#3a3123;border:1px solid #8c7650;border-radius:15px;color:#f1dfb5;margin:30px 0}.support strong{color:#ffedc7}.support p{margin:6px 0}.footer{border-top:1px solid #34544b;padding:24px 0;color:var(--dim);font-size:.81rem}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.banner{position:sticky;top:0;z-index:20;border-radius:0 0 12px 12px;background:#e1cf96;color:#1b2925;padding:8px 15px;font-weight:700;display:none}.banner.visible{display:block}.help{padding:10px 0;font-size:.87rem;color:var(--ink2)}.no-script{border:1px solid #946e43;padding:18px;border-radius:12px}.mt{margin-top:22px}
+@media(max-width:930px){.hero{grid-template-columns:1fr}.world-art{height:240px}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}.world-layout,.journal{grid-template-columns:1fr}.statbar{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:500px){.wrap{padding:0 14px 65px}.hero{padding:31px 0 10px;gap:17px}.hero h1{font-size:3.35rem}.controls{gap:8px}.bigbtn{padding:12px;min-height:116px}.bigbtn b{font-size:.93rem}.bigbtn small{font-size:.74rem}.panel{padding:15px}.field-grid{gap:5px;padding:10px}.people{grid-template-columns:repeat(2,minmax(0,1fr))}.person{padding:9px}.world-art{height:210px}.stat{padding:9px}.stat strong{font-size:1.35rem}.stat span{font-size:.69rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bigbtn{transition:none}}
+</style></head><body>
+<div id="banner" class="banner" role="status" aria-live="polite"></div>
+<div class="wrap">
+<header class="top"><strong>✳ STATIC COLLECTIVE / LANTERN 013</strong><div class="badges"><span class="badge">LOCAL FIRST</span><span class="badge">COPY · FORK · REMEMBER</span><span class="badge model">BROWSER MODEL — NOT MINECRAFT</span></div></header>
+<section class="hero"><div><div class="eyebrow">A SMALL WORLD WITH CONSEQUENCES</div><h1>The Living <span>Commons.</span></h1><p class="lede">Build a village. Change the weather. Ask its people what matters. Let them make choices. Then preserve a reality and try another history.</p><p class="tiny">Offline and private by default. Every saved model cartridge has a SHA-256 identity and an immutable parent. The actual Minecraft worlds remain separate.</p></div><div class="world-art" aria-hidden="true"><div class="sun"></div><div class="mountain a"></div><div class="mountain b"></div><div class="pond"></div><div class="hut"></div><div class="plot-art"><i></i><i></i><i></i><i></i><i></i></div><div class="scene-label">A WORLD OF SMALL DECISIONS</div></div></section>
+<section class="controls" aria-label="Four main world controls">
+<button class="bigbtn" id="createLife"><span class="symbol">✧</span><b>Create life</b><small>Add a neighbor with needs and no free supplies.</small></button>
+<button class="bigbtn" id="disturb"><span class="symbol">↯</span><b>Disturb the peace</b><small>Drought, rain, visitors, frost, discovery.</small></button>
+<button class="bigbtn" id="simulate"><span class="symbol">◌</span><b>Let them be</b><small>Advance one day; observe independent choices.</small></button>
+<button class="bigbtn" id="fork"><span class="symbol">⑂</span><b>Fork reality</b><small>Seal this moment and branch without overwrite.</small></button>
+</section>
+<div id="eventPanel" class="events panel hidden"><h2>God Hand — choose one event</h2><p>An intervention changes the world; it never directly confiscates a person's stores.</p><div class="choice-row"><button class="pill" data-event="drought">☀ Drought</button><button class="pill" data-event="rain">◈ Rain</button><button class="pill" data-event="frost">❄ Frost</button><button class="pill" data-event="visitor">✧ Visitor</button><button class="pill" data-event="discovery">⌁ Irrigation idea</button><button class="pill" id="cancelDisturb">Cancel</button></div></div>
+<div class="statbar" aria-label="Current village resources"><div class="stat"><strong id="day">1</strong><span>Day / year <span id="year">1</span></span></div><div class="stat"><strong id="peopleN">3</strong><span>Present inhabitants</span></div><div class="stat"><strong id="water">8</strong><span>Available water</span></div><div class="stat"><strong id="grain">3</strong><span>Public grain</span></div><div class="stat"><strong id="fields">3</strong><span>Growing / ripe plots</span></div><div class="stat"><strong id="projects">—</strong><span>Irrigation</span></div></div>
+<div class="section-title"><h2>The world, today</h2><p id="worldStatus">Inspect the soil, listen to the village.</p></div>
+<div class="world-layout"><div class="panel"><h3 style="margin:0">The field</h3><p class="subtle">Click a plot to inspect it. Seeds require water and time; ripe fields produce model grain.</p><div class="field-grid" id="fieldGrid" aria-label="Twelve farm plots"></div><div class="needs"><span id="weather">Sky: clear</span><span id="forest">Forest wood: 9</span><span id="stocks">Private grain: 7</span><span id="season">Generation 1</span></div><div class="days"><button class="btn secondary" id="sevenDays">▶ Watch seven days</button><button class="btn secondary" id="oneDay">▶ One day</button></div></div>
+<div class="panel"><h3 style="margin:0 0 9px">The neighbors</h3><p class="subtle">Nobody is automatically wrong. Each has a protected personal reserve and authored behavior.</p><div id="people" class="people"></div></div></div>
+<div class="section-title"><h2>Ask an inhabitant</h2><p>Conversation over worksheets.</p></div>
+<div class="world-layout"><div class="panel chat"><div class="badge" id="speakerLabel">SELECT A NEIGHBOR</div><div class="chat-thread" id="chatThread" aria-live="polite"></div><div class="choice-row"><button class="pill prompt" data-q="Why won't you share?">Why won't you share?</button><button class="pill prompt" data-q="What about food?">What about food?</button><button class="pill prompt" data-q="How can we build irrigation?">Irrigation?</button></div><form class="chat-form" id="chatForm"><input id="chatInput" aria-label="Talk to the selected inhabitant" maxlength="250" autocomplete="off" placeholder="Ask about food, water, help, tomorrow…"><button class="btn" type="submit">Ask ↗</button></form><small class="subtle">Replies are scripted from the current model state, not generated by an online AI. Your typed messages are not included in cartridge exports.</small></div>
+<div class="panel"><h3 style="margin:0 0 8px">What actually happened</h3><p class="subtle">Events are recorded as model decisions, not real-world testimony.</p><div id="journal" role="log" aria-label="Recent world event journal"></div></div></div>
+<div class="section-title" id="shelfHeading"><h2>The World Shelf</h2><p>Keep the originals. Explore copies.</p></div>
+<div class="toolbar"><button class="btn" id="saveReality">✳ Save this reality</button><button class="btn secondary" id="exportAll">Export whole shelf (.json)</button><button class="btn secondary" id="importBtn">Import cartridges (.json)</button><input id="importFile" type="file" accept="application/json,.json" hidden><button class="btn danger" id="reset">Reset local village</button></div>
+<p class="help">Checkout never edits a saved cartridge. It creates a working copy. Fork or Save seals a new descendant with a SHA-256 content hash.</p>
+<div id="shelf" class="shelf"></div>
+<div class="comparison" id="comparePanel">Choose <strong>Compare</strong> on a world cartridge to see how your current village differs.</div>
+<section class="support"><strong>Important provenance boundary</strong><p>This is a playable offline browser simulation, with its own versioned <strong>JSON model cartridges</strong>. It does not open or modify the verified Minecraft Java world-save ZIPs, issue signed reLATTE receipts, or prove that real people cooperate. Its inhabitants follow inspectable scripted policies.</p><p>See the <a href="https://github.com/the-static-collective/reLATTE/pull/154" target="_blank" rel="noopener">verified first-harvest Minecraft source</a> and <a href="https://github.com/the-static-collective/reLATTE/actions/runs/41748390711" target="_blank" rel="noopener">actual game execution receipts</a>.</p></section>
+<footer class="footer">LANTERN COMMONS 013 • The Living Commons • Local model. Separate from the real Minecraft cartridge lineage. Voluntary refusal, provenance and no overwrite are part of the design.</footer>
+</div>
+<noscript><div class="no-script">JavaScript is required to run this offline simulation. The saved HTML file contains no external scripts or network dependencies.</div></noscript>
+<script>
+/* ENGINE START */
+/* LANTERN COMMONS 013 — offline, deterministic SOCIAL MODEL.
+   Does NOT modify Minecraft worlds or grant external authority.
+   All simulations are fictional and agent policies are authored. */
+(function(root){
+'use strict';
+const SCHEMA='lantern.living-commons-browser-world/v1';
+const CARTRIDGE='lantern.browser-world-cartridge/v1';
+const ENGINE='013.1';
+const ROLES=['grower','builder','steward','explorer'];
+const NAMES=['Ada','Rook','Fern','Moss','Pip','Orin','Wren','Briar','Cedar','Lark','Nova','Vale'];
+const MAX_PEOPLE=12, MAX_HISTORY=180, MAX_CARTRIDGES=64;
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const copy=x=>JSON.parse(JSON.stringify(x));
+const stable=x=>Array.isArray(x)?'['+x.map(stable).join(',')+']':x&&typeof x==='object'?'{'+Object.keys(x).sort().map(k=>JSON.stringify(k)+':'+stable(x[k])).join(',')+'}':JSON.stringify(x);
+// UTF8 SHA-256, synchronous and usable when browser file:// WebCrypto is unavailable.
+function sha256(value){
+ const bytes=new TextEncoder().encode(value),bitLength=bytes.length*8;
+ const k=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+ const len=Math.ceil((bytes.length+9)/64)*64,buf=new Uint8Array(len);buf.set(bytes);buf[bytes.length]=128;
+ const dv=new DataView(buf.buffer);const hi=Math.floor(bitLength/0x100000000),lo=bitLength>>>0;dv.setUint32(len-8,hi);dv.setUint32(len-4,lo);
+ const H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+ const rot=(x,n)=>x>>>n|x<<(32-n),w=new Uint32Array(64);
+ for(let i=0;i<len;i+=64){
+  for(let t=0;t<16;t++)w[t]=dv.getUint32(i+t*4);
+  for(let t=16;t<64;t++){let s0=rot(w[t-15],7)^rot(w[t-15],18)^(w[t-15]>>>3),s1=rot(w[t-2],17)^rot(w[t-2],19)^(w[t-2]>>>10);w[t]=(w[t-16]+s0+w[t-7]+s1)>>>0;}
+  let [a,b,c,d,e,f,g,h]=H;
+  for(let t=0;t<64;t++){let s1=rot(e,6)^rot(e,11)^rot(e,25),ch=(e&f)^(~e&g),t1=(h+s1+ch+k[t]+w[t])>>>0,s0=rot(a,2)^rot(a,13)^rot(a,22),maj=(a&b)^(a&c)^(b&c),t2=(s0+maj)>>>0;h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;}
+  const vals=[a,b,c,d,e,f,g,h];for(let t=0;t<8;t++)H[t]=(H[t]+vals[t])>>>0;
+ }
+ return H.map(x=>x.toString(16).padStart(8,'0')).join('');
+}
+function log(s,type,text,who='commons'){
+ s.history.push({day:s.day,type,who,text:String(text).slice(0,300)});
+ if(s.history.length>MAX_HISTORY)s.history.splice(0,s.history.length-MAX_HISTORY);
+}
+function makePerson(id,role,name,grain,seed,wood){
+ const reserves={grower:1,builder:1,steward:2,explorer:0};
+ return {id,name,role,grain,seed,wood,hunger:3,vigor:8,reserve:reserves[role],status:'present',decisions:0};
+}
+function newWorld(){
+ const s={schema:SCHEMA,engine:ENGINE,day:1,year:1,weather:'clear',weatherDays:0,
+  water:8,forest:9,irrigation:false,ideaKnown:false,
+  stores:{grain:3,seeds:2,wood:0},
+  people:[makePerson('p1','grower','Ada',2,3,0),makePerson('p2','builder','Rook',2,1,2),makePerson('p3','steward','Fern',3,1,0)],
+  field:Array.from({length:12},(_,i)=>({stage:i<3?2:0,owner:i<3?'p1':null})),
+  history:[],stats:{harvested:0,eaten:0,shared:0,treesUsed:0,irrigationBuilt:0,lostPlots:0,shortages:0,visitors:0,departed:0},
+  nextPersonId:4,randomState:291834,cycle:0};
+ log(s,'foundation','Three neighbors begin with finite stores, three growing plots, and the right to refuse.');
+ return s;
+}
+function check(s){
+ if(!s||s.schema!==SCHEMA||s.engine!==ENGINE)throw Error('Unknown or incompatible browser world version');
+ for(const f of ['day','year','water','forest','nextPersonId','randomState'])if(!Number.isSafeInteger(s[f])||s[f]<0)throw Error('Invalid world '+f);
+ if(s.day>200000||s.people.length>MAX_PEOPLE||s.field.length!==12||s.history.length>MAX_HISTORY)throw Error('World limits exceeded');
+ for(const n of ['grain','seeds','wood'])if(!Number.isSafeInteger(s.stores[n])||s.stores[n]<0||s.stores[n]>100000)throw Error('Invalid public '+n);
+ if(!['clear','drought','rain','frost'].includes(s.weather)||!Number.isInteger(s.weatherDays)||s.weatherDays<0)throw Error('Invalid weather');
+ if(s.water>30||s.forest>30)throw Error('Impossible environmental reserves');
+ const ids=new Set();
+ for(const p of s.people){
+  if(!p||typeof p.id!=='string'||ids.has(p.id)||!ROLES.includes(p.role)||!['present','departed'].includes(p.status))throw Error('Invalid inhabitant');
+  ids.add(p.id);
+  if(typeof p.name!=='string'||p.name.length>40)throw Error('Invalid inhabitant name');
+  for(const n of ['grain','seed','wood','hunger','vigor','reserve','decisions'])if(!Number.isSafeInteger(p[n])||p[n]<0||p[n]>100000)throw Error('Invalid inhabitant stock '+n);
+  if(p.hunger>10||p.vigor>10)throw Error('Invalid wellbeing');
+ }
+ for(const plot of s.field)if(!plot||!Number.isInteger(plot.stage)||plot.stage<0||plot.stage>3||!(plot.owner===null||ids.has(plot.owner)))throw Error('Invalid plot');
+ if(!s.stats||typeof s.stats!=='object'||!Array.isArray(s.history))throw Error('Invalid history');
+ return true;
+}
+function rng(s){s.randomState=(1664525*s.randomState+1013904223)>>>0;return s.randomState/4294967296;}
+function active(s){return s.people.filter(p=>p.status==='present');}
+function total(s,kind){return active(s).reduce((sum,p)=>sum+p[kind]||sum,0);}
+function newLife(s){
+ if(active(s).length>=MAX_PEOPLE){log(s,'limit','The village cannot support more than twelve model inhabitants.');return false;}
+ const id='p'+s.nextPersonId++,role=ROLES[(s.nextPersonId+1)%ROLES.length];
+ const name=NAMES[(s.nextPersonId-2)%NAMES.length]+' '+String(s.nextPersonId-1);
+ const p=makePerson(id,role,name,0,0,0);p.hunger=5;p.vigor=7;
+ s.people.push(p);s.stats.visitors++;log(s,'arrival',name+' arrives without supplies and must seek consent-based help. '+name+' brings no conjured grain.',id);
+ check(s);return p;
+}
+function disturb(s,event){
+ const events={
+  drought:()=>{s.weather='drought';s.weatherDays=4;s.water=Math.max(0,s.water-3);log(s,'shock','Four days of drought. Water falls by three immediately; crops may stall.');},
+  rain:()=>{s.weather='rain';s.weatherDays=3;s.water=clamp(s.water+5,0,30);log(s,'weather','Three rainy days begin; the basin gains five water.');},
+  frost:()=>{s.weather='frost';s.weatherDays=2;let lost=0;for(const f of s.field){if(f.stage>0&&rng(s)<0.7){f.stage=0;f.owner=null;lost++;}}s.stats.lostPlots+=lost;log(s,'shock','A frost ruins '+lost+' planted plots. Nothing is silently replaced.');},
+  visitor:()=>newLife(s),
+  discovery:()=>{s.ideaKnown=true;log(s,'discovery','An irrigation design is discovered. It still needs three voluntarily contributed wood.');}
+ };
+ if(!Object.hasOwn(events,event))throw Error('Unknown event');
+ events[event]();check(s);return s;
+}
+function nourish(s,p){
+ if(p.hunger<6)return;
+ if(p.grain>0){p.grain--;p.hunger=clamp(p.hunger-4,0,10);s.stats.eaten++;log(s,'meal',p.name+' eats one grain from personal stores.',p.id);return;}
+ if(s.stores.grain>0){s.stores.grain--;p.hunger=clamp(p.hunger-4,0,10);s.stats.eaten++;log(s,'meal',p.name+' accepts one grain from the voluntary common store.',p.id);return;}
+ s.stats.shortages++;log(s,'need',p.name+' needs food, but no accessible grain remains.',p.id);
+}
+function decide(s,p){
+ if(p.status!=='present')return;
+ p.decisions++;
+ if(p.hunger>=6)nourish(s,p);
+ // A personal reserve is an individual commitment, never a community debt.
+ const someoneHungry=active(s).some(q=>q.id!==p.id&&q.hunger>=5&&q.grain===0);
+ if(someoneHungry&&p.grain>p.reserve+1){p.grain--;s.stores.grain++;s.stats.shared++;log(s,'gift',p.name+' voluntarily contributes one grain above their protected reserve.',p.id);}
+ else if(someoneHungry&&p.grain<=p.reserve&&p.grain>0)log(s,'refusal',p.name+' preserves '+p.grain+' grain for personal needs. No penalty.',p.id);
+ if(p.role==='grower'){
+  const ripe=s.field.find(f=>f.stage===3&&f.owner===p.id);
+  if(ripe){ripe.stage=0;ripe.owner=null;p.grain+=2;p.seed++;s.stats.harvested+=2;log(s,'harvest',p.name+' harvests one ripe model plot: +2 grain and +1 seed.',p.id);}
+  else if(p.seed>0&&s.water>1){const plot=s.field.find(f=>f.stage===0);if(plot){plot.stage=1;plot.owner=p.id;p.seed--;log(s,'plant',p.name+' plants one seed. Water and time are required.',p.id);}}
+  if(p.grain>p.reserve+2&&s.stores.seeds===0&&p.seed>1){p.seed--;s.stores.seeds++;log(s,'gift',p.name+' offers one seed for future communal planting.',p.id);}
+ }
+ if(p.role==='builder'){
+  if(!s.irrigation&&p.wood>0&&s.ideaKnown){p.wood--;s.stores.wood++;log(s,'gift',p.name+' contributes one wood to an irrigation proposal.',p.id);}
+  if(p.wood<2&&s.forest>0){s.forest--;p.wood++;s.stats.treesUsed++;log(s,'work',p.name+' gathers one wood from the finite forest.',p.id);}
+ }
+ if(p.role==='steward'&&s.water<3&&!s.ideaKnown)log(s,'idea',p.name+' proposes irrigation, but needs a workable design and voluntary material.',p.id);
+ if(p.role==='explorer'&&s.water<3&&s.forest>0&&rng(s)<.25){s.ideaKnown=true;log(s,'idea',p.name+' sketches an irrigation design. It still needs community resources.',p.id);}
+}
+function oneDay(s){
+ s.day++;if(s.day%15===1)s.year++;
+ if(s.weather==='rain')s.water=clamp(s.water+3,0,30);
+ else if(s.weather==='drought')s.water=Math.max(0,s.water-2);
+ else if(s.day%3===0)s.water=clamp(s.water+1,0,30);
+ if(s.weatherDays>0){s.weatherDays--;if(s.weatherDays===0)s.weather='clear';}
+ if(s.irrigation&&s.water>0&&s.day%2===0)s.water=Math.max(0,s.water-1);
+ const growing=s.field.filter(x=>x.stage>0&&x.stage<3);
+ if(growing.length>0&&s.water>0){s.water--;for(const f of growing)f.stage=Math.min(3,f.stage+(s.weather==='frost'?0:1));}
+ if(s.day%6===0&&s.forest<12)s.forest++;
+ for(const p of active(s)){
+  p.hunger=clamp(p.hunger+1,0,10);
+  decide(s,p);
+  if(p.hunger>=9){p.vigor=clamp(p.vigor-1,0,10);if(p.vigor===0){p.status='departed';s.stats.departed++;log(s,'departure',p.name+' departs seeking food elsewhere; no claim about real lives.',p.id);}}
+  else if(p.hunger<4)p.vigor=clamp(p.vigor+1,0,10);
+ }
+ if(!s.irrigation&&s.ideaKnown&&s.stores.wood>=3){s.stores.wood-=3;s.irrigation=true;s.stats.irrigationBuilt++;log(s,'project','Three voluntarily pooled wood become the irrigation system.');}
+ if(s.irrigation&&s.day%3===0&&s.water<30){s.water=clamp(s.water+2,0,30);log(s,'project','Irrigation channels two modeled water into the field.');}
+ if(s.day%5===0)log(s,'day','Day '+s.day+': stores '+s.stores.grain+' common grain; '+active(s).length+' residents; water '+s.water+'.');
+ check(s);
+}
+function advance(s,n){if(!Number.isInteger(n)||n<1||n>14)throw Error('Advance 1–14 days');for(let i=0;i<n;i++)oneDay(s);return s;}
+function speak(s,id,input){
+ const p=s.people.find(x=>x.id===id);if(!p)throw Error('Unknown inhabitant');
+ const q=String(input||'').toLowerCase().slice(0,250);
+ if(/hungr|food|bread|eat|grain/.test(q))return p.name+': "I have '+p.grain+' grain and my hunger is '+p.hunger+'/10. The common store holds '+s.stores.grain+'. A gift is not a debt."';
+ if(/why|refus|share|help|give|trust|cooperat/.test(q))return p.name+': "I protect at least '+p.reserve+' personal grain. If I have more than I need and another neighbor lacks food, I may offer some. Refusal remains allowed."';
+ if(/water|drought|weather|storm/.test(q))return p.name+': "There are '+s.water+' water units. The sky is '+s.weather+'. We cannot negotiate with a dry field, but we can plan together."';
+ if(/build|irrig|wood|project/.test(q))return p.name+': "Irrigation needs a design and three voluntarily pooled wood. Right now the common wood store has '+s.stores.wood+'."';
+ if(/seed|plant|crop|harvest|farm/.test(q))return p.name+': "Seeds cost resources today, but can become grain after enough growing days and water. Our fields have '+s.field.filter(f=>f.stage===3).length+' ripe plots."';
+ if(/future|tomorrow|generation|family/.test(q))return p.name+': "The next version inherits what we leave behind: fields, stores, infrastructure, and shortages. Preserve the original before you experiment."';
+ return p.name+': "I am a scripted '+p.role+' in this experiment, not a language-model mind. Ask me about food, water, sharing, building, or tomorrow."';
+}
+function cartridge(s,parentId,branch,version){
+ check(s);
+ if(parentId!==null&&(!/^[a-f0-9]{64}$/.test(parentId)))throw Error('Invalid parent cartridge ID');
+ const world=copy(s),worldHash=sha256(stable(world));
+ const body={schema:CARTRIDGE,engine:ENGINE,medium:'OFFLINE_BROWSER_MODEL_NOT_MINECRAFT_SAVE',
+  branch:String(branch||'experiment').slice(0,50),version:String(version),parentCartridgeId:parentId,
+  worldSha256:worldHash,world};
+ return {...body,cartridgeId:sha256(stable(body))};
+}
+function verifyCartridge(c){
+ if(!c||c.schema!==CARTRIDGE||c.engine!==ENGINE||c.medium!=='OFFLINE_BROWSER_MODEL_NOT_MINECRAFT_SAVE')throw Error('Unrecognized browser model cartridge');
+ if(typeof c.branch!=='string'||c.branch.length>50||!/^0\.1\.\d+$/.test(c.version)||!
+  (c.parentCartridgeId===null||/^[a-f0-9]{64}$/.test(c.parentCartridgeId)))throw Error('Invalid cartridge lineage fields');
+ check(c.world);
+ if(sha256(stable(c.world))!==c.worldSha256)throw Error('Cartridge world content was modified');
+ const body={schema:c.schema,engine:c.engine,medium:c.medium,branch:c.branch,version:c.version,
+  parentCartridgeId:c.parentCartridgeId,worldSha256:c.worldSha256,world:c.world};
+ if(sha256(stable(body))!==c.cartridgeId)throw Error('Cartridge identity does not match its contents');
+ return true;
+}
+function family(){const w=newWorld(),genesis=cartridge(w,null,'foundation','0.1.0');return {schema:'lantern.living-commons-shelf/v1',cartridges:[genesis],baseId:genesis.cartridgeId,working:copy(w),lastLabel:'Foundation'};}
+function checkShelf(s){
+ if(!s||s.schema!=='lantern.living-commons-shelf/v1'||!Array.isArray(s.cartridges)||s.cartridges.length<1||s.cartridges.length>MAX_CARTRIDGES)throw Error('Shelf format invalid');
+ if(new Set(s.cartridges.map(x=>x.cartridgeId)).size!==s.cartridges.length)throw Error('Duplicated cartridge IDs');
+ for(const c of s.cartridges)verifyCartridge(c);
+ check(s.working);if(!s.cartridges.some(c=>c.cartridgeId===s.baseId))throw Error('Unknown working copy origin');
+ return true;
+}
+function snapshot(s,branch){
+ checkShelf(s);if(s.cartridges.length>=MAX_CARTRIDGES)throw Error('Shelf full: export your worlds to preserve more.');
+ const current=s.cartridges.find(c=>c.cartridgeId===s.baseId);
+ const v='0.1.'+(Math.max(...s.cartridges.map(c=>Number(c.version.split('.')[2])))+1);
+ const c=cartridge(s.working,s.baseId,branch||'fork-'+v.replaceAll('.','-'),v);
+ verifyCartridge(c);
+ if(s.cartridges.some(x=>x.cartridgeId===c.cartridgeId))throw Error('This exact cartridge already exists');
+ s.cartridges.push(c);s.baseId=c.cartridgeId;s.working=copy(c.world);s.lastLabel=c.branch;
+ return c;
+}
+function checkout(s,id){checkShelf(s);const c=s.cartridges.find(x=>x.cartridgeId===id);if(!c)throw Error('Unknown saved reality');s.working=copy(c.world);s.baseId=id;s.lastLabel=c.branch;return c;}
+function compare(a,b){return {days:a.day-b.day,water:a.water-b.water,people:active(a).length-active(b).length,
+  grain:a.stores.grain+total(a,'grain')-(b.stores.grain+total(b,'grain')),
+  planted:a.field.filter(f=>f.stage>0).length-b.field.filter(f=>f.stage>0).length,
+  irrigation:Number(a.irrigation)-Number(b.irrigation),departures:a.stats.departed-b.stats.departed,
+  harvest:a.stats.harvested-b.stats.harvested};}
+const Engine={SCHEMA,CARTRIDGE,ENGINE,sha256,stable,copy,newWorld,makePerson,check,active,total,newLife,disturb,advance,speak,cartridge,verifyCartridge,family,checkShelf,snapshot,checkout,compare};
+if(typeof module!=='undefined'&&module.exports)module.exports=Engine;
+root.Lantern013Engine=Engine;
+})(typeof globalThis==='object'?globalThis:this);
+
+/* ENGINE END */
+</script>
+<script>
+/* UI START */
+/* 013 offline user interface. No external network calls, no eval, no innerHTML from users. */
+(function(){
+'use strict';
+const E=globalThis.Lantern013Engine,$=id=>document.getElementById(id),KEY='lantern013_living_commons_shelf_v1';
+let shelf,persistent=true,selected=null,compareId=null,chat=[],toastTimer;
+const el=(tag,klass,content)=>{const n=document.createElement(tag);if(klass)n.className=klass;if(content!==undefined)n.textContent=String(content);return n;};
+const append=(parent,...children)=>{for(const c of children)parent.append(c);return parent;};
+const short=id=>id?String(id).slice(0,11)+'…':'none';
+function notice(msg,error=false){const b=$('banner');b.textContent=msg;b.className='banner visible';b.style.background=error?'#dfb5a2':'#e1cf96';clearTimeout(toastTimer);toastTimer=setTimeout(()=>b.className='banner',6500);}
+function persist(){
+ try{E.checkShelf(shelf);localStorage.setItem(KEY,JSON.stringify(shelf));}
+ catch(err){persistent=false;notice('Device storage unavailable. Export your World Shelf before closing; '+err.message,true);}
+}
+function load(){try{const t=localStorage.getItem(KEY);if(t){const x=JSON.parse(t);E.checkShelf(x);return x;}}catch(err){persistent=false;notice('Started a new local world. Existing storage could not be read: '+err.message,true);}return E.family();}
+function change(fn){try{const answer=fn();E.check(shelf.working);persist();render();return answer;}catch(err){notice('Action stopped: '+err.message,true);render();return null;}}
+function render(){const s=shelf.working;
+ $('day').textContent=s.day;$('year').textContent=s.year;$('peopleN').textContent=E.active(s).length;
+ $('water').textContent=s.water;$('grain').textContent=s.stores.grain;$('fields').textContent=s.field.filter(x=>x.stage>0).length;
+ $('projects').textContent=s.irrigation?'Built':'Not yet';
+ $('worldStatus').textContent=`${s.weather.toUpperCase()} · year ${s.year} · working copy of ${short(shelf.baseId)}`;
+ $('weather').textContent='Sky: '+s.weather+(s.weatherDays?' ('+s.weatherDays+' days)':'');
+ $('forest').textContent='Forest wood: '+s.forest;
+ $('stocks').textContent='Private grain: '+E.total(s,'grain');
+ $('season').textContent='Saved worlds: '+shelf.cartridges.length;
+ const field=$('fieldGrid');field.replaceChildren();
+ s.field.forEach((plot,i)=>{
+  const type=['','seed','shoot','ripe'][plot.stage];
+  const txt=['·','◔','♣','✺'][plot.stage];
+  const button=el('button','tile '+type,txt);
+  button.type='button';button.title=`Plot ${i+1}: ${['empty','newly planted','growing','ripe'][plot.stage]}`;
+  button.setAttribute('aria-label',button.title);
+  button.onclick=()=>notice(button.title+(plot.owner?' · tended by '+(s.people.find(x=>x.id===plot.owner)?.name||'unknown'):' · unclaimed'));
+  field.append(button);
+ });
+ renderPeople();renderJournal();renderShelf();renderCompare();
+}
+function renderPeople(){const people=$('people'),list=shelf.working.people;
+ if(!selected||!list.some(p=>p.id===selected))selected=list[0]?.id;
+ people.replaceChildren();
+ for(const p of list){
+  const btn=el('button','person'+(selected===p.id?' selected':'')+(p.status!=='present'?' departed':''));
+  btn.type='button';btn.setAttribute('aria-pressed',selected===p.id?'true':'false');
+  append(btn,el('span','avatar',p.name.charAt(0)),el('strong','',p.name),
+   el('span','',p.role+' · '+p.status),el('span','',`grain ${p.grain} · reserve ${p.reserve}`),el('span','',`hunger ${p.hunger}/10 · vigor ${p.vigor}/10`));
+  btn.onclick=()=>{selected=p.id;chat=[];renderPeople();renderChat();};people.append(btn);
+ }
+ renderChat();
+}
+function renderChat(){const s=shelf.working,p=s.people.find(x=>x.id===selected),box=$('chatThread');
+ $('speakerLabel').textContent=p?p.name+' / '+p.role.toUpperCase():'NO NEIGHBORS';
+ box.replaceChildren();
+ if(chat.length===0&&p)append(box,el('div','bubble',`${p.name}: "Ask about food, water, cooperation, or tomorrow. I can refuse and I can change my mind."`));
+ for(const line of chat)append(box,el('div','bubble'+(line.isUser?' user':''),line.text));
+ box.scrollTop=box.scrollHeight;
+}
+function ask(question){const q=String(question||'').trim().slice(0,250);if(!q)return;const p=shelf.working.people.find(x=>x.id===selected);if(!p)return;
+ chat.push({isUser:true,text:q},{isUser:false,text:E.speak(shelf.working,p.id,q)});
+ if(chat.length>20)chat=chat.slice(-20);
+ renderChat();$('chatInput').value='';
+}
+function renderJournal(){const box=$('journal');box.replaceChildren();
+ const list=shelf.working.history.slice(-11).reverse();
+ for(const entry of list){const row=el('div','eventline');append(row,el('b','',`D${entry.day}`),el('span','',entry.text));box.append(row);}
+ if(!list.length)box.append(el('p','subtle','No events recorded.'));
+}
+function renderShelf(){const area=$('shelf');area.replaceChildren();
+ for(const c of shelf.cartridges.slice().reverse()){
+  const active=shelf.baseId===c.cartridgeId;
+  const card=el('article','cartridge'+(active?' active':''));
+  append(card,el('div','eyebrow',c.version+(active?' / WORKING SOURCE':'')),
+   el('h3','',c.branch),el('p','',`Day ${c.world.day} · ${E.active(c.world).length} residents · water ${c.world.water}`),
+   el('div','hash',short(c.cartridgeId)),
+   el('p','',`Parent: ${short(c.parentCartridgeId)}`));
+  const buttons=el('div','actions');
+  const explore=el('button','','Explore copy');explore.type='button';explore.onclick=()=>{
+   if(!confirm('Checkout this sealed world as a new working copy? Unsaved changes to your current working copy will be discarded.'))return;
+   change(()=>{E.checkout(shelf,c.cartridgeId);chat=[];compareId=null;selected=null;notice('Checked out a COPY of '+c.branch+'. Original stays sealed.');});
+  };
+  const compare=el('button','','Compare');compare.type='button';compare.onclick=()=>{compareId=c.cartridgeId;renderCompare();$('comparePanel').scrollIntoView({behavior:'smooth',block:'nearest'});};
+  const exportOne=el('button','','Export');exportOne.type='button';exportOne.onclick=()=>download('Lantern013_'+c.branch+'_'+c.version+'.json',JSON.stringify(c,null,2));
+  append(buttons,explore,compare,exportOne);card.append(buttons);area.append(card);
+ }
+}
+function renderCompare(){const s=shelf.working,c=shelf.cartridges.find(x=>x.cartridgeId===compareId)||shelf.cartridges.find(x=>x.cartridgeId===shelf.baseId),box=$('comparePanel');
+ if(!c)return;
+ const diff=E.compare(s,c.world),entries=[['Days',diff.days],['Water',diff.water],['Residents',diff.people],['Total grain',diff.grain],['Planted plots',diff.planted],['Irrigation',diff.irrigation],['Harvest produced',diff.harvest],['Departures',diff.departures]];
+ box.replaceChildren(el('strong','',`Working world vs. ${c.branch} (${c.version})`));
+ box.append(el('p','',entries.map(([name,x])=>name+': '+(x>0?'+':'')+x).join('   ·   ')));
+ box.append(el('small','subtle','These differences describe the browser model only, not the official Minecraft save worlds.'));
+}
+function download(filename,content){const blob=new Blob([content],{type:'application/json;charset=utf-8'}),href=URL.createObjectURL(blob),a=document.createElement('a');a.href=href;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(href),15000);notice('Exported '+filename+'. Keep this copy if device storage is unavailable.');}
+function seal(label){return change(()=>{const c=E.snapshot(shelf,label||'day-'+shelf.working.day+'-branch-'+shelf.cartridges.length);notice('Reality sealed: '+c.version+' · '+short(c.cartridgeId)+' · parent preserved');return c;});}
+function bind(){
+ $('createLife').onclick=()=>change(()=>{const p=E.newLife(shelf.working);if(p){selected=p.id;chat=[];notice(p.name+' arrived. No supplies were generated.');}});
+ $('disturb').onclick=()=>{$('eventPanel').classList.toggle('hidden');$('disturb').classList.toggle('active');};
+ $('cancelDisturb').onclick=()=>{$('eventPanel').classList.add('hidden');$('disturb').classList.remove('active');};
+ document.querySelectorAll('[data-event]').forEach(b=>b.onclick=()=>change(()=>{E.disturb(shelf.working,b.dataset.event);$('eventPanel').classList.add('hidden');$('disturb').classList.remove('active');notice('Event witnessed: '+b.textContent.trim());}));
+ const advance=n=>change(()=>{E.advance(shelf.working,n);notice(n+' day'+(n>1?'s':'')+' passed. Resources and needs persist.');});
+ $('simulate').onclick=()=>advance(1);$('oneDay').onclick=()=>advance(1);$('sevenDays').onclick=()=>advance(7);
+ $('fork').onclick=()=>seal('fork-day-'+shelf.working.day+'-'+shelf.cartridges.length);
+ $('saveReality').onclick=()=>seal('witness-day-'+shelf.working.day+'-'+shelf.cartridges.length);
+ $('chatForm').onsubmit=e=>{e.preventDefault();ask($('chatInput').value);};
+ document.querySelectorAll('.prompt').forEach(b=>b.onclick=()=>ask(b.dataset.q));
+ $('exportAll').onclick=()=>download('Lantern013_World_Shelf.json',JSON.stringify({schema:'lantern.living-commons-export/v1',exportedAt:new Date().toISOString(),shelf},null,2));
+ $('importBtn').onclick=()=>$('importFile').click();
+ $('importFile').onchange=async event=>{
+  const file=event.target.files?.[0];event.target.value='';if(!file)return;
+  if(file.size>3000000){notice('File is too large for this offline cartridge importer.',true);return;}
+  try{
+   const data=JSON.parse(await file.text());
+   const entries=data.schema==='lantern.living-commons-export/v1'&&data.shelf?data.shelf.cartridges:[data];
+   if(!Array.isArray(entries)||entries.length>64)throw Error('Invalid imported cartridge list');
+   for(const c of entries)E.verifyCartridge(c);
+   const originals=new Set(shelf.cartridges.map(x=>x.cartridgeId)),add=entries.filter(c=>!originals.has(c.cartridgeId));
+   if(shelf.cartridges.length+add.length>64)throw Error('World Shelf is full; export before importing more.');
+   if(add.length===0){notice('All imported world cartridges are already on this device.');return;}
+   if(!confirm(`Import ${add.length} verified browser model cartridge(s)? Your current working copy will not be altered.`))return;
+   shelf.cartridges.push(...add.map(E.copy));persist();render();notice('Imported '+add.length+' hash-verified browser cartridges.');
+  }catch(err){notice('Import rejected: '+err.message,true);}
+ };
+ $('reset').onclick=()=>{
+  if(!confirm('Delete this device\'s current local World Shelf? Export it first if you want to preserve its history.'))return;
+  if(!confirm('Final confirmation: create a fresh village and discard the local copy of prior worlds?'))return;
+  shelf=E.family();selected=null;compareId=null;chat=[];persist();render();notice('New founding browser village created. Prior exports are unaffected.');
+ };
+}
+shelf=load();selected=shelf.working.people[0]?.id;bind();render();
+if(!persistent)notice('Local browser storage may be unavailable. Export your World Shelf before closing.',true);
+})();
+
+/* UI END */
+</script>
+</body></html>
