@@ -101,12 +101,17 @@ function routeIntent(words){
  if(/\b(code|website|github|github actions|computer|runtime|ghot|static os|bug|build|project)\b/.test(s))return {kind:'build',title:'Inspect or build something real',detail:'Open the source-backed JAR;VIS workshop, check public code, or create a local work card.',where:'direct',action:'Choose a builder'};
  return {kind:'garden',title:'Put the next step on the table',detail:'You can send a concise idea for human review, start a public conversation, or create a local card immediately.',where:'garden-submit',action:'Open the Garden review form'};
 }
-function route(){const q=safe($('intent').value,500),plan=routeIntent(q);view('route-result',plan.title+'\n'+plan.detail+'\nSuggested next action: '+plan.action+'. No external action has happened.');
- if(plan.where==='garden-submit' && q && q.length<=300)$('garden-body').value=q;
- if(plan.where==='conversation' && q && q.length<=240)$('thread-words').value=q;
- const result=$('route-result');let b=result.querySelector?result.querySelector('button'):null;
- if(b)b.remove();b=mk('button','Go to '+plan.action+' →','btn alt');b.type='button';b.addEventListener('click',()=>navigate(plan.where));result.append(b);
- return plan;
+function route(){
+ const q=safe($('intent').value,500),plan=routeIntent(q);
+ view('route-result',plan.title+'\n'+plan.detail+'\nSuggested next action: '+plan.action+'. No external action has happened.');
+ if(plan.where==='garden-submit'&&q&&q.length<=300)$('garden-body').value=q;
+ if(plan.where==='conversation'&&q&&q.length<=240)$('thread-words').value=q;
+ const result=$('route-result');let b=mk(plan.kind==='exchange'||plan.kind==='build'?'a':'button',
+  'Do it: '+plan.action+' →','btn alt');
+ if(plan.kind==='exchange'){b.href=ROOT+'now-route-live';b.rel='noopener noreferrer';b.target='_blank';}
+ else if(plan.kind==='build'){b.href=ROOT+'jarvis-solo-live-017';b.rel='noopener noreferrer';b.target='_blank';}
+ else {b.type='button';b.addEventListener('click',plan.kind==='make'?makeCard:()=>navigate(plan.where));}
+ result.append(b);return plan;
 }
 function makeCard(){const q=safe($('intent').value,500);
  if(!q){view('route-result','Write one concrete thing first; no generic empty documents will be generated.',true);return}
@@ -181,14 +186,16 @@ async function reportPublic(){
 }
 
 function handoff(id,label){
- const b=mk('button',label+' →','btn soft');b.type='button';
+ if(id==='record-audio'||id==='record-video'){
+  const a=mk('a','Open actual recording tool →','btn soft');a.href=ROOT+'jarvis-solo-live-017';a.target='_blank';a.rel='noopener noreferrer';return a;
+ }
+ const b=mk('button','Use '+label+' →','btn soft');b.type='button';
  b.addEventListener('click',()=>{
   const words=safe($('intent').value,240);
   if(id==='announce'){$('thread-words').value=words;navigate('conversation');return;}
   if(id==='private-offer'){$('garden-body').value=words;$('garden-kind').value='offer';navigate('garden-submit');return;}
   if(id==='catalog'||id==='later'){makeCard();return;}
   if(id==='art'){navigate('direct');return;}
-  if(id==='record-audio'||id==='record-video'){const a=mk('a','Open existing recording tool ↗','btn alt');a.href=ROOT+'jarvis-solo-live-017';a.target='_blank';a.rel='noopener noreferrer';$('source-actions').append(a);view('source-result','The existing recorder requires a separate device permission. Click its link to open the tool. No recording has started.');return;}
   view('source-result','No available executor for this proposed action. Nothing was performed.',true);
  });
  return b;
@@ -203,7 +210,7 @@ async function sourceRoute(){
   const list=$('source-actions');list.replaceChildren();
   for(const a of data.plan.actions.slice(0,5)){
    if(!['announce','private-offer','catalog','later','art','record-audio','record-video'].includes(a.id))continue;
-   const c=mk('article',undefined,'entry');c.append(mk('div',safe(a.label||a.id,110)+' · PROPOSED ONLY','kind'),mk('p','Available executor is a separate user action; nothing has been launched.'));c.append(handoff(a.id,'Use '+safe(a.label||a.id,70)));list.append(c);
+   const c=mk('article',undefined,'entry');c.append(mk('div',safe(a.label||a.id,110)+' · PROPOSED ONLY','kind'),mk('p','Available executor is a separate user action; nothing has been launched.'));c.append(handoff(a.id,safe(a.label||a.id,70)));list.append(c);
   }
   view('source-result','SOURCE-OWNED ROUTER RESPONDED. Its proposed actions are linked to local artifacts or existing tools below. No outside action occurred.');
  }catch(err){view('source-result','Router read not verified: '+safe(err.message,100),true)}
