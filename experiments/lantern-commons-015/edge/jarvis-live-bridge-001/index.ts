@@ -26,12 +26,21 @@ async function sha256(str){
 }
 Deno.serve(async req=>{
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers:HEADERS});
- if(req.method==="GET")return j({schema:VERSION,ok:true,mode:"PUBLIC_READ_ONLY",targets:TARGETS,offers:OFFERS,writes_enabled:false,remote_agent_execution:false,user_work_received:false});
- if(req.method!=="POST")return j({schema:VERSION,ok:false,code:"METHOD_NOT_ALLOWED"},405);
- if(Number(req.headers.get("content-length")||0)>512||!req.headers.get("content-type")?.includes("application/json"))return j({schema:VERSION,ok:false,code:"SMALL_JSON_ONLY"},400);
+ const url=new URL(req.url);
+ if(req.method==="GET"&&!url.searchParams.has("action"))return j({schema:VERSION,ok:true,mode:"PUBLIC_READ_ONLY",targets:TARGETS,offers:OFFERS,writes_enabled:false,remote_agent_execution:false,user_work_received:false});
+ if(req.method!=="POST"&&req.method!=="GET")return j({schema:VERSION,ok:false,code:"METHOD_NOT_ALLOWED"},405);
  let body;
- try{const input=await req.text();if(input.length>512)return j({schema:VERSION,ok:false,code:"BODY_TOO_LARGE"},413);body=JSON.parse(input)}
- catch{return j({schema:VERSION,ok:false,code:"INVALID_JSON"},400)}
+ if(req.method==="GET"){
+  // Side-effect-free read actions can be called with GET; caller sends neither
+  // their typed task nor any private notes. Query names remain allowlisted.
+  if([...url.searchParams.keys()].some(k=>!["action","target"].includes(k))||
+     [...url.searchParams.keys()].length!==2)return j({schema:VERSION,ok:false,code:"ONLY_ACTION_AND_TARGET_ALLOWED"},400);
+  body={action:url.searchParams.get("action"),target:url.searchParams.get("target")};
+ }else{
+  if(Number(req.headers.get("content-length")||0)>512||!req.headers.get("content-type")?.includes("application/json"))return j({schema:VERSION,ok:false,code:"SMALL_JSON_ONLY"},400);
+  try{const input=await req.text();if(input.length>512)return j({schema:VERSION,ok:false,code:"BODY_TOO_LARGE"},413);body=JSON.parse(input)}
+  catch{return j({schema:VERSION,ok:false,code:"INVALID_JSON"},400)}
+ }
  if(!body||typeof body!=="object"||Array.isArray(body)||Object.keys(body).sort().join(",")!=="action,target")return j({schema:VERSION,ok:false,code:"ONLY_ACTION_AND_TARGET_ALLOWED"},400);
  if(typeof body.target!=="string"||!Object.prototype.hasOwnProperty.call(TARGETS,body.target)||!["inspect","ci"].includes(body.action))return j({schema:VERSION,ok:false,code:"NO_SUCH_APPROVED_PUBLIC_ACTION"},400);
  const target=body.target, config=TARGETS[target],repo=config.repo,readAt=new Date().toISOString();
