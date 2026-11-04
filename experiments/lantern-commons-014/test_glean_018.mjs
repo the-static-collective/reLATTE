@@ -155,3 +155,31 @@ test('malformed glean answers and private backups are rejected',()=>{
  assert.equal(b.api.validGlean(backup.glean),false);
  assert.equal(b.api.validBackup(backup),false);
 });
+
+test('proposed smallest vertical slice becomes one unfinished, observable work task on explicit click',()=>{
+ const b=browser();b.get('seed-three').click();const p=b.api.state().projects[0];
+ const title=b.api.deriveKit(p).slice,initial=p.tasks.length;
+ b.get('glean-quest').children.at(-1).events.click();
+ assert.equal(p.tasks.length,initial+1);
+ assert.equal(p.tasks.at(-1).title,title);
+ assert.equal(p.tasks.at(-1).state,'todo');
+ assert.equal(p.tasks.at(-1).observation,'');
+ b.get('glean-quest').children.at(-1).events.click();
+ assert.equal(p.tasks.length,initial+1,'no duplicate slice from repeated click');
+});
+test('fork reproduces useful questions but never copies found inventory or observations',()=>{
+ const b=browser();b.get('seed-three').click();const p=b.api.state().projects[0];
+ b.get('glean-custom').value='Spare marker';b.get('glean-create').events.click();
+ const custom=b.api.gleanQuestions(p).questions.find(q=>q.label==='Spare marker');
+ b.api.recordGlean(p,custom,'found','a private location');
+ p.tasks[0].observation='private attempt';p.tasks[0].state='done';
+ const forkButton=b.get('projects').children[0].children[1].children[2];
+ assert.equal(forkButton.textContent,'Fork this operation');
+ forkButton.events.click();
+ const copy=b.api.state().projects.at(-1);
+ assert.equal(copy.parentId,p.id);
+ assert.equal(copy.tasks[0].state,'todo');assert.equal(copy.tasks[0].observation,'');
+ assert.equal(b.api.state().glean.custom[copy.id][0].label,'Spare marker');
+ assert.equal(b.api.state().glean.answers[copy.id+':'+custom.key],undefined);
+ assert.equal(copy.caps.length,0);
+});
