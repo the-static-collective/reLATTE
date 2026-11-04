@@ -5,6 +5,7 @@ on:
     branches:
       - experiment/lantern-commons-014-solo-desk
       - experiment/lantern-014-public-pages
+      - experiment/lantern-015-connected-registry
     paths:
       - 'experiments/lantern-commons-014/**'
       - '.github/workflows/lantern-014-solo-desk.yml'
@@ -33,6 +34,8 @@ jobs:
           node-version: '24'
       - name: Eight real Node VM tests of offline application
         run: node --test experiments/lantern-commons-014/test_solo_desk.mjs
+      - name: Test explicit connected capability registry and privacy boundaries
+        run: node --test experiments/lantern-commons-014/test_connected_desk.mjs
       - name: Verify standalone HTML, no remote assets, and no automatic completion claims
         run: |
           python3 - <<'PY'
@@ -129,8 +132,11 @@ jobs:
           set -euo pipefail
           mkdir -p site
           cp experiments/lantern-commons-014/Lantern_014_The_Solo_Desk.html site/index.html
+          mkdir -p site/connected
+          cp experiments/lantern-commons-014/Lantern_015_Connected_Desk.html site/connected/index.html
           touch site/.nojekyll
           test "$(sha256sum site/index.html | cut -d' ' -f1)" = "$(sha256sum experiments/lantern-commons-014/Lantern_014_The_Solo_Desk.html | cut -d' ' -f1)"
+          test "$(sha256sum site/connected/index.html | cut -d' ' -f1)" = "$(sha256sum experiments/lantern-commons-014/Lantern_015_Connected_Desk.html | cut -d' ' -f1)"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
