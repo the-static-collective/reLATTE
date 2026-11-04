@@ -150,7 +150,7 @@ footer{padding:22px 18px 55px;border-top:1px solid var(--line);color:var(--muted
 <h3 style="margin-top:20px">Check reality inputs across comparable worlds</h3>
 <p class="small muted">Mark only real, self-reported availability. Changes to a shared starting input reset all virtual runs in the related family; no completed real-world observations are overwritten.</p>
 <div id="world-inputs" aria-live="polite"></div>
-<div class="line" style="margin-top:15px"><button type="button" class="button secondary" id="world-json">Download PRIVATE-SAFE world blueprint (JSON)</button><button type="button" class="button secondary" id="world-html">Download standalone playable HTML cartridge</button></div>
+<div class="line" style="margin-top:15px"><button type="button" class="button secondary" id="world-json">Download stripped world blueprint (JSON)</button><button type="button" class="button secondary" id="world-html">Download standalone playable HTML cartridge</button></div>
 <p class="small muted">Both exports deliberately reset material statuses to UNKNOWN, omit private notes/IDs, actual outcomes and simulation history, and keep only the generic role types, declared goal, and strategy. Review the goal before sharing.</p>
 <label for="world-import">Import a world blueprint JSON (offline, schema-checked, unstarted)</label><input type="file" id="world-import" accept=".json,application/json">
 <div id="world-import-status" class="status" role="status"></div>
@@ -869,7 +869,7 @@ const WORLD_STRATEGIES={
  generosity:{label:'Generosity',order:['bridge','build','document','replicate','inspect'],weights:[2,2,5,2]},
  efficiency:{label:'Efficiency',order:['document','build','replicate','bridge','inspect'],weights:[3,5,2,2]},
  autonomy:{label:'Independence',order:['replicate','document','build','inspect','bridge'],weights:[5,4,1,2]},
- cooperation:{label:'Cooperation',order:['bridge','replicate','build','document','inspect'],weights:[2,2,5,4]}
+ cooperation:{label:'Cooperation',order:['bridge','document','build','replicate','inspect'],weights:[2,2,5,4]}
 };
 const WORLD_KEYS=['writing','time','materials','device','resources','instrument','space','contact','content','labels','transport'];
 const WORLD_STATUSES=['unknown','found','missing'];
@@ -902,7 +902,7 @@ function worldScore(w){
  const s=w.sim;
  // Editorial indicators, not real impact or a forecast.
  const values=[s.rehearsals*3+s.methods*2+s.artifacts,s.artifacts*2+s.methods*3,s.bridges*4,s.bridges*3+s.rehearsals*2];
- const weights=WORLD_STRATEGIES[w.blueprint.strategy].weights;
+ const weights=[3,3,3,3]; // SAME evaluation weights across all strategies; otherwise a tournament is incomparable.
  return {score:Math.round(values.reduce((v,x,i)=>v+x*weights[i],0)),capacity:values[0],efficiency:values[1],generosity:values[2],cooperation:values[3],turns:s.turn,known:Object.values(w.blueprint.inputs).filter(x=>x==='found').length};
 }
 function validWorldBlueprint(b){
