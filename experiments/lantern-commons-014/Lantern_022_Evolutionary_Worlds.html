@@ -1084,7 +1084,7 @@ function portableWorldHtml(world){
 
 
 function renderWorlds(){
- const forks=state.worlds.forks,selected=$('world-choice').value||state.worlds.selected;
+ const forks=state.worlds.forks,selected=state.worlds.selected||$('world-choice').value;
  $('world-count').textContent=forks.length+' hypothetical forks';
  const menu=$('world-choice');menu.replaceChildren();
  for(const w of forks){
