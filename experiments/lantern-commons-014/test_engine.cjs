@@ -1,7 +1,15 @@
 'use strict';
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const e=require('./engine.js');
+// reLATTE's root package declares "type": "module". Evaluate the exact
+// browser UMD source in an isolated CommonJS VM, rather than importing .js
+// as an ESM with no named exports.
+const vm=require('node:vm');
+const fs=require('node:fs');
+const path=require('node:path');
+const sandbox={module:{exports:{}},console};
+vm.runInNewContext(fs.readFileSync(path.join(__dirname,'engine.js'),'utf8'),sandbox);
+const e=sandbox.module.exports;
 const make=(source,mode='unstick',minutes=5)=>e.build({source,mode,minutes});
 test('photo example creates one physical file action instead of requesting another invitation',()=>{
  const c=make('I need to pick three photos from Downloads.');
