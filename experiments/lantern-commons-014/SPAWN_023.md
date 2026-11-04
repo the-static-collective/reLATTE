@@ -4,6 +4,8 @@
 
 **Source:** [Lantern_023_Permissioned_Crossings.html](Lantern_023_Permissioned_Crossings.html)
 
+**Public direct-download endpoint:** https://kbhqacsdvjsstzyplqij.supabase.co/functions/v1/relatte-crossing-023/download . It delivers the standalone HTML file as an attachment. Open the downloaded file locally; the Supabase Edge host is **not** an interactive HTML site. Its GET root and health query are read-only JSON metadata, and POST is refused. This delivery does not publish any offers or import packets.
+
 SPAWN 022 established standalone executable offline world cartridges. SPAWN 023 enables two separate copies to exchange **cryptographically signed, narrowly scoped capability packets** by deliberate copy/paste. Each person's local cartridge retains its own simulation and does not inherit another person's inventory, identity, private notes, or observed successes.
 
 This is a functional **offline two-party consent handshake**. It is **not** yet a live federated public registry or a physically verified transfer.
@@ -52,4 +54,4 @@ The tests execute the JavaScript extracted from actual generated standalone HTML
 
 **Not yet claimed:** public discovery, live cartridge-to-cartridge real-time delivery, externally verified identity, independent stock/auditor signatures, real-world fulfillment, field-measured benefit, deployment to a permanent domain or formal signature-based settlement.
 
-**Code status:** draft stacked PR #172 on SPAWN 022 #171. No production Supabase changes, no merge into main.
+**Code status:** draft stacked PR #172 on SPAWN 022 #171, not merged. A **new isolated, public GET/HEAD-only Supabase Edge Function** was deployed solely to deliver this standalone file as a binary attachment and disclose JSON health; it does not write to any production tables or change existing Supabase services. Supabase explicitly rewrites GET HTML to plain text on ordinary Edge domains, so the endpoint is download-only and not represented as a hosted interactive webpage. Existing NOW ROUTE remains independent.
