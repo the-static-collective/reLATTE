@@ -1,0 +1,61 @@
+{
+  "schema": "lantern.first-harvest-world-lock/v0",
+  "project": "LANTERN_COMMONS_012",
+  "verified_workflow_run": 41748390711,
+  "verified_workflow_url": "https://github.com/the-static-collective/reLATTE/actions/runs/41748390711",
+  "game_version": "Minecraft Java 26.1.1",
+  "world_seed": "314159265",
+  "parent": {
+    "branch": "silo_heir",
+    "version": "0.1.3",
+    "cartridge_id": "dd1a1004b02d7fbb17fe868a788178b6d2ce07aebed4080dbafd77fa8e57287d"
+  },
+  "worlds": [
+    {
+      "branch": "reserve",
+      "version": "0.1.4",
+      "cartridge_id": "ae185b12302ed1e1c6d0012bb55c187b5af75aeb4f660d9dd8a109015911d091",
+      "parent_cartridge_id": "dd1a1004b02d7fbb17fe868a788178b6d2ce07aebed4080dbafd77fa8e57287d",
+      "artifact_id": 13284747125,
+      "archive": "reserve-v0.1.4.zip",
+      "action": "preserved inherited mature crops"
+    },
+    {
+      "branch": "harvest",
+      "version": "0.1.4",
+      "cartridge_id": "e59c6ab45f501c5316e92a4ac4574c7e115ca802f32c1f5e504184d6e785a798",
+      "parent_cartridge_id": "dd1a1004b02d7fbb17fe868a788178b6d2ce07aebed4080dbafd77fa8e57287d",
+      "artifact_id": 13284652390,
+      "archive": "harvest-v0.1.4.zip",
+      "action": "non-OP farmer harvested 8 actual mature game crops and stored 8 wheat, seeds"
+    },
+    {
+      "branch": "heir",
+      "version": "0.1.5",
+      "cartridge_id": "fbe9d94992fdbe6527ebe83ea667cb81c5c75844356a3f1ce7c2129ce2823370",
+      "parent_cartridge_id": "e59c6ab45f501c5316e92a4ac4574c7e115ca802f32c1f5e504184d6e785a798",
+      "artifact_id": 13285405712,
+      "archive": "heir-v0.1.5.zip",
+      "action": "actual inherited seed replanted, grew under accelerated vanilla random ticks, wheat harvested and bread actually crafted and eaten"
+    }
+  ],
+  "verified_actual_game_outcome": {
+    "inherited_wheat_items": 2,
+    "inherited_bricks": 2,
+    "first_harvest_wheat": 8,
+    "second_generation_replanted_wheat": 1,
+    "bread_wheat_equivalent_consumed": 3,
+    "final_stored_wheat": 8,
+    "operator_inventory_grants": 0
+  },
+  "lineage_artifact_id": 13285675408,
+  "artifact_expiry_utc": "2027-02-02T00:38:58Z",
+  "source_status": "draft unmerged experimental PR; source-native reLATTE HOLD not created for LANTERN 012",
+  "nonclaims": [
+    "synthetic Minecraft game not human field experiment",
+    "mature initial field authored by prior 006 Minecraft experiment",
+    "random ticks intentionally accelerated to grow crop",
+    "cartridge SHA256 is not P-256 native reLATTE signature",
+    "GitHub artifact retention is not immutable permanent object storage"
+  ]
+}
