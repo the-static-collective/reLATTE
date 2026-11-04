@@ -18,7 +18,7 @@ function browser(){
     classList:{add(){},remove(){},toggle(){}},setAttribute(){},
     addEventListener(k,fn){this.events[k]=fn},append(...args){this.children.push(...args)},
     replaceChildren(...args){this.children=[...args]},remove(){},
-    click(){if(this.events.click)return this.events.click({target:this})},
+    click(){if(typeof this.onclick==='function')return this.onclick({target:this});if(this.events.click)return this.events.click({target:this})},
     focus(){},select(){}};
    nodes.set(id,x);
   }
@@ -80,7 +80,7 @@ test('exact reviewed JAR;VIS router/cartridge still accepts its proposal-only co
  assert.equal(cartridge.remote_execution,false);
 });
 test('full live page is exactly the one bundled in Supabase asset',()=>{
- const encoded=page.trim().replace(/^export const PAGE=/,'').replace(/;$/,'');
+ const encoded=page.slice(page.indexOf('export const PAGE=')+'export const PAGE='.length).trim().replace(/;$/,'');
  assert.equal(JSON.parse(encoded),html);
  assert.equal(sourceScripts.length,2);
  assert.match(html,/<title>LANTERN 015/);
