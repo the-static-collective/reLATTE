@@ -1,0 +1,52 @@
+name: 'LANTERN-014 Offline One Useful Thing: deterministic solo helper'
+on:
+  push:
+    branches:
+      - experiment/lantern-commons-014-one-useful-thing
+    paths:
+      - 'experiments/lantern-commons-014/**'
+      - '.github/workflows/lantern-014-solo.yml'
+  pull_request:
+    paths:
+      - 'experiments/lantern-commons-014/**'
+      - '.github/workflows/lantern-014-solo.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  solo-offline:
+    name: Native unit proofs and exact zero-network standalone source
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify deterministic actionable card engine and safe bounded shelf
+        run: node --test experiments/lantern-commons-014/test_engine.cjs
+      - name: Check browser application syntax
+        run: |
+          node --check experiments/lantern-commons-014/engine.js
+          node --check experiments/lantern-commons-014/app.js
+      - name: Confirm the portable HTML has EXACT source modules embedded, no fetch or external resources
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          d=Path('experiments/lantern-commons-014')
+          html=(d/'Lantern_014_One_Useful_Thing.html').read_text()
+          css=re.search(r'<style>([\s\S]*?)</style>',html)
+          scripts=re.findall(r'<script>([\s\S]*?)</script>',html)
+          assert css and len(scripts)==2,'No fully inlined offline browser application'
+          assert css.group(1)==(d/'style.css').read_text(),'Bundled stylesheet differs from committed source'
+          assert scripts[0]==(d/'engine.js').read_text(),'Bundled engine differs from committed source'
+          assert scripts[1]==(d/'app.js').read_text(),'Bundled UI differs from committed source'
+          assert not re.search(r'\bfetch\s*\(|\bXMLHttpRequest\b|\bWebSocket\b|\bnavigator\.sendBeacon\b|\bimport\s*\(',html),'Network-capable dynamic code detected'
+          assert not re.search(r'<(?:link|script|img|iframe)[^>]+(?:https?:|src=)',html,re.I),'External resource reference'
+          assert 'localStorage' in html and 'Download .md' in html and 'Save snapshot' in html
+          assert 'No server' in html or 'no network' in html.lower()
+          print('EXACT_SINGLE_FILE_OFFLINE_IMPLEMENTATION_VERIFIED')
+          PY

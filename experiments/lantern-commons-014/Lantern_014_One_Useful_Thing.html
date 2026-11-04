@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d171b"><meta name="color-scheme" content="dark">
+<title>LANTERN 014 · One Useful Thing</title>
+<meta name="description" content="Turn a messy thought into one concrete move, an editable file, and a private progress record. Works offline.">
+<style>:root{color-scheme:dark;--bg:#0d171b;--panel:#19282c;--panel2:#1f3135;--muted:#a9c0bc;--text:#f1f7ee;--line:#364c4b;--lime:#d9f3a5;--cyan:#9fe6da;--gold:#ffd899;--red:#ffb0a5;--shadow:0 24px 58px rgba(0,0,0,.19)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 6% 2%,rgba(100,185,150,.10),transparent 36%),radial-gradient(ellipse at 95% 6%,rgba(215,200,140,.09),transparent 32%),var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,textarea,input{font:inherit}button{cursor:pointer}button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(2.3rem,7vw,4.5rem);line-height:1.05;letter-spacing:-.045em;margin:.3rem 0 1rem;max-width:780px}h2{font-size:1.35rem;line-height:1.2}h3{font-size:1rem;margin-bottom:10px}p{margin-bottom:1rem}.wrap{width:min(980px,calc(100% - 32px));margin:0 auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);padding:20px 0}.brand{font-weight:900;letter-spacing:.09em;font-size:.88rem}.brand span{color:var(--lime)}.header-tag,.tiny-tag{border:1px solid var(--line);border-radius:999px;padding:6px 11px;color:var(--muted);font-size:.73rem;white-space:nowrap}.hero{padding:55px 0 28px}.eyebrow{text-transform:uppercase;color:var(--cyan);font-size:.75rem;font-weight:900;letter-spacing:.15em}.hero>p:last-child{color:var(--muted);font-size:1.1rem;max-width:650px}.hero strong{color:var(--lime)}.grid{display:grid;gap:24px;grid-template-columns:minmax(0,1fr)}.panel{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:clamp(18px,3.5vw,28px);box-shadow:var(--shadow);min-width:0}.panel+.panel{margin-top:0}.section-head{display:flex;gap:16px;align-items:center;justify-content:space-between}.step-number{display:inline-flex;width:29px;height:29px;align-items:center;justify-content:center;border:1px solid var(--cyan);border-radius:50%;font-size:.75rem;color:var(--cyan);font-weight:800;margin-right:10px}.section-intro{color:var(--muted);margin:9px 0 18px}.mode-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:20px}.mode-card{min-height:76px;border:1px solid var(--line);background:var(--panel2);border-radius:13px;color:var(--text);padding:13px 10px;text-align:left;line-height:1.25;transition:background .15s,border-color .15s}.mode-card strong{display:block;font-size:.86rem}.mode-card small{display:block;color:var(--muted);margin-top:4px;font-size:.72rem}.mode-card[aria-pressed=true]{border-color:var(--lime);background:#304237;box-shadow:inset 0 0 0 1px var(--lime)}.input-label{font-weight:800;display:block;margin:2px 0 9px}textarea{width:100%;color:var(--text);background:#0f2023;border:1px solid #435959;border-radius:12px;padding:14px 15px;resize:vertical;min-height:125px;line-height:1.52}textarea::placeholder{color:#809b98}.input-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:11px}.help{color:var(--muted);font-size:.86rem}.micro{color:var(--muted);font-size:.74rem}.plain{color:var(--cyan);padding:7px 0;background:none;border:0;text-decoration:underline;text-underline-offset:4px}.timebox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0}.timebox b{font-size:.88rem}.chips{display:flex;gap:8px;flex-wrap:wrap}.chips button{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:7px 14px;font-weight:700}.chips button[aria-pressed=true]{border-color:var(--lime);background:var(--lime);color:#21302a}.button-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.primary{display:inline-block;background:var(--lime);border:1px solid var(--lime);color:#1a2d23;padding:13px 23px;border-radius:12px;font-weight:900;box-shadow:0 4px 18px rgba(218,244,164,.10)}.secondary{display:inline-block;background:#263c3e;border:1px solid var(--line);color:var(--text);padding:12px 17px;border-radius:12px;font-weight:700}.primary:hover,.secondary:hover,.mode-card:hover,.small-button:hover{filter:brightness(1.09)}#status{min-height:44px;margin:18px 0 0;padding:11px 14px;background:#173332;border-left:3px solid var(--cyan);border-radius:6px;color:var(--cyan);font-size:.88rem}#status[data-kind=error]{border-color:var(--red);color:var(--red);background:#3c2527}#status[data-kind=warn]{border-color:var(--gold);color:var(--gold);background:#393322}#status[data-kind=success]{border-color:var(--lime);color:var(--lime)}#result{margin-top:24px;border-color:#657f69;scroll-margin-top:24px}#result[hidden]{display:none}.result-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}.badge{display:inline-block;padding:5px 10px;border-radius:999px;border:1px solid var(--line);font-size:.7rem;color:var(--cyan);font-weight:800;letter-spacing:.06em;text-transform:uppercase}.move{margin:20px 0 16px;padding:23px;border-radius:15px;background:#d9f3a5;color:#203027}.move .small-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.13em;font-weight:900;color:#365344}.move p{font-size:clamp(1.25rem,3.8vw,1.8rem);font-weight:850;line-height:1.29;margin:8px 0 0;letter-spacing:-.02em}.proof{padding:13px 16px;border:1px solid #506e66;border-radius:12px;background:#203731}.proof strong{display:block;color:var(--cyan);font-size:.77rem;text-transform:uppercase;letter-spacing:.05em}.proof p{margin:6px 0 0}.work-area{margin:20px 0}.work-area textarea{min-height:170px}.time-controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;border:1px solid var(--line);padding:13px 15px;border-radius:13px}.clock{font-variant-numeric:tabular-nums;letter-spacing:.06em;font-size:1.7rem;font-weight:900;color:var(--lime)}.result-actions{margin-top:18px}.microline{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.report{border-top:1px solid var(--line);padding-top:21px;margin-top:22px}.report textarea{min-height:85px}.report #doneToggle[aria-pressed=true]{background:var(--lime);border-color:var(--lime);color:#1a2d23}.check-row{display:flex;gap:11px;align-items:flex-start;border-bottom:1px solid var(--line);padding:12px 0}.check-row input{margin-top:6px;accent-color:var(--lime);width:18px;height:18px}.check-row span{flex:1}.tag{background:#2c4042;border-radius:6px;padding:3px 8px;color:var(--cyan);font-size:.7rem}.option-chip{margin:5px 7px 5px 0;padding:10px 12px;border:1px solid var(--line);background:#213b39;border-radius:10px;color:var(--text);text-align:left}.option-chip[aria-pressed=true]{border-color:var(--lime);color:var(--lime)}.shelf{margin-top:24px;margin-bottom:32px}.shelf-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--line)}.shelf-meta{min-width:0;display:flex;flex-direction:column;gap:3px}.shelf-meta strong{overflow-wrap:anywhere}.shelf-meta small{color:var(--muted)}.shelf-actions{display:flex;gap:7px;flex-wrap:wrap}.small-button{border:1px solid var(--cyan);border-radius:9px;padding:8px 10px;background:#23403e;color:var(--text);font-weight:750;font-size:.78rem}.small-button.subtle{border-color:var(--line);background:transparent}.shelf-tools{margin:12px 0 19px}.divider{border-top:1px solid var(--line);margin:23px 0}.footer{display:flex;gap:18px;flex-wrap:wrap;justify-content:space-between;border-top:1px solid var(--line);padding:27px 0 45px;color:var(--muted);font-size:.78rem}.footer strong{color:var(--text)}.muted-link{color:var(--cyan)}[hidden]{display:none!important}@media(max-width:700px){.hero{padding:38px 0 18px}.mode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.mode-card{min-height:81px}.shelf-row{align-items:flex-start;flex-direction:column}.shelf-actions{width:100%}.time-controls .clock{width:100%}.header-tag{display:none}.wrap{width:min(980px,calc(100% - 22px))}.panel{border-radius:17px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="topbar"><div class="brand">✳ LANTERN <span>014</span> <span aria-hidden="true">/</span> ONE USEFUL THING</div><span class="header-tag">Offline • no account • nobody else needed</span></header>
+<section class="hero" aria-labelledby="heroTitle">
+  <div class="eyebrow">The solo door</div><h1 id="heroTitle">Make one thing <em style="color:var(--lime);font-style:normal">better today.</em></h1>
+  <p>Drop in a messy thought. Choose one button. Leave with <strong>a real next move and a file you can keep.</strong> No waiting for a helper, sign-up, or network connection.</p>
+</section>
+<main>
+<section class="panel" id="start">
+ <div class="section-head"><h2><span class="step-number">1</span>What would help right now?</h2><span class="tiny-tag">One textbox, not a worksheet</span></div>
+ <p class="section-intro">Choose what you need; the tool uses simple, visible rules—not a hidden AI service.</p>
+ <div class="mode-grid" role="group" aria-label="Choose a helpful mode">
+   <button type="button" class="mode-card" data-mode="unstick" aria-pressed="true"><strong>↗ Unstick me</strong><small>Give me one doable move</small></button>
+   <button type="button" class="mode-card" data-mode="sort" aria-pressed="false"><strong>☷ Sort this pile</strong><small>Turn scattered notes into checks</small></button>
+   <button type="button" class="mode-card" data-mode="draft" aria-pressed="false"><strong>▤ Make a note</strong><small>Create an editable brief</small></button>
+   <button type="button" class="mode-card" data-mode="decide" aria-pressed="false"><strong>⇄ Choose a test</strong><small>Compare reversible options</small></button>
+ </div>
+ <label class="input-label" for="source">What's on your mind?</label>
+ <textarea id="source" maxlength="8000" placeholder="Example: My laptop is full of photos. I need to sort them and pick three worth editing, but I keep putting it off." spellcheck="true" aria-describedby="inputTip"></textarea>
+ <div class="input-actions"><span id="inputTip" class="micro">You can paste a brain dump or type one sentence. Ctrl/⌘ + Enter makes a card.</span><div class="microline"><button class="plain" type="button" id="sample">Try an example</button><button class="plain" type="button" id="clearInput">Clear</button></div></div>
+ <div class="timebox"><b>I have:</b><div class="chips" role="group" aria-label="Available time"><button type="button" data-minutes="2" aria-pressed="false">2 min</button><button type="button" data-minutes="5" aria-pressed="true">5 min</button><button type="button" data-minutes="15" aria-pressed="false">15 min</button><button type="button" data-minutes="30" aria-pressed="false">30 min</button></div></div>
+ <button type="button" class="primary" id="makeCard">Make my next move →</button>
+ <div id="status" role="status" aria-live="polite" data-kind="info">Offline and ready.</div>
+</section>
+<section class="panel" id="result" hidden aria-labelledby="resultTitle">
+ <div class="result-top"><span class="badge">Your work card</span><span class="tiny-tag"><span id="modeLabel">Unstick</span> · <span id="timeLabel">5 min</span></span></div>
+ <h2 id="resultTitle" style="margin:14px 0 3px">One useful thing</h2><p class="micro" id="lineage">Fresh card · not saved</p>
+ <div class="move"><span class="small-label">Do this first</span><p id="stepText"></p></div>
+ <div class="proof"><strong>What counts as done</strong><p id="proofText"></p></div>
+ <div id="modeExtra"></div>
+ <div class="work-area"><label class="input-label" for="workNote">Your actual working file — edit it here</label><textarea id="workNote" maxlength="12000" spellcheck="true"></textarea><p class="micro">Your words, not an AI-generated claim. You can download this as Markdown.</p></div>
+ <div class="time-controls"><span class="clock" id="timerDisplay" aria-live="off">05:00</span><button type="button" id="timerToggle" class="secondary">▶ Start timebox</button><button type="button" id="timerReset" class="small-button subtle">Reset</button><span class="micro">The clock runs only while this page is open.</span></div>
+ <div class="report"><h3>What actually changed?</h3><p class="help">This is your own record. “Done” means you say it happened; this tool cannot verify the outside world.</p><label for="outcome" class="input-label">Optional outcome note</label><textarea id="outcome" maxlength="2000" placeholder="Example: I made the folder and put three photos in it. Next: rename them."></textarea>
+ <div class="button-row result-actions"><button class="secondary" type="button" id="doneToggle" aria-pressed="false">✓ I did something</button><button class="primary" type="button" id="downloadCard">↓ Download .md</button><button class="secondary" type="button" id="copyCard">Copy</button><button class="secondary" type="button" id="saveSnapshot">Save snapshot</button></div></div>
+</section>
+<section class="panel shelf" id="shelf" aria-labelledby="shelfHeading">
+ <div class="section-head"><h2 id="shelfHeading"><span class="step-number">2</span>Your private work shelf</h2><span id="shelfCount" class="tiny-tag">0 snapshots</span></div>
+ <p class="section-intro">Save only when you choose. Each snapshot becomes a separate copy; continuing from one never rewrites its parent. Nothing is synced or shared.</p>
+ <div class="button-row shelf-tools"><button id="exportShelf" class="secondary" type="button">↓ Export backup</button><button id="importShelf" class="secondary" type="button">↑ Import backup</button><button id="clearShelf" class="small-button subtle" type="button">Clear local shelf</button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
+ <div id="shelfItems"></div>
+</section>
+</main>
+<footer class="footer"><span><strong>LANTERN 014</strong> · Useful work before a network exists.</span><span>All processing runs on this device. No server, tracking, external fonts, or requests. Browser storage is local and not a backup.</span><span>Separate from Minecraft world cartridges: these are private <strong>work-card copies</strong>, not game saves, verified receipts, or legal/financial advice.</span></footer>
+</div>
+<script>/* LANTERN-014 — ONE USEFUL THING. Deterministic, offline, inspectable engine.
+ * No API, network, cloud identity, human moral scores, or automatic commitments.
+ * All results come from source text and visible fixed transformations.
+ */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  root.Lantern014 = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  const MODES = Object.freeze(['unstick', 'sort', 'draft', 'decide']);
+  const BUDGETS = Object.freeze([2, 5, 15, 30]);
+  const MAX_SOURCE = 8000;
+  const LABELS = {unstick: 'Unstick', sort: 'Sort a pile', draft: 'Make a useful note', decide: 'Choose a test'};
+  const tidy = s => String(s || '').replace(/[\u0000-\u0008\u000b-\u001f\u007f]/g, '').trim();
+  function clip(s, n) { s=tidy(s); return s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s; }
+  function cleanLine(s) {
+    return tidy(s).replace(/^\s*(?:[-*•]|\d{1,2}[.)]|\[[ xX]\])\s*/, '').replace(/^\s*(?:TODO|TO-DO|TASK)\s*[:\-]\s*/i, '').trim();
+  }
+  function extractLines(source) {
+    let expanded = tidy(source).replace(/([.!?])\s+(?=[A-Z])/g, '$1\n');
+    const candidates = expanded.split(/\n+|;\s*/).map(cleanLine).filter(Boolean);
+    const out = [];
+    const seen = new Set();
+    for (const line of candidates) {
+      let text = clip(line.replace(/\s+/g,' '), 240);
+      if (!text || seen.has(text.toLowerCase())) continue;
+      seen.add(text.toLowerCase()); out.push(text);
+      if (out.length === 15) break;
+    }
+    return out;
+  }
+  function priority(text) {
+    if (/\b(today|now|urgent|asap|overdue|tomorrow|deadline|due|before noon|this morning)\b/i.test(text)) return 'now';
+    if (/\b(later|someday|eventually|maybe|when i can|next month|future)\b/i.test(text)) return 'later';
+    return 'next';
+  }
+  function pickTitle(text, lines) {
+    const lead = cleanLine(lines[0] || text);
+    return clip(lead.replace(/^(i\s+(?:need|want|have|hope|plan|wish|would like)\s+to\s+)/i, ''), 62) || 'One useful thing';
+  }
+  function strategy(source) {
+    const s = String(source || '').toLowerCase();
+    const cases = [
+      {match: /\b(photo|photos|image|images|raw|lightroom|picture|pictures|photograph)\b/, key:'photos',
+       move:'Create a folder called “Photo picks”; move or copy three candidate images into it.',
+       proof:'Three actual image files exist in the new folder.'},
+      {match:/\b(resume|cv|job application|applying|work history|interview)\b/, key:'resume',
+       move:'Open your résumé and add one verified job title, employer, and date range.',
+       proof:'The résumé contains one accurate, saved work-history entry.'},
+      {match:/\b(bug|broken code|debug|github|repository|script error|website error|app bug)\b/, key:'debug',
+       move:'Reproduce the problem once; record the exact action, expected result, and observed result.',
+       proof:'A reproduction note names an actual input and actual observed failure.'},
+      {match:/\b(song|lyric|lyrics|album|track|guitar|melody|music|mix)\b/, key:'music',
+       move:'Open one unfinished song or track and save a single concrete change to it.',
+       proof:'One track or lyric file now contains the saved change.'},
+      {match:/\b(file|folder|document|downloads|desktop|archive|organize files|sort files)\b/, key:'files',
+       move:'Create a folder named “To sort” and move five loose files into it.',
+       proof:'Five files are now together in one folder.'},
+      {match:/\b(bill|payment|budget|expense|overdraft|money|balance|cost)\b/, key:'expenses',
+       move:'Write down one upcoming expense, its amount, and the date it is due—without account numbers.',
+       proof:'You have one dated expense record you can act on.'},
+      {match:/\b(event|gathering|fellowship|potluck|party|church night|volunteer night)\b/, key:'event',
+       move:'Create a three-line event brief: what it is, where it is, and when it happens. Put “TBD” for unknown details.',
+       proof:'A three-line event brief exists as a saved note.'},
+      {match:/\b(clean|laundry|clutter|messy room|dishes|tidy|organize room)\b/, key:'tidy',
+       move:'Put five out-of-place items where they belong.',
+       proof:'Five objects have actually been moved, not merely listed.'},
+      {match:/\b(meal|recipe|food|cook|kitchen|dinner|lunch)\b/, key:'food',
+       move:'Check what ingredients are already available and prepare one usable portion or ingredient.',
+       proof:'Something edible is prepared, or one ingredient is washed, cut, or portioned.'},
+      {match:/\b(email|letter|message|text someone|reply|write to|announcement|post)\b/, key:'writing',
+       move:'Draft the first two factual sentences in the editable work note. Save it without sending.',
+       proof:'Two editable sentences exist in the saved draft.'},
+      {match:/\b(camera|cable|adapter|pedal|midi|equipment|device|hardware)\b/, key:'gear',
+       move:'Connect one device or cable and record exactly what changed or failed.',
+       proof:'One real connection has been tested and its result recorded.'}
+    ];
+    return cases.find(x => x.match.test(s)) || {
+      key:'general',
+      move:'Choose the first concrete task in your note. Perform its smallest physical or digital step for five minutes.',
+      proof:'A real file, object, or situation has changed—not just the plan.'
+    };
+  }
+  function actionFromLines(lines, fallback) {
+    const first = lines.find(x => /\b(?:need to|have to|must|should|fix|finish|clean|sort|organize|write|open|send|make|build|move|take|record|test|update|check|create|pay|prepare|copy|edit|file|pick)\b/i.test(x));
+    if (!first) return fallback;
+    let action = first.replace(/^i\s+(?:need|want|have|plan)\s+to\s+/i, '')
+      .replace(/^i\s+should\s+/i, '').replace(/\.$/, '');
+    if (!action || action.length > 145 || /\b(and then|after that|someday|eventually)\b/i.test(action)) return fallback;
+    return clip(action.charAt(0).toUpperCase() + action.slice(1) + '.', 155);
+  }
+  function optionsFromSource(source, lines) {
+    let out = [];
+    const short = String(source || '').match(/\b(?:between|either)\s+([^\n,;.]{2,80}?)\s+(?:or|and)\s+([^\n,;.]{2,80})/i);
+    if (short) out = [cleanLine(short[1]), cleanLine(short[2])];
+    if (out.length < 2) {
+      const or = String(source || '').split(/\s+or\s+/i);
+      if (or.length === 2 && or.every(x => x.trim().length <= 95)) out = or.map(cleanLine);
+    }
+    if (out.length < 2 && lines.length >= 2) out = lines.slice(0, 4);
+    out = [...new Set(out.map(x => clip(x, 100)).filter(Boolean))].slice(0,4);
+    return out.length >= 2 ? out : ['Try the smallest reversible option', 'Keep things as they are for now'];
+  }
+  function build(input) {
+    const source=tidy(input && input.source);
+    if (!source) throw new Error('Write one sentence about what you want to move forward.');
+    if (source.length > MAX_SOURCE) throw new Error('Keep the note under 8,000 characters.');
+    const mode = input.mode || 'unstick';
+    if (!MODES.includes(mode)) throw new Error('Unknown mode.');
+    const minutes=Number(input.minutes || 5);
+    if (!BUDGETS.includes(minutes)) throw new Error('Select a supported time budget.');
+    const lines=extractLines(source);
+    const idea=strategy(source);
+    const title=pickTitle(source,lines);
+    const notes=lines.map((text,i)=>({id:i+1,text,priority:priority(text),done:false}));
+    const options=mode==='decide'?optionsFromSource(source,lines):[];
+    const chosen=null;
+    let move, proof;
+    if(mode==='unstick') {
+      move=idea.move; proof=idea.proof;
+    } else if(mode==='sort') {
+      const first=notes.find(n=>n.priority==='now') || notes[0];
+      move=first ? 'Start with this item: '+clip(first.text,145) : idea.move;
+      proof='At least one listed item is checked off because a real action was taken.';
+    } else if(mode==='draft') {
+      move='Edit the generated note so its first paragraph accurately describes the situation; save the file.';
+      proof='A usable .md note has been saved locally with your verified details.';
+    } else {
+      move='Choose one option below, then perform a reversible five-minute test or observation of it.';
+      proof='One option is selected, and one actual test result or observation is recorded.';
+    }
+    return {schema:'lantern.solo-work-card/v1',title,source,mode,minutes,move,proof,
+      strategy:idea.key,notes,options,chosen,done:false,outcome:'',parent_id:null,version:1};
+  }
+  function markdown(card) {
+    const c = card || {};
+    const heading='# '+tidy(c.title || 'One useful thing');
+    const parts=[heading,'','Made with LANTERN 014 • offline, human-controlled work card',
+      '',`Mode: ${LABELS[c.mode] || c.mode || 'Unstick'} | Timebox: ${c.minutes || 5} minutes`,
+      '', '## First useful move', tidy(c.move), '', '## Counts as done',tidy(c.proof),
+      '', '## Original words', tidy(c.source)];
+    if (Array.isArray(c.notes)&&c.notes.length){
+      parts.push('','## Items');
+      for (const n of c.notes) parts.push(`- [${n.done?'x':' '}] ${tidy(n.text)} (${n.priority || 'next'})`);
+    }
+    if (Array.isArray(c.options)&&c.options.length){
+      parts.push('','## Options');
+      for(const x of c.options) parts.push('- '+tidy(x)+(c.chosen===x?' ← selected':''));
+    }
+    parts.push('','## My working note',tidy(c.workNote || '') || '(Write here; no facts invented by the app.)',
+      '', '## Outcome (self-reported)',c.done?'Marked complete':'Not yet marked complete',
+      tidy(c.outcome) || '(No outcome recorded.)');
+    if(c.id) parts.push('','Snapshot ID: '+String(c.id));
+    if(c.parent_id) parts.push('Parent snapshot: '+String(c.parent_id));
+    parts.push('','---','This file records your words and your own reported actions. It is not external verification.');
+    return parts.join('\n')+'\n';
+  }
+  function safeSnapshot(x) {
+    if(!x || x.schema!=='lantern.solo-work-card/v1') throw new Error('Unrecognized work-card format.');
+    if (typeof x.source!=='string' || x.source.length>MAX_SOURCE || !x.source.trim()) throw new Error('Invalid source text.');
+    if (!MODES.includes(x.mode) || !BUDGETS.includes(Number(x.minutes))) throw new Error('Invalid work-card choices.');
+    const base=build({source:x.source,mode:x.mode,minutes:Number(x.minutes)});
+    const notes=base.notes.map((n,i)=>({...n, done:Boolean(x.notes && x.notes[i] && x.notes[i].done)}));
+    const selected=(base.options.includes(x.chosen) ? x.chosen : null);
+    return {...base,notes,chosen:selected,done:Boolean(x.done),
+      workNote:clip(x.workNote,12000),outcome:clip(x.outcome,2000),
+      id:clip(x.id,140),createdAt:clip(x.createdAt,60),
+      parent_id:clip(x.parent_id,140)||null,
+      version:Number.isInteger(x.version)&&x.version>=1&&x.version<=10000?x.version:1};
+  }
+  function validShelf(raw) {
+    if(!raw || raw.schema!=='lantern.solo-shelf/v1' || !Array.isArray(raw.cards) || raw.cards.length>100) throw new Error('This is not a valid Solo Shelf backup.');
+    const list=raw.cards.map(safeSnapshot),ids=new Set();
+    for(const c of list){
+      if(!c.id||ids.has(c.id))throw new Error('Duplicate or missing snapshot identity.');
+      ids.add(c.id);
+    }
+    return {schema:'lantern.solo-shelf/v1',cards:list};
+  }
+  return {MODES,BUDGETS,MAX_SOURCE,LABELS,extractLines,priority,strategy,build,markdown,safeSnapshot,validShelf};
+});
+</script>
+<script>(function () {
+  'use strict';
+  const E=window.Lantern014;
+  if(!E) throw new Error('Solo engine missing');
+  const STORAGE_KEY='lantern014.solo-shelf.v1';
+  const $=id=>document.getElementById(id);
+  let mode='unstick', minutes=5, current=null, shelf={schema:'lantern.solo-shelf/v1',cards:[]};
+  let timerRemaining=0, timerHandle=null, timerRunning=false;
+  const create=(tag,attrs={},children=[])=>{
+    const node=document.createElement(tag);
+    for(const [key,value] of Object.entries(attrs)){
+      if(key==='text')node.textContent=String(value);
+      else if(key==='class')node.className=value;
+      else if(key==='value')node.value=String(value);
+      else if(key==='disabled')node.disabled=Boolean(value);
+      else node.setAttribute(key,String(value));
+    }
+    for(const c of children)node.appendChild(typeof c==='string'?document.createTextNode(c):c);
+    return node;
+  };
+  const notify=(message,kind='info')=>{
+    const el=$('status'); el.textContent=message;el.dataset.kind=kind;
+  };
+  const shortId=id=>String(id||'').slice(-9);
+  const dateString=iso=>{try {return new Date(iso).toLocaleString();}catch{return 'Saved';}};
+  function storageRead(){
+    try{
+      const raw=window.localStorage.getItem(STORAGE_KEY);
+      if(raw)shelf=E.validShelf(JSON.parse(raw));
+    }catch(e){notify('Local storage unavailable or a backup is invalid. You can still use and download work cards.','warn');}
+  }
+  function storageWrite(){
+    try{
+      window.localStorage.setItem(STORAGE_KEY,JSON.stringify(shelf));
+      return true;
+    }catch(e){notify('Browser storage is unavailable or full. Download a backup to keep your work.','warn');return false;}
+  }
+  function newId(){
+    if(window.crypto && typeof window.crypto.randomUUID==='function')return window.crypto.randomUUID();
+    return `local-${Date.now()}-${Math.random().toString(36).slice(2,12)}`;
+  }
+  function stopTimer(){
+    if(timerHandle)clearInterval(timerHandle);
+    timerHandle=null;timerRunning=false;$('timerToggle').textContent='▶ Start timebox';
+  }
+  function displayTimer(){
+    const m=Math.floor(timerRemaining/60),s=timerRemaining%60;
+    $('timerDisplay').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  }
+  function startTimer(){
+    if(!current)return;
+    if(timerRunning){stopTimer();return;}
+    if(timerRemaining<=0)timerRemaining=(current.minutes||5)*60;
+    const startedAt=Date.now(),atStart=timerRemaining;
+    timerRunning=true;$('timerToggle').textContent='Ⅱ Pause';
+    timerHandle=setInterval(()=>{
+      timerRemaining=Math.max(0,atStart-Math.floor((Date.now()-startedAt)/1000));
+      displayTimer();
+      if(timerRemaining<=0){stopTimer();notify('Timebox complete. Record what changed—or keep going if useful.','success');}
+    },230);
+  }
+  function selectedUI(){
+    for(const el of document.querySelectorAll('[data-mode]')){
+      el.setAttribute('aria-pressed',String(el.dataset.mode===mode));
+    }
+    for(const el of document.querySelectorAll('[data-minutes]')){
+      el.setAttribute('aria-pressed',String(Number(el.dataset.minutes)===minutes));
+    }
+  }
+  function dataFromPage(){
+    if(!current)return null;
+    return {...current,
+      workNote:$('workNote').value,
+      outcome:$('outcome').value,
+      done:$('doneToggle').getAttribute('aria-pressed')==='true'};
+  }
+  function cardView(card){
+    current=structuredCopy(card);
+    stopTimer();timerRemaining=card.minutes*60;displayTimer();
+    $('result').hidden=false;
+    $('resultTitle').textContent=card.title;
+    $('stepText').textContent=card.move;
+    $('proofText').textContent=card.proof;
+    $('modeLabel').textContent=E.LABELS[card.mode];
+    $('timeLabel').textContent=card.minutes+' min';
+    $('workNote').value=card.workNote||initialWorkingNote(card);
+    $('outcome').value=card.outcome||'';
+    $('doneToggle').setAttribute('aria-pressed',String(Boolean(card.done)));
+    $('doneToggle').textContent=card.done?'✓ Marked done (undo)':'✓ I did something';
+    $('lineage').textContent=card.parent_id?'New copy from snapshot '+shortId(card.parent_id)+', version '+card.version:'Fresh card · not saved';
+    const extra=$('modeExtra'); extra.replaceChildren();
+    if(card.mode==='sort')renderChecklist(extra);
+    else if(card.mode==='decide')renderOptions(extra);
+    else if(card.mode==='draft')extra.appendChild(create('p',{class:'help',text:'This is an editable draft, not an AI-written assertion. Replace placeholders and save the result.'}));
+    $('result').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function structuredCopy(x){return JSON.parse(JSON.stringify(x));}
+  function initialWorkingNote(card){
+    if(card.mode==='draft')return `WORKING NOTE — ${card.title}\n\nPurpose / outcome:\n[What should change?]\n\nWhat I know:\n${card.notes.map(n=>'• '+n.text).join('\n')}\n\nUnknown or unverified:\n[Mark uncertain facts here]\n\nNext real action:\n${card.move}\n`;
+    if(card.mode==='decide')return `DECISION NOTE\n\nMy choices:\n${card.options.map(x=>'• '+x).join('\n')}\n\nWhat matters to me:\n[write one constraint]\n\nCheapest reversible test:\n[choose an actual 5-minute test]\n`;
+    if(card.mode==='sort')return `ITEMS FROM MY NOTE\n${card.notes.map(x=>'• '+x.text).join('\n')}\n\nI will do one item before making another plan.\n`;
+    return `FIRST MOVE\n${card.move}\n\nCOUNTS AS DONE\n${card.proof}\n\nWHAT ACTUALLY CHANGED\n`;
+  }
+  function renderChecklist(target){
+    const heading=create('h3',{text:'Tap to mark completed actions'});
+    target.appendChild(heading);
+    const counts={now:0,next:0,later:0};
+    for(const n of current.notes)counts[n.priority]++;
+    target.appendChild(create('p',{class:'help',text:`${counts.now} urgent · ${counts.next} upcoming · ${counts.later} later. These tags come from words in your note; you can change what matters.`}));
+    for(const n of current.notes){
+      const row=create('label',{class:'check-row'}),box=create('input',{type:'checkbox'}),name=create('span',{text:n.text});
+      box.checked=Boolean(n.done);
+      box.addEventListener('change',()=>{
+        n.done=box.checked;
+        name.style.textDecoration=box.checked?'line-through':'none';
+        notify(`${current.notes.filter(x=>x.done).length} of ${current.notes.length} marked. Only save a snapshot if you want to keep it.`);
+      });
+      row.append(box,name,create('small',{class:'tag',text:n.priority}));
+      target.appendChild(row);
+    }
+  }
+  function renderOptions(target){
+    target.replaceChildren();
+    target.appendChild(create('h3',{text:'Pick a reversible test—not a permanent verdict'}));
+    for(const opt of current.options){
+      const btn=create('button',{class:'option-chip',type:'button',text:opt});
+      btn.setAttribute('aria-pressed',String(current.chosen===opt));
+      btn.addEventListener('click',()=>{
+        current.chosen=opt;
+        renderOptions(target);
+        $('workNote').value += `\n\nSelected for a reversible test: ${opt}\nObserved result: `;
+        notify('Choice recorded locally. Do a small test before declaring a winner.');
+      });
+      target.appendChild(btn);
+    }
+    target.appendChild(create('p',{class:'help',text:'A choice is not an externally verified outcome. Record what you actually tried.'}));
+  }
+  function makeCard(){
+    try {
+      const card=E.build({source:$('source').value,mode,minutes});
+      card.workNote=initialWorkingNote(card);
+      cardView(card);notify('One next move ready. It works offline; nothing was sent.','success');
+    }catch(e){notify(e.message,'error');$('source').focus();}
+  }
+  function formatFilename(title,ext){
+    const slug=String(title||'work-card').toLowerCase().normalize('NFKD').replace(/[^a-z0-9\s-]+/g,'').trim().replace(/\s+/g,'-').slice(0,42)||'work-card';
+    return `Lantern-014-${slug}.${ext}`;
+  }
+  function download(data,name,type){
+    const blob=new Blob([data],{type});const url=URL.createObjectURL(blob);
+    const a=create('a',{href:url,download:name});document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+  }
+  function downloadCard(){
+    const d=dataFromPage();if(!d)return;
+    download(E.markdown(d),formatFilename(d.title,'md'),'text/markdown;charset=utf-8');
+    notify('Useful note downloaded. Your words are editable in any text editor.','success');
+  }
+  async function copyCard(){
+    const d=dataFromPage();if(!d)return;
+    const text=E.markdown(d);
+    try {if(navigator.clipboard && navigator.clipboard.writeText){await navigator.clipboard.writeText(text);notify('Note copied to clipboard.','success');return;}}
+    catch{}
+    const helper=create('textarea');helper.value=text;helper.style.position='fixed';helper.style.left='-9999px';document.body.appendChild(helper);helper.select();
+    const ok=document.execCommand('copy');helper.remove();
+    notify(ok?'Note copied to clipboard.':'Clipboard unavailable. Use “Download .md” instead.',ok?'success':'warn');
+  }
+  function saveSnapshot(){
+    const card=dataFromPage();if(!card){notify('Make a card first.','warn');return;}
+    try {
+      const when=new Date().toISOString();
+      card.schema='lantern.solo-work-card/v1';card.id=newId();card.createdAt=when;
+      const next=E.safeSnapshot(card);
+      if(shelf.cards.length>=100){notify('Shelf is full (100 snapshots). Export a backup before clearing older copies.','warn');return;}
+      if(shelf.cards.some(x=>x.id===next.id)) throw new Error('Snapshot collision. Retry.');
+      shelf.cards.push(next);
+      const stored=storageWrite();
+      current={...structuredCopy(next),parent_id:next.id,version:next.version+1,id:''};
+      $('lineage').textContent='Saved snapshot '+shortId(next.id)+' · next edit forks from that snapshot.';
+      renderShelf();
+      notify(stored?'Snapshot saved in this browser. Parent will not be overwritten.':'Snapshot is in this tab but browser storage failed. Export your Shelf.',stored?'success':'warn');
+    }catch(e){notify('Snapshot could not be saved: '+e.message,'error');}
+  }
+  function renderShelf(){
+    const target=$('shelfItems'); target.replaceChildren();
+    $('shelfCount').textContent=shelf.cards.length+' snapshots';
+    if(!shelf.cards.length){target.appendChild(create('p',{class:'help',text:'No saved cards. Make something useful, then tap “Save snapshot”.'}));return;}
+    for(const card of shelf.cards.slice().reverse().slice(0,20)){
+      const row=create('article',{class:'shelf-row'});
+      const meta=create('div',{class:'shelf-meta'},[
+        create('strong',{text:card.title}),
+        create('small',{text:`${card.mode} · v${card.version} · ${dateString(card.createdAt)} · ${card.done?'self-reported done':'open'}`}),
+        create('small',{text:card.parent_id?`From ${shortId(card.parent_id)} · ${shortId(card.id)}`:shortId(card.id)})
+      ]);
+      const actions=create('div',{class:'shelf-actions'});
+      const fork=create('button',{class:'small-button',type:'button',text:'Fork / continue'});
+      fork.addEventListener('click',()=>{
+        const c=E.safeSnapshot(card);c.parent_id=card.id;c.version=card.version+1;c.id='';c.createdAt='';c.done=false;c.outcome='';
+        $('source').value=c.source;mode=c.mode;minutes=c.minutes;selectedUI();cardView(c);
+        notify('Working on a copy. The saved parent remains unchanged.');
+      });
+      const exportOne=create('button',{class:'small-button subtle',type:'button',text:'Export'});
+      exportOne.addEventListener('click',()=>download(E.markdown(card),formatFilename(card.title,'md'),'text/markdown;charset=utf-8'));
+      actions.append(fork,exportOne);row.append(meta,actions);target.appendChild(row);
+    }
+    if(shelf.cards.length>20)target.appendChild(create('p',{class:'help',text:'Showing the newest 20. Export the Shelf to keep all snapshots.'}));
+  }
+  function backupShelf(){
+    const json=JSON.stringify({...shelf,exported_at:new Date().toISOString(),note:'Local self-reported work cards only. No external verification.'},null,2);
+    download(json,'Lantern-014-Solo-Shelf.json','application/json;charset=utf-8');
+    notify('Shelf backup downloaded. Keep it somewhere you control.','success');
+  }
+  async function importShelf(file){
+    if(!file)return;
+    if(file.size>1200000){notify('That backup is over the 1.2 MB import limit.','error');return;}
+    try {
+      const raw=JSON.parse(await file.text());const incoming=E.validShelf(raw);
+      if(!confirm(`Import ${incoming.cards.length} snapshots? Identical IDs will be skipped; existing cards stay.`))return;
+      const ids=new Set(shelf.cards.map(c=>c.id));let added=0;
+      for(const c of incoming.cards){
+        if(ids.has(c.id))continue;
+        if(shelf.cards.length>=100)break;
+        shelf.cards.push(c);ids.add(c.id);added++;
+      }
+      const stored=storageWrite();renderShelf();
+      notify(`${added} snapshots imported. ${stored?'Saved in this browser.':'Download backup; browser storage failed.'}` ,stored?'success':'warn');
+    }catch(e){notify('Import refused: '+e.message,'error');}
+  }
+  function clearShelf(){
+    if(!shelf.cards.length)return;
+    if(!confirm('Delete all Solo Shelf snapshots stored in this browser? Export first if you need them.'))return;
+    shelf={schema:'lantern.solo-shelf/v1',cards:[]};storageWrite();renderShelf();notify('Local shelf cleared. Downloaded files were not changed.');
+  }
+  document.addEventListener('DOMContentLoaded',()=>{
+    storageRead();selectedUI();renderShelf();
+    document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;selectedUI();}));
+    document.querySelectorAll('[data-minutes]').forEach(b=>b.addEventListener('click',()=>{minutes=Number(b.dataset.minutes);selectedUI();}));
+    $('makeCard').addEventListener('click',makeCard);
+    $('sample').addEventListener('click',()=>{
+      $('source').value='I have 40 photos scattered in Downloads. I need to pick three worth keeping. I can work on this for five minutes.';
+      mode='unstick';minutes=5;selectedUI();$('source').focus();notify('Example loaded. Tap “Make my next move” to see the result.');
+    });
+    $('clearInput').addEventListener('click',()=>{$('source').value='';$('source').focus();notify('Input cleared. Saved snapshots were not changed.');});
+    $('downloadCard').addEventListener('click',downloadCard);
+    $('copyCard').addEventListener('click',copyCard);
+    $('saveSnapshot').addEventListener('click',saveSnapshot);
+    $('timerToggle').addEventListener('click',startTimer);
+    $('timerReset').addEventListener('click',()=>{stopTimer();timerRemaining=(current?.minutes||minutes)*60;displayTimer();});
+    $('doneToggle').addEventListener('click',()=>{
+      const done=$('doneToggle').getAttribute('aria-pressed')!=='true';
+      $('doneToggle').setAttribute('aria-pressed',String(done));$('doneToggle').textContent=done?'✓ Marked done (undo)':'✓ I did something';
+      notify(done?'Completion marked as your own report. Write what actually changed and save a snapshot.':'Completion mark undone.');
+    });
+    $('exportShelf').addEventListener('click',backupShelf);
+    $('importShelf').addEventListener('click',()=>$('importFile').click());
+    $('importFile').addEventListener('change',async e=>{await importShelf(e.target.files[0]);e.target.value='';});
+    $('clearShelf').addEventListener('click',clearShelf);
+    $('source').addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();makeCard();}});
+    notify('Offline and ready. Your words stay in this browser unless you export them.');
+  });
+})();
+</script>
+</body></html>
