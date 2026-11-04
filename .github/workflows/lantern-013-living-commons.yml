@@ -1,0 +1,53 @@
+name: 'LANTERN-013 Living Commons — offline playable model and immutable world fork checks'
+on:
+  push:
+    branches:
+      - experiment/lantern-commons-013-living-commons
+    paths:
+      - 'experiments/lantern-commons-013/**'
+      - '.github/workflows/lantern-013-living-commons.yml'
+  pull_request:
+    paths:
+      - 'experiments/lantern-commons-013/**'
+      - '.github/workflows/lantern-013-living-commons.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  model-contracts:
+    name: Test 11 world-cartridge safety, reproducibility, consent and fork invariants
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify standalone engine and HTML UI syntax
+        run: |
+          node --check experiments/lantern-commons-013/engine.js
+          node --check experiments/lantern-commons-013/ui.js
+      - name: Test world-model SHA256, parent conservation, no forcing or bogus imports
+        run: node --test experiments/lantern-commons-013/test_engine.test.mjs
+      - name: Prove offline HTML contains exact inspected source modules and no network-dependent runtime
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('experiments/lantern-commons-013')
+          page=(root/'Lantern_013_The_Living_Commons.html').read_text()
+          engine=(root/'engine.js').read_text().strip()
+          ui=(root/'ui.js').read_text().strip()
+          embedded_engine=page.split('/* ENGINE START */',1)[1].split('/* ENGINE END */',1)[0].strip()
+          embedded_ui=page.split('/* UI START */',1)[1].split('/* UI END */',1)[0].strip()
+          assert engine==embedded_engine, 'Standalone HTML engine does not match source'
+          assert ui==embedded_ui, 'Standalone HTML UI does not match source'
+          assert '<script src=' not in page and '<script type="module" src=' not in page, 'Depends on external runtime JavaScript'
+          assert 'fetch(' not in engine+ui, 'Browser model must not silently transmit player data'
+          assert 'https://' in page, 'Source/evidence links should be preserved'
+          assert all(k in page for k in ('Create life','Disturb the peace','Let them be','Fork reality','The World Shelf'))
+          print('LIVING_COMMONS_013_SELF_CONTAINED_SOURCE_EXACT_NO_NETWORK_CALLS')
+          PY
