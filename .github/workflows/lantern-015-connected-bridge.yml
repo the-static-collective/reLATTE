@@ -1,0 +1,121 @@
+name: 'LANTERN-015 public connected JAR;VIS — source, privacy and real HTTPS execution'
+
+on:
+  push:
+    branches:
+      - experiment/lantern-015-connected-capability-bridge
+    paths:
+      - 'experiments/lantern-commons-015/**'
+      - '.github/workflows/lantern-015-connected-bridge.yml'
+  pull_request:
+    paths:
+      - 'experiments/lantern-commons-015/**'
+      - '.github/workflows/lantern-015-connected-bridge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  local-contract-and-browser:
+    name: 18 action/availability/privacy tests and genuine executable HTML syntax
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: All 18 original and newly connected deterministic UI tests
+        run: node --test experiments/lantern-commons-015/test_connected.mjs
+      - name: Verify standalone app and embedded JavaScript syntax
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib,re
+          html=pathlib.Path('experiments/lantern-commons-015/Lantern_015_JARVIS_Connected_Solo_Desk.html').read_text()
+          scripts=re.findall(r'<script>([\s\S]*?)</script>',html)
+          assert len(scripts)==1
+          assert 'const LIVE_ENDPOINT=' in scripts[0]
+          assert 'credentials:\'omit\'' in scripts[0]
+          assert 'referrerPolicy:\'no-referrer\'' in scripts[0]
+          assert 'JAR;VIS CONNECTED PUBLIC EVIDENCE' in scripts[0]
+          assert not re.search(r'<script[^>]*src=',html,re.I)
+          pathlib.Path('/tmp/lantern-015-app.js').write_text(scripts[0])
+          print('STANDALONE_BRIDGE_UI_CONFIRMED',len(html.encode()))
+          PY
+          node --check /tmp/lantern-015-app.js
+      - name: Verify backend only reads exact allowed public GitHub locations
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('experiments/lantern-commons-015/edge/jarvis-live-bridge-001/index.ts').read_text()
+          assert 'Deno.serve' in s
+          assert 'raw.githubusercontent.com/the-static-collective/' in s
+          assert 'api.github.com/repos/the-static-collective/' in s
+          assert 'ONLY_ACTION_AND_TARGET_ALLOWED' in s
+          assert 'NO_SUCH_APPROVED_PUBLIC_ACTION' in s
+          assert 'access-control-allow-origin' in s
+          assert 'writes_performed:0' in s
+          assert 'SUPABASE_SERVICE_ROLE_KEY' not in s
+          assert not any(x in s for x in ['insert(', 'update(', 'delete(', 'exec('])
+          print('ALLOWLISTED_READ_ONLY_PUBLIC_BACKEND_SOURCE')
+          PY
+      - name: Preserve one-file browser tool and independently inspectable backend source
+        uses: actions/upload-artifact@v4
+        with:
+          name: lantern-015-connected-jarvis-playtest
+          retention-days: 90
+          if-no-files-found: error
+          path: |
+            experiments/lantern-commons-015/Lantern_015_JARVIS_Connected_Solo_Desk.html
+            experiments/lantern-commons-015/README.md
+            experiments/lantern-commons-015/edge/jarvis-live-bridge-001/index.ts
+
+  real-public-actions:
+    name: Independently invoke the real Edge Function and confirm GitHub source and CI evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Require real publicly deployed bridge and two completed live read actions
+        run: |
+          python3 - <<'PY'
+          import urllib.request,urllib.error,json,re
+          from urllib.parse import urlencode
+          base='https://kbhqacsdvjsstzyplqij.supabase.co/functions/v1/jarvis-live-bridge-001'
+          def read(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'Lantern015-Independent-Actions-Witness'})
+              with urllib.request.urlopen(req,timeout=20) as r:
+                  assert r.status==200
+                  assert r.headers.get('access-control-allow-origin')=='*'
+                  return json.load(r)
+          manifest=read(base)
+          assert manifest['schema']=='jarvis-live-bridge-001.0.0'
+          assert manifest['mode']=='PUBLIC_READ_ONLY'
+          assert manifest['writes_enabled'] is False
+          assert manifest['user_work_received'] is False
+          assert len(manifest['offers'])==2
+          source=read(base+'?'+urlencode({'action':'inspect','target':'jarvis'}))
+          assert source['ok'] and source['action']=='inspect'
+          assert re.fullmatch('[a-f0-9]{64}',source['sha256'])
+          assert source['repository']=='the-static-collective/JAR-VIS'
+          assert source['source_bytes']>100
+          assert source['writes_performed']==0 and source['user_work_received'] is False
+          print('REAL_PUBLIC_JARVIS_README',source['sha256'],source['source_bytes'],source['observed_at'])
+          ci=read(base+'?'+urlencode({'action':'ci','target':'relatte'}))
+          assert ci['ok'] and ci['action']=='ci'
+          assert ci['repository']=='the-static-collective/reLATTE'
+          assert len(ci['runs'])==ci['run_count'] and ci['run_count']>0
+          assert all(run['url'].startswith('https://github.com/the-static-collective/reLATTE/actions/runs/') for run in ci['runs'])
+          assert ci['writes_performed']==0 and ci['user_work_received'] is False
+          print('REAL_PUBLIC_RELATTE_WORKFLOWS',ci['run_count'],ci['observed_at'])
+          try:
+              read(base+'?action=inspect&target=private')
+          except urllib.error.HTTPError as e:
+              assert e.code==400
+          else:
+              raise AssertionError('unsafe target not rejected')
+          print('REJECTS_UNAPPROVED_TARGETS_AND_PRIVATE_TASKS')
+          PY
