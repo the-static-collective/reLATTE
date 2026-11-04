@@ -18,9 +18,28 @@ Choose one of four lanes:
 - **Decide:** compare two actions and make a reversible trial rather than a false automatic recommendation.
 - **Test:** form an expected/observed debug receipt and test one reversible cause.
 
-Describe the issue in plain language; optional fields state a desired outcome and existing constraint. Choose 5, 10, 20 or 40 minutes, or press **I just need a 5-minute start** without filling anything in. The app generates a user-editable note with a finish line; the note itself is the initial deliverable.
+Describe the issue in plain language; optional fields state a desired outcome and existing constraint. Choose 5, 10, 20 or 40 minutes, or press **I just need a 5-minute start** without filling anything in. The app generates a user-editable note with a finish line; JAR;VIS Step 03 can then actually create a reusable checklist, CSV tracker or HTML work card, or run a local structural audit.
 
 The person can explicitly mark the action **completed**, record what changed (including failed attempts), save a snapshot, create a new fork without overwriting the prior snapshot, copy/download the work as a `.txt` file, print it, or import/export the entire shelf as `.json`.
+
+## Step 03 — JAR;VIS offers actual actions, not more invitations
+
+**New in 0.2.0:** Step 03 now displays a truthful local capability registry, including which action will happen when you click each button. It adapts its first recommendation to the current Untangle / Make / Decide / Test lane, but it never implies the local HTML is an autonomous cloud AI.
+
+| Offered capability | Concrete action performed in this offline browser | Output / evidence |
+| --- | --- | --- |
+| **Make a usable checklist** | Generates five context-specific task steps and appends them directly to the current *editable* working note. | Changed note, persisted locally; no task marked complete. |
+| **Generate a progress tracker** | Produces a spreadsheet-compatible CSV with project/task/status/evidence/date columns; user fields are escaped to reduce CSV formula injection. | Browser downloads `Lantern_JARVIS_Work_Tracker.csv`; old files untouched. |
+| **Build a portable work page** | Produces a complete standalone HTML action card with project goal, five real checkboxes, existing working note and observations textarea. No external scripts or assets. | Browser downloads `Lantern_JARVIS_Work_Card.html`; print or Save to PDF available. |
+| **Audit this work product** | Checks whether a concrete task, desired outcome, edited note, and (if marked done) a self-reported observation exist. | Explicit 0–4 local structural audit; does not claim to inspect external files or verify real-world completion. |
+
+If no working project exists, the app does **not** invent one; it asks for an existing input. If a note is too full, it explicitly refuses to append rather than overwrite content. A downloaded artifact is a real file; an external task is **not** considered completed merely because that file was produced.
+
+The disclosure explicitly excludes browser-inaccessible capabilities: reading photos/folders, internet search, GitHub repository edits, notifications, messaging and external program execution. Those require an enabled connected JAR;VIS runner or ChatGPT tools with suitable permissions. No capability is silently delegated to a server.
+
+Browser interaction tests on desktop 1280px and mobile 375px verified that all four buttons execute, a tracker file has five task rows, a standalone HTML file contains functioning checkboxes, a checklist persists, and an audit renders. The embedded one-file app made zero external requests.
+
+**Important detail:** Step 03 is the offer/execution surface; the Work Shelf was moved to Step 04. This makes the useful action happen before archival.
 
 ## Boundaries we preserve
 
@@ -45,7 +64,7 @@ The person can explicitly mark the action **completed**, record what changed (in
 ## Repo and test
 
 - App: `experiments/lantern-commons-014/Lantern_014_The_Solo_Desk.html`.
-- Local VM tests: `node --test experiments/lantern-commons-014/test_solo_desk.mjs`. They check four work modes, local persistence, version forks, explicit completion, export, untrusted user strings and no remote runtime calls.
+- Local VM tests: `node --test experiments/lantern-commons-014/test_solo_desk.mjs`. They now include 13 tests: four original work modes, local persistence, version forks, explicit completion, export, escaped text, absence of remote calls, the four executable JAR;VIS actions, HTML output escaping and CSV export.
 - GitHub workflow: `.github/workflows/lantern-014-solo-desk.yml`.
 
 ### Next honest frontier
