@@ -1,0 +1,130 @@
+{
+  "schema": "relatte.any-invitation-cartridge/v0",
+  "id": "anything-invitation-chain-001",
+  "version": "0.1.0",
+  "source_owner": "the-static-collective/webZ",
+  "source_ref": "docs/ANY-INVITATION-CHAIN-001.md",
+  "authority": "PROPOSAL_ONLY",
+  "remote_execution": false,
+  "automatic_notifications": false,
+  "automatic_propagation": false,
+  "persistent_identity": false,
+  "preferred_time": "now",
+  "time_modes": [
+    "now",
+    "soon",
+    "open"
+  ],
+  "kinds": [
+    "creative",
+    "food",
+    "transport",
+    "make",
+    "question",
+    "open"
+  ],
+  "possible_responses": [
+    {
+      "id": "act",
+      "label": "I can do something now",
+      "kinds": [
+        "creative",
+        "food",
+        "transport",
+        "make",
+        "question",
+        "open"
+      ],
+      "needs_permission": true,
+      "side_effect": "NONE_UNTIL_HUMAN_ACTION"
+    },
+    {
+      "id": "offer",
+      "label": "I can help",
+      "kinds": [
+        "creative",
+        "food",
+        "transport",
+        "make",
+        "question",
+        "open"
+      ],
+      "needs_permission": false,
+      "side_effect": "LOCAL_REPLY_ONLY"
+    },
+    {
+      "id": "question",
+      "label": "I have a question",
+      "kinds": [
+        "creative",
+        "food",
+        "transport",
+        "make",
+        "question",
+        "open"
+      ],
+      "needs_permission": false,
+      "side_effect": "LOCAL_REPLY_ONLY"
+    },
+    {
+      "id": "pass",
+      "label": "Pass this along",
+      "kinds": [
+        "creative",
+        "food",
+        "transport",
+        "make",
+        "question",
+        "open"
+      ],
+      "needs_permission": true,
+      "side_effect": "EXPLICIT_HUMAN_SHARE"
+    },
+    {
+      "id": "fork",
+      "label": "Build on this",
+      "kinds": [
+        "creative",
+        "food",
+        "transport",
+        "make",
+        "question",
+        "open"
+      ],
+      "needs_permission": false,
+      "side_effect": "LOCAL_DERIVATIVE_ONLY"
+    },
+    {
+      "id": "decline",
+      "label": "Not for me",
+      "kinds": [
+        "creative",
+        "food",
+        "transport",
+        "make",
+        "question",
+        "open"
+      ],
+      "needs_permission": false,
+      "side_effect": "NO_RECORD"
+    }
+  ],
+  "laws": [
+    "INVITATION != ENROLLMENT",
+    "LINK != SIGNATURE",
+    "PROPAGATION != CONSENT",
+    "REPLY_PREPARED != REPLY_DELIVERED",
+    "NOW_PREFERRED != NOW_ASSUMED",
+    "CAPABILITY != AUTHORITY",
+    "FORK != ORIGINAL",
+    "REFUSAL != PENALTY"
+  ],
+  "transport": "PORTABLE_LINK_FRAGMENT",
+  "external_delivery": "NOT_IMPLEMENTED",
+  "sender_reply_delivery": "NOT_IMPLEMENTED",
+  "learning": {
+    "mode": "EXPLICIT_LOCAL_ONLY",
+    "default_enabled": false,
+    "raw_content_retention": false
+  }
+}
