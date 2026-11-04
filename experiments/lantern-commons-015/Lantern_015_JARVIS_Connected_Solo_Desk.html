@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101c1b"><meta name="description" content="An offline, private action desk. Turn one stuck problem into a small action and an editable, exportable artifact. No login, network, or other person needed.">
+<meta name="theme-color" content="#101c1b"><meta name="description" content="A local-first personal action desk with four offline tools and optional live, read-only public GitHub capability checks. No login or collaborators required.">
 <title>LANTERN 015 · JAR;VIS Connected Solo Desk</title>
 <style>
 :root{color-scheme:dark;--bg:#101c1b;--panel:#172a28;--raised:#203532;--line:#3b5a52;--text:#faf4e5;--muted:#b7c6bc;--sub:#93aca2;--mint:#c5e7c4;--gold:#f2d38e;--red:#f1b39d;--glow:0 16px 55px #0007}
@@ -34,7 +34,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{
 <div class="field"><label>How much time can you give it?</label><div class="options-row" role="group" aria-label="Available time"><button class="pill" type="button" data-min="5" aria-pressed="false">5 min</button><button class="pill" type="button" data-min="10" aria-pressed="true">10 min</button><button class="pill" type="button" data-min="20" aria-pressed="false">20 min</button><button class="pill" type="button" data-min="40" aria-pressed="false">40 min</button></div></div>
 <div class="actions"><button class="primary" type="button" id="build">Build my next move →</button><button class="secondary" type="button" id="quick">I just need a 5-minute start</button></div>
 <p class="fine" style="margin:15px 0 0">Everything stays in this browser unless you explicitly export it. Your typed project and notes stay here. A live source check sends only the selected public project ID, never your words.</p>
-<details><summary>What can this tool actually do?</summary><p>It creates a tailored starting plan and an editable working note. You decide what to do, record whether it worked, and can save a new immutable local snapshot or fork your plan. It does not search online, contact people, analyze private files, or guarantee that a step will succeed.</p></details>
+<details><summary>What can this tool actually do?</summary><p>It creates a tailored starting plan and an editable working note. You decide what to do, record whether it worked, and can save a new immutable local snapshot or fork your plan. The local desk does not browse arbitrary sites, contact people, or inspect private files. With permission, Step 03 reads only fixed public source repositories and their live test statuses.</p></details>
 </section>
 <section class="panel output-panel" aria-labelledby="output-title"><div class="headrow"><span class="h-label">02 / Produce something</span><span class="caption" id="current-version">Nothing active yet</span></div><h2 class="h-title" id="output-title">Your next move</h2><p class="hint">One action, one clear finish line, one artifact you can keep.</p>
 <div id="empty" class="empty output-card"><span class="empty-icon" aria-hidden="true">✧</span><strong>Your useful step goes here.</strong><p>Describe what you're working on—or tap the five-minute start to get moving.</p></div>
