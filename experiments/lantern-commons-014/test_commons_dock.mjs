@@ -36,7 +36,7 @@ function browser({fail=false,override={},url='https://kbhqacsdvjsstzyplqij.supab
   requests.push({path,opts});
   if(fail)throw Error('Network unavailable');
   const body=opts?.body?JSON.parse(opts.body):null,operation=body?.action||(path.includes('?feed=1')?'feed=1':'none');
-  const response=responses[operation];
+  const response=operation==='withdraw'&&path.includes('invitation-network-002')?{state:'WITHDRAWN'}:responses[operation];
   return {ok:!!response,json:async()=>response||{error:'UNKNOWN_OPERATION'}};
  };
  const crypto={randomUUID:()=>UUID};
