@@ -1,0 +1,55 @@
+name: 'LANTERN-014 Solo Desk: useful offline notes, truthful completion and local world forks'
+
+on:
+  push:
+    branches:
+      - experiment/lantern-commons-014-solo-desk
+    paths:
+      - 'experiments/lantern-commons-014/**'
+      - '.github/workflows/lantern-014-solo-desk.yml'
+  pull_request:
+    paths:
+      - 'experiments/lantern-commons-014/**'
+      - '.github/workflows/lantern-014-solo-desk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-solo-utility:
+    name: Verify four useful outputs, local-only storage, explicit evidence and fork safety
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Eight real Node VM tests of offline application
+        run: node --test experiments/lantern-commons-014/test_solo_desk.mjs
+      - name: Verify standalone HTML, no remote assets, and no automatic completion claims
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          file=Path('experiments/lantern-commons-014/Lantern_014_The_Solo_Desk.html')
+          s=file.read_text()
+          assert '<title>LANTERN 014' in s
+          assert s.count('<script>')==s.count('</script>')==1
+          assert not re.search(r'<script[^>]+src=',s,re.I)
+          assert not re.search(r'<link[^>]+href=["\x27]https?://',s,re.I)
+          assert not re.search(r'\bfetch\s*\(',s)
+          assert 'completed:false' in s
+          assert 'localStorage' in s and 'download' in s
+          print('STANDALONE_LOCAL_014_HTML_OK',len(s.encode()))
+          PY
+      - name: Preserve a downloadable one-file offline app
+        uses: actions/upload-artifact@v4
+        with:
+          name: lantern-014-solo-desk-offline
+          retention-days: 90
+          if-no-files-found: error
+          path: experiments/lantern-commons-014/Lantern_014_The_Solo_Desk.html
