@@ -1070,6 +1070,34 @@ function worldPortableRuntime(){
 
 
 /* Portable executable: source-owned simulation bundled into a standalone, network-free HTML file. */
+
+const CROSSING_PORTABLE_HTML=
+ '<div class="panel" id="cross-dock"><h2>reLATTE · Permissioned crossing</h2>'+
+ '<p><strong>Session-key pilot.</strong> Two cartridges can exchange signed, copy/paste JSON packets. Signatures establish packet integrity and key continuity, not human identity, actual inventory, independent permission or delivery. Keep both tabs open.</p>'+
+ '<button type="button" id="cross-key">Create a one-session signing key</button><p id="cross-identity">No session identity yet.</p>'+
+ '<h3>1 / Voluntary offer</h3><label>Capability category</label><select id="cross-category">'+
+ '<option value="tools">Tool</option><option value="materials">Reusable material</option><option value="method">Reproducible method</option><option value="art">Original creative sample</option><option value="skill">Skill / demonstration</option><option value="digital">Digital file or process</option></select>'+
+ '<label>Generic description (no names, addresses, passwords or contacts)</label>'+
+ '<input id="cross-label" maxlength="100" placeholder="e.g. One spare USB cable for a safe tabletop test">'+
+ '<label>Quantity (1–20)</label><input id="cross-qty" type="number" min="1" max="20" value="1">'+
+ '<label>Allowed scope</label><select id="cross-scope"><option value="review">Review only</option><option value="test">One reversible test</option><option value="copy">Permission to copy a method</option></select>'+
+ '<label><input type="checkbox" id="cross-offer-consent"> I choose to share this particular self-reported offer with a recipient I select. Nothing is independently verified or physically transferred.</label>'+
+ '<button type="button" id="cross-make-offer">Sign OFFER packet</button>'+
+ '<h3>2 / Manually cross between independent cartridges</h3>'+
+ '<p><small>Copy the generated packet and give it to the other operator through your chosen channel. Paste their response and inspect it before deciding. Do not share private notes, credentials, contact details or exact locations.</small></p>'+
+ '<label>My latest signed outbound packet (copy manually)</label><textarea id="cross-out" rows="7" readonly spellcheck="false"></textarea>'+
+ '<label>Inbound signed JSON packet</label><textarea id="cross-in" rows="7" maxlength="5500" placeholder="Paste OFFER, INTEREST, DECISION or ACK packet"></textarea>'+
+ '<button type="button" id="cross-import">Verify inbound signature and chain</button><p id="cross-seen"></p>'+
+ '<h3>3 / Explicit next decision</h3>'+
+ '<label>Reason for interest (generic)</label><input id="cross-reason" maxlength="100" value="I would like one bounded review or test of this capability.">'+
+ '<label><input type="checkbox" id="cross-reply-consent"> I independently choose to sign a scoped interest response.</label>'+
+ '<button type="button" id="cross-respond">Sign INTEREST response</button>'+
+ '<label>Provider decision</label><select id="cross-decision"><option value="HOLD">HOLD — review before proceeding</option><option value="ADMIT">ADMIT — allow only the stated test</option><option value="REFUSE">REFUSE — do not proceed</option></select>'+
+ '<button type="button" id="cross-decide">Sign provider decision</button>'+
+ '<button type="button" id="cross-ack">Acknowledge decision (NOT delivery)</button>'+
+ '<p id="cross-result" role="status" aria-live="polite"></p>'+
+ '<p><small>Cryptographic packet integrity is not evidence of physical exchange. For separate real local OFFER/NEED matching, operators may deliberately open the <a href="https://kbhqacsdvjsstzyplqij.supabase.co/functions/v1/now-route-live" target="_blank" rel="noopener noreferrer">NOW ROUTE pilot</a>. It has independent consent and confirmation rules; these signed packets are not automatically synchronized there.</small></p></div>';
+
 function portableWorldHtml(world){
  const bp=portableBlueprint(world);
  if(!validWorldBlueprint(bp))throw Error('Cannot export an invalid world blueprint.');
