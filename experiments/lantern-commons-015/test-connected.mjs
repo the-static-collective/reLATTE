@@ -34,7 +34,7 @@ function browser(){
    return [];
  },createElement(k){
   const x=el('_created_'+nodes.size);
-  x.click=()=>{if(k==='a')downloads.push(x.download)};
+  if(k==='a')x.click=()=>downloads.push(x.download);
   return x;
  },body:{append(){},appendChild(){}}};
  const fake={schema:'jarvis.connected-capability-registry/v1',connected:['jarvis','world','ghot','static_os'].map(id=>({
