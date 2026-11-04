@@ -5,6 +5,8 @@ The first public opt-in short-lived signed capability relay between independentl
 ## Status
 Backend: ACTIVE new isolated Supabase Edge Function relatte-relay-024. 2 new private RLS tables. Existing Commons and NOW ROUTE services untouched. Experimental frontend source: Lantern_024_Live_Relay.html on draft PR #173.
 
+**Actual public app download:** https://kbhqacsdvjsstzyplqij.supabase.co/functions/v1/relatte-app-024/download . It serves the FULL HTML application as a browser download/attachment. Open the downloaded HTML locally. It is not an interactive hosted page.
+
 Backend: https://kbhqacsdvjsstzyplqij.supabase.co/functions/v1/relatte-relay-024
 Append ?health=1 for health; ?action=discover&category=all for opt-in public catalogue. These are JSON APIs, not a hosted HTML page.
 
@@ -28,7 +30,7 @@ Private tables: hashed 256-bit owner and guest bearer tokens, one signed interes
 
 The server validates P-256 signatures and linked hashes, not the identity, legal authority, safety, ownership, actual inventory, consent of other people, physical delivery, or independent adoption. Private bearer secrets and session signing keys exist only in memory while the tab is open. Tokens are carried in POST bodies, not URLs. Public relay uses account-free stateless CORS and requires explicit permission and signatures for all writes.
 
-There is no push delivery: opt-in polling is 45 seconds and stops when the tab closes. This first version holds at most one signed interest per offer. Expired offers no longer appear in discovery. Scheduled deletion of historical expired rows is not yet implemented.
+There is no push delivery: opt-in polling is 45 seconds and stops when the tab closes. This first version holds at most one signed interest per offer. Expired offers no longer appear in discovery. A new hourly pg_cron job deletes relay offers older than 24 hours past expiration, cascading to interests, decisions and ACKs. The job is active under the name relatte-relay-024-prune-24h.
 
 ## Testing
 
