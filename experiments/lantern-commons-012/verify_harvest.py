@@ -112,10 +112,12 @@ def verify(stage,archive,observation,parent):
              food[1]["wheat_equivalent_spent"]==3 and
              food[1]["hunger_before"]<20,"VANILLA_CONSUMPTION_CLAIM")
         moves=obs["witnessed_real_item_transactions"]
+        source_bank=start["stock"]["harvest_wheat"]
         need([(x["action"],x["item"],x["amount"]) for x in moves]==[
             ("ACTUAL_GAME_WITHDRAW","wheat_seeds",1),
             ("ACTUAL_GAME_DEPOSIT","wheat",1),
-            ("ACTUAL_GAME_WITHDRAW","wheat",3)],
+            ("ACTUAL_GAME_WITHDRAW","wheat",source_bank+1),
+            ("ACTUAL_GAME_DEPOSIT","wheat",source_bank-2)],
             "ILLEGAL_HEIR_RESOURCES")
     return {"branch":stage,"version":full["version"],"cartridge_id":full["cartridge_id"],
         "parent_cartridge_id":parent["cartridge_id"],"world_tree_sha256":full["world_tree_sha256"],
