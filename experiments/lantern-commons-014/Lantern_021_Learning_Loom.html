@@ -659,6 +659,160 @@ $('im-scale').addEventListener('change',()=>{imOffset=0;imSelection=null;renderI
 $('im-northstar').addEventListener('change',()=>{imOffset=0;imSelection=null;renderImagination();});
 $('im-whatif').addEventListener('change',()=>{imOffset=0;imSelection=null;renderImagination();});
 
+
+/* LEARNING 021: evidence-gated, operator-reviewed imagination rules; never executable user code. */
+const LEARNING_STATUS=['draft','worked','failed','mixed'];
+function validLearning(v){
+ if(!v||typeof v!=='object'||!Array.isArray(v.trials)||!Array.isArray(v.rules)||v.trials.length>80||v.rules.length>18)return false;
+ const textBound=(s,n,lo=0)=>typeof s==='string'&&s.length<=n&&s.trim().length>=lo;
+ if(!v.trials.every(t=>t&&textBound(t.id,100,4)&&textBound(t.ideaId,180,2)&&textBound(t.projectId,100,4)&&textBound(t.taskId,100,4)&&textBound(t.name,160,8)&&textBound(t.lens,50,2)&&textBound(t.firstTest,180,8)&&LEARNING_STATUS.includes(t.status)&&textBound(t.observation,500)&&textBound(t.lesson,180)&&textBound(t.updatedAt,50)))return false;
+ if(!v.rules.every(r=>r&&textBound(r.id,100,4)&&['single','pair','triple'].includes(r.mode)&&textBound(r.name,145,8)&&textBound(r.firstTest,180,12)&&textBound(r.refute,180,8)&&Array.isArray(r.needs)&&r.needs.length>=1&&r.needs.length<=6&&r.needs.every(k=>typeof k==='string'&&Object.hasOwn(KINDS,k))&&typeof r.enabled==='boolean'&&textBound(r.createdAt,50)&&textBound(r.sourceTrialId||'',100)))return false;
+ return true;
+}
+function linkedTask(t){
+ const p=state.projects.find(p=>p.id===t.projectId);
+ return p?.tasks.find(x=>x.id===t.taskId)||null;
+}
+function verifiedSelfReport(t){
+ const task=linkedTask(t);
+ if(!task||task.observation.trim().length<4)return false;
+ return (t.status==='worked'&&task.state==='done')||
+  (t.status==='failed'&&task.state==='blocked')||
+  (t.status==='mixed'&&['done','blocked'].includes(task.state));
+}
+function learnedLensWeight(lens){
+ const valid=state.learning.trials.filter(t=>t.lens===lens&&verifiedSelfReport(t));
+ const positive=valid.filter(t=>t.status==='worked').length,negative=valid.filter(t=>t.status==='failed').length;
+ return Math.max(-12,Math.min(12,positive*3-negative*4));
+}
+function captureTrial(idea){
+ if(!idea||!state.projects.some(p=>p.id===idea.projectId))return {ok:false,reason:'Choose a real operation first.'};
+ if(state.learning.trials.length>=80)return {ok:false,reason:'80-trial local ledger limit reached. Back up your journal before starting new ones.'};
+ const exists=state.learning.trials.find(t=>t.ideaId===idea.id);
+ if(exists)return {ok:false,reason:'This hypothesis is already captured. Record its observation in the learning ledger below.'};
+ const p=state.projects.find(p=>p.id===idea.projectId);
+ let task=p.tasks.find(x=>x.imaginationId===idea.id);
+ if(!task){
+  const staged=stageImagination(idea);
+  if(!staged.ok)return staged;
+  task=p.tasks.find(x=>x.imaginationId===idea.id);
+ }
+ if(!task)return {ok:false,reason:'Could not associate this hypothesis with a workboard task.'};
+ const t={id:id(),ideaId:clean(idea.id,180),projectId:p.id,taskId:task.id,name:clean(idea.name,160),lens:clean(idea.lens,50),firstTest:clean(idea.firstTest,180),status:'draft',observation:'',lesson:'',updatedAt:new Date().toISOString()};
+ state.learning.trials.push(t);refresh();
+ return {ok:true,reason:'Captured an unfinished experiment. Do the work; mark its linked task done or blocked with an observation; only then record the result.'};
+}
+function recordTrial(trialId,status,observation,lesson){
+ const t=state.learning.trials.find(x=>x.id===trialId);
+ if(!t)return {ok:false,reason:'Unknown experiment.'};
+ if(!['worked','failed','mixed'].includes(status))return {ok:false,reason:'Choose what was actually observed.'};
+ const observed=clean(observation,500),change=clean(lesson,180);
+ if(observed.length<20)return {ok:false,reason:'Write at least 20 characters describing what happened in the real test.'};
+ if(change.length<8)return {ok:false,reason:'Write at least eight characters describing a useful lesson or change.'};
+ const linked=linkedTask(t);
+ if(!linked||linked.observation.trim().length<4)return {ok:false,reason:'The linked workboard task needs its own real observation first.'};
+ if(status==='worked'&&linked.state!=='done')return {ok:false,reason:'A worked report requires the linked task to be marked DONE with an actual observation.'};
+ if(status==='failed'&&linked.state!=='blocked')return {ok:false,reason:'A failed report requires the linked task to be marked BLOCKED with an actual observation.'};
+ if(status==='mixed'&&!['done','blocked'].includes(linked.state))return {ok:false,reason:'A mixed result needs a done or blocked workboard task.'};
+ t.status=status;t.observation=observed;t.lesson=change;t.updatedAt=new Date().toISOString();
+ refresh();
+ return {ok:true,reason:'Saved one operator-reported outcome linked to an observed task. Its evidence now contributes modestly to ranking; it does not establish universal success.'};
+}
+function ruleSlots(mode){return mode==='triple'?['A','B','C']:mode==='pair'?['A','B']:['A'];}
+function replaceSlots(input,ops){return clean(input,180).replace(/\{\{([ABC])\}\}/g,(_,key)=>ops[{A:0,B:1,C:2}[key]]?.title||'UNBOUND OPERATION');}
+function validRuleTemplate(name,test,mode){
+ const slots=ruleSlots(mode);
+ if(!slots.every(k=>(name+' '+test).includes('{{'+k+'}}')))return false;
+ if(/\{\{(?![ABC]\}\})[^}]*\}\}/.test(name+' '+test))return false;
+ return true;
+}
+function addLearningRule(input){
+ if(state.learning.rules.length>=18)return {ok:false,reason:'18-rule local limit reached. Disable an old rule before adding more.'};
+ const mode=input.mode,source=clean(input.sourceTrialId||'',100),name=clean(input.name,145),firstTest=clean(input.firstTest,180),refute=clean(input.refute,180),needs=Array.isArray(input.needs)?input.needs:[];
+ if(!['single','pair','triple'].includes(mode))return {ok:false,reason:'Choose one, two or three existing roles.'};
+ if(name.length<8||firstTest.length<12||refute.length<8)return {ok:false,reason:'Give the transformation a meaningful description, observable first test and disproof condition.'};
+ if(!validRuleTemplate(name,firstTest,mode))return {ok:false,reason:'Use the required {{A}}, {{B}} or {{C}} slots for your selected number of hats.'};
+ if(needs.length<1||needs.length>6||!needs.every(key=>typeof key==='string'&&Object.hasOwn(KINDS,key)))return {ok:false,reason:'Choose one to six recognized resource categories.'};
+ const sourceTrial=source?state.learning.trials.find(t=>t.id===source):null;
+ if(source&&!sourceTrial)return {ok:false,reason:'Source evidence was not found.'};
+ if(sourceTrial&&!(sourceTrial.status==='worked'&&verifiedSelfReport(sourceTrial)))return {ok:false,reason:'Evidence-backed recipes require a worked, still-observed linked task. Leave source blank for untested moves.'};
+ if(state.learning.rules.some(r=>r.name.toLowerCase()===name.toLowerCase()&&r.mode===mode))return {ok:false,reason:'A transformation with that name and mode already exists.'};
+ const r={id:id(),mode,name,firstTest,refute,needs:[...new Set(needs)],enabled:true,createdAt:new Date().toISOString(),sourceTrialId:source};
+ state.learning.rules.push(r);refresh();
+ return {ok:true,rule:r,reason:'Added one operator-reviewed, experimental transformation. It may generate new hypotheses but cannot certify the outcome of any test.'};
+}
+function toggleLearningRule(ruleId){
+ const r=state.learning.rules.find(r=>r.id===ruleId);
+ if(!r)return {ok:false,reason:'Unknown recipe.'};
+ r.enabled=!r.enabled;refresh();return {ok:true,reason:'Transformation '+(r.enabled?'enabled':'disabled')+'. Previously recorded tests are unchanged.'};
+}
+function learnedRuleCandidates(projects){
+ const ps=(projects||[]).slice(0,12),out=[];
+ for(const rule of state.learning.rules.filter(x=>x.enabled)){
+  const combo=[];
+  if(rule.mode==='single')for(const p of ps)combo.push([p]);
+  else if(rule.mode==='pair'){for(let i=0;i<ps.length;i++)for(let j=i+1;j<ps.length;j++)combo.push([ps[i],ps[j]]);}
+  else{for(let i=0;i<ps.length;i++)for(let j=i+1;j<ps.length;j++)for(let k=j+1;k<ps.length;k++)combo.push([ps[i],ps[j],ps[k]]);}
+  for(const roles of combo.slice(0,28)){
+   const name=replaceSlots(rule.name,roles),firstTest=replaceSlots(rule.firstTest,roles);
+   const proven=rule.sourceTrialId&&state.learning.trials.some(t=>t.id===rule.sourceTrialId&&t.status==='worked'&&verifiedSelfReport(t));
+   const reference=proven?'an operator-reported worked trial':'an operator-authored experimental rule';
+   out.push(imCandidate({id:'im:recipe:'+rule.id+':'+roles.map(p=>p.id).join(':'),name,lens:'learned',projects:roles,requirements:rule.needs.map(key=>({key,projectId:null})),firstTest,why:'This recombination follows '+reference+'. It may fail in a different context, so reproduce the first test before trusting it.',assumptions:['The role-slot combination is a hypothesis, not a completed system.','A prior individual result does not establish general success.'],refute:rule.refute,days:7,weight:[3,5,5],external:false,origin:'operator-reviewed declarative transformation '+rule.id+(proven?' · supported by one self-report':' · no successful trial yet')}));
+  }
+ }
+ return out.slice(0,170);
+}
+function renderLearning(){
+ const world=state.learning;
+ $('learn-count').textContent=world.trials.length+' experiments captured';
+ $('learn-outcomes').textContent=world.trials.filter(t=>verifiedSelfReport(t)).length+' observed outcomes (self-reported)';
+ $('learn-rulecount').textContent=world.rules.filter(r=>r.enabled).length+' active custom moves';
+ const registry=$('learn-trials');registry.replaceChildren();
+ if(!world.trials.length)registry.append(el('div','No experiment has been captured yet. Start with a hypothesis above.','empty'));
+ for(const t of world.trials.slice(-30).reverse()){
+   const card=el('div',undefined,'learn-ledger'),task=linkedTask(t);
+   card.append(el('div','TRIAL · '+t.lens+' · '+t.status.toUpperCase(),'tag'),el('h3',t.name),el('p','First test: '+t.firstTest,'small'));
+   card.append(el('p','Linked task: '+(task?task.state.toUpperCase()+' — '+task.title:'missing; this trial cannot be credited')+'.','small'));
+   const row=el('div',undefined,'two');
+   const observed=el('textarea');observed.maxLength=500;observed.value=t.observation;observed.placeholder='What actually happened when you ran it?';
+   const wrap=el('div'),lab=el('label','Actual observation (at least 20 characters)');lab.append(observed);wrap.append(lab);
+   const next=el('input');next.maxLength=180;next.value=t.lesson;next.placeholder='What should change next?';
+   const wrap2=el('div'),lab2=el('label','Lesson or next revision');lab2.append(next);wrap2.append(lab2);
+   row.append(wrap,wrap2);card.append(row);
+   const actions=el('div',undefined,'line');
+   for(const x of [['worked','Test worked (self-reported)'],['failed','Test failed (self-reported)'],['mixed','Partial / mixed result']]){
+    actions.append(button(x[1],()=>{const r=recordTrial(t.id,x[0],observed.value,next.value);note('learn-status',r.reason)},x[0]==='worked'?'secondary':'ghost'));
+   }
+   if(t.status==='worked'&&verifiedSelfReport(t)){
+    actions.append(button('Derive a possible new move',()=>{
+      $('learn-source').value=t.id;$('learn-mode').value='pair';
+      $('learn-name').value='Adapt {{A}} into a reusable method for {{B}}';
+      $('learn-test').value='Use a real output from {{A}} as one input to {{B}}, then document whether it actually fits.';
+      $('learn-refute').value='The real output fails to serve the receiving role.';
+      note('learn-status','Prefilled a hypothetical reusable transformation from a reported test. Review and edit every field before adding it.');
+    },'ghost'));
+   }
+   card.append(actions);registry.append(card);
+ }
+ const source=$('learn-source'),saved=source.value;source.replaceChildren();const blank=el('option','None yet — experimental hypothesis');blank.value='';source.append(blank);
+ for(const t of world.trials.filter(t=>t.status==='worked'&&verifiedSelfReport(t))){
+  const op=el('option',imCut(t.name,95));op.value=t.id;source.append(op);
+ }
+ if(world.trials.some(t=>t.id===saved&&t.status==='worked'&&verifiedSelfReport(t)))source.value=saved;else source.value='';
+ const root=$('learn-rules');root.replaceChildren();
+ if(!world.rules.length)root.append(el('div','No operator-written transformation yet. Your default imagination grammar still works.','empty'));
+ for(const r of world.rules){
+  const card=el('div',undefined,'learn-ledger');card.append(el('span',(r.enabled?'ACTIVE':'PAUSED')+' · '+r.mode+' · '+(r.sourceTrialId?'linked to an operator-reported trial':'untested hypothesis'),'tag'));
+  card.append(el('h3',r.name),el('p','First proof: '+r.firstTest,'small'),el('p','Disproof: '+r.refute,'small'));
+  card.append(button(r.enabled?'Pause this move':'Enable this move',()=>{const res=toggleLearningRule(r.id);note('learn-status',res.reason)},'ghost'));
+  root.append(card);
+ }
+}
+$('learn-add').addEventListener('click',()=>{
+ const result=addLearningRule({mode:$('learn-mode').value,sourceTrialId:$('learn-source').value,name:$('learn-name').value,firstTest:$('learn-test').value,refute:$('learn-refute').value,needs:[$('learn-need').value,'writing','time'].filter((x,i,a)=>a.indexOf(x)===i)});
+ note('learn-status',result.reason);
+});
+
 window.SPAWN_021=Object.freeze({templates:T,cartridge:cartridge,validCartridge:validCartridge,validBackup:validBackup,matches:matches,deriveKit:deriveKit,gleaningScore:gleaningScore,validGlean:validGlean,gleanQuestions:gleanQuestions,recordGlean:recordGlean,composeMaximum:composeMaximum,stageMaximum:stageMaximum,maximumCandidates:maximumCandidates,imagineWorlds:imagineWorlds,imagineForks:imagineForks,stageImagination:stageImagination,captureTrial:captureTrial,recordTrial:recordTrial,learnedRuleCandidates:learnedRuleCandidates,learnedLensWeight:learnedLensWeight,addLearningRule:addLearningRule,validLearning:validLearning,csvCell:csvCell,htmlEscape:htmlEscape,state:()=>state});
 refresh();
 })();
