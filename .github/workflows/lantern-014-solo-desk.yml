@@ -54,6 +54,8 @@ jobs:
         run: node --test experiments/lantern-commons-014/test_crossing_023.mjs
       - name: Verify LIVE SPAWN 023 public GET, health transparency and no write method
         run: node --test experiments/lantern-commons-014/test_live_crossing_023.mjs
+      - name: Verify LIVE SPAWN 024 opt-in relay, sandbox two-session crossing and no false delivery
+        run: node --test experiments/lantern-commons-014/test_relay_024.mjs
       - name: Verify standalone HTML, no remote assets, and no automatic completion claims
         run: |
           python3 - <<'PY'
