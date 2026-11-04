@@ -1022,6 +1022,140 @@ function importWorld(raw){
  return {ok:true,world,reason:'Imported one unstarted, isolated hypothetical world. All resource statuses were reset to unknown; no code or outcome was imported.'};
 }
 
+
+function worldPortableRuntime(){
+ const get=id=>document.getElementById(id);
+ let sim=worldInitial();
+ function render(){
+  get('title').textContent=blueprint.goal;
+  get('rule').textContent=WORLD_STRATEGIES[blueprint.strategy].label+' · '+blueprint.roles.length+' role(s) of ONE operator';
+  get('stats').textContent='SIMULATED turns: '+sim.turn+' | sample cards: '+sim.artifacts+' | hypothetical handoffs: '+sim.bridges+' | modeled method cards: '+sim.methods+' | modeled repeat tests: '+sim.rehearsals+' | questions asked: '+sim.questions;
+  const inputs=get('inputs');inputs.replaceChildren();
+  for(const key of Object.keys(blueprint.inputs)){
+   const row=document.createElement('div'),label=document.createElement('label'),select=document.createElement('select');
+   label.textContent=key+' (self-reported, NOT verified)';
+   for(const option of ['unknown','found','missing']){
+    const el=document.createElement('option');el.value=option;el.textContent=option==='found'?'I checked: available':option==='missing'?'I checked: missing':'Unknown / not checked';
+    if(option===blueprint.inputs[key])el.selected=true;
+    select.append(el);
+   }
+   select.value=blueprint.inputs[key];
+   select.addEventListener('change',()=>{blueprint.inputs[key]=select.value;sim=worldInitial();get('status').textContent='Starting inputs changed. All hypothetical turns reset. No real resources changed.';render();});
+   row.append(label,select);inputs.append(row);
+  }
+  const log=get('log');log.replaceChildren();
+  for(const h of sim.history){const row=document.createElement('li');row.textContent='Turn '+h.turn+' · '+h.description;log.append(row);}
+ }
+ get('step').addEventListener('click',()=>{const result=worldModelTick(blueprint,sim);get('status').textContent=result.reason;render();});
+ get('four').addEventListener('click',()=>{sim=worldInitial();let completed=0;for(let i=0;i<4;i++){if(worldModelTick(blueprint,sim).ok)completed++;else break;}get('status').textContent='Completed '+completed+' VIRTUAL turns. No physical result or outside participant exists.';render();});
+ get('reset').addEventListener('click',()=>{sim=worldInitial();get('status').textContent='Virtual experiment reset. Resource checks preserved on this page only.';render();});
+ get('report').addEventListener('click',()=>{
+  const report={schema:'abundent/world-virtual-report/v1',version:1,status:'SIMULATION ONLY — NOT FIELD EVIDENCE',goal:blueprint.goal,strategy:blueprint.strategy,roles:blueprint.roles.length,inputReports:blueprint.inputs,virtualTurns:sim};
+  const blob=new Blob([JSON.stringify(report,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='SPAWN_022_Virtual_Report.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
+  get('status').textContent='Saved a simulation report only. This is NOT evidence of real-world exchange or impact.';
+ });
+ render();
+}
+
+
+/* Portable executable: source-owned simulation bundled into a standalone, network-free HTML file. */
+function portableWorldHtml(world){
+ const bp=portableBlueprint(world);
+ if(!validWorldBlueprint(bp))throw Error('Cannot export an invalid world blueprint.');
+ const js='const WORLD_STRATEGIES='+JSON.stringify(WORLD_STRATEGIES)+';\n'+
+   'const blueprint='+JSON.stringify(bp).replace(/</g,'\\u003c')+';\n'+
+   worldInitial.toString()+';\n'+worldModelTick.toString()+';\n'+
+   worldPortableRuntime.toString()+';\nworldPortableRuntime();';
+ return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+
+ '<meta name="referrer" content="no-referrer"><title>SPAWN 022 — Playable World Cartridge</title>'+
+ '<style>body{font:16px/1.5 system-ui;max-width:820px;margin:25px auto;padding:16px;background:#13241c;color:#f6f0df}'+
+ 'h1{font:normal 2.4rem Georgia,serif}button,select{font:inherit;margin:5px 5px 5px 0;padding:9px;border-radius:8px}button{background:#c4e6ac;color:#142319;cursor:pointer}'+
+ 'label{display:block;margin-top:10px}select{background:#253c2d;color:#fff;border:1px solid #79a786}'+
+ '.panel{background:#20382a;padding:16px;border-radius:12px;margin:17px 0;border:1px solid #668570}small{color:#c3ccbf}</style></head><body>'+
+ '<h1>Playable World Cartridge</h1><p><strong id="title"></strong></p><p id="rule"></p>'+
+ '<p><strong>SIMULATION ONLY:</strong> All sample cards, modeled handoffs and reproduction tests are hypothetical. No permissions, real goods, or participants are created.</p>'+
+ '<div class="panel"><h2>Actual resources? You decide.</h2><p><small>No data was imported from private work. Mark only what you have genuinely checked. All inputs begin unknown.</small></p><div id="inputs"></div></div>'+
+ '<div class="panel"><h2>Executable virtual world</h2><button type="button" id="step">Run one virtual turn</button><button type="button" id="four">Run four turns from start</button>'+
+ '<button type="button" id="reset">Reset simulation</button><button type="button" id="report">Save virtual report</button><p id="status" role="status"></p><p id="stats"></p><ol id="log"></ol></div>'+
+ '<p><small>One human can wear multiple roles. No network calls or external assets. This cartridge does not independently verify inputs or outcomes.</small></p>'+
+ '<scr'+'ipt>'+js+'</scr'+'ipt></body></html>';
+}
+
+
+function renderWorlds(){
+ const forks=state.worlds.forks,selected=$('world-choice').value||state.worlds.selected;
+ $('world-count').textContent=forks.length+' hypothetical forks';
+ const menu=$('world-choice');menu.replaceChildren();
+ for(const w of forks){
+  const option=el('option',WORLD_STRATEGIES[w.blueprint.strategy].label+' · revision '+w.revision+' · '+w.id.slice(0,8));
+  option.value=w.id;menu.append(option);
+ }
+ const world=forks.find(x=>x.id===selected)||forks.find(x=>x.id===state.worlds.selected)||forks[0];
+ if(!world){$('world-detail').textContent='Create a world to begin. No fictional people, resources or outcomes are seeded.';$('world-comparison').replaceChildren();$('world-inputs').replaceChildren();return;}
+ menu.value=world.id;state.worlds.selected=world.id;
+ $('world-mutation').value=world.blueprint.strategy;
+ const group=forks.filter(w=>w.groupId===world.groupId);
+ const scores=group.map(x=>({w:x,...worldScore(x)})).sort((a,b)=>b.score-a.score||a.w.id.localeCompare(b.w.id));
+ const comparator=$('world-comparison');comparator.replaceChildren();
+ comparator.append(el('p','Same inputs · '+group.length+' versions · score = synthetic planning indicator, NOT observed impact.','small muted'));
+ for(const r of scores){
+  const card=el('article',undefined,'world-card');card.dataset.selected=String(r.w.id===world.id);
+  card.append(el('div','REVISION '+r.w.revision+' · '+(r.w.parentId?'FORKED':'ORIGINAL')+' · VIRTUAL MODEL','tag'),
+    el('h3',WORLD_STRATEGIES[r.w.blueprint.strategy].label+' world'),el('p',
+      'VIRTUAL score '+r.score+' · '+r.turns+' turns · '+r.w.sim.artifacts+' modeled samples · '+
+      r.w.sim.bridges+' modeled handoffs · '+r.w.sim.methods+' method notes · '+r.w.sim.rehearsals+' modeled repeat tests','small'));
+  card.append(button('Inspect this fork',()=>{state.worlds.selected=r.w.id;renderWorlds()},'ghost'));
+  comparator.append(card);
+ }
+ const details=$('world-detail');details.replaceChildren();
+ details.append(el('div','WORLD BRANCH · '+WORLD_STRATEGIES[world.blueprint.strategy].label+' · revision '+world.revision,'tag'),
+   el('h3',world.blueprint.goal),el('p','Roles in simulation: '+world.blueprint.roles.map(type=>T[type].label).join(' + ')+'. All belong to one real operator.','small'));
+ details.append(el('p','Virtual turns: '+world.sim.turn+' / 12. Every resulting event is modeled, not a real-world outcome.','metric'));
+ for(const h of world.sim.history.slice(-8))details.append(el('p','Turn '+h.turn+': '+h.description,'small'));
+ if(!world.sim.history.length)details.append(el('p','No virtual turns yet. Choose a simulated step or compare four turns under identical inputs.','small'));
+ const inp=$('world-inputs');inp.replaceChildren();
+ for(const key of Object.keys(world.blueprint.inputs)){
+  const row=el('div',undefined,'world-input-row'),label=el('strong',KINDS[key]?.label||key),selector=el('select');
+  for(const [value,desc] of [['unknown','Not checked'],['found','Self-reported available'],['missing','Self-reported missing']]){
+   const opt=el('option',desc);opt.value=value;selector.append(opt);
+  }
+  selector.value=world.blueprint.inputs[key];
+  selector.setAttribute('aria-label','Resource check: '+key);
+  selector.addEventListener('change',()=>{const result=worldSetInput(world.id,key,selector.value);note('world-status',result.reason)});
+  row.append(label,selector);inp.append(row);
+ }
+}
+$('world-create').addEventListener('click',()=>{const res=createWorldFamily(state.projects,$('world-goal').value,$('world-inherit').value==='checked');note('world-status',res.reason);});
+$('world-choice').addEventListener('change',()=>{state.worlds.selected=$('world-choice').value;renderWorlds()});
+$('world-tournament').addEventListener('click',()=>{const result=runWorldComparison($('world-choice').value,4);note('world-status',result.reason);});
+$('world-fork').addEventListener('click',()=>{
+ const w=state.worlds.forks.find(x=>x.id===$('world-choice').value);
+ const strategy=$('world-revision').value==='same'?w?.blueprint.strategy:$('world-mutation').value;
+ const res=worldFork(w?.id,strategy);note('world-status',res.reason);
+});
+$('world-step').addEventListener('click',()=>{const result=worldStep($('world-choice').value);note('world-status',result.reason);});
+$('world-field').addEventListener('click',()=>{const result=stageWorldFieldTest($('world-choice').value);note('world-status',result.reason);});
+$('world-json').addEventListener('click',()=>{
+ const w=state.worlds.forks.find(x=>x.id===$('world-choice').value);
+ if(!w){note('world-status','Choose a world first.');return;}
+ download('SPAWN_022_World_Cartridge.json',JSON.stringify(portableBlueprint(w),null,2),'application/json;charset=utf-8');
+ note('world-status','Downloaded a method-only blueprint; all inputs are UNKNOWN. Private notes, outcomes, IDs and run history were excluded.');
+});
+$('world-html').addEventListener('click',()=>{
+ const w=state.worlds.forks.find(x=>x.id===$('world-choice').value);
+ if(!w){note('world-status','Choose a world first.');return;}
+ download('SPAWN_022_Playable_World.html',portableWorldHtml(w),'text/html;charset=utf-8');
+ note('world-status','Downloaded executable offline world cartridge. It starts with UNKNOWN resources; simulation actions stay virtual.');
+});
+$('world-import').addEventListener('change',async e=>{
+ const file=e.target.files[0];if(!file)return;
+ if(file.size>12000){note('world-import-status','Cartridge exceeds 12 KB. Nothing imported.');e.target.value='';return;}
+ try{const result=importWorld(await file.text());note('world-import-status',result.reason);}
+ catch(err){note('world-import-status','Import failed: '+clean(err.message,180))}
+ finally{e.target.value='';}
+});
+
 window.SPAWN_022=Object.freeze({templates:T,cartridge:cartridge,validCartridge:validCartridge,validBackup:validBackup,matches:matches,deriveKit:deriveKit,gleaningScore:gleaningScore,validGlean:validGlean,gleanQuestions:gleanQuestions,recordGlean:recordGlean,composeMaximum:composeMaximum,stageMaximum:stageMaximum,maximumCandidates:maximumCandidates,imagineWorlds:imagineWorlds,imagineForks:imagineForks,stageImagination:stageImagination,captureTrial:captureTrial,recordTrial:recordTrial,suggestNextRule:suggestNextRule,learnedRuleCandidates:learnedRuleCandidates,learnedLensWeight:learnedLensWeight,addLearningRule:addLearningRule,validLearning:validLearning,worldBlueprint:worldBlueprint,validWorldBlueprint:validWorldBlueprint,validWorldState:validWorldState,createWorldFamily:createWorldFamily,worldStep:worldStep,runWorldComparison:runWorldComparison,worldFork:worldFork,worldSetInput:worldSetInput,worldScore:worldScore,portableWorldHtml:portableWorldHtml,importWorld:importWorld,stageWorldFieldTest:stageWorldFieldTest,csvCell:csvCell,htmlEscape:htmlEscape,state:()=>state});
 refresh();
 })();
