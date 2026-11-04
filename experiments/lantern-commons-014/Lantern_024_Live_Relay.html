@@ -1318,6 +1318,143 @@ const RELAY_PORTABLE_HTML=
  '<p id="relay-status" role="status" aria-live="polite"></p>'+
  '<p><small>PROOF LIMIT: The relay checks P-256 signatures and matching packet references, not the person, item, or physical result. An ADMIT authorizes only the narrow original scope. An ACK says SEEN_NOT_DELIVERED. The server retains hashes of session secrets, never raw secret tokens. No geographical matchmaking, no push notifications and no sale or delivery workflow.</small></p></div>';
 
+
+/* SPAWN 024: opt-in HTTP-poll transport around the existing signed 023 crossing protocol.
+   This UI never auto-publishes, makes a physical transfer, or treats a signature as identity. */
+function worldRelayRuntime(){
+ 'use strict';
+ const ENDPOINT='https://kbhqacsdvjsstzyplqij.supabase.co/functions/v1/relatte-relay-024';
+ const cross=globalThis.RELATTE_CROSSING_023;
+ const get=id=>document.getElementById(id);
+ let selected=null,session=null,pollHandle=null;
+ const status=message=>{get('relay-status').textContent=message};
+ async function req(action,params={}){
+  let response;
+  try{
+   if(action==='discover'||action==='health'){
+    const query=action==='health'?'?health=1':'?action=discover&category='+encodeURIComponent(params.category||'all');
+    response=await fetch(ENDPOINT+query,{method:'GET',mode:'cors',credentials:'omit',cache:'no-store'});
+   }else{
+    response=await fetch(ENDPOINT,{method:'POST',mode:'cors',credentials:'omit',cache:'no-store',
+     headers:{'content-type':'application/json'},body:JSON.stringify({action,...params})});
+   }
+  }catch(e){throw Error('Network unavailable. This file remains usable offline; the relay requires HTTPS connectivity.')}
+  let data;try{data=await response.json()}catch{throw Error('Unexpected response from relay; nothing should be treated as confirmed.')}
+  if(!response.ok)throw Error('Relay rejected this action: '+String(data.error||'UNAVAILABLE'));
+  return data;
+ }
+ function click(fn){return async()=>{try{await fn()}catch(e){status('NOT COMPLETED: '+String(e?.message||'Relay unavailable'))}}}
+ async function discover(){
+  status('Reading temporary opt-in offers…');
+  const data=await req('discover',{category:get('relay-category').value});
+  if(data.schema!=='relatte/relay-discovery/v1'||!Array.isArray(data.discovered))throw Error('Unexpected catalogue schema.');
+  const list=get('relay-list');list.replaceChildren();
+  const label=document.createElement('p');
+  label.textContent=data.discovered.length+' self-reported active listing(s); no goods or participants independently verified.';
+  list.append(label);
+  for(const item of data.discovered.slice(0,25)){
+   const card=document.createElement('article'),head=document.createElement('strong'),desc=document.createElement('p'),btn=document.createElement('button');
+   head.textContent=item.category+' · '+item.scope+' · '+item.quantity+' reported item(s)';
+   desc.textContent=item.label+' · expires '+item.expiresAt;
+   btn.type='button';btn.textContent='Verify and inspect this OFFER';
+   btn.addEventListener('click',click(async()=>{
+    if(session?.side==='owner')throw Error('This tab already operates a provider session; open another independent cartridge to express interest.');
+    if(!item.packet||!item.id)throw Error('Invalid discovered offer.');
+    const inspected=await cross.importPacket(JSON.stringify(item.packet));
+    if(inspected.kind!=='OFFER')throw Error('Not an OFFER.');
+    selected=item;status('Verified this offer’s signature and provider key. This does not verify the item or owner. Explicitly sign an INTEREST above if you choose to respond.');
+   }));
+   card.append(head,desc,btn);list.append(card);
+  }
+  status('Catalogue refreshed. Select one listing to verify its signed packet before taking further action.');
+ }
+ async function refresh(){
+  if(!session)throw Error('No private relay session yet. Publish an offer or send your signed interest first.');
+  const result=await req('status',{offerId:session.offerId,secret:session.secret,side:session.side});
+  if(result.offerId!==session.offerId||result.side!==session.side)throw Error('Unexpected private inbox data.');
+  const report=[];
+  if(session.side==='owner'){
+   if(result.interest&&cross.ledger().remoteInterest!==result.interest.id){
+    const v=await cross.importPacket(JSON.stringify(result.interest));
+    if(v.kind!=='INTEREST')throw Error('Wrong packet in provider inbox.');
+    report.push('Verified independent signed INTEREST. You may now choose HOLD, ADMIT or REFUSE above, sign it and deliberately send it.');
+   }
+   if(result.ack&&cross.ledger().remoteAck!==result.ack.id){
+    const v=await cross.importPacket(JSON.stringify(result.ack));
+    if(v.kind!=='ACK')throw Error('Wrong packet in provider inbox.');
+    report.push('Received a linked signed acknowledgment: SEEN_NOT_DELIVERED. No physical outcome is implied.');
+   }
+  }else{
+   if(result.decision&&cross.ledger().remoteDecision!==result.decision.body.decision){
+    const v=await cross.importPacket(JSON.stringify(result.decision));
+    if(v.kind!=='DECISION')throw Error('Wrong packet in recipient inbox.');
+    report.push('Verified signed '+result.decision.body.decision+'. You may acknowledge receipt without asserting physical delivery.');
+   }
+  }
+  status(report.join(' ')||'Inbox checked: '+result.state+'. No new signed message. Polling does not create permission, enrollment or delivery.');
+ }
+ get('relay-health').addEventListener('click',click(async()=>{
+  const result=await req('health');
+  get('relay-health-out').textContent=result.ok&&result.version===24?
+   'Live relay reachable · HTTP polling (not push) · session-key integrity only · no verified physical outcomes.':
+   'Unexpected relay health response.';
+ }));
+ get('relay-publish').addEventListener('click',click(async()=>{
+  if(!get('relay-publish-consent').checked)throw Error('Explicit public-discovery consent is required.');
+  if(session)throw Error('One relay exchange per open cartridge session. Use another tab for another.');
+  const signed=cross.ledger().outbound;
+  if(!signed||signed.kind!=='OFFER')throw Error('First sign an OFFER using the Crossing panel.');
+  const received=await req('publish',{consent:true,packet:signed});
+  if(!received.ok||!received.ownerSecret)throw Error('No private publishing capability returned.');
+  session={side:'owner',offerId:received.offerId,secret:received.ownerSecret};
+  status('PUBLIC, opt-in OFFER published until '+received.expiresAt+'. Keep this tab open. Other users can now discover the self-reported summary; nothing was reserved or transferred.');
+ }));
+ get('relay-discover').addEventListener('click',click(discover));
+ get('relay-send-interest').addEventListener('click',click(async()=>{
+  if(!get('relay-interest-consent').checked)throw Error('Explicit interest transmission consent is required.');
+  if(session)throw Error('One relay exchange per cartridge session.');
+  if(!selected)throw Error('Discover and verify a specific OFFER first.');
+  const signed=cross.ledger().outbound;
+  if(!signed||signed.kind!=='INTEREST'||cross.ledger().remoteOffer!==selected.packet.id)throw Error('Sign an INTEREST for the selected offer in the Crossing panel first.');
+  const received=await req('interest',{offerId:selected.id,consent:true,packet:signed});
+  if(!received.ok||!received.guestSecret)throw Error('No private recipient capability returned.');
+  session={side:'guest',offerId:received.offerId,secret:received.guestSecret};
+  status('Signed INTEREST delivered to the relay, not directly to a person. The provider may now review and respond. No action is authorized yet.');
+ }));
+ get('relay-refresh').addEventListener('click',click(refresh));
+ get('relay-decision').addEventListener('click',click(async()=>{
+  if(!session||session.side!=='owner')throw Error('Only the provider session can relay a decision.');
+  const signed=cross.ledger().outbound;
+  if(!signed||signed.kind!=='DECISION')throw Error('Verify the INTEREST, choose HOLD/ADMIT/REFUSE and explicitly sign a DECISION above first.');
+  const result=await req('decision',{offerId:session.offerId,secret:session.secret,packet:signed});
+  status('Provider '+result.choice+' delivered to relay. ADMIT is limited to the original offer scope, not physical delivery.');
+ }));
+ get('relay-ack').addEventListener('click',click(async()=>{
+  if(!session||session.side!=='guest')throw Error('Only the recipient session can relay an acknowledgment.');
+  const signed=cross.ledger().outbound;
+  if(!signed||signed.kind!=='ACK')throw Error('Verify the DECISION and explicitly sign an ACK in the Crossing panel first.');
+  const result=await req('ack',{offerId:session.offerId,secret:session.secret,packet:signed});
+  status('Signed ACK relayed: '+result.status+'. This is an acknowledgment of a decision, not physical delivery or completed work.');
+ }));
+ get('relay-withdraw').addEventListener('click',click(async()=>{
+  if(!session||session.side!=='owner')throw Error('Only the original provider can withdraw their own listed offer.');
+  const result=await req('withdraw',{offerId:session.offerId,secret:session.secret});
+  if(pollHandle){clearInterval(pollHandle);pollHandle=null;get('relay-auto').checked=false;}
+  status('Offer '+result.state+'. It is no longer discoverable; an already signed decision or saved copy cannot be retroactively erased.');
+ }));
+ get('relay-auto').addEventListener('change',()=>{
+  if(pollHandle){clearInterval(pollHandle);pollHandle=null;}
+  if(!get('relay-auto').checked){status('Automatic inbox checking stopped.');return;}
+  if(!session){get('relay-auto').checked=false;status('No private inbox yet. Publish or express interest first.');return;}
+  pollHandle=setInterval(()=>{
+   if(document.visibilityState==='hidden')return;
+   void refresh().catch(e=>{status('Inbox poll unavailable: '+String(e?.message||'unknown'));});
+  },45000);
+  status('Voluntary inbox checking enabled every 45 seconds while this tab is visible. No background task after closing.');
+ });
+ globalThis.RELATTE_RELAY_024=Object.freeze({discover,refresh,publish:()=>get('relay-publish').click(),state:()=>({side:session?.side||null,offerId:session?.offerId||null,selectedOfferId:selected?.id||null}),endpoint:ENDPOINT});
+}
+
 function portableWorldHtml(world){
  const bp=portableBlueprint(world);
  if(!validWorldBlueprint(bp))throw Error('Cannot export an invalid world blueprint.');
