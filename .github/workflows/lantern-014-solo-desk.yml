@@ -44,6 +44,8 @@ jobs:
         run: node --test experiments/lantern-commons-014/test_glean_018.mjs
       - name: Verify SPAWN 019 maximum-responsible-action frontier and explicit gap checks
         run: node --test experiments/lantern-commons-014/test_maximum_019.mjs
+      - name: Verify SPAWN 020 possibility recombination, falsification and true resources
+        run: node --test experiments/lantern-commons-014/test_imagination_020.mjs
       - name: Verify standalone HTML, no remote assets, and no automatic completion claims
         run: |
           python3 - <<'PY'
