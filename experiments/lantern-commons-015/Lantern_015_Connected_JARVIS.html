@@ -203,7 +203,34 @@ function runJarvis(id){
     '<section><h2>Five concrete steps</h2><ol>'+items+'</ol></section>'+
     '<section><h2>Original working note</h2><pre>'+note+'</pre></section>'+
     '<section><h2>My observations</h2><textarea placeholder="Write what actually changed here. This file never claims completion for you."></textarea></section>'+
-    '<button onclick="window.print()">Print / Save to PDF</button> <small>Checkboxes and notes are not auto-saved. Print or save your results.</small><script>
+    '<button onclick="window.print()">Print / Save to PDF</button> <small>Checkboxes and notes are not auto-saved. Print or save your results.</small></body></html>';
+  simpleFile('Lantern_JARVIS_Work_Card.html',portable,'text/html;charset=utf-8');
+  offerFeedback('FILE CREATED: Lantern_JARVIS_Work_Card.html — open it offline, check the steps, write observations, or print it. The work is not reported complete.');
+ }else if(id==='audit'){
+  const reference=build(p.mode,p.problem,p.finish,p.limit,p.time).note;
+  const checks=[
+    [!!safe(p.problem),'A concrete problem is named.','Missing: name the actual task.'],
+    [!!safe(p.finish),'An explicit desired outcome is recorded.','Missing: one concrete desired outcome (not only a general intention).'],
+    [p.note.trim()!==reference.trim()&&p.note.trim().length>reference.trim().length/2,'The working note contains changes beyond its original scaffold.','The working note still resembles the untouched scaffold.'],
+    [!p.completed||!!safe(p.evidence),'Completion is either unclaimed or has a self-reported observation.','Completion is checked, but no observation or evidence was recorded.']
+  ];
+  const passed=checks.filter(x=>x[0]).length;
+  const issues=checks.filter(x=>!x[0]).map(x=>'- '+x[2]);
+  offerFeedback('JAR;VIS LOCAL AUDIT: '+passed+'/4 document checks passed.\n'+
+    (issues.length?issues.join('\n'):'No missing fields detected in this document.')+
+    '\nThis is a structural check only; I did not inspect your local files or verify any outside action.');
+ }
+}
+
+['checklist','tracker','page','audit'].forEach(id=>$('jarvis-'+id).addEventListener('click',()=>runJarvis(id)));
+$('build').addEventListener('click',()=>newProject(false));$('quick').addEventListener('click',()=>newProject(true));document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;applyMode();}));document.querySelectorAll('[data-min]').forEach(b=>b.addEventListener('click',()=>{minutes=+b.dataset.min;applyMinutes();}));
+[el.note,el.evidence].forEach(x=>x.addEventListener('input',()=>{clearTimeout(autosaveTimer);autosaveTimer=setTimeout(flush,180);}));el.completed.addEventListener('change',()=>{flush();renderActive();});$('save').addEventListener('click',save);$('fork').addEventListener('click',fork);
+$('copy').addEventListener('click',async()=>{if(!active)return;flush();const txt=plain(active);try{if(!navigator.clipboard)throw Error('Clipboard unavailable');await navigator.clipboard.writeText(txt);notice('Working note copied.');}catch{el.note.focus();el.note.select();notice('Clipboard permission unavailable. Select and copy the working note manually.',true);}});
+$('download').addEventListener('click',()=>{if(!active)return;flush();simpleFile('Lantern_014_Working_Note.txt',plain(active),'text/plain;charset=utf-8');notice('Saved a working text file.');});$('print').addEventListener('click',()=>{if(!active)return;flush();window.print();});$('export-shelf').addEventListener('click',exportShelf);$('import-shelf').addEventListener('click',()=>$('import-file').click());$('import-file').addEventListener('change',e=>importShelf(e.target.files?.[0]));$('clear-shelf').addEventListener('click',()=>{if(!shelf.length)return;if(confirm('Clear all saved snapshots from this browser? This cannot be undone. Export a backup first if these matter.')){shelf=[];persist();renderShelf();notice('Saved local snapshots cleared; working copy left intact.');}});
+load();applyMode();applyMinutes();renderActive();renderShelf();offerContext();window.LANTERN014={status:()=>({mode,minutes,active:active?cleanProject(active):null,snapshots:shelf.length,storageAvailable}),offers:()=>JARVIS_OFFERS.map(x=>({...x})),executeOffer:runJarvis,version:'0.2.0'};
+})();
+</script>
+<script>
 
 (()=>{
  'use strict';
@@ -314,33 +341,6 @@ function runJarvis(id){
  window.JARVIS015={connect,route,get lastReceipt(){return receipt},version:'0.1.0',githubAuthority:'READ_ONLY'};
 })();
 
-</script>
-</body></html>';
-  simpleFile('Lantern_JARVIS_Work_Card.html',portable,'text/html;charset=utf-8');
-  offerFeedback('FILE CREATED: Lantern_JARVIS_Work_Card.html — open it offline, check the steps, write observations, or print it. The work is not reported complete.');
- }else if(id==='audit'){
-  const reference=build(p.mode,p.problem,p.finish,p.limit,p.time).note;
-  const checks=[
-    [!!safe(p.problem),'A concrete problem is named.','Missing: name the actual task.'],
-    [!!safe(p.finish),'An explicit desired outcome is recorded.','Missing: one concrete desired outcome (not only a general intention).'],
-    [p.note.trim()!==reference.trim()&&p.note.trim().length>reference.trim().length/2,'The working note contains changes beyond its original scaffold.','The working note still resembles the untouched scaffold.'],
-    [!p.completed||!!safe(p.evidence),'Completion is either unclaimed or has a self-reported observation.','Completion is checked, but no observation or evidence was recorded.']
-  ];
-  const passed=checks.filter(x=>x[0]).length;
-  const issues=checks.filter(x=>!x[0]).map(x=>'- '+x[2]);
-  offerFeedback('JAR;VIS LOCAL AUDIT: '+passed+'/4 document checks passed.\n'+
-    (issues.length?issues.join('\n'):'No missing fields detected in this document.')+
-    '\nThis is a structural check only; I did not inspect your local files or verify any outside action.');
- }
-}
-
-['checklist','tracker','page','audit'].forEach(id=>$('jarvis-'+id).addEventListener('click',()=>runJarvis(id)));
-$('build').addEventListener('click',()=>newProject(false));$('quick').addEventListener('click',()=>newProject(true));document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;applyMode();}));document.querySelectorAll('[data-min]').forEach(b=>b.addEventListener('click',()=>{minutes=+b.dataset.min;applyMinutes();}));
-[el.note,el.evidence].forEach(x=>x.addEventListener('input',()=>{clearTimeout(autosaveTimer);autosaveTimer=setTimeout(flush,180);}));el.completed.addEventListener('change',()=>{flush();renderActive();});$('save').addEventListener('click',save);$('fork').addEventListener('click',fork);
-$('copy').addEventListener('click',async()=>{if(!active)return;flush();const txt=plain(active);try{if(!navigator.clipboard)throw Error('Clipboard unavailable');await navigator.clipboard.writeText(txt);notice('Working note copied.');}catch{el.note.focus();el.note.select();notice('Clipboard permission unavailable. Select and copy the working note manually.',true);}});
-$('download').addEventListener('click',()=>{if(!active)return;flush();simpleFile('Lantern_014_Working_Note.txt',plain(active),'text/plain;charset=utf-8');notice('Saved a working text file.');});$('print').addEventListener('click',()=>{if(!active)return;flush();window.print();});$('export-shelf').addEventListener('click',exportShelf);$('import-shelf').addEventListener('click',()=>$('import-file').click());$('import-file').addEventListener('change',e=>importShelf(e.target.files?.[0]));$('clear-shelf').addEventListener('click',()=>{if(!shelf.length)return;if(confirm('Clear all saved snapshots from this browser? This cannot be undone. Export a backup first if these matter.')){shelf=[];persist();renderShelf();notice('Saved local snapshots cleared; working copy left intact.');}});
-load();applyMode();applyMinutes();renderActive();renderShelf();offerContext();window.LANTERN014={status:()=>({mode,minutes,active:active?cleanProject(active):null,snapshots:shelf.length,storageAvailable}),offers:()=>JARVIS_OFFERS.map(x=>({...x})),executeOffer:runJarvis,version:'0.2.0'};
-})();
 </script>
 </body>
 </html>
