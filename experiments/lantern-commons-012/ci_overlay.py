@@ -28,6 +28,15 @@ if __name__=="__main__":
     dest=TARGET.parent.parent
     if not (dest/"level.dat").is_file():
         raise ValueError("REFUSE_FRESH_WORLD_WITHOUT_SAVED_PARENT")
+    settings=Path("work/lantern/server/server.properties")
+    if not settings.is_file():raise ValueError("SERVER_PROPERTIES_NOT_INITIALIZED")
+    lines=settings.read_text().splitlines()
+    matches=[i for i,x in enumerate(lines) if x.startswith("difficulty=")]
+    if len(matches)!=1:raise ValueError("MISSING_UNIQUE_SERVER_DIFFICULTY")
+    lines[matches[0]]="difficulty=normal"
+    lines.append("spawn-monsters=false")
+    settings.write_text("\\n".join(lines)+"\\n")
+    print("GAME_DIFFICULTY_SET_TO_NORMAL_BEFORE_BOOT_FOR_REAL_HUNGER")
     if TARGET.exists():
         if tree(TARGET)!=tree(LOCAL):
             raise ValueError("SOURCE_DATAPACK_UNDECLARED_DRIFT")
