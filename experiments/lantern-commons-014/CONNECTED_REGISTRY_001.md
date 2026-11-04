@@ -15,6 +15,14 @@ Allowed targets as currently advertised by deployed backend: `jarvis`, `relatte`
 
 **Human-facing external handoff:** The existing `now-route-live` Waseca-area exchange is linked as a separate, invite-only pilot page. The link carries no query parameters and transfers no typed text. This is a navigation handoff, not an integrated write capability. The pilot currently supports shelf-stable goods only, not fish or other perishables.
 
+## Immediate test preview
+
+A **public GET-only Edge Function** is deployed as `jarvis-connected-registry-001` in the existing pantry-gate Supabase project. The exact URL is:
+
+`https://kbhqacsdvjsstzyplqij.supabase.co/functions/v1/jarvis-connected-registry-001`
+
+Deployment receipt: Supabase function status `ACTIVE`, version 2, `verify_jwt=false`; the served PAGE content was compared byte-for-byte with the GitHub connected HTML when version 1 was deployed, and v2 changed only a path fallback to accept the gateway's normalized root route. Both scripts were syntax-checked. **External browser GET and connected bridge actions still need field verification**; deployment metadata alone is not an independent successful HTTP response. This is a test-only public host and it shares the project's browser storage origin, so use nonsensitive test data only.
+
 ## Proof and limitations
 
 - `test_solo_desk.mjs`: the baseline offline behavior remains runnable and tested.
