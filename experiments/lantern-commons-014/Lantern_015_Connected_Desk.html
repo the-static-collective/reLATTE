@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101c1b"><meta name="description" content="An offline, private action desk. Turn one stuck problem into a small action and an editable, exportable artifact. No login, network, or other person needed.">
+<title>LANTERN 014 · The Solo Desk</title>
+<style>
+:root{color-scheme:dark;--bg:#101c1b;--panel:#172a28;--raised:#203532;--line:#3b5a52;--text:#faf4e5;--muted:#b7c6bc;--sub:#93aca2;--mint:#c5e7c4;--gold:#f2d38e;--red:#f1b39d;--glow:0 16px 55px #0007}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);background:radial-gradient(ellipse at 45% -5%,#244d42 0,transparent 47%),radial-gradient(ellipse at 95% 44%,#243632 0,transparent 44%),var(--bg);font:16px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif;min-height:100vh}
+button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.55;cursor:not-allowed}a{color:var(--gold)}:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.wrap{max-width:1130px;margin:auto;padding:0 22px 82px}.topbar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #436158;padding:20px 0 15px;gap:12px}.brand{display:flex;gap:11px;align-items:center;text-transform:uppercase;letter-spacing:.15em;font-size:.77rem;font-weight:800}.brand-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:12px;background:#f2d38e;color:#1b2e27;font-size:23px}.status{border:1px solid #4b715e;background:#193629;color:#ccebc9;border-radius:999px;padding:5px 12px;font-size:.77rem;font-weight:700;white-space:nowrap}
+.hero{display:grid;grid-template-columns:1.2fr .65fr;gap:30px;align-items:end;padding:45px 0 35px}.eyebrow{letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-size:.74rem;font-weight:800}.hero h1{font-family:Georgia,'Times New Roman',serif;font-weight:normal;line-height:1.06;letter-spacing:-.043em;font-size:clamp(3rem,8vw,5.3rem);margin:11px 0 13px}.hero h1 em{color:var(--mint);font-weight:normal}.intro{font-size:1.06rem;max-width:580px;color:var(--muted);margin:0}.side-quote{border-left:2px solid var(--gold);padding:8px 0 8px 17px;font-family:Georgia,serif;color:#e7ddc1;font-size:1.2rem;line-height:1.45}.side-quote small{display:block;font-family:system-ui;color:var(--sub);font-size:.75rem;margin-top:9px;text-transform:uppercase;letter-spacing:.12em}
+.panel{border:1px solid var(--line);border-radius:20px;background:linear-gradient(150deg,#1c332f,#142522);box-shadow:var(--glow);padding:26px}.headrow{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:13px;flex-wrap:wrap}.h-label{color:var(--gold);font-size:.71rem;text-transform:uppercase;letter-spacing:.17em;font-weight:800}.h-title{font-family:Georgia,serif;font-size:1.8rem;font-weight:normal;margin:0 0 5px}.hint{color:var(--muted);font-size:.91rem;margin:0 0 20px}.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.98fr);gap:20px}.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mode{background:#223b35;border:1px solid #49665b;color:var(--text);border-radius:14px;padding:15px;text-align:left;transition:transform .15s,border-color .15s,background .15s;min-height:99px}.mode:hover{background:#2b4a41;transform:translateY(-1px)}.mode[aria-pressed=true]{border:2px solid var(--gold);padding:14px;background:#394637}.mode strong{display:block;font-size:1rem;margin:1px 0}.mode span{display:block;font-size:.79rem;color:#c8d4cc}.mode-icon{color:var(--gold);font-size:1.16rem}
+.field{margin-top:17px}label{display:block;font-size:.87rem;color:#e1e8dc;font-weight:700;margin-bottom:7px}textarea,input,select{background:#102220;border:1px solid #4b6b5f;border-radius:11px;color:var(--text);padding:12px 14px;width:100%;min-width:0}textarea{resize:vertical;min-height:108px;line-height:1.5}input::placeholder,textarea::placeholder{color:#9daea6}input[type=range]{padding:0;accent-color:var(--gold)}.two{display:grid;grid-template-columns:1fr 1fr;gap:13px}.options-row{display:flex;gap:8px;flex-wrap:wrap}.pill{border-radius:999px;padding:9px 13px;background:#223b35;border:1px solid #547465;color:#e9eee5;font-size:.83rem}.pill[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#14221c;font-weight:800}.primary{background:var(--gold);border:1px solid var(--gold);color:#17291e;font-weight:850;border-radius:12px;padding:13px 17px;box-shadow:0 5px 0 #a8874d;transition:transform .1s}.primary:hover{transform:translateY(-1px)}.primary:active{transform:translateY(3px);box-shadow:0 2px 0 #a8874d}.secondary{background:#29453f;color:var(--text);border:1px solid #618174;border-radius:11px;padding:11px 14px;font-weight:650}.secondary:hover{background:#33534b}.danger{border-color:#a47166;color:#ffd6c6}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.caption{color:#94ada2;font-size:.8rem}.fine{font-size:.79rem;color:var(--sub)}.banner{margin-top:16px;padding:12px 14px;border:1px solid #50786b;border-radius:12px;background:#1b3b32;color:#e4f1dc;font-size:.86rem}.error{background:#4d2927;border-color:#b56e62;color:#ffe0d8}
+.output-card{background:#12231f;border:1px solid #3e6658;border-radius:15px;padding:22px;min-height:275px}.output-card .step{display:flex;justify-content:space-between;gap:10px;align-items:center}.tag{color:#1d352a;background:var(--mint);padding:4px 9px;border-radius:6px;font-weight:800;font-size:.7rem;letter-spacing:.03em;text-transform:uppercase}.mini{font-size:.78rem;color:var(--sub);text-transform:uppercase;letter-spacing:.1em}.focus{font-family:Georgia,serif;font-size:clamp(1.5rem,3vw,2.15rem);line-height:1.22;margin:20px 0 10px}.detail{white-space:pre-wrap;color:#d3dfd2;font-size:.94rem}.rule{height:1px;background:#36584a;margin:18px 0}.criteria{font-weight:750;color:var(--gold)}.empty{display:grid;align-content:center;justify-items:center;text-align:center;gap:8px;min-height:255px;color:var(--muted)}.empty-icon{font-size:2rem;color:var(--gold)}.empty p{margin:0;max-width:310px}.receipt{margin-top:17px}.receipt textarea{min-height:88px}.draft-label{display:flex;align-items:center;justify-content:space-between;gap:10px}.small-btn{padding:7px 11px;border-radius:8px;font-size:.77rem;color:var(--text);background:#274238;border:1px solid #5a7e69}.checkline{display:flex;align-items:center;gap:10px;margin:13px 0;padding:12px;background:#1a3730;border:1px solid #537265;border-radius:10px;color:#e4eddd;font-weight:700}.checkline input{width:20px;height:20px;accent-color:var(--gold)}.checkline label{margin:0}.output-tools{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px}.timeline{border-top:1px solid #3d6559;margin-top:16px;padding-top:15px}.timeline-card{border:1px solid #38594d;background:#182e28;border-radius:12px;padding:14px;margin-bottom:9px}.timeline-card b{display:block}.timeline-meta{color:#a3bbad;font-size:.76rem}.timeline-body{color:#cbd8cd;font-size:.85rem;margin:4px 0 0}.footer{margin-top:36px;border-top:1px solid #446456;padding:18px 0;color:#a9c1b2;font-size:.83rem;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}details{margin-top:15px;border-top:1px solid #3d594e;padding-top:14px}summary{cursor:pointer;color:var(--mint);font-weight:700}details p{color:var(--muted);font-size:.85rem}.jarvis-panel{margin-top:23px;border-color:#58785f;background:linear-gradient(140deg,#213e35,#122722)}.jarvis-panel .jarvis-intro{max-width:860px;color:var(--muted);margin:0 0 15px}.offer-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.offer{border:1px solid #527667;border-radius:14px;background:#172e28;padding:16px;display:flex;flex-direction:column;gap:9px}.offer strong{font-size:1.04rem;color:var(--mint)}.offer p{font-size:.88rem;line-height:1.4;color:var(--muted);margin:0;flex:1}.offer .secondary{width:100%;text-align:left}.availability{color:#dceecb;font-size:.71rem;font-weight:800;letter-spacing:.12em}.jarvis-response{margin-top:15px;padding:15px;border:1px solid #64836e;border-radius:11px;background:#0d2420;color:#e5eeda;white-space:pre-wrap;font-size:.88rem}.jarvis-disclosure{border-left:2px solid #a4b69f;padding:8px 12px;font-size:.83rem;color:var(--muted);margin:16px 0 0}#library{margin-top:23px}.library-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}.library-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:11px;margin-top:13px}.library-item{border:1px solid #456858;background:#1d332f;border-radius:13px;padding:15px;text-align:left;color:var(--text);min-height:125px}.library-item:hover{border-color:var(--gold)}.library-item strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:6px 0}.library-item .muted{font-size:.78rem;color:var(--sub)}.hidden{display:none!important}.sr-only{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}.print-only{display:none}
+@media(max-width:790px){.hero{grid-template-columns:1fr;padding-top:28px;gap:20px}.grid{grid-template-columns:1fr}.panel{padding:20px}.side-quote{font-size:1.04rem}.hero h1{font-size:3.4rem}}@media(max-width:650px){.offer-list{grid-template-columns:1fr}}@media(max-width:430px){.wrap{padding:0 13px 45px}.topbar{padding:13px 0}.brand{letter-spacing:.06em}.status{font-size:.67rem;padding:4px 8px}.panel{padding:16px;border-radius:15px}.modes{gap:8px}.mode{padding:12px;min-height:105px}.mode[aria-pressed=true]{padding:11px}.mode strong{font-size:.9rem}.two{grid-template-columns:1fr}.focus{font-size:1.55rem}}
+@media print{body{background:white;color:#141d16}.topbar,.hero,.form-panel,.output-tools,.footer,#library,.no-print{display:none!important}.grid{display:block}.output-panel{border:0;box-shadow:none;background:white;color:black;padding:0}.output-card{border:0;background:white;color:black}.focus,.detail,label,.criteria{color:black}.print-only{display:block}.receipt textarea{border:1px solid #777;color:black;background:white}.draft-label{color:black}}
+
+/* CONNECTED 001: optional real public read-only capabilities */
+.connected-panel{margin-top:23px;border-color:#688b78;background:linear-gradient(145deg,#203e34,#101e1b)}
+.connected-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.connected-box{border:1px solid #547667;border-radius:13px;padding:15px;background:#172e28}
+.connected-box h3{color:var(--mint);margin:0 0 6px;font-size:1.05rem}
+.connected-box p{margin:0 0 12px;color:var(--muted);font-size:.89rem}
+.connected-box button{width:100%;text-align:left}
+.connected-log{white-space:pre-wrap;overflow-wrap:anywhere;background:#0c211e;padding:14px;border:1px solid #527b69;border-radius:11px;margin-top:12px}
+.connected-log p{margin:.3em 0 .7em}
+.connected-log a{display:block;word-break:break-word;margin:7px 0}
+.connected-privacy{border-left:2px solid var(--gold);padding:8px 12px;color:var(--muted);font-size:.88rem;margin:14px 0}
+@media(max-width:650px){.connected-grid{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true">✳</span><span>LANTERN <strong>014</strong> / SOLO DESK</span></div><span class="status">● PRIVATE · OFFLINE · YOURS</span></header>
+<section class="hero"><div><div class="eyebrow">Small useful things, finished</div><h1>Make one thing <em>happen.</em></h1><p class="intro">Bring a problem, an idea, or a stuck decision. Leave with one doable move and a working document. No account. No collaborators. No perfect plan required.</p></div><div class="side-quote">“A useful step ends somewhere different from where it began.”<small>Solo Desk · local-first workshop</small></div></section>
+<main class="grid">
+<section class="panel form-panel" aria-labelledby="start-title"><div class="headrow"><span class="h-label">01 / Choose a lane</span><span class="caption">2 minutes to start</span></div><h2 class="h-title" id="start-title">What are we doing?</h2><p class="hint">Choose what will help you make progress today. These are practical templates, not an AI pretending to understand your situation.</p>
+<div class="modes" role="group" aria-label="Choose the kind of progress">
+<button class="mode" type="button" data-mode="untangle" aria-pressed="true"><span class="mode-icon" aria-hidden="true">✦</span><strong>Untangle</strong><span>Find the next move when everything feels tangled.</span></button>
+<button class="mode" type="button" data-mode="make" aria-pressed="false"><span class="mode-icon" aria-hidden="true">◇</span><strong>Make</strong><span>Turn an idea into a real first draft.</span></button>
+<button class="mode" type="button" data-mode="decide" aria-pressed="false"><span class="mode-icon" aria-hidden="true">⇄</span><strong>Decide</strong><span>Compare two choices without getting trapped.</span></button>
+<button class="mode" type="button" data-mode="debug" aria-pressed="false"><span class="mode-icon" aria-hidden="true">⌁</span><strong>Test</strong><span>Investigate what's broken with a reversible test.</span></button>
+</div>
+<div class="field"><label id="problem-label" for="problem">What's taking up space in your head?</label><textarea id="problem" maxlength="1400" placeholder="Example: I have hundreds of photos and don't know where to begin."></textarea></div>
+<div class="two"><div class="field"><label id="finish-label" for="finish">What's one useful outcome?</label><input id="finish" maxlength="240" placeholder="Example: find my first 10 favorites"></div><div class="field"><label id="limit-label" for="limit">What's the main constraint?</label><input id="limit" maxlength="240" placeholder="Example: only my old laptop"></div></div>
+<div class="field"><label>How much time can you give it?</label><div class="options-row" role="group" aria-label="Available time"><button class="pill" type="button" data-min="5" aria-pressed="false">5 min</button><button class="pill" type="button" data-min="10" aria-pressed="true">10 min</button><button class="pill" type="button" data-min="20" aria-pressed="false">20 min</button><button class="pill" type="button" data-min="40" aria-pressed="false">40 min</button></div></div>
+<div class="actions"><button class="primary" type="button" id="build">Build my next move →</button><button class="secondary" type="button" id="quick">I just need a 5-minute start</button></div>
+<p class="fine" style="margin:15px 0 0">Everything stays in this browser unless you explicitly export it. Nothing is submitted or shared.</p>
+<details><summary>What can this tool actually do?</summary><p>It creates a tailored starting plan and an editable working note. You decide what to do, record whether it worked, and can save a new immutable local snapshot or fork your plan. It does not search online, contact people, analyze private files, or guarantee that a step will succeed.</p></details>
+</section>
+<section class="panel output-panel" aria-labelledby="output-title"><div class="headrow"><span class="h-label">02 / Produce something</span><span class="caption" id="current-version">Nothing active yet</span></div><h2 class="h-title" id="output-title">Your next move</h2><p class="hint">One action, one clear finish line, one artifact you can keep.</p>
+<div id="empty" class="empty output-card"><span class="empty-icon" aria-hidden="true">✧</span><strong>Your useful step goes here.</strong><p>Describe what you're working on—or tap the five-minute start to get moving.</p></div>
+<div id="result" class="hidden"><div class="output-card"><div class="step"><span class="tag" id="mode-tag">Untangle</span><span class="mini" id="duration">10-minute action</span></div><h3 class="focus" id="action-title"></h3><p class="detail" id="action-body"></p><div class="rule"></div><div class="mini">The finish line</div><p class="criteria" id="finish-line"></p></div>
+<div class="receipt"><div class="draft-label"><label for="working-note">Editable working note · your actual output</label><span class="caption">Autosaves locally</span></div><textarea id="working-note" rows="9" maxlength="12000" spellcheck="true"></textarea><label class="checkline" for="completed"><input id="completed" type="checkbox"> I actually completed the step</label><label for="evidence">What changed? (Leave blank if nothing changed.)</label><textarea id="evidence" rows="3" maxlength="1500" placeholder="Example: Found 10 photos; copied 3 favorites into a new folder. Or: the test failed because…"></textarea><div class="output-tools"><button class="secondary" type="button" id="save">Save snapshot</button><button class="secondary" type="button" id="fork">Fork another approach</button><button class="secondary" type="button" id="copy">Copy note</button><button class="secondary" type="button" id="download">Download .txt</button><button class="secondary" type="button" id="print">Print</button></div><p class="fine" id="save-status">This is a draft until you record what actually happened.</p></div></div>
+</section></main>
+<section id="jarvis" class="panel jarvis-panel" aria-labelledby="jarvis-title">
+<div class="headrow"><span class="h-label">03 / JAR;VIS · executable offers</span><span class="status" id="jarvis-availability">● OFFLINE TOOLS READY</span></div>
+<h2 class="h-title" id="jarvis-title">Here's what I can actually do.</h2>
+<p class="jarvis-intro">Not another invitation to make an invitation. These buttons run local actions and produce a changed note, a downloadable file, or a concrete diagnostic report. No model, server, account, or additional person is involved.</p>
+<p class="hint" id="jarvis-context">Create a working step above and I'll identify the most useful action I can execute here.</p>
+<div class="offer-list">
+<div class="offer"><span class="availability">AVAILABLE NOW · MODIFIES YOUR NOTE</span><strong>Make a usable checklist</strong><p>I will put a task-specific, editable checklist directly into the current working note—not just advise you to make one.</p><button class="secondary" type="button" id="jarvis-checklist">JAR;VIS, build my checklist →</button></div>
+<div class="offer"><span class="availability">AVAILABLE NOW · CREATES CSV</span><strong>Generate a progress tracker</strong><p>I can download a real spreadsheet-friendly CSV with task rows, a status column, and room for evidence. I can't change your computer's existing files.</p><button class="secondary" type="button" id="jarvis-tracker">JAR;VIS, make the tracker →</button></div>
+<div class="offer"><span class="availability">AVAILABLE NOW · CREATES HTML</span><strong>Build a portable work page</strong><p>I can generate another standalone HTML file containing your goal, instructions, live checkboxes, a notes area, and a print button.</p><button class="secondary" type="button" id="jarvis-page">JAR;VIS, build the page →</button></div>
+<div class="offer"><span class="availability">AVAILABLE NOW · CHECKS DRAFT</span><strong>Audit this work product</strong><p>I can flag missing outcomes, unchanged template fields, and unsupported completion claims. I cannot verify that an external task happened.</p><button class="secondary" type="button" id="jarvis-audit">JAR;VIS, inspect what we have →</button></div>
+</div>
+<div id="jarvis-response" class="jarvis-response hidden" role="status" aria-live="polite"></div>
+<p class="jarvis-disclosure"><strong>Not available inside this offline copy:</strong> reading your photographs or folders, browsing the internet, sending messages, changing GitHub repositories, running arbitrary programs, or claiming an outside task is complete. Those would require separate connected tools and your authorization. The buttons above genuinely run here.</p>
+</section>
+
+<section id="connected" class="panel connected-panel" aria-labelledby="connected-title">
+ <div class="headrow"><span class="h-label">03B / JAR;VIS · Connected Registry 001</span><span id="connected-state" class="status">● NOT CONNECTED</span></div>
+ <h2 id="connected-title" class="h-title">What can I actually reach?</h2>
+ <p class="hint">Keep working privately above. When you choose, JAR;VIS can check real public project sources and build results through an existing read-only bridge. This is not an AI model and cannot run code, message anyone, or change repositories.</p>
+ <p class="connected-privacy"><strong>Public preview: use nonsensitive test notes only.</strong> Multiple pages on the same hosting origin may share browser storage. <strong>Your choice matters:</strong> No connection starts automatically. <strong>Find live capabilities</strong> contacts the public JAR;VIS bridge to learn which read-only tools exist. An external request exposes normal connection metadata, such as your IP, to the service—but <strong>does not send your project text, notes, evidence, or local shelf.</strong> Running either tool requires a separate confirmation.</p>
+ <div class="connected-box" style="margin:13px 0"><h3>Something useful needs to happen with another person?</h3><p>For a real, nearby exchange, the existing Waseca NOW ROUTE pilot can receive shelf-stable goods offers and needs, look for possible matches, and track mutual agreement. It requires a pilot invitation code and uses a separate page. No Solo Desk note is copied there. Perishable food is not supported in that pilot.</p><a href="https://kbhqacsdvjsstzyplqij.supabase.co/functions/v1/now-route-live" target="_blank" rel="noopener noreferrer">Open the invite-only NOW ROUTE exchange ↗</a></div>
+ <div class="actions"><button type="button" class="primary" id="connected-discover">Find live capabilities →</button><span id="connected-suggestion" class="caption">First inspect the tools that are currently available.</span></div>
+ <div id="connected-tools" class="hidden">
+  <div class="field"><label for="connected-target">Which public project?</label><select id="connected-target"></select><p class="fine" id="connected-target-description">Public source only.</p></div>
+  <div class="connected-grid">
+   <div class="connected-box"><h3>Read its actual source</h3><p>Fetch the public project README. See its source address, byte count, SHA-256 digest, and a short excerpt. This does not run the project.</p><button type="button" class="secondary" id="connected-inspect" disabled>Inspect the live source →</button></div>
+   <div class="connected-box"><h3>Check recent builds</h3><p>Read the latest public GitHub Actions statuses and links. This does not trigger a build or approve any change.</p><button type="button" class="secondary" id="connected-ci" disabled>Check its live builds →</button></div>
+  </div>
+ </div>
+ <div id="connected-result" class="connected-log hidden" role="status" aria-live="polite"></div>
+ <p class="fine">Boundary: only preapproved project identifiers and the action name cross the bridge. Unknown actions, external writes, and private inputs are refused. A build result is not real-world completion.</p>
+</section>
+
+<section id="library" class="panel" aria-labelledby="library-title"><div class="library-head"><div><div class="h-label">04 / Your local history</div><h2 class="h-title" id="library-title">The Work Shelf</h2><p class="hint" style="margin-bottom:0">Copies preserve your earlier notes. An outcome is only marked complete when you say so.</p></div><div class="actions"><button class="secondary" type="button" id="export-shelf">Export shelf .json</button><button class="secondary" type="button" id="import-shelf">Import shelf .json</button><input id="import-file" type="file" accept="application/json,.json" class="sr-only"><button class="secondary danger" type="button" id="clear-shelf">Clear local shelf</button></div></div><div id="library-list" class="library-list"></div><p class="fine">This browser can lose local storage when data is cleared or private browsing ends. Export a backup if a record matters. Files are never uploaded.</p></section>
+<div id="notice" role="status" aria-live="polite" class="banner hidden"></div>
+<footer class="footer"><span>✳ LANTERN 014 · Solo Desk · offline working tool</span><span>Evidence ≠ intention · A draft ≠ a completed action · A copied plan ≠ a real-world event</span></footer></div>
+<script>
+'use strict';
+(()=>{
+const KEY='lantern014_solo_desk_v1',MAX=60;
+const $=x=>document.getElementById(x);
+const el={problem:$('problem'),finish:$('finish'),limit:$('limit'),note:$('working-note'),evidence:$('evidence'),completed:$('completed'),result:$('result'),empty:$('empty'),notice:$('notice'),library:$('library-list')};
+const labels={untangle:'Untangle',make:'Make',decide:'Decide',debug:'Test'};
+const prefix={untangle:'Sort out',make:'Draft',decide:'Compare',debug:'Check'};
+let mode='untangle',minutes=10,active=null,shelf=[],storageAvailable=true,autosaveTimer=0;
+function uid(){return (globalThis.crypto&&crypto.randomUUID)?crypto.randomUUID():`local-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;}
+function safe(t,n=1500){return String(t??'').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,' ').trim().slice(0,n);}
+function when(){return new Date().toISOString();}
+function fmt(iso){try{return new Date(iso).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'});}catch{return iso;}}
+function notice(msg,isError=false){el.notice.textContent=msg;el.notice.classList.remove('hidden');el.notice.classList.toggle('error',isError);clearTimeout(notice.timer);notice.timer=setTimeout(()=>el.notice.classList.add('hidden'),6500);}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({schema:'lantern.solo-shelf/v1',shelf,active}));storageAvailable=true;}catch(e){storageAvailable=false;notice('Local storage is unavailable or full. Export your work using Download / Export shelf.',true);}}
+function load(){try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&saved.schema==='lantern.solo-shelf/v1'){shelf=Array.isArray(saved.shelf)?saved.shelf.filter(valid).slice(0,MAX):[];active=valid(saved.active)?saved.active:null;}}catch{notice('Saved data could not be read. Starting with a fresh local shelf.',true);}}
+function valid(s){return !!s&&typeof s==='object'&&!Array.isArray(s)&&typeof s.id==='string'&&s.id.length<110&&Object.hasOwn(labels,s.mode)&&typeof s.problem==='string'&&s.problem.length<=1400&&typeof s.note==='string'&&s.note.length<=12000&&typeof s.time==='number'&&[5,10,20,40].includes(s.time)&&typeof s.action==='string'&&s.action.length<=450&&typeof s.finishLine==='string'&&s.finishLine.length<=500&&typeof s.created==='string'&&s.created.length<55&&(!s.parent||typeof s.parent==='string'&&s.parent.length<110)&&typeof s.evidence==='string'&&s.evidence.length<=1500&&typeof s.completed==='boolean';}
+function cleanProject(s){return {id:s.id,parent:s.parent||null,mode:s.mode,problem:s.problem,finish:s.finish||'',limit:s.limit||'',time:s.time,action:s.action,actionBody:s.actionBody||'',finishLine:s.finishLine,note:s.note,evidence:s.evidence,completed:s.completed,created:s.created,updated:s.updated||s.created};}
+function build(mode,problem,finish,limit,min){
+ const topic=problem||'the thing you want to move forward'; const target=finish||'one visible change';const constraint=limit||'the time and materials you already have';
+ const first=topic.replace(/[\s.?!]+$/,'');
+ const short=first.length>88?first.slice(0,85)+'…':first;
+ if(mode==='untangle')return {action:'Make three piles: known, unknown, next',body:`Put “${short}” at the top of a page. Write only facts you can verify under KNOWN, open questions under UNKNOWN, and actions you can do yourself under NEXT. Choose the smallest item in NEXT that fits ${min} minutes.`,line:`A page exists with those three headings and one specific action circled. Desired outcome: ${target}.`,note:`WORKING MAP\n\nProblem: ${topic}\nOutcome I want: ${target}\nConstraint: ${constraint}\n\nKNOWN (facts, not guesses)\n- \n\nUNKNOWN (questions to investigate)\n- \n\nNEXT (actions I can do alone)\n1. \n\nOne step to do in ${min} minutes:\n\nWhat I actually observed:\n`};
+ if(mode==='make')return {action:'Create the rough first version',body:`Start an actual draft for “${short}” in the working note below. Fill the title, who/what it serves, three useful parts, and the next edit. Do not spend the first ${min} minutes making it polished.`,line:`A saved first draft exists. Target output: ${target}. Constraint to respect: ${constraint}.`,note:`FIRST DRAFT\n\nWorking title: ${topic}\nIntended outcome: ${target}\nConstraint: ${constraint}\n\nWhat this is / what it does:\n\nPart 1 — start:\n\nPart 2 — useful middle:\n\nPart 3 — concrete ending:\n\nSmallest improvement for the next version:\n`};
+ if(mode==='decide')return {action:'Run a reversible two-option comparison',body:`Name two things you could actually do about “${short}.” Compare each against the same three measures: time today, possible downside, and whether you can reverse it. Choose the least costly test—not a lifetime commitment.`,line:`Two real options are written down and one ${min}-minute trial is selected. Desired outcome: ${target}. The decision remains yours.`,note:`DECISION CARD\n\nQuestion: ${topic}\nDesired result: ${target}\nConstraint: ${constraint}\n\nOption A:\n- First action:\n- Cost / time:\n- Downside:\n- Reversible?\n\nOption B:\n- First action:\n- Cost / time:\n- Downside:\n- Reversible?\n\nSmall test I choose (not a permanent commitment):\n\nWhat would change my mind?\n`};
+ return {action:'Record what is happening; test one cause',body:`Describe the exact failure involving “${short}.” Write EXPECTED versus OBSERVED. Change only one reversible thing that you can test in ${min} minutes. Record the result, including failures.`,line:`One test has a reproducible step, an observed result, and a way to undo it. Outcome sought: ${target}.`,note:`BUG / PROBLEM RECEIPT\n\nProblem: ${topic}\nExpected behavior:\nObserved behavior:\nWhen and where it happens:\n\nCurrent constraint: ${constraint}\n\nSmallest reversible test (${min} min):\n1. \n\nResult (what actually happened):\n\nUndo / restore instructions:\n\nNext hypothesis (only if needed):\n`};
+}
+function newProject(quick=false){const problem=safe(el.problem.value,1400),finish=safe(el.finish.value,240),limit=safe(el.limit.value,240);if(!problem&&!quick){el.problem.focus();notice('Write one sentence about what you want to move forward.',true);return;}
+ const p=problem||'I need one simple thing to feel less stuck';const use=quick?5:minutes;const data=build(mode,p,finish,limit,use);const now=when();active={id:uid(),parent:null,mode,problem:p,finish,limit,time:use,action:data.action,actionBody:data.body,finishLine:data.line,note:data.note,evidence:'',completed:false,created:now,updated:now};persist();renderActive();offerContext();notice('Created a first working step. Edit the note; save a snapshot when you have something to keep.');}
+function flush(){if(!active)return;active.note=safe(el.note.value,12000);active.evidence=safe(el.evidence.value,1500);active.completed=!!el.completed.checked;active.updated=when();persist();}
+function renderActive(){const exists=!!active;el.result.classList.toggle('hidden',!exists);el.empty.classList.toggle('hidden',exists);if(!exists){$('current-version').textContent='Nothing active yet';return;}
+ $('current-version').textContent='Working copy · '+active.id.slice(-7);$('mode-tag').textContent=labels[active.mode];$('duration').textContent=`${active.time}-minute action`;$('action-title').textContent=active.action;$('action-body').textContent=active.actionBody;$('finish-line').textContent=active.finishLine;el.note.value=active.note;el.evidence.value=active.evidence;el.completed.checked=active.completed;
+ $('save-status').textContent=active.completed?'Marked complete by you. Save a snapshot to preserve this outcome.':'Working draft. Completion is not assumed; record what changed.';
+}
+function save(){if(!active){notice('Create a next move first.',true);return;}flush();const snapshot=cleanProject({...active,id:uid(),parent:active.parent||null,updated:when()});if(shelf.length>=MAX){notice('Shelf full (60 snapshots). Export it, then clear the shelf to make room.',true);return;}
+ shelf.unshift(snapshot);persist();renderShelf();notice('Snapshot saved. Your earlier entries remain unchanged.');}
+function fork(){if(!active){notice('Create a next move first.',true);return;}flush();const parent=active.id;const now=when();active={...cleanProject(active),id:uid(),parent,completed:false,evidence:'',created:now,updated:now};persist();renderActive();offerContext();notice('Fork created. The earlier working copy was not overwritten; save it first if you want to keep it.');}
+function restore(s){active={...cleanProject(s),id:uid(),parent:s.id,completed:false,evidence:'',created:when(),updated:when()};mode=active.mode;minutes=active.time;el.problem.value=active.problem;el.finish.value=active.finish;el.limit.value=active.limit;applyMode();applyMinutes();persist();renderActive();offerContext();window.scrollTo({top:0,behavior:'smooth'});notice('A new editable copy opened. The shelf snapshot was not modified.');}
+function applyMode(){document.querySelectorAll('[data-mode]').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.mode===mode)));const text={untangle:['What’s taking up space in your head?','What’s one useful outcome?'],make:['What do you want to make?','What would a first usable draft do?'],decide:['What decision is stuck?','What matters most in the decision?'],debug:['What isn’t working?','What would success look like?']}[mode];$('problem-label').textContent=text[0];$('finish-label').textContent=text[1];}
+function applyMinutes(){document.querySelectorAll('[data-min]').forEach(btn=>btn.setAttribute('aria-pressed',String(+btn.dataset.min===minutes)));}
+function simpleFile(name,body,mime){const blob=new Blob([body],{type:mime});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function plain(s){const lines=['LANTERN 014 · SOLO DESK','-----------------------',`Mode: ${labels[s.mode]}`,`Created: ${fmt(s.created)}`,'',`PROBLEM\n${s.problem}`,'',`NEXT MOVE\n${s.action}`,'',s.actionBody,'',`FINISH LINE\n${s.finishLine}`,'',`WORKING NOTE\n${s.note}`,'',`COMPLETION: ${s.completed?'Self-reported completed':'Not yet reported complete'}`,`WHAT CHANGED\n${s.evidence||'(not recorded)'}`,'',`Local ID: ${s.id}`,`Parent copy: ${s.parent||'none'}`,'','These notes record your own observations. The software cannot independently verify real-world completion.'];return lines.join('\n');}
+function renderShelf(){el.library.replaceChildren();if(!shelf.length){const d=document.createElement('div');d.className='timeline-card';d.textContent='No saved snapshots yet. Create a plan, edit your note, then use Save snapshot.';el.library.append(d);return;}
+ shelf.forEach(s=>{const b=document.createElement('button');b.type='button';b.className='library-item';const cap=document.createElement('span');cap.className='mini';cap.textContent=labels[s.mode]+(s.completed?' · self-reported done':' · working');const title=document.createElement('strong');title.textContent=s.problem.slice(0,90);const info=document.createElement('span');info.className='muted';info.textContent=`${fmt(s.updated)} · ${s.parent?'forked copy':'original'}`;const foot=document.createElement('span');foot.className='muted';foot.textContent='Open as editable copy →';foot.style.display='block';foot.style.marginTop='9px';b.append(cap,title,info,foot);b.addEventListener('click',()=>restore(s));el.library.append(b);});}
+function exportShelf(){flush();simpleFile('Lantern_014_Solo_Desk_Shelf.json',JSON.stringify({schema:'lantern.solo-shelf/v1',exported:when(),shelf,active},null,2),'application/json');notice('Exported a local backup. Keep the file somewhere safe.');}
+async function importShelf(file){if(!file)return;try{if(file.size>2_000_000)throw Error('File is too large.');const payload=JSON.parse(await file.text());if(payload.schema!=='lantern.solo-shelf/v1'||!Array.isArray(payload.shelf)||payload.shelf.length>MAX||!payload.shelf.every(valid)||payload.active&&!valid(payload.active))throw Error('This is not a valid Solo Desk shelf.');const ids=payload.shelf.map(x=>x.id);if(new Set(ids).size!==ids.length)throw Error('Duplicate snapshot IDs in file.');if(!confirm(`Import ${payload.shelf.length} snapshots? This replaces the current local shelf. Export a backup first if you need it.`))return;shelf=payload.shelf.map(cleanProject);active=payload.active?cleanProject(payload.active):null;persist();renderActive();renderShelf();notice('Imported local shelf from your file. No network used.');}catch(e){notice(`Import refused: ${e.message}`,true);}finally{$('import-file').value='';}}
+
+/* JAR;VIS offer registry. Every declared AVAILABLE_NOW entry maps to a real
+ * deterministic local executor; no imaginary network or cloud actions. */
+const JARVIS_OFFERS=Object.freeze([
+ {id:'checklist',effect:'EDIT_CURRENT_NOTE',label:'Create an editable checklist'},
+ {id:'tracker',effect:'DOWNLOAD_CSV',label:'Create a structured work tracker'},
+ {id:'page',effect:'DOWNLOAD_HTML',label:'Create a self-contained work page'},
+ {id:'audit',effect:'RENDER_DIAGNOSTIC',label:'Check work product readiness'}
+]);
+function taskSteps(p){
+ const title=safe(p.problem,105).replace(/[.?!]+$/,'')||'this project';
+ const goal=safe(p.finish,90)||'one real, observable change';
+ const practical=p.limit?('Respect constraint: '+safe(p.limit,95)+'.'):'Use only the resources already available.';
+ const steps={
+  untangle:['Write down two facts about '+title+'.','Separate unanswered questions from confirmed facts.',
+    'Choose the smallest action possible in '+p.time+' minutes.','Record a real observation or obstacle.'],
+  make:['Name the intended user or purpose of '+title+'.','Make a first usable version, even if rough.',
+    'Check the result against: '+goal+'.','Save the result and one specific revision.'],
+  decide:['Write the first concrete option for '+title+'.','Write the second concrete option.',
+    'Compare time, reversibility, and downsides on the same criteria.','Choose a short trial and record its observed result.'],
+  debug:['Record what actually happens in '+title+'.','Record what you expected instead.',
+    'Change one reversible variable and run one test.','Write the observed result and how to undo the change.']
+ };
+ return [...steps[p.mode],practical];
+}
+function htmlSafe(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function csvCell(value){
+ let v=String(value??'').replace(/[\u0000-\u001F]/g,' ');
+ // Prevent spreadsheet-formula injection, including after whitespace.
+ if(/^[\s]*[=+@\-]/.test(v))v="'"+v;
+ return '"'+v.replace(/"/g,'""')+'"';
+}
+function offerFeedback(message){
+ $('jarvis-response').textContent=message;
+ $('jarvis-response').classList.remove('hidden');
+ notice(message.split('\n')[0]);
+}
+function offerContext(){
+ const p=active;
+ const preferred={untangle:'a usable checklist',make:'a portable work page',decide:'a structured tracker',debug:'a readiness audit'};
+ $('jarvis-context').textContent=p
+   ?'For "'+safe(p.problem,110)+'", I recommend '+preferred[p.mode]+'. All four actions below are executable in this file.'
+   :'Create or restore a working step in section 01–02. I will offer actions I can execute on that actual project.';
+}
+function runJarvis(id){
+ if(!JARVIS_OFFERS.some(x=>x.id===id))throw Error('Unknown JAR;VIS capability');
+ if(!active){offerFeedback('Nothing to work on yet. Start one project above; I cannot invent a real task for you.');return;}
+ flush();
+ const p=active,steps=taskSteps(p),stamp=when();
+ if(id==='checklist'){
+  const list='\n\nJAR;VIS · EXECUTED CHECKLIST ('+stamp+')\n'+
+    steps.map(x=>'- [ ] '+x).join('\n')+'\n';
+  if(p.note.length+list.length>12000){offerFeedback('Checklist not added: the working note is full. Export your note before reducing it.');return;}
+  p.note+=list;p.updated=stamp;persist();renderActive();
+  offerFeedback('DONE HERE: five checklist items were added to your editable working note. This did not complete those items.');
+ }else if(id==='tracker'){
+  const rows=[['Project','Task','Status','Evidence','Date']];
+  steps.forEach((x,i)=>rows.push([p.problem,(i+1)+'. '+x,'Not started','','']));
+  const contents=rows.map(row=>row.map(csvCell).join(',')).join('\r\n')+'\r\n';
+  simpleFile('Lantern_JARVIS_Work_Tracker.csv',contents,'text/csv;charset=utf-8');
+  offerFeedback('FILE CREATED: Lantern_JARVIS_Work_Tracker.csv — five task rows and evidence columns. No other files were edited.');
+ }else if(id==='page'){
+  const title=htmlSafe(safe(p.problem,140));
+  const items=steps.map(x=>'<li><label><input type="checkbox"> '+htmlSafe(x)+'</label></li>').join('');
+  const note=htmlSafe(p.note);
+  const portable='<!doctype html><html lang="en"><head><meta charset="utf-8">'+
+    '<meta name="viewport" content="width=device-width,initial-scale=1"><title>'+title+' · Work Card</title>'+
+    '<style>body{max-width:780px;margin:24px auto;padding:18px;font:17px/1.6 system-ui;color:#192f29;background:#f7f7f1}h1{line-height:1.2}li{padding:9px 0}input[type=checkbox]{width:20px;height:20px;margin-right:9px}textarea{width:100%;box-sizing:border-box;min-height:200px;padding:12px;font:inherit}button{padding:10px 18px;border-radius:8px;background:#23463a;color:white;border:0}small{color:#476052}pre{white-space:pre-wrap;overflow-wrap:anywhere}section{border-top:1px solid #b5c9bc;margin-top:18px;padding-top:12px}@media print{button{display:none}}</style></head><body>'+
+    '<p><small>LANTERN · JAR;VIS LOCAL WORK CARD · no upload, no remote sync</small></p><h1>'+title+'</h1>'+
+    '<p><strong>Desired outcome:</strong> '+htmlSafe(p.finish||p.finishLine)+'</p>'+
+    '<p><strong>Constraint:</strong> '+htmlSafe(p.limit||'None recorded')+'</p>'+
+    '<section><h2>Five concrete steps</h2><ol>'+items+'</ol></section>'+
+    '<section><h2>Original working note</h2><pre>'+note+'</pre></section>'+
+    '<section><h2>My observations</h2><textarea placeholder="Write what actually changed here. This file never claims completion for you."></textarea></section>'+
+    '<button onclick="window.print()">Print / Save to PDF</button> <small>Checkboxes and notes are not auto-saved. Print or save your results.</small></body></html>';
+  simpleFile('Lantern_JARVIS_Work_Card.html',portable,'text/html;charset=utf-8');
+  offerFeedback('FILE CREATED: Lantern_JARVIS_Work_Card.html — open it offline, check the steps, write observations, or print it. The work is not reported complete.');
+ }else if(id==='audit'){
+  const reference=build(p.mode,p.problem,p.finish,p.limit,p.time).note;
+  const checks=[
+    [!!safe(p.problem),'A concrete problem is named.','Missing: name the actual task.'],
+    [!!safe(p.finish),'An explicit desired outcome is recorded.','Missing: one concrete desired outcome (not only a general intention).'],
+    [p.note.trim()!==reference.trim()&&p.note.trim().length>reference.trim().length/2,'The working note contains changes beyond its original scaffold.','The working note still resembles the untouched scaffold.'],
+    [!p.completed||!!safe(p.evidence),'Completion is either unclaimed or has a self-reported observation.','Completion is checked, but no observation or evidence was recorded.']
+  ];
+  const passed=checks.filter(x=>x[0]).length;
+  const issues=checks.filter(x=>!x[0]).map(x=>'- '+x[2]);
+  offerFeedback('JAR;VIS LOCAL AUDIT: '+passed+'/4 document checks passed.\n'+
+    (issues.length?issues.join('\n'):'No missing fields detected in this document.')+
+    '\nThis is a structural check only; I did not inspect your local files or verify any outside action.');
+ }
+}
+
+['checklist','tracker','page','audit'].forEach(id=>$('jarvis-'+id).addEventListener('click',()=>runJarvis(id)));
+$('build').addEventListener('click',()=>newProject(false));$('quick').addEventListener('click',()=>newProject(true));document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;applyMode();}));document.querySelectorAll('[data-min]').forEach(b=>b.addEventListener('click',()=>{minutes=+b.dataset.min;applyMinutes();}));
+[el.note,el.evidence].forEach(x=>x.addEventListener('input',()=>{clearTimeout(autosaveTimer);autosaveTimer=setTimeout(flush,180);}));el.completed.addEventListener('change',()=>{flush();renderActive();});$('save').addEventListener('click',save);$('fork').addEventListener('click',fork);
+$('copy').addEventListener('click',async()=>{if(!active)return;flush();const txt=plain(active);try{if(!navigator.clipboard)throw Error('Clipboard unavailable');await navigator.clipboard.writeText(txt);notice('Working note copied.');}catch{el.note.focus();el.note.select();notice('Clipboard permission unavailable. Select and copy the working note manually.',true);}});
+$('download').addEventListener('click',()=>{if(!active)return;flush();simpleFile('Lantern_014_Working_Note.txt',plain(active),'text/plain;charset=utf-8');notice('Saved a working text file.');});$('print').addEventListener('click',()=>{if(!active)return;flush();window.print();});$('export-shelf').addEventListener('click',exportShelf);$('import-shelf').addEventListener('click',()=>$('import-file').click());$('import-file').addEventListener('change',e=>importShelf(e.target.files?.[0]));$('clear-shelf').addEventListener('click',()=>{if(!shelf.length)return;if(confirm('Clear all saved snapshots from this browser? This cannot be undone. Export a backup first if these matter.')){shelf=[];persist();renderShelf();notice('Saved local snapshots cleared; working copy left intact.');}});
+load();applyMode();applyMinutes();renderActive();renderShelf();offerContext();window.LANTERN014={status:()=>({mode,minutes,active:active?cleanProject(active):null,snapshots:shelf.length,storageAvailable}),offers:()=>JARVIS_OFFERS.map(x=>({...x})),executeOffer:runJarvis,version:'0.2.0'};
+})();
+</script>
+<script>
+
+'use strict';
+(() => {
+ const ENDPOINT='https://kbhqacsdvjsstzyplqij.supabase.co/functions/v1/jarvis-live-bridge-001';
+ const TARGETS=Object.freeze({jarvis:'JAR;VIS · Assistant',relatte:'reLATTE · World experiments',ghot:'GHoT · Compute',planz:'planZ · Planning'});
+ const $=id=>document.getElementById(id);
+ let manifest=null,busy=false;
+ const state=$('connected-state'),result=$('connected-result'),tools=$('connected-tools');
+ const target=$('connected-target'),buttons=[$('connected-inspect'),$('connected-ci')];
+ function say(lines,links=[]){
+  result.replaceChildren();result.classList.remove('hidden');
+  for(const line of lines){const p=document.createElement('p');p.textContent=String(line);result.append(p);}
+  for(const link of links){if(!link||typeof link.href!=='string'||!link.href.startsWith('https://github.com/the-static-collective/')&&!link.href.startsWith('https://raw.githubusercontent.com/the-static-collective/'))continue;
+   const a=document.createElement('a');a.href=link.href;a.rel='noopener noreferrer';a.target='_blank';a.textContent=link.text||'Inspect public evidence';result.append(a);}
+ }
+ function setBusy(value){busy=value;$('connected-discover').disabled=value;for(const b of buttons)b.disabled=value||!manifest;}
+ function suggest(text){
+  const s=String(text||'').toLowerCase();
+  if(/\b(computer|compute|machine|cluster|server|device|mac|laptop)\b/.test(s))return 'ghot';
+  if(/\b(game|minecraft|world|cartridge|fork)\b/.test(s))return 'relatte';
+  if(/\b(event|volunteer|schedule|organize|planning|plan|task)\b/.test(s))return 'planz';
+  return 'jarvis';
+ }
+ function localTopic(){
+  const p=window.LANTERN014&&window.LANTERN014.status().active;
+  return p&&typeof p.problem==='string'?p.problem:'';
+ }
+ function validManifest(m){
+  return !!m&&m.ok===true&&m.mode==='PUBLIC_READ_ONLY'&&m.writes_enabled===false&&
+    m.remote_agent_execution===false&&m.user_work_received===false&&
+    m.targets&&typeof m.targets==='object'&&Array.isArray(m.offers)&&
+    ['inspect_public_source','check_public_ci'].every(id=>m.offers.some(o=>o.id===id&&o.execution==='CONNECTED_NOW'));
+ }
+ async function request(url){
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),11000);
+  try{
+   const response=await fetch(url,{method:'GET',headers:{accept:'application/json'},signal:controller.signal,cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'});
+   if(!response.ok)throw Error('Public service returned HTTP '+response.status);
+   const json=await response.json();return json;
+  }finally{clearTimeout(timeout);}
+ }
+ async function discover(){
+  if(busy)return;
+  setBusy(true);state.textContent='● CHECKING CONNECTION';
+  say(['Checking the actual read-only capability registry. No project notes are transmitted.']);
+  try{
+   const m=await request(ENDPOINT);
+   if(!validManifest(m))throw Error('The bridge did not advertise the required safe read-only capabilities.');
+   const allowed=Object.keys(TARGETS).filter(id=>Object.prototype.hasOwnProperty.call(m.targets,id));
+   if(!allowed.length)throw Error('No recognized public projects are currently advertised.');
+   manifest=m;target.replaceChildren();
+   for(const id of allowed){const option=document.createElement('option');option.value=id;option.textContent=TARGETS[id];target.append(option);}
+   const suggestion=suggest(localTopic());
+   target.value=allowed.includes(suggestion)?suggestion:allowed[0];
+   $('connected-suggestion').textContent='Suggested project selected using local keywords. You may change it.';
+   tools.classList.remove('hidden');state.textContent='● PUBLIC READ-ONLY TOOLS FOUND';
+   say(['Connected to the live registry. '+allowed.length+' public project targets available.','Available: inspect a public README or check real build status. Select one, then approve the separate read request.','Your working notes are still local.']);
+  }catch(e){
+   manifest=null;tools.classList.add('hidden');state.textContent='● CONNECTED SERVICE UNAVAILABLE';
+   say(['Connection not established: '+String(e.message||e).slice(0,180),'The four local JAR;VIS tools above still work. No connected action was performed.']);
+  }finally{setBusy(false);}
+ }
+ async function run(action){
+  if(busy||!manifest)return;
+  const id=target.value;
+  if(!Object.prototype.hasOwnProperty.call(TARGETS,id)||!Object.prototype.hasOwnProperty.call(manifest.targets,id))return say(['Unrecognized project. No request sent.']);
+  if(!['inspect','ci'].includes(action))return say(['Unsupported operation. No request sent.']);
+  const meaning=action==='inspect'?'read the public README and fingerprint':'read the five newest public GitHub Actions runs';
+  if(!confirm('Authorize JAR;VIS to '+meaning+' for '+TARGETS[id]+'? Only action='+action+' and target='+id+' are sent. Your notes remain here.'))return;
+  setBusy(true);state.textContent='● READING PUBLIC EVIDENCE';say(['Request authorized. Checking '+TARGETS[id]+'.']);
+  try{
+   const u=ENDPOINT+'?action='+encodeURIComponent(action)+'&target='+encodeURIComponent(id);
+   const receipt=await request(u);
+   if(!receipt||receipt.ok!==true||receipt.action!==action||receipt.target!==id||
+      receipt.writes_performed!==0||receipt.user_work_received!==false)
+     throw Error('Connected service returned an unexpected or unverified result.');
+   const lines=['READ-ONLY ACTION EXECUTED · '+TARGETS[id],'Observed: '+String(receipt.observed_at||'unknown time'), 'Repository: '+String(receipt.repository||'not provided')];
+   const links=[];
+   if(action==='inspect'){
+    if(typeof receipt.sha256!=='string'||!/^[a-f0-9]{64}$/.test(receipt.sha256))throw Error('Missing verified source digest.');
+    lines.push('Source bytes: '+String(receipt.source_bytes),'SHA-256: '+receipt.sha256,'Excerpt (public README):',String(receipt.excerpt||'').slice(0,1800));
+    if(typeof receipt.source_url==='string')links.push({href:receipt.source_url,text:'Open this exact public source'});
+   }else{
+    const rows=Array.isArray(receipt.runs)?receipt.runs.slice(0,5):[];
+    lines.push('Public workflow runs found: '+rows.length);
+    for(const r of rows){lines.push(String(r.name||'workflow')+' — '+String(r.status||'unknown')+' / '+String(r.conclusion||'not finished'));}
+    for(const r of rows)if(typeof r.url==='string')links.push({href:r.url,text:'Open '+String(r.name||'workflow').slice(0,90)});
+   }
+   lines.push('Result: public evidence read only; no build dispatched, notes uploaded, or outside work completed.');
+   say(lines,links);state.textContent='● PUBLIC EVIDENCE RECEIVED';
+  }catch(e){say(['Connected action not verified: '+String(e.message||e).slice(0,180),'No success is claimed. Check connectivity and retry explicitly.']);state.textContent='● READ NOT VERIFIED';}
+  finally{setBusy(false);}
+ }
+ $('connected-discover').addEventListener('click',discover);
+ $('connected-inspect').addEventListener('click',()=>run('inspect'));
+ $('connected-ci').addEventListener('click',()=>run('ci'));
+ window.CONNECTED001=Object.freeze({suggest,discover,run,status:()=>({loaded:!!manifest,busy,targets:manifest?Object.keys(manifest.targets).filter(k=>Object.hasOwn(TARGETS,k)):[]})});
+})();
+
+</script>
+</body>
+</html>

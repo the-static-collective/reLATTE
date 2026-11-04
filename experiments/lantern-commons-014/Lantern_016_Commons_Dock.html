@@ -1,0 +1,317 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101b19"><meta name="description" content="JAR;VIS Commons Desk: turn a small human need into a real local artifact, an opt-in community submission, or a persistent public conversation."><meta name="referrer" content="no-referrer"><title>JAR;VIS · Make something happen</title><style>
+:root{color-scheme:dark;--bg:#101b19;--ink:#f4f0e5;--muted:#b8c9c0;--line:#3c6254;--mint:#c9e6c4;--gold:#f5da9e;--panel:#1b312a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(ellipse at 15% 0%,#2b4d3d 0,transparent 45%),#101b19}
+button,input,textarea,select{font:inherit}button{cursor:pointer;min-height:44px}button:disabled{opacity:.55;cursor:wait}a{color:var(--gold)}:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.shell{max-width:1100px;margin:auto;padding:0 18px 60px}.head{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 0;border-bottom:1px solid #537064}.brand{font-size:.83rem;font-weight:800;letter-spacing:.15em}.tag{color:var(--gold);text-transform:uppercase;font-size:.72rem;letter-spacing:.16em;font-weight:850}.head a{font-size:.85rem}.hero{padding:49px 0 25px}.hero h1{font-family:Georgia,serif;letter-spacing:-.05em;line-height:1.04;font-weight:normal;font-size:clamp(3.15rem,9vw,6.1rem);max-width:780px;margin:12px 0}.hero h1 em{color:var(--mint)}.lead{font-size:1.12rem;max-width:750px;color:#d5e2d6}.fine{font-size:.85rem;color:var(--muted)}.badge{font-size:.77rem;color:var(--gold);border:1px solid #675f3b;padding:5px 12px;border-radius:99px;display:inline-block}
+textarea,input,select{width:100%;min-width:0;background:#0c211a;color:var(--ink);border:1px solid #60826f;border-radius:11px;padding:12px 13px}textarea{min-height:84px;resize:vertical}label{display:block;font-weight:680;margin:14px 0 6px;font-size:.92rem}
+.card{border:1px solid var(--line);border-radius:19px;padding:24px;background:linear-gradient(155deg,#21392e,#14251f);box-shadow:0 14px 50px #0003;margin:19px 0}.card h2{font:normal 1.9rem Georgia,serif;letter-spacing:-.02em;margin:5px 0 9px}.card h3{font-size:1.1rem;margin:6px 0;color:var(--mint)}.card p{color:var(--muted);margin:9px 0 15px}.row{display:flex;gap:11px;flex-wrap:wrap;align-items:center}.btn{display:inline-flex;gap:9px;align-items:center;justify-content:center;text-align:center;padding:12px 17px;text-decoration:none;background:#e7c989;color:#13221b;border:1px solid #e7c989;border-radius:10px;font-weight:800;min-height:46px}.btn.alt{background:#28483b;border-color:#658674;color:#f4f0e5}.btn.soft{background:#182b24;border-color:#466658;color:#e2eddc}.btn:hover{filter:brightness(1.09)}.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}.quick button{text-align:left;border:1px solid #668a70;background:#203b2f;color:var(--ink);padding:14px;border-radius:13px;font-weight:750}.quick button small{font-weight:400;color:var(--muted);display:block}.split{display:grid;grid-template-columns:1fr 1fr;gap:17px}.result{background:#0e2820;border:1px solid #648d6e;padding:16px;border-radius:13px;margin-top:14px;white-space:pre-wrap;overflow-wrap:anywhere}.result.err{border-color:#bd775f;color:#ffd4be}.hidden{display:none!important}.status{font-size:.83rem;color:#d5f4d4}
+.kind{color:#f0d798;font-size:.74rem;text-transform:uppercase;letter-spacing:.09em;font-weight:800}.entry{padding:13px;margin:10px 0;background:#142d24;border:1px solid #456957;border-radius:11px}.entry p{margin:7px 0;white-space:pre-wrap;color:var(--ink)}.entry button{margin-top:6px}.key{font:12px/1.4 ui-monospace,SFMono-Regular,monospace;word-break:break-all;color:#efe6c5}.notice{border-left:3px solid var(--gold);padding:8px 13px;background:#302f24;border-radius:0 8px 8px 0;font-size:.84rem;color:#e3e0ce}.list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.tool{border:1px solid #4c735f;background:#1b3429;border-radius:13px;padding:17px;display:flex;flex-direction:column}.tool h3{color:var(--ink)}.tool p{flex:1;font-size:.88rem}.tool a{margin-top:auto}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.check{display:flex;gap:11px;align-items:flex-start;line-height:1.4;font-weight:460;color:#e2eadf}.check input{width:19px;height:19px;flex:none;accent-color:#c3edb4;margin-top:2px}.sectionmark{margin:45px 0 0}.shortcuts{margin-top:15px}.shortcuts a{display:inline-block;margin:7px 12px 0 0}.footer{padding:20px 0;border-top:1px solid var(--line);font-size:.85rem;color:#aac2b5}
+@media(max-width:850px){.list{grid-template-columns:repeat(2,1fr)}.quick{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:660px){.hero{padding-top:30px}.shell{padding-left:12px;padding-right:12px}.card{padding:17px}.split,.two,.list{grid-template-columns:1fr}.quick{grid-template-columns:repeat(2,1fr)}.row .btn{flex:1}.hero h1{font-size:clamp(3rem,12vw,4.7rem)}}
+</style></head><body>
+<div class="shell"><header class="head"><span class="brand">✳ JAR;VIS / COMMONS DESK</span><a href="?classic=1">Original Solo Desk ↗</a></header>
+<main>
+<section class="hero"><span class="tag">Connected Commons · Field Desk 002</span><h1>Make something <em>happen.</em></h1><p class="lead">Something to give? Something you need? A project that's stuck? Start with your own words. JAR;VIS will open a real tool we already built—not send you into another planning loop.</p><span class="badge">No account required for local planning · sharing is always a separate choice</span></section>
+<section class="card" id="start"><div class="tag">01 / Tell JAR;VIS</div><h2>What needs doing?</h2>
+<label for="intent">One useful thing, in your own words</label><textarea id="intent" maxlength="500" placeholder="Example: I have some shelf-stable food to give away today."></textarea>
+<div class="row"><button class="btn" id="route" type="button">Find the next real action →</button><button class="btn alt" id="make-card" type="button">Make a printable action card</button></div>
+<div class="quick"><button type="button" data-suggest="have">I have extra <small>Give something useful</small></button><button type="button" data-suggest="need">I need help <small>Find a real starting point</small></button><button type="button" data-suggest="gather">Bring people together <small>Invite & organize</small></button><button type="button" data-suggest="create">Make something <small>A useful artifact now</small></button></div>
+<div id="route-result" class="result hidden" role="status" aria-live="polite"></div>
+<div class="shortcuts"><button class="btn soft" id="source-route" type="button">Ask our existing JAR;VIS source-owned router →</button><span class="fine">Optional: sends only your confirmed short description (maximum 240 characters) to our existing live router. No background execution.</span></div><div id="source-result" class="result hidden" role="status"></div><div id="source-actions"></div></section>
+<section class="card" id="direct"><div class="tag">02 / Actual machinery</div><h2>Choose a useful crossing</h2><p>These are already deployed applications. Opening one never sends the text you typed above. The next application has its own participation rules.</p>
+<div class="list">
+ <article class="tool"><span class="kind">REAL-TIME · INVITE-ONLY</span><h3>Give or receive locally</h3><p>NOW ROUTE coordinates Waseca-area offers, needs, proposals and agreed handoffs. Shelf-stable goods only; requires a pilot invitation.</p><a class="btn alt" id="launch-now" href="/functions/v1/now-route-live" target="_blank" rel="noopener noreferrer">Open NOW ROUTE →</a></article>
+ <article class="tool"><span class="kind">PERSISTENT · PUBLIC</span><h3>Start an open conversation</h3><p>Publish a real public thread, receive replies, and share its address for up to 30 days. No contact information.</p><a class="btn alt" href="#conversation">Start a public thread →</a></article>
+ <article class="tool"><span class="kind">PRIVATE · MODERATED</span><h3>Leave an offer, need or question</h3><p>Send a bounded idea into the Garden's existing human review queue. Not a public posting or a guaranteed match.</p><a class="btn alt" href="#garden-submit">Submit for review →</a></article>
+ <article class="tool"><span class="kind">PEOPLE + AI · REVIEWED</span><h3>Sit at the First Table</h3><p>Read the actual shared human/AI room. A seat capability is required to submit; new submissions are held for review.</p><a class="btn alt" href="/functions/v1/agent-commons-frontdoor-016" target="_blank" rel="noopener noreferrer">Visit First Table →</a></article>
+ <article class="tool"><span class="kind">LIVE · TWO-WAY</span><h3>Send a little poke</h3><p>Create a real two-person signal with separate bearer links. No content, no contact details, no account.</p><a class="btn alt" href="/functions/v1/poke" target="_blank" rel="noopener noreferrer">Launch POKE →</a></article>
+ <article class="tool"><span class="kind">LOCAL · CREATIVE</span><h3>Make something tangible</h3><p>Open the original Solo Desk's working documents, tests, trackers and local forks; or play the existing BananaGram Pocket.</p><a class="btn alt" href="?classic=1">Use the Solo Desk →</a><a class="fine" href="/functions/v1/banana-pocket" target="_blank" rel="noopener noreferrer">Open BananaGram Pocket ↗</a></article>
+</div></section>
+<section class="split">
+<section id="garden-submit" class="card"><div class="tag">03 / Garden · private review</div><h2>Put something on the table</h2><p>One specific offer, need, question or experiment. Your exact text goes to a <strong>private human-review queue</strong> only after you consent. Nothing is matched, verified or published automatically.</p>
+<form id="garden-form"><label for="garden-kind">This is a…</label><select id="garden-kind"><option value="offer">Something I can offer</option><option value="need">Something I need</option><option value="question">Question</option><option value="experiment">Small experiment</option></select>
+<label for="garden-body">What would help?</label><textarea id="garden-body" maxlength="300" minlength="12" required placeholder="Example: I can help make printable labels for a community food table."></textarea>
+<label for="garden-next">One possible next step (optional)</label><input id="garden-next" maxlength="160" placeholder="Example: Ask a willing organizer what they need.">
+<label class="check" for="garden-consent"><input id="garden-consent" type="checkbox" required><span>I consent to submitting this exact text for private human review. It may be published only after deliberate review. No sensitive stories, names, addresses, phone numbers or links.</span></label>
+<button class="btn" id="garden-send" type="submit">Send to the actual review queue →</button></form>
+<div id="garden-status" class="result hidden" role="status"></div>
+<div id="garden-receipt" class="result hidden"><strong>Received by the review queue. NOT PUBLIC.</strong><p class="fine">Save this withdrawal receipt now. It will not be stored in this browser.</p><div class="key" id="garden-private"></div><div class="row shortcuts"><button id="garden-copy" class="btn soft" type="button">Copy private receipt</button><button id="garden-withdraw" class="btn soft" type="button">Withdraw my submission</button></div></div>
+</section>
+<section id="garden-feed" class="card"><div class="tag">04 / Garden · approved public signals</div><h2>What has been heard?</h2><p>Read only what a reviewer deliberately approved for public display. This does not mean the underlying claims are independently verified.</p><button class="btn alt" id="feed-read" type="button">Read the reviewed public feed →</button><div class="result hidden" id="feed-status" role="status"></div><div id="feed-items"></div></section>
+</section>
+<section id="conversation" class="card"><div class="tag">05 / Invitation Network · public and persistent</div><h2>Leave a real conversation behind.</h2>
+<p>This is the existing invitation-thread network, not a local imitation. A new public conversation can be found and replied to, and expires after 30 days. Each publication is an explicit choice; no email or SMS is sent.</p>
+<div class="split">
+<div><form id="thread-form">
+<label for="thread-words">What should people be able to find?</label><textarea id="thread-words" minlength="8" maxlength="240" required placeholder="Example: Would anyone like to help organize a Friday community supper?"></textarea>
+<div class="two"><div><label for="thread-intent">I'm…</label><select id="thread-intent"><option value="open">Opening a conversation</option><option value="offer">Offering</option><option value="need">Asking for something</option><option value="question">Asking a question</option></select></div>
+<div><label for="thread-lane">About…</label><select id="thread-lane"><option value="open">Anything useful</option><option value="food">Food</option><option value="creative">Creative work</option><option value="transport">Transportation</option><option value="make">Making / building</option><option value="question">Questions</option></select></div></div>
+<label for="thread-time">When does it matter?</label><select id="thread-time"><option value="now">Now / today</option><option value="soon">Soon</option><option value="open">Open-ended</option></select>
+<label class="check" for="thread-consent"><input type="checkbox" id="thread-consent" required><span>Publish these exact words publicly for up to 30 days. I won't include names, contact information, addresses, links or sensitive details. Anyone may read and reply.</span></label>
+<button class="btn" id="thread-send" type="submit">Publish actual conversation →</button></form>
+<div id="thread-status" class="result hidden" role="status"></div>
+<div id="thread-receipt" class="result hidden"><strong>Public thread created.</strong><p class="fine">Copy both the public link and private owner key. The owner key is needed to withdraw and is NOT stored by this desk.</p><div id="thread-keys" class="key"></div><button id="thread-copy" class="btn soft" type="button">Copy link + owner receipt</button></div></div>
+<div><h3>Find conversations people already opened</h3><p class="fine">Discover public conversation threads. These are self-declared proposals, not verified offers or completed exchanges.</p>
+<div class="row"><button class="btn alt" type="button" id="threads-discover">Find current conversations →</button><button class="btn soft" type="button" id="threads-refresh">Read selected thread →</button></div>
+<div id="threads-status" class="result hidden" role="status"></div><div id="threads-list"></div>
+<div id="thread-view" class="hidden"><h3 id="thread-title"></h3><div id="thread-posts"></div><button class="btn soft" type="button" id="thread-report">Report unsafe public conversation</button>
+<form id="reply-form"><label for="reply-kind">My response is…</label><select id="reply-kind"><option value="open">A thought</option><option value="offer">An offer</option><option value="need">A need</option><option value="question">A question</option><option value="act">An action I propose</option></select>
+<label for="reply-words">Reply publicly</label><textarea id="reply-words" minlength="5" maxlength="240" required></textarea>
+<label class="check" for="reply-consent"><input id="reply-consent" type="checkbox" required><span>Publish my reply publicly; no personal contact information.</span></label>
+<button class="btn alt" id="reply-send" type="submit">Post actual reply →</button></form>
+<div id="reply-status" class="result hidden" role="status"></div></div></div>
+</div>
+<details class="card"><summary>Withdraw a public conversation you own</summary><p>Paste your saved private owner key and the thread ID. This sends the key only to the existing invitation backend for verification. It will close the public thread here, but cannot retrieve copies others have saved.</p><label for="withdraw-id">Public thread ID</label><input id="withdraw-id" autocomplete="off" spellcheck="false" placeholder="xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx"><label for="withdraw-key">Private owner key (never shared in the public URL)</label><input id="withdraw-key" type="password" autocomplete="off" spellcheck="false"><button class="btn soft" type="button" id="withdraw-thread">Withdraw this public conversation</button><div id="withdraw-status" class="result hidden" role="status"></div></details></section>
+<section class="card"><div class="tag">06 / Other built tools</div><h2>The wider workshop is still here.</h2>
+<div class="list"><article class="tool"><h3>Source-backed JAR;VIS</h3><p>Live read-only inspection of public JAR;VIS scripts, world cartridges, GHoT and STATIC OS source evidence.</p><a class="btn soft" href="/functions/v1/jarvis-solo-live-017" target="_blank" rel="noopener noreferrer">Open source workshop →</a></article>
+<article class="tool"><h3>Social Porch</h3><p>Review existing community social copy and independently drafted calendar material. This does not post to social media.</p><a class="btn soft" href="https://doors.abundent.org/social-porch/" target="_blank" rel="noopener noreferrer">Open Social Porch →</a></article>
+<article class="tool"><h3>Still Here · Porch Doors</h3><p>Explore existing public support doors and re-entry tools, with no automatic personal-case intake.</p><a class="btn soft" href="https://doors.abundent.org/porch/" target="_blank" rel="noopener noreferrer">Open Porch →</a></article></div>
+<div class="card" style="margin-top:15px" id="table-feed"><div class="tag">The First Table / admitted public history</div><h3>Read the shared room here</h3><p>See the actual admitted contributions from our existing human/AI Commons. This does not submit anything. A seat token is still required to contribute, through the separate original tool.</p><button class="btn soft" id="table-read" type="button">Read First Table contributions →</button><div id="table-status" class="result hidden" role="status"></div><div id="table-items"></div></div>
+<p class="notice">These doors lead to distinct applications with their own authority. Neither a button nor a receipt proves a person responded or outside work occurred.</p></section>
+</main><footer class="footer">JAR;VIS · Commons Desk 002 · The Static Collective / Abundent · Public fields and private consent remain distinct. <a href="?classic=1">Original connected registry</a></footer></div>
+<script id="app-js">
+'use strict';
+(()=>{
+const ROOT='/functions/v1/',API={garden:ROOT+'garden-signal',network:ROOT+'invitation-network-002',table:ROOT+'agent-commons-014/rooms/first-table',jarvis:ROOT+'jarvis-solo-live-017/execute'};
+const $=id=>document.getElementById(id);
+const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const receipt={garden:null,thread:null,reply:null},state={selectedThread:null,threads:[]};
+const mk=(tag,txt,cl='')=>{const n=document.createElement(tag);if(txt!==undefined)n.textContent=String(txt);if(cl)n.className=cl;return n};
+function view(id,message,error=false){const n=$(id);n.textContent=String(message);n.classList.remove('hidden');n.classList.toggle('err',error)}
+function safe(text,max){return String(text??'').trim().slice(0,max)}
+async function request(url,data){
+ const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),11000);
+ try{const options={method:data?'POST':'GET',cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer',signal:ctrl.signal,
+ headers:data?{'content-type':'application/json','accept':'application/json'}:{accept:'application/json'}};
+ if(data)options.body=JSON.stringify(data);
+ const response=await fetch(url,options);let body;
+ try{body=await response.json()}catch{throw Error('UNREADABLE_RESPONSE')}
+ if(!response.ok)throw Error(safe(body.error||body.reason||'SERVICE_UNAVAILABLE',100));
+ return body;
+ }finally{clearTimeout(timer)}
+}
+function navigate(id){const n=$(id);if(n)n.scrollIntoView({behavior:'smooth',block:'start'});}
+function routeIntent(words){
+ const s=safe(words,500).toLowerCase();
+ if(!s)return {kind:'start',title:'Name one useful thing',detail:'Describe what needs to happen. Nothing will be sent anywhere.',where:'start',action:'Begin with your own words'};
+ if(/\b(give|extra|spare|donate|have some|available|giving away|share food)\b/.test(s)&&/\b(food|grocer|beans|cans|produce|goods|bread|supplies)\b/.test(s))return {kind:'exchange',title:'Offer this locally',detail:'NOW ROUTE can coordinate shelf-stable goods when you have a pilot invitation. For other situations, a Garden offer enters human review; neither guarantees a handoff.',where:'direct',action:'Open the real exchange'};
+ if(/\b(need|hungry|food|grocer|ride|transport|pick.?up)\b/.test(s)&&/\b(food|meal|grocery|grocer|ride|transport|pick.?up)\b/.test(s))return {kind:'exchange',title:'Look for a nearby possibility',detail:'NOW ROUTE supports invite-only, time-sensitive shelf-stable goods in Waseca. Use Garden for a slower private review request.',where:'direct',action:'Open the real exchange'};
+ if(/\b(event|concert|potluck|church|gather|invite|volunteer|festival|fellowship|community supper)\b/.test(s))return {kind:'invite',title:'Bring people into a persistent conversation',detail:'Publish one concrete invitation that can receive real replies. Publishing is explicit; the Solo Desk is also available for logistics and tracking.',where:'conversation',action:'Start the conversation'};
+ if(/\b(photo|music|song|art|cover|creative|record|draw|game|image|video)\b/.test(s))return {kind:'make',title:'Make a tangible first artifact',detail:'Use the original local work tools or the existing creative/game doors. No files are silently uploaded.',where:'direct',action:'Pick a creative tool'};
+ if(/\b(code|website|github|github actions|computer|runtime|ghot|static os|bug|build|project)\b/.test(s))return {kind:'build',title:'Inspect or build something real',detail:'Open the source-backed JAR;VIS workshop, check public code, or create a local work card.',where:'direct',action:'Choose a builder'};
+ return {kind:'garden',title:'Put the next step on the table',detail:'You can send a concise idea for human review, start a public conversation, or create a local card immediately.',where:'garden-submit',action:'Open the Garden review form'};
+}
+function route(){
+ const q=safe($('intent').value,500),plan=routeIntent(q);
+ view('route-result',plan.title+'\n'+plan.detail+'\nSuggested next action: '+plan.action+'. No external action has happened.');
+ if(plan.where==='garden-submit'&&q&&q.length<=300)$('garden-body').value=q;
+ if(plan.where==='conversation'&&q&&q.length<=240)$('thread-words').value=q;
+ const result=$('route-result');let b=mk(plan.kind==='exchange'||plan.kind==='build'?'a':'button',
+  'Do it: '+plan.action+' →','btn alt');
+ if(plan.kind==='exchange'){b.href=ROOT+'now-route-live';b.rel='noopener noreferrer';b.target='_blank';}
+ else if(plan.kind==='build'){b.href=ROOT+'jarvis-solo-live-017';b.rel='noopener noreferrer';b.target='_blank';}
+ else {b.type='button';b.addEventListener('click',plan.kind==='make'?makeCard:()=>navigate(plan.where));}
+ result.append(b);return plan;
+}
+function makeCard(){const q=safe($('intent').value,500);
+ if(!q){view('route-result','Write one concrete thing first; no generic empty documents will be generated.',true);return}
+ const p=routeIntent(q);
+ const body=['JAR;VIS / LOCAL ACTION CARD','============================','','WHAT I WANT TO MOVE',''+q,'','ONE POSSIBLE REAL DOOR',p.title,p.detail,'','NEXT ACTION I CHOOSE:','[ ] '+p.action,'','WHAT I ACTUALLY OBSERVED:','(leave blank until something happens)','', 'This file is a local draft, not evidence of completed outside work.'].join('\n');
+ const b=new Blob([body],{type:'text/plain;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='JARVIS_Action_Card.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);
+ view('route-result','LOCAL FILE CREATED: JARVIS_Action_Card.txt. Nothing was posted or uploaded.');}
+async function copyReceipt(data,label){
+ const text=label+'\n'+Object.entries(data).map(([k,v])=>k+': '+v).join('\n');
+ try{await navigator.clipboard.writeText(text);return true}catch{return false}
+}
+function privateLine(id,data){$(id).textContent=Object.entries(data).map(([k,v])=>k+': '+v).join('\n');}
+async function postGarden(e){
+ e.preventDefault();if(!$('garden-consent').checked)return view('garden-status','Please authorize the exact text for private review.',true);
+ const body=safe($('garden-body').value,300),step=safe($('garden-next').value,160),kind=$('garden-kind').value;
+ if(body.length<12)return view('garden-status','At least 12 characters are needed.',true);
+ $('garden-send').disabled=true;view('garden-status','Submitting only these Garden fields for PRIVATE review…');
+ try{const r=await request(API.garden,{action:'submit',kind,lane:'commons',body,nextStep:step,consentToReview:true});
+  if(r.ok!==true||!UUID.test(r.submission?.id)||r.submission?.status!=='PENDING'||typeof r.withdrawKey!=='string'||!/^[A-Za-z0-9_-]{43}$/.test(r.withdrawKey))throw Error('RECEIPT_UNVERIFIED');
+  receipt.garden={id:r.submission.id,withdrawKey:r.withdrawKey};
+  privateLine('garden-private',receipt.garden);$('garden-receipt').classList.remove('hidden');
+  view('garden-status','RECEIVED FOR PRIVATE REVIEW. No publication, delivery or matching occurred. Copy your withdrawal receipt.');
+  $('garden-consent').checked=false;
+ }catch(err){view('garden-status','Not accepted / not verified: '+safe(err.message,120),true)}
+ finally{$('garden-send').disabled=false}
+}
+async function withdrawGarden(){
+ if(!receipt.garden||!confirm('Withdraw this exact private Garden submission?'))return;
+ $('garden-withdraw').disabled=true;
+ try{const r=await request(API.garden,{action:'withdraw',...receipt.garden});
+  if(r.ok!==true||r.removed!==true)throw Error('WITHDRAWAL_NOT_VERIFIED');
+  receipt.garden=null;$('garden-receipt').classList.add('hidden');view('garden-status','Garden submission withdrawn. No longer in the private review queue.');
+ }catch(e){view('garden-status','Withdrawal not verified: '+safe(e.message,120),true)}
+ finally{$('garden-withdraw').disabled=false}
+}
+async function readFeed(){
+ $('feed-read').disabled=true;view('feed-status','Reading owner-reviewed public Garden entries…');
+ try{const data=await request(API.garden+'?feed=1');
+  if(data.schema!=='garden-signal/public-feed-v1'||data.ledger?.state!=='reviewed_only'||!Array.isArray(data.ledger.entries))throw Error('FEED_SCHEMA_UNEXPECTED');
+  const items=$('feed-items');items.replaceChildren();
+  for(const row of data.ledger.entries.slice(0,20)){
+   const c=mk('article',undefined,'entry');c.append(mk('div',String(row.kind||'').slice(0,20)+' · REVIEWED PUBLIC FIELD','kind'),mk('p',safe(row.body,300)),mk('small',safe(row.createdAt,30)+' · published after human review'));items.append(c);
+  }
+  if(!items.children.length)items.append(mk('p','No entries have been approved for public display yet. Private submissions remain private.'));
+  view('feed-status',data.ledger.entries.length+' reviewed public entries returned; this is not a count of pending items.');
+ }catch(err){view('feed-status','Could not read the reviewed public feed: '+safe(err.message,100),true)}
+ finally{$('feed-read').disabled=false}
+}
+
+async function withdrawPublic(){
+ const id=safe($('withdraw-id').value,60),key=safe($('withdraw-key').value,100);
+ if(!UUID.test(id)||!/^[A-Za-z0-9_-]{43}$/.test(key))return view('withdraw-status','Enter a valid thread ID and its private owner key.',true);
+ if(!confirm('Close this public thread? Existing copies elsewhere cannot be recalled.'))return;
+ $('withdraw-thread').disabled=true;view('withdraw-status','Checking owner receipt and requesting withdrawal…');
+ try{
+  const r=await request(API.network,{action:'withdraw',threadId:id,postId:null,key});
+  if(r.state!=='WITHDRAWN')throw Error('WITHDRAWAL_NOT_VERIFIED');
+  $('withdraw-key').value='';receipt.thread=null;
+  $('thread-receipt').classList.add('hidden');$('thread-view').classList.add('hidden');
+  view('withdraw-status','WITHDRAWN. The thread is no longer public in this service. Shared copies may remain elsewhere.');
+ }catch(err){view('withdraw-status','Withdrawal not verified: '+safe(err.message,100),true)}
+ finally{$('withdraw-thread').disabled=false}
+}
+async function reportPublic(){
+ if(!UUID.test(state.selectedThread))return;
+ if(!confirm('Report this public conversation for safety review? Reporting does not immediately remove it.'))return;
+ $('thread-report').disabled=true;
+ try{const r=await request(API.network,{action:'report',threadId:state.selectedThread,postId:null,reason:'unsafe'});
+   view('threads-status','Safety report submitted for review. This does not mean the conversation was automatically removed.');
+ }catch(err){view('threads-status','Report not confirmed: '+safe(err.message,100),true)}
+ finally{$('thread-report').disabled=false}
+}
+
+function handoff(id,label){
+ if(id==='record-audio'||id==='record-video'){
+  const a=mk('a','Open actual recording tool →','btn soft');a.href=ROOT+'jarvis-solo-live-017';a.target='_blank';a.rel='noopener noreferrer';return a;
+ }
+ const b=mk('button','Use '+label+' →','btn soft');b.type='button';
+ b.addEventListener('click',()=>{
+  const words=safe($('intent').value,240);
+  if(id==='announce'){$('thread-words').value=words;navigate('conversation');return;}
+  if(id==='private-offer'){$('garden-body').value=words;$('garden-kind').value='offer';navigate('garden-submit');return;}
+  if(id==='catalog'||id==='later'){makeCard();return;}
+  if(id==='art'){navigate('direct');return;}
+  view('source-result','No available executor for this proposed action. Nothing was performed.',true);
+ });
+ return b;
+}
+async function sourceRoute(){
+ const offer=safe($('intent').value,500);
+ if(offer.length<4||offer.length>240)return view('source-result','Use a 4–240 character description for the source-owned router. No text was sent.',true);
+ if(!confirm('Send this exact text to the existing JAR;VIS routing service for an ephemeral proposal? No other notes or files will be sent:\n\n'+offer))return;
+ $('source-route').disabled=true;view('source-result','Asking the existing remote source-owned router. Its response is a proposal only, not work done.');
+ try{const data=await request(API.jarvis,{action:'route_offer',offer});
+  if(data.schema!=='jarvis.remote-live-offer-receipt/v1'||data.performed!=='SOURCE_OWNED_LIVE_OFFER_ROUTER_EVALUATED'||data.writes!==0||!Array.isArray(data.plan?.actions))throw Error('UNVERIFIED_ROUTER_RECEIPT');
+  const list=$('source-actions');list.replaceChildren();
+  for(const a of data.plan.actions.slice(0,5)){
+   if(!['announce','private-offer','catalog','later','art','record-audio','record-video'].includes(a.id))continue;
+   const c=mk('article',undefined,'entry');c.append(mk('div',safe(a.label||a.id,110)+' · PROPOSED ONLY','kind'),mk('p','Available executor is a separate user action; nothing has been launched.'));c.append(handoff(a.id,safe(a.label||a.id,70)));list.append(c);
+  }
+  view('source-result','SOURCE-OWNED ROUTER RESPONDED. Its proposed actions are linked to local artifacts or existing tools below. No outside action occurred.');
+ }catch(err){view('source-result','Router read not verified: '+safe(err.message,100),true)}
+ finally{$('source-route').disabled=false}
+}
+async function readTable(){
+ $('table-read').disabled=true;view('table-status','Reading actual admitted First Table history…');
+ try{const response=await request(API.table);
+ if(!Array.isArray(response.events))throw Error('UNVERIFIED_TABLE_FEED');
+ const list=$('table-items');list.replaceChildren();
+ for(const e of response.events.slice(-16)){
+  const n=mk('article',undefined,'entry');n.append(mk('div',safe(e.by?.label||'Unverified participant',70)+' · '+safe(e.kind||'note',30),'kind'),mk('p',safe(e.text||'',1600)));
+  n.append(mk('small',e.in_reply_to?'In reply to another contribution':'First contribution'));list.append(n);
+ }
+ if(!list.children.length)list.append(mk('p','No admitted contributions returned. Held drafts remain private.'));
+ view('table-status',response.events.length+' admitted items returned from the existing First Table. Contributors and provider identity are self-declared.');
+ }catch(e){view('table-status','Could not verify First Table history: '+safe(e.message,100),true)}
+ finally{$('table-read').disabled=false}
+}
+function publicPermalink(id){return new URL(location.pathname+'?thread='+encodeURIComponent(id),location.origin).href}
+async function publish(e){
+ e.preventDefault();if(!$('thread-consent').checked)return view('thread-status','Explicit public publication consent is required.',true);
+ const words=safe($('thread-words').value,240);if(words.length<8)return view('thread-status','Describe something useful in at least 8 characters.',true);
+ const invitationId=crypto.randomUUID?crypto.randomUUID().replace(/-/g,''):Array.from(crypto.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('');
+ $('thread-send').disabled=true;view('thread-status','Publishing the exact words you approved to the existing invitation network…');
+ try{const r=await request(API.network,{action:'publish',invitationId,words,lane:$('thread-lane').value,timing:$('thread-time').value,intent:$('thread-intent').value,consent:true});
+  if(r.schema!=='abundent/invitation-thread-v1'||!UUID.test(r.thread?.id)||!r.ownerKey||!/^[A-Za-z0-9_-]{43}$/.test(r.ownerKey))throw Error('PUBLIC_RECEIPT_INVALID');
+  receipt.thread={publicLink:publicPermalink(r.thread.id),threadId:r.thread.id,privateOwnerKey:r.ownerKey};
+  $('withdraw-id').value=r.thread.id;$('withdraw-key').value=r.ownerKey;
+  privateLine('thread-keys',receipt.thread);$('thread-receipt').classList.remove('hidden');$('thread-consent').checked=false;
+  view('thread-status','PUBLISHED PUBLICLY. This real thread can be opened and replied to for up to 30 days. Save your owner key. This does not send notifications outside the app.');
+  await readThread(r.thread.id);
+ }catch(err){view('thread-status','Publication not confirmed: '+safe(err.message,120),true)}
+ finally{$('thread-send').disabled=false}
+}
+async function discover(){
+ $('threads-discover').disabled=true;view('threads-status','Looking for actual open public threads…');
+ try{const r=await request(API.network,{action:'discover',lane:'any',intent:'open'});
+  if(r.schema!=='abundent/invitation-candidates-v1'||!Array.isArray(r.candidates))throw Error('INVALID_PUBLIC_DISCOVERY');
+  state.threads=r.candidates.filter(x=>UUID.test(x.id)).slice(0,15);
+  const box=$('threads-list');box.replaceChildren();
+  if(!state.threads.length)box.append(mk('p','No public conversations were returned. You can create the first visible invitation.'));
+  for(const row of state.threads){const c=mk('article',undefined,'entry');c.append(mk('div',safe(row.lane,30)+' · '+safe(row.timing,30)+' · '+safe(row.intent,30),'kind'),mk('p',safe(row.words,240)));
+   const b=mk('button','Read and reply →','btn soft');b.type='button';b.addEventListener('click',()=>readThread(row.id));c.append(b);box.append(c);}
+  view('threads-status',state.threads.length+' public threads available in the current query; proposals are self-declared.');
+ }catch(e){view('threads-status','Could not discover threads: '+safe(e.message,100),true)}
+ finally{$('threads-discover').disabled=false}
+}
+async function readThread(id){
+ if(!UUID.test(id)){view('threads-status','A valid public thread link is required.',true);return;}
+ view('threads-status','Reading existing public conversation…');
+ try{const r=await request(API.network,{action:'read',threadId:id});
+ if(r.schema!=='abundent/invitation-conversation-v1'||!UUID.test(r.thread?.id)||!Array.isArray(r.posts))throw Error('THREAD_UNAVAILABLE');
+ state.selectedThread=id;$('thread-view').classList.remove('hidden');
+ $('thread-title').textContent=safe(r.thread.words,240);
+ const box=$('thread-posts');box.replaceChildren();
+ if(!r.posts.length)box.append(mk('p','No public replies yet. It is okay to leave a question unanswered.'));
+ for(const p of r.posts){const c=mk('article',undefined,'entry');c.append(mk('div',safe(p.kind,30)+' · public reply','kind'),mk('p',safe(p.words,240)));box.append(c);}
+ $('threads-refresh').disabled=false;
+ history.replaceState(null,'',location.pathname+'?thread='+encodeURIComponent(id));
+ view('threads-status','Read '+r.posts.length+' public replies. This is a published conversation, not an independently verified match.');
+ }catch(err){view('threads-status','Could not read the selected thread: '+safe(err.message,100),true)}
+}
+async function reply(e){
+ e.preventDefault();
+ if(!$('reply-consent').checked||!UUID.test(state.selectedThread))return view('reply-status','Choose a public thread and approve posting.',true);
+ const words=safe($('reply-words').value,240);if(words.length<5)return view('reply-status','Reply must have at least 5 characters.',true);
+ $('reply-send').disabled=true;view('reply-status','Posting the reply you authorized…');
+ try{const r=await request(API.network,{action:'reply',threadId:state.selectedThread,kind:$('reply-kind').value,words,consent:true});
+ if(r.schema!=='abundent/invitation-reply-v1'||!UUID.test(r.post?.id)||!/^[A-Za-z0-9_-]{43}$/.test(r.replyKey||''))throw Error('REPLY_NOT_VERIFIED');
+ receipt.reply={postId:r.post.id,privateReplyKey:r.replyKey};
+ const copied=await copyReceipt(receipt.reply,'JAR;VIS PRIVATE REPLY RECEIPT');
+ $('reply-words').value='';$('reply-consent').checked=false;
+ view('reply-status','Reply published. '+(copied?'Private reply key copied to clipboard.':'Copy your private reply key from this screen: '+r.replyKey));
+ await readThread(state.selectedThread);
+ }catch(err){view('reply-status','Reply not confirmed: '+safe(err.message,120),true)}
+ finally{$('reply-send').disabled=false}
+}
+$('source-route').addEventListener('click',sourceRoute);
+$('table-read').addEventListener('click',readTable);
+$('route').addEventListener('click',route);
+$('make-card').addEventListener('click',makeCard);
+document.querySelectorAll('[data-suggest]').forEach(b=>b.addEventListener('click',()=>{
+ const opts={have:'I have extra shelf-stable groceries to offer today.',need:'I need help obtaining groceries today.',gather:'I want to invite volunteers to a local gathering.',create:'I want to make a useful first version of a project.'};
+ $('intent').value=opts[b.dataset.suggest];route();
+}));
+$('garden-form').addEventListener('submit',postGarden);$('garden-copy').addEventListener('click',async()=>{
+ if(!receipt.garden)return;const ok=await copyReceipt(receipt.garden,'GARDEN PRIVATE WITHDRAWAL RECEIPT');view('garden-status',ok?'Private withdrawal receipt copied.':'Clipboard unavailable. Select the visible receipt manually.',!ok);
+});
+$('garden-withdraw').addEventListener('click',withdrawGarden);
+$('feed-read').addEventListener('click',readFeed);
+$('thread-form').addEventListener('submit',publish);
+$('thread-copy').addEventListener('click',async()=>{
+ if(!receipt.thread)return;const ok=await copyReceipt(receipt.thread,'PUBLIC THREAD AND PRIVATE OWNER RECEIPT');view('thread-status',ok?'Link and private owner key copied.':'Clipboard unavailable. Select the receipt text above.',!ok);
+});
+$('withdraw-thread').addEventListener('click',withdrawPublic);
+$('thread-report').addEventListener('click',reportPublic);
+$('threads-discover').addEventListener('click',discover);
+$('threads-refresh').addEventListener('click',()=>state.selectedThread?readThread(state.selectedThread):view('threads-status','First select a public conversation.',true));
+$('reply-form').addEventListener('submit',reply);
+const requested=new URL(location.href).searchParams.get('thread');if(requested&&UUID.test(requested)){void readThread(requested);}
+window.JARVIS_COMMONS_002=Object.freeze({routeIntent,route,makeCard,readFeed,discover,readThread,status:()=>({thread:state.selectedThread,receivedGarden:!!receipt.garden,publicThread:!!receipt.thread})});
+})();
+</script></body></html>
