@@ -236,9 +236,7 @@ async function discoverLive(){
   const got=reply.offers.map(x=>x.id);
   if(!got.includes('inspect_public_source')||!got.includes('check_public_ci'))throw Error('Live capabilities are not actually exposed');
   liveCapabilities=reply.offers;liveReady=true;
-  liveMessage('CONNECTED TO A REAL FUNCTION. It advertises '+liveCapabilities.length+' available read-only actions.
-
-Choose a public project, then run an operation. JAR;VIS will return source URLs, timestamps and evidence—not invented work.',true);
+  liveMessage('CONNECTED TO A REAL FUNCTION. It advertises '+liveCapabilities.length+' available read-only actions.\n\nChoose a public project, then run an operation. JAR;VIS will return source URLs, timestamps and evidence—not invented work.',true);
  }catch(error){liveCapabilities=[];liveReady=false;liveMessage('NOT CONNECTED. '+String(error.message||error)+'. Your four local tools still work normally.',false)}
  finally{setLiveBusy(false)}
 }
@@ -247,8 +245,7 @@ function reportEvidence(d){
  if(d.action==='inspect')lines.push('SHA-256 (actual source bytes): '+d.sha256,'Bytes: '+d.source_bytes,'','PUBLIC DOCUMENT EXCERPT (not executable):',d.excerpt,'','BOUNDARY: '+d.claim);
  else {lines.push('GitHub Actions runs returned: '+d.run_count,'');for(const r of d.runs)lines.push('• '+r.name+' | '+r.status+' | '+(r.conclusion??'not finished')+' | '+r.url);lines.push('','BOUNDARY: '+d.claim)}
  lines.push('','This read caused 0 remote writes. No personal project text was transmitted.');
- return lines.join('
-');
+ return lines.join('\n');
 }
 async function executeLive(action){
  if(liveBusy||!liveReady)return;
@@ -268,20 +265,12 @@ async function executeLive(action){
  }catch(error){liveMessage('LIVE ACTION FAILED: '+String(error.message||error)+'. Nothing was added to your work note. Offline tools remain usable.',false)}
  finally{setLiveBusy(false)}
 }
-function saveLiveEvidence(){if(!lastLiveEvidence)return;simpleFile('JARVIS_Connected_Public_Evidence.json',JSON.stringify(lastLiveEvidence,null,2)+'
-','application/json;charset=utf-8');notice('Downloaded genuine public-source evidence; this does not certify real-world success.');}
+function saveLiveEvidence(){if(!lastLiveEvidence)return;simpleFile('JARVIS_Connected_Public_Evidence.json',JSON.stringify(lastLiveEvidence,null,2)+'\n','application/json;charset=utf-8');notice('Downloaded genuine public-source evidence; this does not certify real-world success.');}
 function attachLiveEvidence(){
  if(!lastLiveEvidence||!active)return;
  flush();
  const d=lastLiveEvidence;
- const summary='
-
-JAR;VIS CONNECTED PUBLIC EVIDENCE ('+d.observed_at+')
-Repository: '+d.repository+'
-Source: '+d.source_url+'
-'+(d.action==='inspect'?'SHA-256: '+d.sha256:'CI runs: '+d.runs.map(x=>x.name+': '+x.status+' / '+(x.conclusion??'pending')).join('; '))+'
-Observation only; no outside action performed.
-';
+ const summary='\n\nJAR;VIS CONNECTED PUBLIC EVIDENCE ('+d.observed_at+')\nRepository: '+d.repository+'\nSource: '+d.source_url+'\n'+(d.action==='inspect'?'SHA-256: '+d.sha256:'CI runs: '+d.runs.map(x=>x.name+': '+x.status+' / '+(x.conclusion??'pending')).join('; '))+'\nObservation only; no outside action performed.\n';
  if(active.note.length+summary.length>12000){notice('Note is full. Download JSON instead of overwriting it.',true);return}
  active.note+=summary;active.updated=when();persist();renderActive();notice('Actual public evidence attached to working note, with source and time. Nothing was marked complete.');
 }
