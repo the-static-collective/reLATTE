@@ -136,7 +136,7 @@ test('JAR;VIS creates a real downloadable CSV with a usable structured task tabl
   const csv=await c.blobs.at(-1).text();
   assert.match(csv,/Project","Task","Status","Evidence","Date/);
   assert.match(csv,/Not started/);
-  assert.equal(csv.split('\\r\\n').length,7);
+  assert.equal(csv.split(/\r\n/).length,7);
   assert.equal(c.window.LANTERN014.status().active.completed,false);
 });
 test('JAR;VIS produces a standalone HTML work card and encodes user-supplied markup',async()=>{
