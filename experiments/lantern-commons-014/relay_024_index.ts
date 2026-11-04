@@ -112,7 +112,7 @@ async function discovery(req,url){
  const category=url.searchParams.get("category")||"all";
  if(category!=="all"&&!CATS.includes(category))err("BAD_CATEGORY");
  let q=db.from("relatte_relay_024_offers").select("id,category,scope,label,quantity,created_at,expires_at,packet")
-  .eq("state","OPEN").gt("expires_at",new Date().toISOString()).order("created_at",{ascending:false}).limit(25);
+  .eq("state","OPEN").eq("sandbox",false).gt("expires_at",new Date().toISOString()).order("created_at",{ascending:false}).limit(25);
  if(category!=="all")q=q.eq("category",category);
  const {data,error}=await q;
  if(error)err("RELAY_DISCOVERY_UNAVAILABLE",503);
@@ -122,16 +122,16 @@ async function discovery(req,url){
  })),realWorldVerified:false,notice:"Public opt-in reports, not verified goods/identities. No contact or pickup details."});
 }
 async function publish(req,body){
- if(!exact(body,["action","consent","packet"])||body.consent!==true)err("PUBLISH_REQUIRES_EXPLICIT_CONSENT");
+ if(!(exact(body,["action","consent","packet"])||exact(body,["action","consent","packet","sandbox"]))||body.consent!==true||(body.sandbox!==undefined&&body.sandbox!==true))err("PUBLISH_REQUIRES_EXPLICIT_CONSENT");
  const proof=await checked(body.packet,"OFFER");
  await quota(req,"publish");
  const secret=token(),validUntil=new Date(body.packet.expiresAt).toISOString();
- const row={category:body.packet.body.category,label:body.packet.body.label,quantity:body.packet.body.quantity,
+ const row={sandbox:body.sandbox===true,category:body.packet.body.category,label:body.packet.body.label,quantity:body.packet.body.quantity,
   scope:body.packet.body.scope,expires_at:validUntil,packet_id:body.packet.id,packet_hash:proof.hash,packet:proof.wire,owner_hash:await sha(secret)};
  const {data,error}=await db.from("relatte_relay_024_offers").insert(row).select("id,expires_at").single();
  if(error){if(error.code==="23505")err("OFFER_ALREADY_PUBLISHED",409);err("RELAY_STORAGE_UNAVAILABLE",503)}
  return reply({ok:true,offerId:data.id,ownerSecret:secret,expiresAt:data.expires_at,
-  status:"PUBLIC_SELF_REPORTED_OFFER",verified:"SESSION_SIGNATURE_ONLY",notice:"Keep this local secret in this tab. No physical item has been verified or reserved."},201);
+  status:body.sandbox===true?"PRIVATE_SYNTHETIC_TEST":"PUBLIC_SELF_REPORTED_OFFER",verified:"SESSION_SIGNATURE_ONLY",notice:"Keep this local secret in this tab. No physical item has been verified or reserved."},201);
 }
 async function interest(req,body){
  if(!exact(body,["action","consent","offerId","packet"])||body.consent!==true)err("INTEREST_REQUIRES_EXPLICIT_CONSENT");
