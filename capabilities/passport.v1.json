@@ -26,7 +26,14 @@
         "href": "https://github.com/the-static-collective/reLATTE/blob/main/docs/COMMUTER-001.md"
       },
       "sourcePath": "docs/COMMUTER-001.md",
-      "requires": "Requires provider credentials owned by the operator, opt-in and suppression checks, and a separately authorized destination."
+      "requires": "Requires provider credentials owned by the operator, opt-in and suppression checks, and a separately authorized destination.",
+      "contract": {
+        "inputHint": "signed.source-event/v1",
+        "outputHint": "receiver.disposition/v1",
+        "invocation": "NOT_CONNECTED_TO_JARVIS",
+        "receipt": "SIGNED_SYNTHETIC_TEST_ONLY",
+        "effect": "NO_CROSS_PROJECT_EFFECT"
+      }
     },
     {
       "id": "relatte.receiver",
@@ -46,7 +53,14 @@
         "href": "https://github.com/the-static-collective/reLATTE/blob/main/docs/LOCAL-RECEIVER-001.md"
       },
       "sourcePath": "docs/LOCAL-RECEIVER-001.md",
-      "requires": "Ownership, signatures and receiver policy are required; no automatic acceptance."
+      "requires": "Ownership, signatures and receiver policy are required; no automatic acceptance.",
+      "contract": {
+        "inputHint": "signed.crossing/v1",
+        "outputHint": "receiver.disposition/v1",
+        "invocation": "NOT_CONNECTED_TO_JARVIS",
+        "receipt": "SIGNED_SYNTHETIC_TEST_ONLY",
+        "effect": "NO_CROSS_PROJECT_EFFECT"
+      }
     }
   ]
 }
