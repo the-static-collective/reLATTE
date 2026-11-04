@@ -114,7 +114,7 @@ test('source inspector creates a real downloadable local JSON evidence artifact'
  const b=browser();b.el('connect-sources').click();await tick();
  const first=b.el('connected-offers').children[0];
  first.children[3].click();await tick();
- assert.equal(b.downloads.at(-1),'JARVIS_Connected_jarvis_Source_Report.json');
+ assert.equal(b.downloads.at(-1),'JARVIS_Connected_jarvis_Source_Report.json',JSON.stringify({calls:b.calls,result:b.el('connected-result').textContent,button:first.children[3].textContent}));
  const saved=JSON.parse(await b.blobs.at(-1).text());
  assert.equal(saved.writes,0);
  assert.equal(saved.report.github_source_blob_sha,'a'.repeat(40));
