@@ -303,8 +303,18 @@ try{
   // Actual consumption requires the game to lower hunger; don't fabricate a
   // food-eating receipt if the client remains too full to consume the bread.
   await cmd('difficulty normal');
-  await cmd('effect give AidHarvester minecraft:hunger 18 20 true');
-  await until(async()=>farmer.food<19,'FARMER_NOT_HUNGRY',100,200);
+  const difficulty=await rcon.send('difficulty');
+  console.log('HUNGER_TEST_START',JSON.stringify({difficulty,
+    client_food:farmer.food,client_saturation:farmer.foodSaturation}));
+  await cmd('effect give AidHarvester minecraft:hunger 22 40 true');
+  let hungerPoll=0;
+  await until(async()=>{
+    hungerPoll++;
+    if(hungerPoll%12===0)
+      console.log('REAL_HUNGER_PROGRESS',JSON.stringify({food:farmer.food,
+        saturation:farmer.foodSaturation,health:farmer.health,poll:hungerPoll}));
+    return farmer.food<19;
+  },'FARMER_NOT_HUNGRY',110,200);
   await cmd('effect clear AidHarvester minecraft:hunger');
   const hungerBefore=farmer.food;
   await farmer.equip(breadId,'hand');
