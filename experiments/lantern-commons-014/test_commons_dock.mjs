@@ -30,6 +30,8 @@ function browser({fail=false,override={},url='https://kbhqacsdvjsstzyplqij.supab
   discover:{schema:'abundent/invitation-candidates-v1',candidates:[]},
   reply:{schema:'abundent/invitation-reply-v1',post:{id:UUID},replyKey:'c'.repeat(43)},
   report:{state:'REPORTED'},'feed=1':{schema:'garden-signal/public-feed-v1',ledger:{state:'reviewed_only',entries:[]}},
+  route_offer:{schema:'jarvis.remote-live-offer-receipt/v1',performed:'SOURCE_OWNED_LIVE_OFFER_ROUTER_EVALUATED',writes:0,plan:{actions:[{id:'catalog',label:'Catalog the work'},{id:'announce',label:'Prepare an announcement'}]}},
+  none:{events:[{id:'a',kind:'question',by:{label:'Unverified participant'},text:'Hello from the table'}]},
   ...override
  };
  const fetch=async (path,opts)=>{
@@ -132,4 +134,30 @@ test('replies and safety reports are separate actions; owner can withdraw using 
  assert.equal(JSON.parse(c.requests.at(-1).opts.body).action,'withdraw');
  assert.equal(JSON.parse(c.requests.at(-1).opts.body).postId,null);
  assert.match(c.el('withdraw-status').textContent,/WITHDRAWN/);
+});
+
+test('source-owned JAR;VIS router is a separate confirmed external crossing; executable local handoff exists',async()=>{
+ const c=browser();c.el('intent').value='Help catalog three demo photos';
+ assert.equal(c.requests.length,0);
+ await c.el('source-route').events.click();
+ assert.equal(c.requests.length,1);
+ assert.equal(c.requests[0].path,'/functions/v1/jarvis-solo-live-017/execute');
+ const posted=JSON.parse(c.requests[0].opts.body);
+ assert.deepEqual(posted,{action:'route_offer',offer:'Help catalog three demo photos'});
+ assert.match(c.el('source-result').textContent,/SOURCE-OWNED ROUTER RESPONDED/);
+ assert.equal(c.el('source-actions').children.length,2);
+ const b=c.el('source-actions').children[0].children.at(-1);
+ assert.match(b.textContent,/Catalog/);
+ const denied=browser();denied.el('intent').value='x'.repeat(270);
+ await denied.el('source-route').events.click();
+ assert.equal(denied.requests.length,0);
+ assert.match(denied.el('source-result').textContent,/240 character/);
+});
+test('First Table is read only after click and shows existing admitted history, not fabricated AI identities',async()=>{
+ const c=browser();
+ assert.equal(c.requests.length,0);
+ await c.el('table-read').events.click();
+ assert.equal(c.requests[0].path,'/functions/v1/agent-commons-014/rooms/first-table');
+ assert.match(c.el('table-items').children[0].children[1].textContent,/Hello from the table/);
+ assert.match(c.el('table-status').textContent,/admitted items/);
 });
