@@ -33,7 +33,7 @@ const SAFE_PLAN_CARTRIDGE=validateCartridge(CARTRIDGE);
 
 function route(req){
  const p=new URL(req.url).pathname;
- if(p===PATH || p===PATH+'/' || p==='/')return 'page';
+ if(p===PATH || p===PATH+'/' || p==='/jarvis-solo-live-017' || p==='/jarvis-solo-live-017/' || p==='/')return 'page';
  if(p.endsWith('/health'))return 'health';
  if(p.endsWith('/capabilities'))return 'capabilities';
  if(p.endsWith('/execute'))return 'execute';
