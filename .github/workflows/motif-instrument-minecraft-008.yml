@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: '24'
       - name: Install reLATTE dependencies
-        run: npm ci
+        run: npm install
       - name: Run actual MOTIF-020 instrument-design unit tests
         run: node --test motif-source/experiments/020/instrument_garden.test.mjs
       - name: Reverify signed 004+005 Mojang histories and test proposal chain
