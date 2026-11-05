@@ -27,11 +27,13 @@ const safeDestination=(provider,target,ext)=>{
   return {filename};
  }
  if(provider==="github"){
-  const {owner,repo,path,expectedExistingSha}=target||{};
+  const {owner,repo,path,branch,expectedExistingSha}=target||{};
   if(!/^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/.test(owner)||!/^[A-Za-z0-9_.-]{1,100}$/.test(repo)||typeof path!=="string"||path.length>120||
     path.split("/").some(s=>!safeChars.test(s)||s==="."||s==="..")||denyPaths.test(path)||
-    path.split(".").at(-1).toLowerCase()!==ext||expectedExistingSha!==null)refuse("GITHUB_CREATE_ONLY_PATH_REQUIRED");
-  return {owner,repo,path};
+    path.split(".").at(-1).toLowerCase()!==ext||expectedExistingSha!==null||
+    typeof branch!=="string"||!/^[A-Za-z0-9][A-Za-z0-9._/-]{1,85}$/.test(branch)||branch.includes('..')||branch.includes('//')||branch.endsWith('/')||
+    ['main','master','production'].includes(branch.toLowerCase()))refuse("GITHUB_CREATE_ONLY_PATH_REQUIRED");
+  return {owner,repo,path,branch};
  }
  refuse("UNKNOWN_PROVIDER");
 };
@@ -101,14 +103,14 @@ export async function createApprovedProviderFile({intent,token,approved=false,fe
   if(read.status!==200)refuse("DRIVE_READBACK_FAILED",502);
   verifiedBytes=await read.text();
  }else{
-  const {owner,repo,path}=plan.target;
+  const {owner,repo,path,branch}=plan.target;
   const u="https://api.github.com/repos/"+encodeURIComponent(owner)+"/"+encodeURIComponent(repo)+"/contents/"+urlPath(path);
   // No SHA is supplied; GitHub's contents API refuses overwrites for existing files.
   const res=await fetcher(u,{method:"PUT",headers:{...headers,"content-type":"application/json","accept":"application/vnd.github+json",
-    "x-github-api-version":"2022-11-28"},body:JSON.stringify({message:"create: "+path+" via reviewed reLATTE 025 intent",content:toBase64(plan.body)}),redirect:"error"});
+    "x-github-api-version":"2022-11-28"},body:JSON.stringify({message:"create: "+path+" via reviewed reLATTE 025 intent",content:toBase64(plan.body),branch}),redirect:"error"});
   remote=await parseOrFail(res,[201],"GITHUB");
   if(!remote.content?.sha||!remote.content?.html_url)refuse("GITHUB_CREATE_RESULT_UNVERIFIED",502);
-  const read=await fetcher(u,{method:"GET",headers:{...headers,accept:"application/vnd.github+json",
+  const read=await fetcher(u+'?ref='+encodeURIComponent(branch),{method:"GET",headers:{...headers,accept:"application/vnd.github+json",
     "x-github-api-version":"2022-11-28"},redirect:"error"});
   const data=await parseOrFail(read,[200],"GITHUB_READBACK");
   if(data.encoding!=="base64"||typeof data.content!=="string")refuse("GITHUB_READBACK_NOT_BASE64",502);
