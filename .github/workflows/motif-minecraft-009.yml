@@ -1,0 +1,189 @@
+name: Minecraft 009 — new Mojang world, signed observation, independent replay
+on:
+  push:
+    branches: [experiment/motif-minecraft-009-native-observation-return]
+  workflow_dispatch:
+  pull_request:
+    paths: ["experiments/motif-instrument-009/**", "test/motif-instrument-009.test.mjs", ".github/workflows/motif-minecraft-009.yml"]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  new-game:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/MOTIF
+          ref: 1fe5732acddacd52751bb73dc760d4fa30f651fa
+          path: motif-source
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+      - name: Install reLATTE and Minecraft clients
+        run: |
+          npm install
+          npm install --no-save --ignore-scripts mineflayer@4.39.0 rcon-client@4.2.5 vec3@0.2.0
+      - name: Test game witness verification and hostile outcomes
+        run: node --test --experimental-strip-types test/motif-instrument-009.test.mjs
+      - name: Reverify P256 source 004 and 005; generate MOTIF-selected datapack
+        env:
+          MOTIF_ROOT: \${{ github.workspace }}/motif-source
+        run: |
+          node --experimental-strip-types experiments/motif-instrument-008/compose.mjs
+          test -s work/motif-minecraft-instrument-008/datapack/pack.mcmeta
+          test -s work/motif-minecraft-instrument-008/signed-held-proposal.json
+      - name: Resolve authentic official Mojang 26.1.1 server
+        run: |
+          set -euo pipefail
+          mkdir -p work/motif-minecraft-009/server
+          curl --fail --silent --show-error https://piston-meta.mojang.com/mc/game/version_manifest_v2.json -o work/motif-minecraft-009/version-manifest.json
+          python3 - <<'PY'
+          import json, urllib.request, pathlib
+          root=pathlib.Path("work/motif-minecraft-009")
+          versions=json.loads((root/"version-manifest.json").read_text())
+          url=next(v for v in versions["versions"] if v["id"]=="26.1.1")["url"]
+          server=json.load(urllib.request.urlopen(url))["downloads"]["server"]
+          (root/"server-version.json").write_text(json.dumps({
+              "id":"26.1.1","server_sha1":server["sha1"],"server_size":server["size"]},indent=2)+"\n")
+          urllib.request.urlretrieve(server["url"],root/"server/server.jar")
+          PY
+          expected="$(python3 -c 'import json;print(json.load(open("work/motif-minecraft-009/server-version.json"))["server_sha1"])')"
+          actual="$(sha1sum work/motif-minecraft-009/server/server.jar | cut -d' ' -f1)"
+          test "$actual" = "$expected"
+      - name: Install generated datapack into NEW isolated World B
+        run: |
+          set -euo pipefail
+          server=work/motif-minecraft-009/server
+          mkdir -p "$server/world/datapacks/motif020"
+          cp -a work/motif-minecraft-instrument-008/datapack/. "$server/world/datapacks/motif020/"
+          cat > "$server/server.properties" <<'EOF'
+          server-ip=127.0.0.1
+          server-port=25565
+          online-mode=false
+          enforce-secure-profile=false
+          gamemode=creative
+          force-gamemode=true
+          difficulty=peaceful
+          spawn-protection=0
+          generate-structures=false
+          level-type=minecraft:flat
+          level-seed=918273645
+          view-distance=8
+          simulation-distance=8
+          allow-flight=true
+          op-permission-level=4
+          enable-rcon=true
+          rcon.port=25575
+          rcon.password=relatte-ci
+          enable-query=false
+          motd=MOTIF instrument World B — synthetic game only
+          EOF
+          echo "eula=true" > "$server/eula.txt"
+          test -s "$server/world/datapacks/motif020/data/motif020/function/fault.mcfunction"
+          cd "$server"
+          java -Xms1G -Xmx2G -jar server.jar nogui > server.log 2>&1 &
+          echo $! > server.pid
+          for i in $(seq 1 120); do
+            if grep -q 'Done (' server.log; then
+              echo "Official vanilla World B ready"
+              exit 0
+            fi
+            if ! kill -0 "$(cat server.pid)" 2>/dev/null; then
+              tail -120 server.log
+              exit 1
+            fi
+            sleep 1
+          done
+          tail -120 server.log
+          exit 1
+      - name: Run new game measurement and fresh non-operator client
+        env:
+          MC_HOST: 127.0.0.1
+          MC_RCON_PASSWORD: relatte-ci
+          MC_VERSION_META: work/motif-minecraft-009/server-version.json
+        run: |
+          node --experimental-strip-types experiments/motif-instrument-009/execute.mjs > work/motif-minecraft-009/live-execution-summary.json
+          test -s work/motif-minecraft-009/game-trace.json
+          test -s work/motif-minecraft-009/signed-game-result.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("work/motif-minecraft-009")
+          s=json.loads((root/"game-outcome.json").read_text())
+          t=json.loads((root/"game-trace.json").read_text())
+          assert s["evidence"]=="actual-official-vanilla-server-with-protocol-nonop-observer"
+          assert sum(x["lit"] for x in t["states"]["fault"]["server"])==s["fault_lit_count"]
+          assert t["states"]["fault"]["fresh_nonop"]["operator"] is False
+          assert all(x["lit"] for x in t["states"]["restored"]["server"])
+          print("ACTUAL_GAME_OBSERVED",s["fault_lit_count"],s["classification"])
+          PY
+      - name: Preserve new game evidence for distinct replay runner
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: motif-009-new-vanilla-world-b-evidence
+          path: |
+            work/motif-minecraft-009/game-trace.json
+            work/motif-minecraft-009/game-outcome.json
+            work/motif-minecraft-009/live-execution-summary.json
+            work/motif-minecraft-009/signed-game-result.json
+            work/motif-minecraft-009/server-version.json
+            work/motif-minecraft-009/server/server.log
+            work/motif-minecraft-instrument-008/decision.json
+            work/motif-minecraft-instrument-008/proposal.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  independent-replay:
+    needs: [new-game]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install
+      - uses: actions/download-artifact@v4
+        with:
+          name: motif-009-new-vanilla-world-b-evidence
+          path: work/independent-game
+      - name: Reverify both original game ancestors and new observed result
+        run: |
+          SOURCE="$(find work/independent-game -name signed-game-result.json -print -quit)"
+          test -n "$SOURCE"
+          node --experimental-strip-types experiments/motif-instrument-009/verify.mjs "$SOURCE" work/independent-game/verified-return.json
+          test -s work/independent-game/verified-return.json
+      - name: Alter one signed byte and demand strict rejection
+        run: |
+          SOURCE="$(find work/independent-game -name signed-game-result.json -print -quit)"
+          python3 - "$SOURCE" <<'PY'
+          import pathlib,sys
+          original=pathlib.Path(sys.argv[1]).read_bytes()
+          b=bytearray(original)
+          b[-2] ^= 1
+          pathlib.Path("work/independent-game/tampered.json").write_bytes(b)
+          PY
+          if node --experimental-strip-types experiments/motif-instrument-009/verify.mjs work/independent-game/tampered.json work/independent-game/refused.json; then
+            echo "TAMPERED GAME RESULT ACCEPTED" >&2
+            exit 1
+          fi
+          test ! -e work/independent-game/refused.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: motif-009-independent-game-return
+          path: work/independent-game/verified-return.json
+          if-no-files-found: error
+          retention-days: 14
