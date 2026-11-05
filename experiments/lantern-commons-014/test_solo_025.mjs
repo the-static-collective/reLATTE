@@ -156,7 +156,7 @@ test('025 constructs a real local HTML work product from an existing operation w
  assert.equal(result.record.resourceStatus,'checked');
  assert.equal(result.artifact.filename,'one-printable-event-preparation-sheet.html');
  assert.match(result.artifact.content,/<!doctype html>/);
- assert.match(result.artifact.content,/Actual observations/);
+ assert.match(result.artifact.content,/What actually happened/);
  assert.match(result.artifact.content,new RegExp(task.title.slice(0,15)));
  assert.equal(result.artifact.bytes,new TextEncoder().encode(result.artifact.content).length);
  assert.match(result.artifact.hash,/^[a-f0-9]{64}$/);
@@ -228,6 +228,7 @@ test('025 actual UI offers one-action artifact generation, download and review-o
  b.get('exec-resource').value='Verified printer, notebook, and personal notes';
  b.get('exec-outcome').value='One real rehearsal procedure';
  b.get('exec-format').value='checklist';
+ b.get('exec-source').value='checked';
  await b.get('exec-make').click();
  assert.equal(b.api.state().work.records.length,1);
  assert.match(b.get('exec-status').textContent,/digital file has been constructed locally/);
