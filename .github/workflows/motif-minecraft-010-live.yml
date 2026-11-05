@@ -97,7 +97,7 @@ jobs:
           NEW="$(find work/new-A -name signed-game-result.json -print -quit)"
           OLD="$(find work/old-B -name signed-game-result.json -print -quit)"
           test -n "$NEW" && test -n "$OLD"
-          node --experimental-strip-types experiments/motif-instrument-010/verify.mjs "$NEW" "$OLD" work/independent-010.json
+          node --experimental-strip-types experiments/motif-instrument-010/independent-check.mjs "$NEW" "$OLD" work/independent-010.json
           test -s work/independent-010.json
       - uses: actions/upload-artifact@v4
         with:
