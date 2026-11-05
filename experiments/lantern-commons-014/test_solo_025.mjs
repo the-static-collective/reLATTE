@@ -245,3 +245,23 @@ test('025 actual UI offers one-action artifact generation, download and review-o
  assert.equal(prepared.action,'CREATE_NEW_ONLY');
  assert.match(b.get('exec-bridge-status').textContent,/No OAuth, account connection, remote read\/write/);
 });
+
+test('025 actually computes a same-human cross-hat capability circuit from only recorded category overlaps',async()=>{
+ const b=isolatedMain();b.get('seed-three').click();const [organizer,grower,artist]=b.api.state().projects;
+ organizer.caps.push({id:'need-1',direction:'need',category:'tools',detail:'One reusable, suitably tested tool for a gathering'});
+ grower.caps.push({id:'offer-1',direction:'offer',category:'tools',detail:'One previously inspected tool for farm use'});
+ artist.caps.push({id:'offer-mismatch',direction:'offer',category:'music',detail:'Original guitar piece; no permission granted'});
+ const created=await b.api.constructSoloArtifact({projectId:organizer.id,taskId:organizer.tasks[0].id,
+  resource:'A verified pen and several existing recorded offers',outcome:'Local capability circuit for one operator',format:'circuit',resourceStatus:'checked'});
+ const data=JSON.parse(created.artifact.content);
+ assert.equal(data.schema,'relatte/solo-capability-circuit/v1');
+ assert.equal(data.operatorCount,1);
+ assert.equal(data.hatCount,3);
+ assert.equal(data.possibleCrossingCount,1);
+ assert.equal(data.completeTransactions,0);
+ assert.equal(data.possibleCrossings[0].sourceHat.title,grower.title);
+ assert.equal(data.possibleCrossings[0].targetHat.title,organizer.title);
+ assert.equal(data.possibleCrossings[0].status,'POSSIBLE_CATEGORY_OVERLAP_UNVERIFIED');
+ assert.doesNotMatch(created.artifact.content,/independent confirmed partner/);
+ assert.equal(organizer.tasks[0].state,'todo','computed category overlap cannot complete work');
+});
