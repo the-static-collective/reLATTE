@@ -1599,7 +1599,170 @@ $('relay-024-export').addEventListener('click',()=>{
  note('relay-024-status','Downloaded an independently playable world with opt-in relay. Nothing has been published or transmitted; consent remains separate inside the cartridge.');
 });
 
-window.SPAWN_025=Object.freeze({templates:T,cartridge:cartridge,validCartridge:validCartridge,validBackup:validBackup,matches:matches,deriveKit:deriveKit,gleaningScore:gleaningScore,validGlean:validGlean,gleanQuestions:gleanQuestions,recordGlean:recordGlean,composeMaximum:composeMaximum,stageMaximum:stageMaximum,maximumCandidates:maximumCandidates,imagineWorlds:imagineWorlds,imagineForks:imagineForks,stageImagination:stageImagination,captureTrial:captureTrial,recordTrial:recordTrial,suggestNextRule:suggestNextRule,learnedRuleCandidates:learnedRuleCandidates,learnedLensWeight:learnedLensWeight,addLearningRule:addLearningRule,validLearning:validLearning,worldBlueprint:worldBlueprint,validWorldBlueprint:validWorldBlueprint,validWorldState:validWorldState,createWorldFamily:createWorldFamily,worldStep:worldStep,runWorldComparison:runWorldComparison,worldFork:worldFork,worldSetInput:worldSetInput,worldScore:worldScore,portableWorldHtml:portableWorldHtml,importWorld:importWorld,stageWorldFieldTest:stageWorldFieldTest,csvCell:csvCell,htmlEscape:htmlEscape,state:()=>state});
+
+/* SPAWN 025: one person's owned resource + actual task -> downloadable digital artifact, then optional provider request.
+   Digital construction is REAL (bytes produced); physical work and outside saves remain UNPROVEN.
+   No provider passwords, tokens, OAuth redirect, third-party API access or automatic file writes here. */
+const SOLO_FORMATS={page:{ext:'html',mime:'text/html;charset=utf-8'},checklist:{ext:'md',mime:'text/markdown;charset=utf-8'},tracker:{ext:'csv',mime:'text/csv;charset=utf-8'},recipe:{ext:'json',mime:'application/json;charset=utf-8'}};
+let soloCurrent=null;
+function validSoloWork(obj){
+ if(!obj||typeof obj!=='object'||!Array.isArray(obj.records)||obj.records.length>40)return false;
+ return obj.records.every(x=>x&&typeof x.id==='string'&&x.id.length<=100&&
+ typeof x.projectId==='string'&&x.projectId.length<=100&&
+ typeof x.taskId==='string'&&x.taskId.length<=100&&
+ typeof x.title==='string'&&x.title.length<=160&&
+ Object.hasOwn(SOLO_FORMATS,x.format)&&
+ typeof x.filename==='string'&&x.filename.length<=180&&
+ typeof x.hash==='string'&&/^[0-9a-f]{64}$/.test(x.hash)&&
+ Number.isInteger(x.bytes)&&x.bytes>=1&&x.bytes<=30000&&
+ typeof x.createdAt==='string'&&x.createdAt.length<60&&
+ ['checked','unverified'].includes(x.resourceStatus)&&
+ (x.providerReceipt===null||(x.providerReceipt&&typeof x.providerReceipt==='object'&&x.providerReceipt.status==='self-reported-not-verified'&&typeof x.providerReceipt.url==='string'&&x.providerReceipt.url.length<=250)));
+}
+function soloSlug(value){
+ const str=clean(value,75).toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,58);
+ return str||'solo-work';
+}
+function soloInputs(input){
+ if(!input||!state.projects.some(p=>p.id===input.projectId))throw Error('Select an actual existing operation.');
+ const p=state.projects.find(p=>p.id===input.projectId),task=p.tasks.find(t=>t.id===input.taskId);
+ if(!task)throw Error('Select an actual workboard task.');
+ const resource=clean(input.resource,160),outcome=clean(input.outcome,160);
+ if(resource.length<8)throw Error('Describe an actual existing material or capability (at least 8 characters).');
+ if(outcome.length<8)throw Error('Name the concrete digital artifact you want to construct (at least 8 characters).');
+ if(!Object.hasOwn(SOLO_FORMATS,input.format))throw Error('Choose an actual executable artifact format.');
+ if(!['checked','unverified'].includes(input.resourceStatus))throw Error('Choose the truthful status of the resource.');
+ return {p,task,resource,outcome,format:input.format,resourceStatus:input.resourceStatus};
+}
+function soloSteps(input){
+ return [
+  'Inspect the controlled input: '+input.resource,
+  'Define the artifact from the existing task: '+input.task.title,
+  'Construct one local '+SOLO_FORMATS[input.format].ext+' work product for: '+input.outcome,
+  'Review the file for accuracy, rights, safety and private details before using or sharing it',
+  'Perform the remaining physical steps separately; record independent field observations on the task',
+  'Reuse only the tested method when a similar need appears'
+ ];
+}
+function renderSoloBytes(input){
+ const x=soloInputs(input), steps=soloSteps(x),status=x.resourceStatus==='checked'?'Self-reported as controlled; not independently verified':'UNKNOWN: ownership or availability not yet checked';
+ const stamp='SPAWN 025 · LOCAL DIGITAL ARTIFACT · NOT PHYSICAL COMPLETION';
+ let content;
+ if(x.format==='page'){
+  const line=steps.map((s,i)=>'<li><label><input type="checkbox"> '+htmlEscape(s)+'</label></li>').join('');
+  content='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+htmlEscape(x.outcome)+'</title>'+
+  '<style>body{font:16px/1.5 system-ui;max-width:760px;margin:25px auto;padding:18px;color:#24231e;background:#faf7ee}h1{font:normal 2rem Georgia}small{color:#575348}li{padding:8px;margin:7px 0}input{margin-right:11px}footer{border-top:1px solid #c9c3b8;margin-top:25px;padding-top:15px}@media print{button{display:none}}</style></head><body>'+
+  '<small>'+stamp+'</small><h1>'+htmlEscape(x.outcome)+'</h1><p><b>Real workboard item:</b> '+htmlEscape(x.task.title)+'</p>'+
+  '<p><b>Known operator-controlled input:</b> '+htmlEscape(x.resource)+' <br><b>Status:</b> '+htmlEscape(status)+'</p>'+
+  '<h2>Executable first-pass procedure</h2><ol>'+line+'</ol><h2>What actually happened?</h2><p>Observation: ________________________________________________</p>'+
+  '<p>Evidence or file reference: _____________________________________</p><p>Next modification: ____________________________________________</p><footer>Produced locally by JAR;VIS. No one else was enrolled. The digital file exists; physical and external outcomes are not claimed.</footer></body></html>';
+ }else if(x.format==='checklist'){
+  content='# '+x.outcome+'\n\n> '+stamp+'\n\n**Existing task:** '+x.task.title+'\n\n**Resource:** '+x.resource+'\n\n**Resource status:** '+status+'\n\n## The work\n\n'+steps.map(s=>'- [ ] '+s).join('\n')+'\n\n## Actual observations\n\n- What happened:\n- Evidence:\n- What failed:\n- What to change:\n\n_This document was constructed locally. The physical task is not marked done._\n';
+ }else if(x.format==='tracker'){
+  const header=['stage','specific_work','status','observed_evidence','next_constraint'];
+  const stages=['inspect','prepare','construct','review','field-test','reuse'];
+  content=header.map(csvCell).join(',')+'\r\n'+stages.map((t,i)=>[t,steps[i],'not started','',''].map(csvCell).join(',')).join('\r\n')+'\r\n';
+ }else{
+  content=JSON.stringify({schema:'relatte/solo-work-method/v1',version:1,claim:'DIGITAL METHOD ONLY — PHYSICAL OUTCOME UNTESTED',roleType:x.p.type,format:x.format,
+   objective:x.outcome,resourceStatus:status,steps:steps.map((text,n)=>({step:n+1,instruction:text,state:'not started',observed:false})),
+   provenance:{origin:'operator supplied one checked or unverified input and an existing task',outsideConnections:0,verifiedFieldOutcome:false}},null,2);
+ }
+ if(content.length>30000)throw Error('Artifact exceeds the 30 KB bounded workbench limit.');
+ return {format:x.format,mime:SOLO_FORMATS[x.format].mime,filename:soloSlug(x.outcome)+'.'+SOLO_FORMATS[x.format].ext,content,bytes:new TextEncoder().encode(content).length,
+  projectId:x.p.id,taskId:x.task.id,title:x.outcome,resourceStatus:x.resourceStatus,steps:steps.length};
+}
+async function soloDigest(content){
+ return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(content))),v=>v.toString(16).padStart(2,'0')).join('');
+}
+async function constructSoloArtifact(input){
+ if(state.work.records.length>=40)throw Error('40 local receipts reached; back up private state before adding more.');
+ const artifact=renderSoloBytes(input),hash=await soloDigest(artifact.content);
+ const record={id:id(),projectId:artifact.projectId,taskId:artifact.taskId,title:artifact.title,format:artifact.format,filename:artifact.filename,
+ hash,bytes:artifact.bytes,createdAt:new Date().toISOString(),resourceStatus:artifact.resourceStatus,providerReceipt:null};
+ state.work.records.push(record);
+ soloCurrent={...artifact,hash,recordId:record.id};
+ refresh();
+ return {artifact:soloCurrent,record,notice:'A real digital file has been constructed locally. Existing workboard completion and physical outcomes remain unchanged.'};
+}
+function soloDest(provider,destination){
+ const d=clean(destination,180);
+ if(provider==='google-drive'){
+  if(!/^[a-zA-Z0-9][a-zA-Z0-9 _().-]{0,110}\.(?:md|html|csv|json|txt)$/i.test(d)||/[\\/]/.test(d))throw Error('Use one safe Google Drive filename ending .md, .html, .csv, .json or .txt.');
+  return {filename:d,folder:'user-selected app-accessible location only'};
+ }
+ if(provider==='github'){
+  const parts=d.split('/');
+  if(parts.length<3||parts.some(x=>!x||x==='.'||x==='..')||!parts[0].match(/^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/)||!parts[1].match(/^[A-Za-z0-9_.-]{1,100}$/))throw Error('Use owner/repository/path and choose an allowed repository.');
+  const path=parts.slice(2).join('/');
+  if(path.length>120||parts.slice(2).some(x=>!x.match(/^[A-Za-z0-9_.-]+$/))||/^\.github\/|^\.env|\.pem$|\.key$|\.secret$/i.test(path))throw Error('Cannot create workflow, credential, hidden environment, or unsafe paths.');
+  return {owner:parts[0],repo:parts[1],path,branch:'explicitly selected later',expectedExistingSha:null};
+ }
+ throw Error('Unsupported provider.');
+}
+function providerIntent(artifact,provider,destination,approved){
+ if(!approved)throw Error('Review and explicitly authorize preparation of this exact artifact first.');
+ if(!artifact||typeof artifact.content!=='string'||artifact.bytes<=0||!(/^[a-f0-9]{64}$/.test(artifact.hash)))throw Error('Construct a real local artifact before preparing a provider request.');
+ if(!['google-drive','github'].includes(provider))throw Error('Choose Google Drive or GitHub.');
+ const target=soloDest(provider,destination);
+ return {schema:'relatte/provider-create-intent/v1',version:1,provider,action:'CREATE_NEW_ONLY',target,artifact:{name:artifact.filename,mime:artifact.mime,sha256:artifact.hash,body:artifact.content,bytes:artifact.bytes},
+ controls:{requiresProviderOAuth:true,requiresExplicitPerActionApproval:true,requiresWriteVerification:true,
+   credentialIncluded:false,overwriteAllowed:false,scope:provider==='google-drive'?'drive.file per-file access':'GitHub App contents:write on one selected repository'},
+ caveat:'PREPARED REQUEST ONLY; no account has been connected and nothing has been saved remotely.'};
+}
+function methodOnly(artifact){
+ if(!artifact)throw Error('Build one digital artifact first.');
+ return {schema:'relatte/solo-execution-method/v1',version:1,
+  format:artifact.format,sequence:['Confirm control of one actual resource','Select one actual unfinished task','Construct a deterministic, downloadable digital artifact',
+   'Review material permissions and output accuracy','Separately observe real-world use','Reuse the tested process without copying private user records'],
+  source:'one-operator executable artifact proof',copiedOperatorData:false,physicalOutcomeClaim:false};
+}
+function renderSoloWork(){
+ const ops=$('exec-op'),old=ops.value;ops.replaceChildren();
+ for(const p of state.projects){const option=el('option',p.title);option.value=p.id;ops.append(option)}
+ ops.value=state.projects.some(x=>x.id===old)?old:state.projects[0]?.id||'';
+ const tasks=$('exec-task'),prev=tasks.value;tasks.replaceChildren();
+ const p=state.projects.find(p=>p.id===ops.value);
+ if(p)for(const t of p.tasks){const option=el('option',t.title+(t.state==='done'?' [already done]':''));option.value=t.id;tasks.append(option)}
+ tasks.value=p?.tasks.some(t=>t.id===prev)?prev:p?.tasks[0]?.id||'';
+ $('exec-count').textContent=state.work.records.length+' locally constructed artifact'+(state.work.records.length===1?'':'s');
+ const preview=$('exec-preview');preview.replaceChildren();
+ if(!soloCurrent){preview.append(el('div',p?'Choose an actual task and click Construct work product now.':'Create or seed an existing operation to construct the first artifact.','empty'));return}
+ const art=soloCurrent,box=el('div',undefined,'exec-card');
+ box.append(el('h3',art.filename),el('p','ACTUAL DIGITAL BYTES: '+art.bytes+' · SHA-256 '+art.hash+' · '+art.steps+' procedural steps. Resource '+art.resourceStatus+'; no physical task completion inferred.','small'));
+ const pre=el('pre',art.content.slice(0,3200));box.append(pre);preview.append(box);
+}
+$('exec-op').addEventListener('change',()=>renderSoloWork());
+$('exec-make').addEventListener('click',async()=>{
+ try{
+  const result=await constructSoloArtifact({projectId:$('exec-op').value,taskId:$('exec-task').value,resource:$('exec-resource').value,
+    outcome:$('exec-outcome').value,format:$('exec-format').value,resourceStatus:$('exec-source').value});
+  $('exec-approve').checked=false;$('exec-intent').value='';
+  note('exec-status',result.notice+' SHA-256: '+result.artifact.hash);
+ }catch(e){note('exec-status','NOT CONSTRUCTED: '+clean(e.message,200))}
+});
+$('exec-download').addEventListener('click',()=>{
+ if(!soloCurrent){note('exec-status','Construct a work product first.');return;}
+ download(soloCurrent.filename,soloCurrent.content,soloCurrent.mime);
+ note('exec-status','Your browser was asked to save '+soloCurrent.filename+'. The digital file was generated; actual filesystem download completion is not independently verified.');
+});
+$('exec-provider').addEventListener('change',()=>{
+ $('exec-destination').placeholder=$('exec-provider').value==='google-drive'?'e.g. fellowship-runbook.md':'e.g. the-static-collective/reLATTE/docs/fellowship-runbook.md';
+ $('exec-approve').checked=false;$('exec-intent').value='';
+});
+$('exec-bridge').addEventListener('click',()=>{
+ try{
+  const intent=providerIntent(soloCurrent,$('exec-provider').value,$('exec-destination').value,$('exec-approve').checked);
+  $('exec-intent').value=JSON.stringify(intent,null,2);
+  note('exec-bridge-status','Prepared one explicit CREATE-only provider request. No OAuth, account connection, remote read/write or publishing occurred. Review the entire payload and submit it through a separately authorized connector.');
+ }catch(e){note('exec-bridge-status','NO PROVIDER REQUEST: '+clean(e.message,200))}
+});
+$('exec-method').addEventListener('click',()=>{
+ try{download('SPAWN_025_Generic_Execution_Method.json',JSON.stringify(methodOnly(soloCurrent),null,2),'application/json;charset=utf-8');
+  note('exec-bridge-status','Exported a reusable METHOD ONLY. No user materials, original notes, task names or provider credentials are included.');
+ }catch(e){note('exec-bridge-status',clean(e.message,200))}
+});
+
+window.SPAWN_025=Object.freeze({templates:T,cartridge:cartridge,validCartridge:validCartridge,validBackup:validBackup,matches:matches,deriveKit:deriveKit,gleaningScore:gleaningScore,validGlean:validGlean,gleanQuestions:gleanQuestions,recordGlean:recordGlean,composeMaximum:composeMaximum,stageMaximum:stageMaximum,maximumCandidates:maximumCandidates,imagineWorlds:imagineWorlds,imagineForks:imagineForks,stageImagination:stageImagination,captureTrial:captureTrial,recordTrial:recordTrial,suggestNextRule:suggestNextRule,learnedRuleCandidates:learnedRuleCandidates,learnedLensWeight:learnedLensWeight,addLearningRule:addLearningRule,validLearning:validLearning,worldBlueprint:worldBlueprint,validWorldBlueprint:validWorldBlueprint,validWorldState:validWorldState,createWorldFamily:createWorldFamily,worldStep:worldStep,runWorldComparison:runWorldComparison,worldFork:worldFork,worldSetInput:worldSetInput,worldScore:worldScore,portableWorldHtml:portableWorldHtml,importWorld:importWorld,stageWorldFieldTest:stageWorldFieldTest,validSoloWork:validSoloWork,renderSoloBytes:renderSoloBytes,constructSoloArtifact:constructSoloArtifact,providerIntent:providerIntent,methodOnly:methodOnly,soloDest:soloDest,csvCell:csvCell,htmlEscape:htmlEscape,state:()=>state});
 refresh();
 })();
 </script></body></html>
