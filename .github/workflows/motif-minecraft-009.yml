@@ -133,6 +133,7 @@ jobs:
         with:
           name: motif-009-new-vanilla-world-b-evidence
           path: |
+            work/motif-minecraft-009/raw-trial-before-adjudication.json
             work/motif-minecraft-009/game-trace.json
             work/motif-minecraft-009/game-outcome.json
             work/motif-minecraft-009/live-execution-summary.json
