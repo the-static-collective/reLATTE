@@ -272,7 +272,7 @@ function button(label,fn,cls){var b=el('button',label,'button '+(cls||'secondary
 function note(name,msg){$(name).textContent=msg}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));return true}catch(e){note('export-status','Browser storage unavailable or full. Download a private backup before leaving.');return false}}
 function download(filename,body,mime){var blob=new Blob([body],{type:mime});var u=URL.createObjectURL(blob);var a=el('a');a.href=u;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),10000);}
-function refresh(){save();$('count').textContent=state.projects.length+' operation'+(state.projects.length===1?'':'s');renderProjects();renderCaps();renderGlean();renderMaximum();renderImagination();renderLearning();renderWorlds();renderSoloWork();}
+function refresh(){save();$('count').textContent=state.projects.length+' operation'+(state.projects.length===1?'':'s');renderProjects();renderCaps();renderGlean();renderMaximum();renderImagination();renderLearning();renderWorlds();renderSoloWork();renderDeepChoices();}
 function addProject(kind,title,goal,method,parent){if(state.projects.length>=MAX)throw Error('24-operation local limit reached. Export a backup first.');var p=project(kind,title,goal,method,parent);state.projects.push(p);refresh();return p;}
 function renderProjects(){var root=$('projects');root.replaceChildren();var focus=$('focus');focus.replaceChildren();if(!state.projects.length){root.append(el('div','Your workbench is empty. Load the three starter hats or create one above.','empty'));return}
 var todo=state.projects.flatMap(p=>p.tasks.filter(t=>t.state==='todo').slice(0,1).map(t=>({p:p,t:t})));
@@ -1893,6 +1893,50 @@ function deepMethod(){return {schema:'relatte/deep-glean-method/v1',version:1,
  'Find cross-provider source pairs','Verify original contents and permissions','Prepare and approve a specific executable next step',
  'Record actual readback or field result'],privateMetadataIncluded:false,providerCredentialsIncluded:false,
  fileDiscoveryDoesNotProveUsefulness:true,realWorldOutcomeClaimed:false}}
+
+
+function renderDeepChoices(){
+ const menu=$('deep-project'),selected=menu.value;menu.replaceChildren();
+ const blank=el('option','Use my question');blank.value='';menu.append(blank);
+ for(const p of state.projects){const option=el('option',p.title+' — '+p.goal);option.value=p.id;menu.append(option)}
+ menu.value=state.projects.some(p=>p.id===selected)?selected:'';
+}
+function renderDeep(){
+ $('deep-count').textContent=(deepInventory?.entries.length||0)+' indexed sources';
+ const coverage=$('deep-coverage');coverage.replaceChildren();
+ if(!deepInventory){coverage.textContent='No private index loaded. This offline file has no Google Drive or GitHub sign-in.';return}
+ coverage.append(el('strong','Declared source coverage — not automatically whole-account access:'));
+ for(const c of deepInventory.coverage){
+  coverage.append(el('p',c.provider+' · '+c.scope+' · '+c.pages+' pages · '+(c.complete?'reported complete':'PARTIAL')+' · '+c.reason,'small'));
+ }
+ coverage.append(el('p',deepHidden.size+' excluded. Metadata is a lead, not verification of contents.','small'));
+}
+function deepCard(r){
+ const e=r.entry,box=el('article',undefined,'deep-result');
+ box.append(el('div',e.provider+' · '+e.kind+' · '+e.level,'tag'),el('h3',e.title));
+ box.append(el('p',r.claim+' · matching score '+r.rank,'deep-evidence'));
+ box.append(el('p',e.modifiedAt?'Last modified: '+e.modifiedAt:'No supplied modification date','deep-meta'));
+ if(e.summary)box.append(el('p',e.summary.slice(0,250),'small'));
+ box.append(el('p','Why suggested: '+r.exact.join(', ')+(r.related.length?' · related '+r.related.join(', '):''),'small'));
+ if(e.url){const link=el('a','Open original ↗');link.href=e.url;link.target='_blank';link.rel='noopener noreferrer';link.referrerPolicy='no-referrer';box.append(link)}
+ const actions=el('div',undefined,'line');
+ actions.append(button('Make private review checklist',()=>{
+  const noteText='# PRIVATE DEEP GLEAN SOURCE REVIEW\n\n'+
+   'File metadata is not proof of contents, rights or current value.\n\n'+
+   'Question: '+deepLast.query+'\nSource: '+e.title+'\nProvider: '+e.provider+'\nLink: '+e.url+
+   '\nEvidence: '+r.exact.concat(r.related).join(', ')+'\n\n'+
+   '- [ ] Open and inspect the original source\n- [ ] Verify permissions and currency\n'+
+   '- [ ] Identify one useful actual executable step\n- [ ] Perform or authorize it separately\n'+
+   '- [ ] Verify the result and record a real observation\n';
+  download('PRIVATE_Deep_Glean_Checklist.md',noteText,'text/markdown;charset=utf-8');
+  note('deep-status','Constructed a private source review checklist. No actual source content or file download was verified.');
+ },'ghost'));
+ actions.append(button('Exclude source',()=>{
+  deepHidden.add(e.provider+':'+e.id);if(deepLast)deepSearch(deepLast.query);
+  renderDeep();renderDeepResults();note('deep-status','Excluded source locally. Provider file unchanged.');
+ },'ghost'));
+ box.append(actions);return box;
+}
 
 window.SPAWN_026=Object.freeze({templates:T,cartridge:cartridge,validCartridge:validCartridge,validBackup:validBackup,matches:matches,deriveKit:deriveKit,gleaningScore:gleaningScore,validGlean:validGlean,gleanQuestions:gleanQuestions,recordGlean:recordGlean,composeMaximum:composeMaximum,stageMaximum:stageMaximum,maximumCandidates:maximumCandidates,imagineWorlds:imagineWorlds,imagineForks:imagineForks,stageImagination:stageImagination,captureTrial:captureTrial,recordTrial:recordTrial,suggestNextRule:suggestNextRule,learnedRuleCandidates:learnedRuleCandidates,learnedLensWeight:learnedLensWeight,addLearningRule:addLearningRule,validLearning:validLearning,worldBlueprint:worldBlueprint,validWorldBlueprint:validWorldBlueprint,validWorldState:validWorldState,createWorldFamily:createWorldFamily,worldStep:worldStep,runWorldComparison:runWorldComparison,worldFork:worldFork,worldSetInput:worldSetInput,worldScore:worldScore,portableWorldHtml:portableWorldHtml,importWorld:importWorld,stageWorldFieldTest:stageWorldFieldTest,validSoloWork:validSoloWork,renderSoloBytes:renderSoloBytes,constructSoloArtifact:constructSoloArtifact,providerIntent:providerIntent,methodOnly:methodOnly,soloDest:soloDest,csvCell:csvCell,htmlEscape:htmlEscape,validDeepInventory:validDeepInventory,deepImport:deepImport,deepCatalog:deepCatalog,deepSearch:deepSearch,deepCross:deepCross,deepMethod:deepMethod,deepLexical:deepLexical,state:()=>state});
 refresh();
