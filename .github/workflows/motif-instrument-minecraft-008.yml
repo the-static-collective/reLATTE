@@ -1,0 +1,75 @@
+name: reLATTE-008 MOTIF Instrument Garden Minecraft seed
+on:
+  push:
+    branches:
+      - experiment/motif-instrument-garden-minecraft-008
+  pull_request:
+    paths:
+      - "experiments/motif-instrument-008/**"
+      - "test/motif-instrument-008.test.ts"
+      - ".github/workflows/motif-instrument-minecraft-008.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verified-source-to-proposed-game:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/MOTIF
+          ref: 1fe5732acddacd52751bb73dc760d4fa30f651fa
+          path: motif-source
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install reLATTE dependencies
+        run: npm install
+      - name: Run actual MOTIF-020 instrument-design unit tests
+        run: node --test motif-source/experiments/020/instrument_garden.test.mjs
+      - name: Reverify signed 004+005 Mojang histories and test proposal chain
+        env:
+          MOTIF_ROOT: ${{ github.workspace }}/motif-source
+        run: node --test --experimental-strip-types test/motif-instrument-008.test.ts
+      - name: Seed a real Minecraft datapack from native reLATTE world grammar
+        env:
+          MOTIF_ROOT: ${{ github.workspace }}/motif-source
+        run: |
+          mkdir -p work
+          node --experimental-strip-types experiments/motif-instrument-008/compose.mjs \
+            > work/motif-008-stdout.json
+          test -s work/motif-minecraft-instrument-008/signed-held-proposal.json
+          test -s work/motif-minecraft-instrument-008/datapack/data/motif020/function/fault.mcfunction
+          test -s work/motif-minecraft-instrument-008/datapack/data/motif020/function/read_lamps.mcfunction
+      - name: Assert actual source-signature verification and no game actuation
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("work/motif-minecraft-instrument-008")
+          x=json.loads((root/"proposal.json").read_text())
+          s=json.loads((root/"signed-held-proposal.json").read_text())
+          d=json.loads((root/"decision.json").read_text())
+          assert d["status"]=="PROPOSE_NEW_INSTRUMENT"
+          assert d["selected"]["target"]["world"]=="B"
+          assert d["selected"]["target"]["fault_x"]==-13
+          assert d["selected"]["target"]["threshold"]==4
+          assert x["source_disposition"]=="HOLD"
+          assert x["pending_disposition"]=="R3_HOLD"
+          assert x["automated_game_execution_occurred"] is False
+          assert x["physical_world_effect"] is False
+          assert s["receipt"]["kind"]=="R3_HOLD"
+          assert s["crossing"]["crossing_id"]==s["receipt"]["crossing_id"]
+          assert s["game_execution_verified"] is False
+          print("SIGNED_SOURCE_VERIFIED → NEW_GAME_PROBE_PROPOSED → R3_HOLD")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: motif-020-relatte-008-buildable-minecraft-instrument
+          path: work/motif-minecraft-instrument-008/
+          if-no-files-found: error
