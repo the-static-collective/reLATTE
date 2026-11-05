@@ -30,7 +30,7 @@ test('008: previously witnessed Mojang results are re-authenticated before new s
 
 test('008: MOTIF actually selects new bounded fault measurement from signed game ancestry',
   liveTestOptions,async()=>{
-  const out=await composeNativeMinecraftExperiment({motifRoot:root,sourceBytes:source()});
+  const out=await composeNativeMinecraftExperiment({motifRoot:root!,sourceBytes:source()});
   assert.equal(out.state.schema,SCHEMA);
   assert.equal(out.state.parent_source_sha256,SOURCE_SHA256);
   assert.equal(out.decision.status,'PROPOSE_NEW_INSTRUMENT');
@@ -49,7 +49,7 @@ test('008: MOTIF actually selects new bounded fault measurement from signed game
 
 test('008: MOTIF instrument compiles native redstone world + bounded observer commands',
   liveTestOptions,async()=>{
-  const out=await composeNativeMinecraftExperiment({motifRoot:root,sourceBytes:source()});
+  const out=await composeNativeMinecraftExperiment({motifRoot:root!,sourceBytes:source()});
   const f=out.pack.files;
   assert.equal(Object.keys(f).length,8);
   assert.match(f['data/motif020/function/setup.mcfunction'],
@@ -67,7 +67,7 @@ test('008: MOTIF instrument compiles native redstone world + bounded observer co
 
 test('008: generate distinct ephemeral reLATTE signed crossing + receiver-local HOLD',
   liveTestOptions,async()=>{
-  const out=await composeNativeMinecraftExperiment({motifRoot:root,sourceBytes:source()});
+  const out=await composeNativeMinecraftExperiment({motifRoot:root!,sourceBytes:source()});
   const signed=await sealSyntheticQuest(out.state);
   assert.equal(signed.schema,'relatte.motif-minecraft-instrument-signed-hold/v0');
   assert.equal(signed.receipt.kind,'R3_HOLD');
@@ -84,7 +84,7 @@ test('008: a single altered byte in archived game history fails source verificat
   const b=source();
   b[b.length-1]^=1;
   await assert.rejects(()=>composeNativeMinecraftExperiment({
-    motifRoot:root,sourceBytes:b,
+    motifRoot:root!,sourceBytes:b,
   }),/PINNED_SOURCE_BYTE_HASH_CHANGED/);
 });
 
