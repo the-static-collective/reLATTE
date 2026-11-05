@@ -40,6 +40,7 @@ jobs:
         env:
           MOTIF_ROOT: ${{ github.workspace }}/motif-source
         run: |
+          mkdir -p work
           node --experimental-strip-types experiments/motif-instrument-008/compose.mjs \
             > work/motif-008-stdout.json
           test -s work/motif-minecraft-instrument-008/signed-held-proposal.json
