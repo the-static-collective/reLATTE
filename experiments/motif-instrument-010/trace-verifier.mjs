@@ -60,7 +60,10 @@ export function checkGameTrace(state,trace,meta){
     trace.actual_game_execution===true &&
     trace.real_physical_environment_effect===false &&
     trace.receiver_disposition==='R3_HOLD' &&
-    trace.owner_admission===false,
+    (trace.owner_admission===false ||
+      trace.source_owner_admission===false) &&
+    trace.owner_admission!==true &&
+    trace.source_owner_admission!==true,
     'GAME_AUTHORITY_OR_EXECUTION_CLAIM');
 
   const micro=trace.micro_readout;
