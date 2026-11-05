@@ -91,3 +91,43 @@ export async function scanGithubInstallation({token,fetcher=fetch,maxPages=100,m
    complete=false;reason="Repository enumeration stopped at a page or item limit.";break
   }
  }
+
+ if(includeTrees){
+  const requested=new Set(selectedRepositories);
+  const choices=repos.filter(r=>requested.has(r.full_name)).slice(0,maxTrees);
+  if(choices.length<selectedRepositories.length){complete=false;reason+=" Some requested trees were out of scope or over the tree bound."}
+  for(const r of choices){
+   if(entries.length>=maxEntries){complete=false;reason+=" Entry cap reached.";break}
+   const bits=r.full_name.split("/").map(encodeURIComponent).join("/");
+   const branch=encodeURIComponent(r.default_branch||"main");
+   const response=await getJSON(GITHUB+"/repos/"+bits+"/git/trees/"+branch+"?recursive=1",token,fetcher);
+   if(!Array.isArray(response.tree))err("GITHUB_REPO_TREE_INVALID");
+   if(response.truncated===true){complete=false;reason+=" GitHub reported a truncated tree for "+r.full_name+"."}
+   for(const file of response.tree){
+    if(entries.length>=maxEntries){complete=false;reason+=" Entry cap reached.";break}
+    if(!file||file.type!=="blob"||typeof file.path!=="string"||file.path.length>350||
+     /(^|\/)\.env|(^|\/)\.git\/|\.pem$|\.key$|\.secret$/i.test(file.path))continue;
+    const key=r.full_name+":"+file.path;if(seen.has(key))continue;seen.add(key);
+    const link="https://github.com/"+r.full_name+"/blob/"+branch+"/"+file.path.split("/").map(encodeURIComponent).join("/");
+    entries.push(record("github",key,file.path.split("/").at(-1),"file","text/unknown","",
+     r.full_name+"/"+file.path,link,"Path metadata only. File contents were not read.",r.private?"private":"public"));
+   }
+  }
+ }
+ return {entries,coverage:{provider:"github",scope:"GitHub App authorized installation repositories; selected trees only",
+  pages,complete,reason:reason.trim()}};
+}
+export function mergePrivateInventories(...scans){
+ if(scans.length<1||scans.length>16)err("SCAN_COUNT_INVALID");
+ const coverage=[],seen=new Set(),entries=[];
+ for(const scan of scans){
+  if(!scan||!Array.isArray(scan.entries)||!scan.coverage)err("SCAN_INVALID");
+  coverage.push(scan.coverage);
+  for(const item of scan.entries){
+   const key=item.provider+":"+item.id;if(seen.has(key))continue;
+   if(entries.length>=LIMIT)err("PRIVATE_INVENTORY_LIMIT_REACHED");
+   entries.push(item);seen.add(key);
+  }
+ }
+ return {schema:PROTOCOL,version:1,createdAt:new Date().toISOString(),coverage,entries};
+}
