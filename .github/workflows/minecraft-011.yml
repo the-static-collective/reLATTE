@@ -65,7 +65,7 @@ jobs:
           MOTIF_009_SOURCE: work/source009/signed-game-result.json
           MOTIF_010_PACK: work/motif-minecraft-010/datapack
         run: |
-          node --experimental-strip-types experiments/motif-instrument-011/compose.mjs > work/011-preparation.json
+          node --experimental-strip-types experiments/motif-instrument-011/prepare-hostile.mjs > work/011-preparation.json
           test -s work/motif-minecraft-011/signed-proposal.json
           test -s work/motif-minecraft-011/datapack/data/motif023/function/inject.mcfunction
           python3 - <<'PY'
