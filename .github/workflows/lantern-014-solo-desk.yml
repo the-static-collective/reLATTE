@@ -62,6 +62,10 @@ jobs:
         run: node --test experiments/lantern-commons-014/test_provider_adapters_025.mjs
       - name: Verify LIVE SPAWN 025 public app download and no unapproved account sign-in claims
         run: node --test experiments/lantern-commons-014/test_live_app_025.mjs
+      - name: Verify SPAWN 026 private index, source-backed cross-network discovery, and inherited solo work
+        run: node --test experiments/lantern-commons-014/test_deep_026.mjs
+      - name: Verify read-only Drive and GitHub App metadata scanners and honest pagination
+        run: node --test experiments/lantern-commons-014/test_provider_inventory_026.mjs
       - name: Verify standalone HTML, no remote assets, and no automatic completion claims
         run: |
           python3 - <<'PY'
