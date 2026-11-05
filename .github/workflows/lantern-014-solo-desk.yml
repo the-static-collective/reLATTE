@@ -56,6 +56,10 @@ jobs:
         run: node --test experiments/lantern-commons-014/test_live_crossing_023.mjs
       - name: Verify LIVE SPAWN 024 opt-in relay, sandbox two-session crossing and no false delivery
         run: node --test experiments/lantern-commons-014/test_relay_024.mjs
+      - name: Verify SPAWN 025 one-person executable artifacts and approval-only provider requests
+        run: node --test experiments/lantern-commons-014/test_solo_025.mjs
+      - name: Verify Google Drive and GitHub create-only adapters and provider readback checks
+        run: node --test experiments/lantern-commons-014/test_provider_adapters_025.mjs
       - name: Verify standalone HTML, no remote assets, and no automatic completion claims
         run: |
           python3 - <<'PY'
