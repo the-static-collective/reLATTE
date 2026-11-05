@@ -3,6 +3,8 @@
  */
 import {SCHEMA as PROPOSAL_SCHEMA} from '../motif-instrument-008/compose.mjs';
 const error=(yes,why)=>{if(!yes)throw Error('MOTIF_MC009_'+why)};
+export const RESULT_SCHEMA='relatte.motif-minecraft-009-live-observation/v0';
+export const BUNDLE_SCHEMA='relatte.motif-minecraft-009-signed-result/v0';
 const fixedSeed='918273645';
 
 export function checkGameTrace(state,trace,meta) {
