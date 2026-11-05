@@ -88,15 +88,15 @@ export async function composeNativeMinecraftExperiment({
   error(decision.status==='PROPOSE_NEW_INSTRUMENT'&&
     decision.real_game_execution===false,'NO_VALID_INSTRUMENT');
   const {world,fault_x,threshold}=decision.selected.target;
-  error(world==='B'&&fault_x===-13&&threshold===4,
-    'SEED_PROPOSAL_NOT_EXPECTED_GAME_PROBE');
-  error(REDSTONE_CIRCUIT.repeaters.includes(fault_x) &&
+  error(['A','B'].includes(world)&&
+    REDSTONE_CIRCUIT.repeaters.includes(fault_x) &&
+    threshold>=1&&threshold<=9&&
     REDSTONE_CIRCUIT.stages.length===9,'UNKNOWN_REPEATER_OR_LAMPS');
-  const seedB='918273645';
+  const worldSeed=world==='B'?'918273645':'381654729';
   // Build the new *target* world from reLATTE's native, executable
   // Minecraft world and redstone planning implementation.
   const plan=buildRiffRaftRedstonePlan({
-    goal:GROUND_GOAL,serverSeed:seedB,provenance:sourceProvenance,
+    goal:GROUND_GOAL,serverSeed:worldSeed,provenance:sourceProvenance,
   });
   validateWorldPlan(plan);
   error(plan.riff_raft_redstone.repeaters.includes(fault_x),
@@ -111,7 +111,7 @@ export async function composeNativeMinecraftExperiment({
     source_authenticated_as:'previous-vanilla-game-results-not-physical-world',
     prior_observations:prior,
     target_world:world,
-    target_world_seed:seedB,
+    target_world_seed:worldSeed,
     new_fault_repeater:{x:fault_x,y:66,z:46},
     classify_lit_count_at_least:threshold,
     rival_predicted_counts:decision.selected.predictions,
@@ -136,8 +136,9 @@ export async function composeNativeMinecraftExperiment({
 }
 
 export function buildMinecraftDatapack(plan,state) {
-  error(state?.schema===SCHEMA&&state.target_world==='B'&&
-    state.new_fault_repeater?.x===-13,'UNSUPPORTED_GAME_TARGET');
+  error(state?.schema===SCHEMA&&['A','B'].includes(state.target_world)&&
+    REDSTONE_CIRCUIT.repeaters.includes(state.new_fault_repeater?.x),
+    'UNSUPPORTED_GAME_TARGET');
   error(plan?.riff_raft_redstone?.stages?.length===9,'UNTESTABLE_PLAN');
   validateWorldPlan(plan);
   const pos=state.new_fault_repeater;
