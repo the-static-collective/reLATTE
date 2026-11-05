@@ -265,3 +265,88 @@ test('025 actually computes a same-human cross-hat capability circuit from only 
  assert.doesNotMatch(created.artifact.content,/independent confirmed partner/);
  assert.equal(organizer.tasks[0].state,'todo','computed category overlap cannot complete work');
 });
+
+function sampleInventory(){
+ const entries=[
+  ['google-drive','file-001','Fellowship volunteer coordination notes','event signup and reception program','https://docs.google.com/document/d/file-001/edit'],
+  ['google-drive','file-002','Garden harvest pickup plan','farm produce distribution schedule','https://drive.google.com/file/d/file-002/view'],
+  ['github','org/fellowship-calendar','fellowship-calendar','Volunteer signup and event scheduling','https://github.com/org/fellowship-calendar'],
+  ['github','org/garden-whisperer','garden-whisperer','Farm and garden coordination tool','https://github.com/org/garden-whisperer'],
+  ['google-drive','file-005','A distinct illustration portfolio','no matching event or farm descriptions','https://drive.google.com/file/d/file-005/view']
+ ];
+ return {schema:'relatte/deep-glean-inventory/v1',version:1,createdAt:'2026-11-04T12:00:00.000Z',
+  coverage:[
+   {provider:'google-drive',scope:'drive.metadata.readonly authorized subset',pages:2,complete:false,reason:'Additional pages not yet scanned'},
+   {provider:'github',scope:'GitHub App installed on two selected repositories',pages:1,complete:true,reason:''}
+  ],entries:entries.map(([provider,id,title,summary,url])=>({
+   provider,id,title,summary,url,kind:provider==='github'?'repository':'file',mime:'text/metadata',path:'',
+   modifiedAt:'2026-10-01T10:00:00.000Z',visibility:'unknown',level:'metadata'
+  }))};
+}
+test('026 private inventory validates exact source contract and rejects credential-shaped injected fields',()=>{
+ const b=isolatedMain(),x=sampleInventory();
+ assert.equal(b.api.validDeepInventory(x),true);
+ assert.equal(b.api.validDeepInventory({...x,accessToken:'sensitive'}),false);
+ const invalid=structuredClone(x);invalid.entries[0].url='javascript:alert(1)';
+ assert.equal(b.api.validDeepInventory(invalid),false);
+ const injected=structuredClone(x);injected.entries[0].oauth_token='evil';
+ assert.equal(b.api.validDeepInventory(injected),false);
+ const duplicate=structuredClone(x);duplicate.entries.push(duplicate.entries[0]);
+ assert.equal(b.api.validDeepInventory(duplicate),false);
+ const oversize='x'.repeat(3000001);
+ assert.equal(b.api.deepImport(oversize).ok,false);
+ assert.equal(b.api.deepCatalog(),null);
+});
+test('026 discovers actual named source matches and noninvented Google-Drive-to-GitHub links',()=>{
+ const b=isolatedMain();const x=sampleInventory();
+ const imported=b.api.deepImport(JSON.stringify(x));assert.equal(imported.ok,true);
+ assert.equal(imported.entries,5);
+ const results=b.api.deepSearch('Fellowship volunteer signup');
+ assert.equal(results.ok,true);
+ assert.ok(results.matched>=2);
+ assert.equal(results.results[0].entry.provider,'google-drive');
+ assert.ok(results.results.some(r=>r.entry.id==='org/fellowship-calendar'));
+ assert.ok(results.cross.some(c=>new Set([c.a.provider,c.b.provider]).size===2));
+ assert.ok(results.cross.every(c=>c.common.length>=1));
+ assert.equal(results.results[0].claim,'METADATA LEAD, CONTENT UNKNOWN');
+ assert.ok(results.results.every(r=>x.entries.some(v=>v.id===r.entry.id)),'no fabricated files');
+ assert.equal(b.api.state().work.records.length,0,'discovery is not a completed work product');
+});
+test('026 incomplete scans stay explicitly incomplete; no account-wide or contents claim',()=>{
+ const b=isolatedMain();const x=sampleInventory();
+ b.api.deepImport(x);
+ const catalog=b.api.deepCatalog();
+ assert.equal(catalog.coverage[0].complete,false);
+ assert.equal(catalog.coverage[0].pages,2);
+ assert.equal(catalog.coverage[1].complete,true);
+ assert.equal(catalog.entries[0].level,'metadata');
+ assert.ok(!JSON.stringify(b.api.state()).includes('Fellowship volunteer coordination notes'),
+  'private inventory must not be in localStorage-backed main state');
+ assert.match(b.get('deep-coverage').textContent+b.get('deep-coverage').children.map(c=>c.textContent).join(' '),/PARTIAL/);
+});
+test('026 method export never copies file IDs, private titles, source links or provider OAuth credentials',()=>{
+ const b=isolatedMain();b.api.deepImport(sampleInventory());b.api.deepSearch('garden');
+ const safe=JSON.stringify(b.api.deepMethod());
+ assert.equal(b.api.deepMethod().privateMetadataIncluded,false);
+ assert.doesNotMatch(safe,/file-001|fellowship-calendar|Fellowship volunteer|docs.google.com|access_token/);
+ assert.equal(b.api.deepCatalog().entries.length,5);
+ b.get('deep-clear').click();
+ assert.equal(b.api.deepCatalog(),null);
+ assert.match(b.get('deep-status').textContent,/Discarded private index/);
+});
+test('026 interactive offline UI shows evidenced results, then excludes one and never contacts a provider',()=>{
+ const b=isolatedMain();b.api.deepImport(sampleInventory());
+ b.get('deep-query').value='Garden harvest plan';
+ b.get('deep-project').value='';
+ b.get('deep-search').click();
+ const results=b.get('deep-results').children;
+ assert.ok(results.length>=3);
+ assert.match(b.get('deep-status').textContent,/Matched/);
+ assert.equal(b.api.deepCatalog().entries.length,5);
+ const item=results.find(x=>x.tagName==='article');assert.ok(item);
+ const actions=item.children.find(x=>x.className==='line');assert.ok(actions);
+ actions.children[1].click();
+ assert.equal(b.api.deepCatalog().entries.length,4);
+ assert.match(b.get('deep-status').textContent,/Excluded source/);
+ assert.equal(b.api.state().projects.length,0,'search does not invent operators');
+});
