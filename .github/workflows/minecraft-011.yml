@@ -110,6 +110,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/MOTIF
+          ref: 2fab3f845e1afb247a78d8129ace229f702a56ed
+          path: motif-023
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
@@ -141,9 +147,30 @@ jobs:
           test -n "$NEW" && test -n "$PRIOR" && test -n "$OLD"
           node --experimental-strip-types experiments/motif-instrument-011/verify-hostile.mjs "$NEW" "$PRIOR" "$OLD" work/independent-011.json
           test -s work/independent-011.json
+      - name: Reverify new observation again then let MOTIF-023 revise the failed method
+        run: |
+          set -euo pipefail
+          NEW="$(find work/011 -name signed-game-result.json -print -quit)"
+          PRIOR="$(find work/010 -name signed-game-result.json -print -quit)"
+          OLD="$(find work/009 -name signed-game-result.json -print -quit)"
+          node --experimental-strip-types experiments/motif-instrument-011/learn-hostile.mjs "$NEW" "$PRIOR" "$OLD" motif-023 work/signed-method-revision-011.json
+          test -s work/signed-method-revision-011.json
+          python3 - <<'PY'
+          import json
+          p=json.load(open('work/signed-method-revision-011.json'))
+          assert p['receipt']['kind']=='R3_HOLD'
+          assert p['crossing']['crossing_id']==p['receipt']['crossing_id']
+          assert p['real_game_actuation'] is False
+          assert p['model_history_rewritten'] is False
+          assert p['method_status']=='PROPOSE_REVISED_THREE_STAGE_GAME_PROBE'
+          assert p['proposed_stage_indexes']==[2,3,6]
+          print('MOTIF_PROPOSED_REVISED_SENSOR_AFTER_INDEPENDENTLY_VERIFIED_METHOD_FAILURE',p['proposed_stage_indexes'])
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: motif-011-independent-method-falsification-return
-          path: work/independent-011.json
+          path: |
+            work/independent-011.json
+            work/signed-method-revision-011.json
           if-no-files-found: error
           retention-days: 14
