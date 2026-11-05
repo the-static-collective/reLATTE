@@ -199,6 +199,7 @@ footer{padding:22px 18px 55px;border-top:1px solid var(--line);color:var(--muted
 <select id="exec-provider"><option value="google-drive">Google Drive — create a new, app-selected file</option><option value="github">GitHub — create a new file in one chosen repository</option></select></div>
 <div><label for="exec-destination">Drive filename or GitHub owner/repo/path</label>
 <input id="exec-destination" maxlength="180" placeholder="Drive: notes.md / GitHub: owner/repo/docs/notes.md"></div></div>
+<label for="exec-branch">GitHub ONLY — explicitly selected existing non-default work branch</label><input id="exec-branch" maxlength="90" placeholder="e.g. experiment/spawn-025-solo-executor-connector-bridge">
 <label><input id="exec-approve" type="checkbox"> I reviewed this exact artifact and authorize preparing a provider-specific CREATE request. This is not yet permission to execute a provider API call.</label>
 <div class="line"><button type="button" class="button secondary" id="exec-bridge">Prepare provider CREATE request</button><button type="button" class="button ghost" id="exec-method">Download method-only cartridge</button></div>
 <label for="exec-intent">Provider request (COPY to a connected ChatGPT session; contains no provider tokens)</label><textarea id="exec-intent" rows="7" readonly spellcheck="false" placeholder="Approve an artifact to generate a reviewable request."></textarea>
@@ -1684,7 +1685,7 @@ async function constructSoloArtifact(input){
  refresh();
  return {artifact:soloCurrent,record,notice:'A real digital file has been constructed locally. Existing workboard completion and physical outcomes remain unchanged.'};
 }
-function soloDest(provider,destination){
+function soloDest(provider,destination,branch){
  const d=clean(destination,180);
  if(provider==='google-drive'){
   if(!/^[a-zA-Z0-9][a-zA-Z0-9 _().-]{0,110}\.(?:md|html|csv|json|txt)$/i.test(d)||/[\\/]/.test(d))throw Error('Use one safe Google Drive filename ending .md, .html, .csv, .json or .txt.');
@@ -1695,15 +1696,16 @@ function soloDest(provider,destination){
   if(parts.length<3||parts.some(x=>!x||x==='.'||x==='..')||!parts[0].match(/^[A-Za-z0-9][A-Za-z0-9-]{0,38}$/)||!parts[1].match(/^[A-Za-z0-9_.-]{1,100}$/))throw Error('Use owner/repository/path and choose an allowed repository.');
   const path=parts.slice(2).join('/');
   if(path.length>120||parts.slice(2).some(x=>!x.match(/^[A-Za-z0-9_.-]+$/))||/^\.github\/|^\.env|\.pem$|\.key$|\.secret$/i.test(path))throw Error('Cannot create workflow, credential, hidden environment, or unsafe paths.');
-  return {owner:parts[0],repo:parts[1],path,branch:'explicitly selected later',expectedExistingSha:null};
+  if(typeof branch!=='string'||!(/^[A-Za-z0-9][A-Za-z0-9._/-]{1,85}$/.test(branch))||branch.includes('..')||branch.includes('//')||branch.endsWith('/')||['main','master','production'].includes(branch.toLowerCase()))throw Error('Select an existing non-default GitHub work branch explicitly; do not silently write to main.');
+  return {owner:parts[0],repo:parts[1],path,branch,expectedExistingSha:null};
  }
  throw Error('Unsupported provider.');
 }
-function providerIntent(artifact,provider,destination,approved){
+function providerIntent(artifact,provider,destination,approved,branch){
  if(!approved)throw Error('Review and explicitly authorize preparation of this exact artifact first.');
  if(!artifact||typeof artifact.content!=='string'||artifact.bytes<=0||!(/^[a-f0-9]{64}$/.test(artifact.hash)))throw Error('Construct a real local artifact before preparing a provider request.');
  if(!['google-drive','github'].includes(provider))throw Error('Choose Google Drive or GitHub.');
- const target=soloDest(provider,destination);
+ const target=soloDest(provider,destination,branch);
  return {schema:'relatte/provider-create-intent/v1',version:1,provider,action:'CREATE_NEW_ONLY',target,artifact:{name:artifact.filename,mime:artifact.mime,sha256:artifact.hash,body:artifact.content,bytes:artifact.bytes},
  controls:{requiresProviderOAuth:true,requiresExplicitPerActionApproval:true,requiresWriteVerification:true,
    credentialIncluded:false,overwriteAllowed:false,scope:provider==='google-drive'?'drive.file per-file access':'GitHub App contents:write on one selected repository'},
@@ -1749,9 +1751,10 @@ $('exec-provider').addEventListener('change',()=>{
  $('exec-destination').placeholder=$('exec-provider').value==='google-drive'?'e.g. fellowship-runbook.md':'e.g. the-static-collective/reLATTE/docs/fellowship-runbook.md';
  $('exec-approve').checked=false;$('exec-intent').value='';
 });
+$('exec-branch').addEventListener('change',()=>{$('exec-approve').checked=false;$('exec-intent').value='';});
 $('exec-bridge').addEventListener('click',()=>{
  try{
-  const intent=providerIntent(soloCurrent,$('exec-provider').value,$('exec-destination').value,$('exec-approve').checked);
+  const intent=providerIntent(soloCurrent,$('exec-provider').value,$('exec-destination').value,$('exec-approve').checked,$('exec-branch').value);
   $('exec-intent').value=JSON.stringify(intent,null,2);
   note('exec-bridge-status','Prepared one explicit CREATE-only provider request. No OAuth, account connection, remote read/write or publishing occurred. Review the entire payload and submit it through a separately authorized connector.');
  }catch(e){note('exec-bridge-status','NO PROVIDER REQUEST: '+clean(e.message,200))}
