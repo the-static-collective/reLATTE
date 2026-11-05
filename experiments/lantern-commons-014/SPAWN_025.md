@@ -4,7 +4,7 @@
 
 The user does not need to recruit a second operator before JAR;VIS becomes useful. SPAWN 025 extends the local-first desk in [Lantern_025_Solo_Connector_Workbench.html](Lantern_025_Solo_Connector_Workbench.html) with an **actual digital-artifact constructor**, not just task suggestions.
 
-Pick one actual local operation, one unfinished task, one operator-reported available input, the desired output and a format. The tool constructs the content immediately, hashes the exact UTF-8 bytes with SHA-256, creates a browser Blob for local download, and records only metadata (not raw work content) in the local work journal. Supported outputs: printable HTML runbook, Markdown checklist, CSV tracker and source-owned JSON process cartridge.
+Pick one actual local operation, one unfinished task, one operator-reported available input, the desired output and a format. The tool constructs the content immediately, hashes the exact UTF-8 bytes with SHA-256, creates a browser Blob for local download, and records only metadata (not raw work content) in the local work journal. Supported outputs: printable HTML runbook, Markdown checklist, CSV tracker, source-owned JSON process cartridge, and a **computed single-operator cross-hat capability circuit**. The circuit checks only user-recorded OFFER/NEED category overlaps between distinct hats, produces explicit questions about suitability/ownership/permission, and asserts **zero completed physical transactions**. It does not invent a second person or verify inventory.
 
 **The constructed digital artifact exists.** The real-world task, actual printing, physical deliveries, and other people's decisions are **not** silently completed by creating it. No external authority is inferred from the digital receipt.
 
