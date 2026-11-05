@@ -10,3 +10,11 @@ class Element{
  addEventListener(k,v){this.events[k]=v}setAttribute(k,v){this[k]=v}remove(){}
  click(){return this.events.click?.({preventDefault(){},target:this})}
 }
+test('026 includes private inventory import, source-backed search and no automatic network publication',()=>{
+ assert.match(src,/function validDeepInventory/);
+ assert.match(src,/function deepImport/);
+ assert.match(src,/function deepSearch/);
+ assert.match(src,/function deepCross/);
+ assert.match(src,/deepHidden=new Set/);
+ assert.match(src,/private inventory|PRIVATE authorized inventory/i);
+});
