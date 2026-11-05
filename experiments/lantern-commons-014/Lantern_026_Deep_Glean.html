@@ -1938,6 +1938,52 @@ function deepCard(r){
  box.append(actions);return box;
 }
 
+
+function renderDeepResults(){
+ const found=$('deep-results'),cross=$('deep-cross');found.replaceChildren();cross.replaceChildren();
+ if(!deepLast){found.append(el('div','Import a private authorized source inventory, then search for a real project need.','empty'));return}
+ found.append(el('p',deepLast.matched+' source-backed lead(s); '+Math.min(25,deepLast.results.length)+' shown. Names are leads, not inspected contents.','small muted'));
+ if(!deepLast.results.length)found.append(el('div','No supported matches in this authorized subset. Nothing invented.','empty'));
+ for(const r of deepLast.results.slice(0,25))found.append(deepCard(r));
+ if(!deepLast.cross.length)cross.append(el('div','No cross-provider pair shared a substantive term; no synthetic integration inferred.','empty'));
+ for(const c of deepLast.cross){
+  const item=el('article',undefined,'deep-result');
+  item.append(el('div','HYPOTHESIS ONLY — VERIFY ORIGINALS','tag'),el('h3',c.a.title+' ↔ '+c.b.title),
+   el('p',c.hypothesis,'small'),el('p',c.test,'small muted'));
+  for(const e of [c.a,c.b])if(e.url){
+   const a=el('a','Open '+e.provider+' original ↗');a.href=e.url;a.target='_blank';a.rel='noopener noreferrer';a.referrerPolicy='no-referrer';item.append(a);
+  }
+  cross.append(item);
+ }
+}
+$('deep-import').addEventListener('change',async ev=>{
+ const file=ev.target.files?.[0];if(!file)return;
+ try{
+  if(file.size>3000000)throw Error('Three-megabyte private inventory limit exceeded');
+  const result=deepImport(await file.text());note('deep-status',result.reason);renderDeepResults();
+ }catch(e){note('deep-status','NOT IMPORTED: '+clean(e.message,180))}
+ finally{ev.target.value=''}
+});
+$('deep-search').addEventListener('click',()=>{
+ const p=state.projects.find(p=>p.id===$('deep-project').value);
+ const result=deepSearch(p?p.goal:$('deep-query').value);
+ note('deep-status',result.ok?'Matched '+result.matched+' original-source leads and '+result.cross.length+' tentative cross-provider pairings. Nothing transmitted.':result.reason);
+ renderDeepResults();
+});
+$('deep-clear').addEventListener('click',()=>{
+ deepInventory=null;deepHidden.clear();deepLast=null;renderDeep();renderDeepResults();
+ note('deep-status','Private index discarded from memory. No provider file changed.');
+});
+$('deep-export').addEventListener('click',()=>{
+ const x=deepCatalog();if(!x){note('deep-status','No private inventory loaded');return}
+ download('PRIVATE_Deep_Glean_Inventory.json',JSON.stringify(x,null,2),'application/json;charset=utf-8');
+ note('deep-status','Private index prepared for download. It includes actual metadata; never commit it to a public repository.');
+});
+$('deep-method').addEventListener('click',()=>{
+ download('SPAWN_026_Method_Only.json',JSON.stringify(deepMethod(),null,2),'application/json;charset=utf-8');
+ note('deep-status','Exported method only; no titles, source IDs, URLs, contents or OAuth credentials.');
+});
+
 window.SPAWN_026=Object.freeze({templates:T,cartridge:cartridge,validCartridge:validCartridge,validBackup:validBackup,matches:matches,deriveKit:deriveKit,gleaningScore:gleaningScore,validGlean:validGlean,gleanQuestions:gleanQuestions,recordGlean:recordGlean,composeMaximum:composeMaximum,stageMaximum:stageMaximum,maximumCandidates:maximumCandidates,imagineWorlds:imagineWorlds,imagineForks:imagineForks,stageImagination:stageImagination,captureTrial:captureTrial,recordTrial:recordTrial,suggestNextRule:suggestNextRule,learnedRuleCandidates:learnedRuleCandidates,learnedLensWeight:learnedLensWeight,addLearningRule:addLearningRule,validLearning:validLearning,worldBlueprint:worldBlueprint,validWorldBlueprint:validWorldBlueprint,validWorldState:validWorldState,createWorldFamily:createWorldFamily,worldStep:worldStep,runWorldComparison:runWorldComparison,worldFork:worldFork,worldSetInput:worldSetInput,worldScore:worldScore,portableWorldHtml:portableWorldHtml,importWorld:importWorld,stageWorldFieldTest:stageWorldFieldTest,validSoloWork:validSoloWork,renderSoloBytes:renderSoloBytes,constructSoloArtifact:constructSoloArtifact,providerIntent:providerIntent,methodOnly:methodOnly,soloDest:soloDest,csvCell:csvCell,htmlEscape:htmlEscape,validDeepInventory:validDeepInventory,deepImport:deepImport,deepCatalog:deepCatalog,deepSearch:deepSearch,deepCross:deepCross,deepMethod:deepMethod,deepLexical:deepLexical,state:()=>state});
 refresh();
 })();
