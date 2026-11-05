@@ -1804,7 +1804,97 @@ $('exec-method').addEventListener('click',()=>{
  }catch(e){note('exec-bridge-status',clean(e.message,200))}
 });
 
-window.SPAWN_026=Object.freeze({templates:T,cartridge:cartridge,validCartridge:validCartridge,validBackup:validBackup,matches:matches,deriveKit:deriveKit,gleaningScore:gleaningScore,validGlean:validGlean,gleanQuestions:gleanQuestions,recordGlean:recordGlean,composeMaximum:composeMaximum,stageMaximum:stageMaximum,maximumCandidates:maximumCandidates,imagineWorlds:imagineWorlds,imagineForks:imagineForks,stageImagination:stageImagination,captureTrial:captureTrial,recordTrial:recordTrial,suggestNextRule:suggestNextRule,learnedRuleCandidates:learnedRuleCandidates,learnedLensWeight:learnedLensWeight,addLearningRule:addLearningRule,validLearning:validLearning,worldBlueprint:worldBlueprint,validWorldBlueprint:validWorldBlueprint,validWorldState:validWorldState,createWorldFamily:createWorldFamily,worldStep:worldStep,runWorldComparison:runWorldComparison,worldFork:worldFork,worldSetInput:worldSetInput,worldScore:worldScore,portableWorldHtml:portableWorldHtml,importWorld:importWorld,stageWorldFieldTest:stageWorldFieldTest,validSoloWork:validSoloWork,renderSoloBytes:renderSoloBytes,constructSoloArtifact:constructSoloArtifact,providerIntent:providerIntent,methodOnly:methodOnly,soloDest:soloDest,csvCell:csvCell,htmlEscape:htmlEscape,state:()=>state});
+
+/* 026: private, in-memory metadata index. No provider credentials or automatic network requests. */
+let deepInventory=null,deepHidden=new Set(),deepLast=null;
+const DEEP_STOP=new Set('the and for with from this that your our are was were how why one two three four get use using into via can could should would about has had not new old now more than only work file files document docs repo repository project projects version draft readme original index source current latest private public test tests of in on by to a an or at as it is be you me my we'.split(' '));
+const DEEP_FAMILY={fellowship:['gathering','church','event','hospitality','table','friday','worship'],
+gathering:['fellowship','event','church','festival'],volunteer:['organizer','coordination','invitation','signup'],
+garden:['farm','food','grocery','produce','harvest','nourish'],farm:['garden','grower','produce'],
+jubilee:['penny','tickets','arcade','economy'],cartridge:['minecraft','world','blueprint'],
+minecraft:['world','cartridge','blueprint'],music:['song','artist','worship','guitar','album','jazz'],
+midi:['controller','pedal','worship','playback'],newsletter:['email','publish','harvest'],
+relay:['network','exchange','bridge'],network:['commons','exchange','relay','bridge'],
+table:['fellowship','commons','hospitality'],commons:['coalition','table','garden','exchange']};
+function deepLexical(s){return [...new Set(String(s||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase()
+ .split(/[^a-z0-9]+/g).filter(w=>w.length>=3&&!DEEP_STOP.has(w)))].slice(0,70)}
+function deepTokens(s,expand=false){const words=deepLexical(s);
+ return expand?[...new Set([...words,...words.flatMap(w=>DEEP_FAMILY[w]||[])])].slice(0,80):words}
+function deepSafeURL(provider,url){
+ if(url==='')return true;
+ if(typeof url!=='string'||url.length>450)return false;
+ try{const u=new URL(url);return u.protocol==='https:'&&!u.username&&!u.password&&
+ (provider==='google-drive'?['drive.google.com','docs.google.com'].includes(u.hostname):u.hostname==='github.com')}
+ catch{return false}
+}
+function validDeepInventory(x){
+ const providers=['google-drive','github'],kinds=['file','folder','repository'];
+ if(!x||x.schema!=='relatte/deep-glean-inventory/v1'||x.version!==1||
+ !Array.isArray(x.entries)||x.entries.length>5000||
+ !Array.isArray(x.coverage)||x.coverage.length>20||typeof x.createdAt!=='string'||!Number.isFinite(Date.parse(x.createdAt))||
+ Object.keys(x).sort().join(',')!=='coverage,createdAt,entries,schema,version')return false;
+ if(!x.coverage.every(c=>c&&providers.includes(c.provider)&&
+ typeof c.scope==='string'&&c.scope.length<=160&&typeof c.reason==='string'&&c.reason.length<=220&&
+ Number.isInteger(c.pages)&&c.pages>=0&&c.pages<=10000&&typeof c.complete==='boolean'&&
+ Object.keys(c).sort().join(',')==='complete,pages,provider,reason,scope'))return false;
+ if(!x.entries.every(e=>e&&providers.includes(e.provider)&&typeof e.id==='string'&&e.id.length>=1&&e.id.length<=250&&
+ kinds.includes(e.kind)&&['metadata','content-excerpt'].includes(e.level)&&
+ typeof e.title==='string'&&e.title.length>=1&&e.title.length<=220&&
+ typeof e.summary==='string'&&e.summary.length<=500&&typeof e.mime==='string'&&e.mime.length<=160&&
+ typeof e.path==='string'&&e.path.length<=400&&
+ typeof e.modifiedAt==='string'&&(e.modifiedAt===''||Number.isFinite(Date.parse(e.modifiedAt)))&&e.modifiedAt.length<=60&&
+ ['public','private','shared','unknown'].includes(e.visibility)&&deepSafeURL(e.provider,e.url)&&
+ Object.keys(e).sort().join(',')==='id,kind,level,mime,modifiedAt,path,provider,summary,title,url,visibility'))return false;
+ return new Set(x.entries.map(e=>e.provider+':'+e.id)).size===x.entries.length;
+}
+function deepImport(raw){
+ let x=raw;
+ if(typeof raw==='string'){if(raw.length>3000000)return {ok:false,reason:'Three-megabyte bound exceeded'};
+ try{x=JSON.parse(raw)}catch{return {ok:false,reason:'Malformed JSON'}}}
+ if(!validDeepInventory(x))return {ok:false,reason:'Invalid source schema, metadata bounds, coverage or provider URLs'};
+ deepInventory=JSON.parse(JSON.stringify(x));deepHidden.clear();deepLast=null;renderDeep();
+ return {ok:true,entries:x.entries.length,reason:'Loaded '+x.entries.length+' private records into this tab only. No upload or provider write.'};
+}
+function deepCatalog(){return deepInventory?{...deepInventory,entries:deepInventory.entries.filter(e=>!deepHidden.has(e.provider+':'+e.id))}:null}
+function deepSearch(query){
+ if(!deepInventory)return {ok:false,reason:'Load an authorized private inventory first',results:[],cross:[]};
+ const q=deepLexical(query),expanded=deepTokens(query,true);
+ if(!q.length)return {ok:false,reason:'Enter a meaningful project need',results:[],cross:[]};
+ const scored=[];
+ for(const e of deepCatalog().entries){
+  const name=deepTokens(e.title),path=deepTokens(e.path),summary=deepTokens(e.summary);
+  const exact=q.filter(w=>name.includes(w)||summary.includes(w)||path.includes(w));
+  const related=expanded.filter(w=>!q.includes(w)&&(name.includes(w)||summary.includes(w)||path.includes(w)));
+  if(!exact.length&&!related.length)continue;
+  const rank=exact.reduce((n,w)=>n+(name.includes(w)?6:0)+(path.includes(w)?2:0)+(summary.includes(w)?2:0),0)+
+   related.length+(e.level==='content-excerpt'?2:0);
+  scored.push({entry:e,rank,exact,related:related.slice(0,5),claim:e.level==='content-excerpt'?'EXCERPT LEAD, VERIFY ORIGINAL':'METADATA LEAD, CONTENT UNKNOWN'});
+ }
+ scored.sort((a,b)=>b.rank-a.rank||a.entry.title.localeCompare(b.entry.title));
+ deepLast={ok:true,query:String(query).slice(0,180),matched:scored.length,results:scored.slice(0,30),cross:deepCross(scored.slice(0,30))};
+ return deepLast;
+}
+function deepCross(results){
+ const out=[];
+ for(let i=0;i<results.length;i++)for(let j=i+1;j<results.length;j++){
+  const a=results[i].entry,b=results[j].entry;if(a.provider===b.provider)continue;
+  const words=deepTokens(a.title+' '+a.summary+' '+a.path).filter(x=>x.length>3);
+  const other=new Set(deepTokens(b.title+' '+b.summary+' '+b.path));
+  const common=words.filter(w=>other.has(w));
+  if(!common.length)continue;
+  out.push({a,b,common:common.slice(0,6),hypothesis:'Possible reuse suggested by shared metadata terms: '+common.slice(0,6).join(', '),
+   test:'Open both original files and inspect content, rights and currency before making a real integration.'});
+ }
+ return out.sort((x,y)=>y.common.length-x.common.length).slice(0,12);
+}
+function deepMethod(){return {schema:'relatte/deep-glean-method/v1',version:1,
+ steps:['Authorize read-only provider metadata independently','Enumerate actual accessible pages; flag incomplete coverage',
+ 'Hold metadata only in private memory','Compare source-linked terms with an existing need',
+ 'Find cross-provider source pairs','Verify original contents and permissions','Prepare and approve a specific executable next step',
+ 'Record actual readback or field result'],privateMetadataIncluded:false,providerCredentialsIncluded:false,
+ fileDiscoveryDoesNotProveUsefulness:true,realWorldOutcomeClaimed:false}}
+
+window.SPAWN_026=Object.freeze({templates:T,cartridge:cartridge,validCartridge:validCartridge,validBackup:validBackup,matches:matches,deriveKit:deriveKit,gleaningScore:gleaningScore,validGlean:validGlean,gleanQuestions:gleanQuestions,recordGlean:recordGlean,composeMaximum:composeMaximum,stageMaximum:stageMaximum,maximumCandidates:maximumCandidates,imagineWorlds:imagineWorlds,imagineForks:imagineForks,stageImagination:stageImagination,captureTrial:captureTrial,recordTrial:recordTrial,suggestNextRule:suggestNextRule,learnedRuleCandidates:learnedRuleCandidates,learnedLensWeight:learnedLensWeight,addLearningRule:addLearningRule,validLearning:validLearning,worldBlueprint:worldBlueprint,validWorldBlueprint:validWorldBlueprint,validWorldState:validWorldState,createWorldFamily:createWorldFamily,worldStep:worldStep,runWorldComparison:runWorldComparison,worldFork:worldFork,worldSetInput:worldSetInput,worldScore:worldScore,portableWorldHtml:portableWorldHtml,importWorld:importWorld,stageWorldFieldTest:stageWorldFieldTest,validSoloWork:validSoloWork,renderSoloBytes:renderSoloBytes,constructSoloArtifact:constructSoloArtifact,providerIntent:providerIntent,methodOnly:methodOnly,soloDest:soloDest,csvCell:csvCell,htmlEscape:htmlEscape,validDeepInventory:validDeepInventory,deepImport:deepImport,deepCatalog:deepCatalog,deepSearch:deepSearch,deepCross:deepCross,deepMethod:deepMethod,deepLexical:deepLexical,state:()=>state});
 refresh();
 })();
 </script></body></html>
