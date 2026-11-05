@@ -13,6 +13,7 @@ test('live standalone 025 downloadable app returns original complete executor, n
  assert.match(html,/<title>JAR;VIS SPAWN 025 — Solo Work Executor \+ Provider Bridge<\/title>/);
  assert.match(html,/function constructSoloArtifact/);
  assert.match(html,/function providerIntent/);
+ assert.match(html,/relatte\/solo-capability-circuit\/v1/);
  assert.match(html,/id="executor-025"/);
  assert.match(html,/No tokens, secrets or external API calls are used by this section/);
  assert.doesNotMatch(html,/<script[^>]+src=|\bSUPABASE_SERVICE_ROLE_KEY\b|sb_secret_/);
