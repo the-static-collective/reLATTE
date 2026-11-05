@@ -1,0 +1,149 @@
+name: Minecraft 011 — actual adversarial game falsifies MOTIF's own sensor
+on:
+  push:
+    branches: [experiment/minecraft-011-method-falsification]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  official-adversarial-world:
+    runs-on: ubuntu-latest
+    timeout-minutes: 27
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/MOTIF
+          ref: 2fab3f845e1afb247a78d8129ace229f702a56ed
+          path: motif-023
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+      - run: |
+          npm install
+          npm install --no-save --ignore-scripts mineflayer@4.39.0 rcon-client@4.2.5 vec3@0.2.0
+      - name: Falsification control and negative evidence tests
+        run: node --test test/motif-instrument-011-trace.test.mjs
+      - uses: actions/download-artifact@v4
+        with:
+          repository: the-static-collective/reLATTE
+          run-id: 42058320590
+          github-token: ${{ github.token }}
+          name: motif-010-real-vanilla-world-A-observation
+          path: work/source010-artifact
+      - uses: actions/download-artifact@v4
+        with:
+          repository: the-static-collective/reLATTE
+          run-id: 42056763998
+          github-token: ${{ github.token }}
+          name: motif-010-signed-compressed-minecraft-experiment
+          path: work/source009-artifact
+      - name: Recover exact source bytes and signed previous datapack
+        run: |
+          set -euo pipefail
+          NEW="$(find work/source010-artifact -name signed-game-result.json -print -quit)"
+          OLD="$(find work/source009-artifact -name signed-game-result.json -print -quit)"
+          PACK="$(find work/source009-artifact -name signed-proposal.json -print -quit)"
+          test -n "$NEW" && test -n "$OLD" && test -n "$PACK"
+          mkdir -p work/source010 work/source009
+          cp "$NEW" work/source010/signed-game-result.json
+          cp "$OLD" work/source009/signed-game-result.json
+          cp -a "$(dirname "$PACK")" work/motif-minecraft-010
+          test -s work/motif-minecraft-010/datapack/data/motif022/function/read_micro.mcfunction
+      - name: Native reLATTE verifier authenticates prior game; MOTIF-023 proposes lateral fault
+        env:
+          MOTIF_ROOT: ${{ github.workspace }}/motif-023
+          MOTIF_010_SOURCE: work/source010/signed-game-result.json
+          MOTIF_009_SOURCE: work/source009/signed-game-result.json
+          MOTIF_010_PACK: work/motif-minecraft-010/datapack
+        run: |
+          node --experimental-strip-types experiments/motif-instrument-011/compose.mjs > work/011-preparation.json
+          test -s work/motif-minecraft-011/signed-proposal.json
+          test -s work/motif-minecraft-011/datapack/data/motif023/function/inject.mcfunction
+          python3 - <<'PY'
+          import json
+          x=json.load(open("work/motif-minecraft-011/proposal.json"))
+          assert x["side_power_position"]=={"x":20,"y":65,"z":47,"block":"minecraft:redstone_block"}
+          assert x["automatic_execution"] is False
+          assert x["disposition"]=="R3_HOLD"
+          PY
+      - name: Run actual official Minecraft and require independently observed 9-lamp state
+        env:
+          MOTIF_011_CI_GAME_ONLY: "1"
+          MC_HOST: 127.0.0.1
+          MC_RCON_PASSWORD: relatte-ci
+          MOTIF_009_GAME_SOURCE: work/source009/signed-game-result.json
+          MOTIF_010_GAME_SOURCE: work/source010/signed-game-result.json
+        run: |
+          node --experimental-strip-types experiments/motif-instrument-011/ci-run-hostile.mjs
+          test -s work/motif-minecraft-011-live/signed-game-result.json
+          test -s work/motif-minecraft-011-live/game-trace.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: motif-011-lateral-fault-real-minecraft-world
+          path: |
+            work/motif-minecraft-011/proposal.json
+            work/motif-minecraft-011/signed-proposal.json
+            work/motif-minecraft-011/motif-design.json
+            work/motif-minecraft-011-live/raw-trial-before-adjudication.json
+            work/motif-minecraft-011-live/game-trace.json
+            work/motif-minecraft-011-live/signed-game-result.json
+            work/motif-minecraft-011-live/game-outcome.json
+            work/motif-minecraft-011-live/live-game-summary.json
+            work/motif-minecraft-011-live/server-log.txt
+          if-no-files-found: warn
+          retention-days: 14
+  separately-verify:
+    needs: [official-adversarial-world]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install
+      - uses: actions/download-artifact@v4
+        with:
+          name: motif-011-lateral-fault-real-minecraft-world
+          path: work/011
+      - uses: actions/download-artifact@v4
+        with:
+          repository: the-static-collective/reLATTE
+          run-id: 42058320590
+          github-token: ${{ github.token }}
+          name: motif-010-real-vanilla-world-A-observation
+          path: work/010
+      - uses: actions/download-artifact@v4
+        with:
+          repository: the-static-collective/reLATTE
+          run-id: 42056763998
+          github-token: ${{ github.token }}
+          name: motif-010-signed-compressed-minecraft-experiment
+          path: work/009
+      - name: Reverify complete 004→005→008→009→010→011 ancestry and counterexample
+        run: |
+          set -euo pipefail
+          NEW="$(find work/011 -name signed-game-result.json -print -quit)"
+          PRIOR="$(find work/010 -name signed-game-result.json -print -quit)"
+          OLD="$(find work/009 -name signed-game-result.json -print -quit)"
+          test -n "$NEW" && test -n "$PRIOR" && test -n "$OLD"
+          node --experimental-strip-types experiments/motif-instrument-011/verify-hostile.mjs "$NEW" "$PRIOR" "$OLD" work/independent-011.json
+          test -s work/independent-011.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: motif-011-independent-method-falsification-return
+          path: work/independent-011.json
+          if-no-files-found: error
+          retention-days: 14
