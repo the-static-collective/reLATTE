@@ -1,0 +1,107 @@
+name: Minecraft 010 — live causal micro-probe and independent re-verification
+on:
+  push:
+    branches: [experiment/minecraft-010-compressed-sensor]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  actual-game:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+      - name: Install real Minecraft client and RCON dependencies
+        run: |
+          npm install
+          npm install --no-save --ignore-scripts mineflayer@4.39.0 rcon-client@4.2.5 vec3@0.2.0
+      - name: Check causal sensor falsifiers before any game execution
+        run: node --test test/motif-instrument-010-trace.test.mjs
+      - uses: actions/download-artifact@v4
+        with:
+          repository: the-static-collective/reLATTE
+          run-id: 42056763998
+          github-token: ${{ github.token }}
+          name: motif-010-signed-compressed-minecraft-experiment
+          path: work/seeded-010
+      - name: Recover exact game009 signed parent and MOTIF-022-generated native datapack
+        run: |
+          set -euo pipefail
+          PRIOR="$(find work/seeded-010 -name signed-game-result.json -print -quit)"
+          PROPOSAL="$(find work/seeded-010 -name signed-proposal.json -print -quit)"
+          test -n "$PRIOR"
+          test -n "$PROPOSAL"
+          mkdir -p work/seed009
+          cp "$PRIOR" work/seed009/signed-game-result.json
+          cp -a "$(dirname "$PROPOSAL")" work/motif-minecraft-010
+          test -s work/motif-minecraft-010/datapack/data/motif022/function/read_micro.mcfunction
+      - name: Execute fresh SHA1-checked official vanilla World A, then cross-check 2 lamps against 9
+        env:
+          MOTIF_010_CI_GAME_ONLY: "1"
+          GITHUB_ACTIONS: "true"
+          MC_HOST: 127.0.0.1
+          MC_RCON_PASSWORD: relatte-ci
+        run: |
+          node --experimental-strip-types experiments/motif-instrument-010/ci-run.mjs
+          test -s work/motif-minecraft-010-live/signed-game-result.json
+          test -s work/motif-minecraft-010-live/live-game-summary.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: motif-010-real-vanilla-world-A-observation
+          path: |
+            work/motif-minecraft-010-live/raw-trial-before-adjudication.json
+            work/motif-minecraft-010-live/game-trace.json
+            work/motif-minecraft-010-live/game-outcome.json
+            work/motif-minecraft-010-live/signed-game-result.json
+            work/motif-minecraft-010-live/live-game-summary.json
+            work/motif-minecraft-010-live/server-log.txt
+          if-no-files-found: warn
+          retention-days: 14
+  separate-verifier:
+    needs: [actual-game]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install
+      - uses: actions/download-artifact@v4
+        with:
+          name: motif-010-real-vanilla-world-A-observation
+          path: work/new-A
+      - uses: actions/download-artifact@v4
+        with:
+          repository: the-static-collective/reLATTE
+          run-id: 42056763998
+          github-token: ${{ github.token }}
+          name: motif-010-signed-compressed-minecraft-experiment
+          path: work/old-B
+      - name: Replay all signed game ancestors, infer micro sensor, inspect 9-lamp source and non-OP observer
+        run: |
+          set -euo pipefail
+          NEW="$(find work/new-A -name signed-game-result.json -print -quit)"
+          OLD="$(find work/old-B -name signed-game-result.json -print -quit)"
+          test -n "$NEW" && test -n "$OLD"
+          node --experimental-strip-types experiments/motif-instrument-010/independent-check.mjs "$NEW" "$OLD" work/independent-010.json
+          test -s work/independent-010.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: motif-010-independent-micro-sensor-game-witness
+          path: work/independent-010.json
+          if-no-files-found: error
+          retention-days: 14

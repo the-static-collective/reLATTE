@@ -1,0 +1,80 @@
+name: Minecraft 010 — native two-lamp instrument from verified game 009
+on:
+  push:
+    branches:
+      - experiment/minecraft-010-compressed-sensor
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "experiments/motif-instrument-010/**"
+      - "test/motif-instrument-010.test.mjs"
+      - ".github/workflows/motif-minecraft-010.yml"
+permissions:
+  contents: read
+  actions: read
+jobs:
+  instrument-prep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/MOTIF
+          ref: 8812841c9b241600f158b7714e4137d400827766
+          path: motif-source
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install native reLATTE P256 verification tools
+        run: npm install
+      - uses: actions/download-artifact@v4
+        with:
+          repository: the-static-collective/reLATTE
+          run-id: 42048208699
+          github-token: ${{ github.token }}
+          name: motif-009-new-vanilla-world-b-evidence
+          path: work/prior-minecraft009
+      - name: Preserve byte-identical original signed world-B game-result
+        run: |
+          set -euo pipefail
+          GAME="$(find work/prior-minecraft009 -name signed-game-result.json -print -quit)"
+          test -n "$GAME"
+          mkdir -p work/seed009
+          cp "$GAME" work/seed009/signed-game-result.json
+          test -s work/seed009/signed-game-result.json
+      - name: Native MOTIF-022 chooses new micro instrument from actual prior game
+        env:
+          MOTIF_ROOT: ${{ github.workspace }}/motif-source
+          MOTIF_009_GAME_SOURCE: work/seed009/signed-game-result.json
+        run: |
+          node --test --experimental-strip-types test/motif-instrument-010.test.mjs
+          node --experimental-strip-types experiments/motif-instrument-010/compose.mjs > work/micro-010-prep-summary.json
+          test -s work/motif-minecraft-010/signed-proposal.json
+          test -s work/motif-minecraft-010/datapack/data/motif022/function/read_micro.mcfunction
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path('work/motif-minecraft-010')
+          x=json.loads((r/'proposal.json').read_text())
+          d=json.loads((r/'decision.json').read_text())
+          assert x['source_009_verified_in_process'] is True
+          assert x['world']=='A'
+          assert x['fault_x']==-28
+          assert x['stage_indexes']==[2,3]
+          assert d['status']=='PROPOSE_MINIMAL_CAUSAL_WITNESS'
+          assert d['actions']==0
+          assert x['game_server_not_yet_run'] is True
+          print('GAMED_009_VERIFIED → MOTIF_022_TWO_LAMP_INSTRUMENT_PROPOSED → R3_HOLD')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: motif-010-signed-compressed-minecraft-experiment
+          path: |
+            work/motif-minecraft-010/
+            work/seed009/signed-game-result.json
+          if-no-files-found: error
+          retention-days: 14
