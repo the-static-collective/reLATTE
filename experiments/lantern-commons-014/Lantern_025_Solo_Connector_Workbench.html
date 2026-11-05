@@ -188,7 +188,7 @@ footer{padding:22px 18px 55px;border-top:1px solid var(--line);color:var(--muted
 <label for="exec-outcome">What should exist when this digital step finishes?</label>
 <input id="exec-outcome" maxlength="160" placeholder="e.g. an event program I can bring to a pastor">
 <div class="two"><div><label for="exec-format">Build actual output</label>
-<select id="exec-format"><option value="page">Printable single-page operational plan (HTML)</option><option value="checklist">Executable checklist (Markdown)</option><option value="tracker">Progress and evidence tracker (CSV)</option><option value="recipe">Portable process cartridge (JSON)</option></select></div>
+<select id="exec-format"><option value="page">Printable single-page operational plan (HTML)</option><option value="checklist">Executable checklist (Markdown)</option><option value="tracker">Progress and evidence tracker (CSV)</option><option value="recipe">Portable process cartridge (JSON)</option><option value="circuit">Cross-hat capability circuit (calculated JSON)</option></select></div>
 <div><label for="exec-source">Resource provenance</label><select id="exec-source"><option value="checked">I checked that I control it</option><option value="unverified">Not verified yet — draft only</option></select></div></div>
 <div class="line" style="margin-top:15px"><button type="button" class="button" id="exec-make">Construct work product now</button><button type="button" class="button secondary" id="exec-download">Download actual file</button><span class="counter" id="exec-count">0 local work products</span></div>
 <div id="exec-status" role="status" class="cap">Creating a digital artifact does not complete the physical work or verify the resource. Work products remain local until deliberately exported.</div>
@@ -1604,7 +1604,7 @@ $('relay-024-export').addEventListener('click',()=>{
 /* SPAWN 025: one person's owned resource + actual task -> downloadable digital artifact, then optional provider request.
    Digital construction is REAL (bytes produced); physical work and outside saves remain UNPROVEN.
    No provider passwords, tokens, OAuth redirect, third-party API access or automatic file writes here. */
-const SOLO_FORMATS={page:{ext:'html',mime:'text/html;charset=utf-8'},checklist:{ext:'md',mime:'text/markdown;charset=utf-8'},tracker:{ext:'csv',mime:'text/csv;charset=utf-8'},recipe:{ext:'json',mime:'application/json;charset=utf-8'}};
+const SOLO_FORMATS={page:{ext:'html',mime:'text/html;charset=utf-8'},checklist:{ext:'md',mime:'text/markdown;charset=utf-8'},tracker:{ext:'csv',mime:'text/csv;charset=utf-8'},recipe:{ext:'json',mime:'application/json;charset=utf-8'},circuit:{ext:'json',mime:'application/json;charset=utf-8'}};
 let soloCurrent=null;
 function validSoloWork(obj){
  if(!obj||typeof obj!=='object'||!Array.isArray(obj.records)||obj.records.length>40)return false;
@@ -1612,7 +1612,7 @@ function validSoloWork(obj){
  typeof x.projectId==='string'&&x.projectId.length<=100&&
  typeof x.taskId==='string'&&x.taskId.length<=100&&
  typeof x.title==='string'&&x.title.length<=160&&
- ['page','checklist','tracker','recipe'].includes(x.format)&&
+ ['page','checklist','tracker','recipe','circuit'].includes(x.format)&&
  typeof x.filename==='string'&&x.filename.length<=180&&
  typeof x.hash==='string'&&/^[0-9a-f]{64}$/.test(x.hash)&&
  Number.isInteger(x.bytes)&&x.bytes>=1&&x.bytes<=30000&&
@@ -1663,6 +1663,16 @@ function renderSoloBytes(input){
   const header=['stage','specific_work','status','observed_evidence','next_constraint'];
   const stages=['inspect','prepare','construct','review','field-test','reuse'];
   content=header.map(csvCell).join(',')+'\r\n'+stages.map((t,i)=>[t,steps[i],'not started','',''].map(csvCell).join(',')).join('\r\n')+'\r\n';
+ }else if(x.format==='circuit'){
+  const edges=matches(state.projects).map(m=>({sourceHat:{type:m.from.type,title:m.from.title},targetHat:{type:m.to.type,title:m.to.title},category:m.offer.category,
+    reportedOffer:m.offer.detail,reportedNeed:m.need.detail,status:'POSSIBLE_CATEGORY_OVERLAP_UNVERIFIED',
+    firstProof:'Independently inspect the actual offered object/skill, suitability, permission and receiving need before any transfer.'}));
+  const offers=state.projects.flatMap(p=>p.caps.filter(c=>c.direction==='offer').map(c=>({roleType:p.type,category:c.category,description:c.detail}))).slice(0,45);
+  const needs=state.projects.flatMap(p=>p.caps.filter(c=>c.direction==='need').map(c=>({roleType:p.type,category:c.category,description:c.detail}))).slice(0,45);
+  content=JSON.stringify({schema:'relatte/solo-capability-circuit/v1',version:1,claim:'SAME PERSON MULTIPLE HATS; NO NEW PARTNER OR MATERIAL VERIFIED',
+    objective:x.outcome,operatorCount:1,hatCount:state.projects.length,recordedOffers:offers,recordedNeeds:needs,
+    possibleCrossings:edges,possibleCrossingCount:edges.length,completeTransactions:0,
+    conclusion:edges.length?'Category overlap found. Each crossing requires real independent suitability/ownership/permission checks.':'No category-overlapping, distinct-hat offer and need currently recorded. No fictitious match is added.'},null,2);
  }else{
   content=JSON.stringify({schema:'relatte/solo-work-method/v1',version:1,claim:'DIGITAL METHOD ONLY — PHYSICAL OUTCOME UNTESTED',roleType:x.p.type,format:x.format,
    objective:x.outcome,resourceStatus:status,steps:steps.map((text,n)=>({step:n+1,instruction:text,state:'not started',observed:false})),
