@@ -12,7 +12,7 @@ import {makeObservation,makePolyglotHop,verifyHopBinding}
 import {generateP256KeyPair,verifyCrossingEnvelope,verifyReceipt}
   from '../../src/protocol.ts';
 import {verifyObservedGameBundle} from '../motif-instrument-009/verify.mjs';
-import {SPEC_SCHEMA as PROPOSAL_SCHEMA} from './compose.mjs';
+import {SPEC_SCHEMA as PROPOSAL_SCHEMA} from '../motif-instrument-010/compose.mjs';
 import {checkHostileTrace} from './trace-verifier.mjs';
 import {verifyNewMicroGame} from '../motif-instrument-010/verify.mjs';
 
