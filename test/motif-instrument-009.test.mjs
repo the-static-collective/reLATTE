@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {checkGameTrace} from '../experiments/motif-instrument-009/execute.mjs';
+import {checkGameTrace} from '../experiments/motif-instrument-009/trace-verifier.mjs';
 import {verifyObservedGameBundle} from '../experiments/motif-instrument-009/verify.mjs';
 
 const cues=['READ_FIELD','LAY_BONES','CATCH_WATER','MAKE_SHADE',
