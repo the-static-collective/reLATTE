@@ -186,6 +186,7 @@ export async function conductNativeGame({
   error(host==='127.0.0.1'||host==='localhost','GAME_NOT_LOCALHOST');
   const rcon=await Rcon.connect({host,port:rconPort,password});
   let author;
+  let chunkKeeper;
   const stagePositions=Array.from({length:9},(_,i)=>({
     cue:['READ_FIELD','LAY_BONES','CATCH_WATER','MAKE_SHADE','MAKE_GROUND',
       'SEED_NUCLEUS','FEED_FIELD','WITNESS_DELTA','ONE_METER_OUTWARD'][i],
@@ -227,6 +228,16 @@ export async function conductNativeGame({
     author.quit('instrument authored');
     author=null;
     await rcon.send('deop MotifAuthor');
+    // Never run restoration without the circuit's chunks loaded. A separate
+    // nonoperator protocol client remains in the zone across both trials;
+    // neither fresh witness is the chunk keeper or the author.
+    chunkKeeper=mineflayer.createBot({
+      host,port:mcPort,username:'MotifChunkKeeper',auth:'offline',
+    });
+    await waitForSpawn(chunkKeeper);
+    await rcon.send('deop MotifChunkKeeper');
+    await rcon.send('tp MotifChunkKeeper 0 80 46');
+    await chunkKeeper.waitForChunksToLoad();
     await sleep(800);
     const observer=await readFreshNonOp(rcon,stagePositions,'MotifWitness009');
 
@@ -259,11 +270,18 @@ export async function conductNativeGame({
       commands,
       author_session:'MotifAuthor',
       author_disconnect_before_fresh_witness:true,
+      nonoperator_chunk_keeper:'MotifChunkKeeper',
+      chunk_keeper_is_not_author_or_observer:true,
       actual_game_execution:true,
       real_physical_environment_effect:false,
       source_owner_admission:false,
       receiver_disposition:'R3_HOLD',
     };
+    // Preserve raw attempted observations *before* any verdict. A failed
+    // restoration must remain visible as failure evidence, not disappear.
+    await mkdir(output,{recursive:true});
+    await writeFile(join(output,'raw-trial-before-adjudication.json'),
+      JSON.stringify(trace,null,2)+'\n');
     const outcome=checkGameTrace(proposal,trace,version);
     const packet={
       schema:RESULT_SCHEMA,
@@ -328,6 +346,7 @@ export async function conductNativeGame({
     return {outcome,bundle,trace};
   }finally {
     try{author?.quit('stop')}catch{}
+    try{chunkKeeper?.quit('experiment concluded')}catch{}
     try{await rcon.send('stop')}catch{}
     try{rcon.end()}catch{}
   }
