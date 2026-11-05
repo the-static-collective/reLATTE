@@ -91,7 +91,7 @@ export async function run(){
   const source=JSON.parse(await readFile(
     'work/motif-minecraft-011/proposal.json','utf8'));
   fail(source.schema==='relatte.minecraft011.hostile-method-proposal/v0' &&
-    source.game_server_not_yet_run===true &&
+    source.automatic_execution===false &&
     source.world==='A'&&source.fault_x===-28&&
     source.side_power_position?.x===20 &&
     source.disposition==='R3_HOLD' &&
