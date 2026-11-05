@@ -205,10 +205,12 @@ test('025 provider intent needs fresh approval and never writes, signs in, or ca
  assert.equal(intent.artifact.body,art.content);
  assert.doesNotMatch(JSON.stringify(intent),/access_token|refresh_token|client_secret|provider_token|api_key/i);
  assert.equal(b.api.state().work.records[0].providerReceipt,null);
- const gh=b.api.providerIntent(art,'github','the-static-collective/reLATTE/docs/checklist.md',true);
+ const gh=b.api.providerIntent(art,'github','the-static-collective/reLATTE/docs/checklist.md',true,'experiment/spawn-025-solo-executor-connector-bridge');
  assert.equal(gh.target.owner,'the-static-collective');
  assert.equal(gh.target.repo,'reLATTE');
  assert.equal(gh.target.expectedExistingSha,null);
+ assert.equal(gh.target.branch,'experiment/spawn-025-solo-executor-connector-bridge');
+ assert.throws(()=>b.api.providerIntent(art,'github','the-static-collective/reLATTE/docs/checklist.md',true,'main'),/non-default GitHub work branch/);
  assert.throws(()=>b.api.providerIntent(art,'github','owner/repo/.github/workflows/unsafe.yml',true),/Cannot create workflow/);
  assert.throws(()=>b.api.providerIntent(art,'google-drive','../secrets.md',true),/safe Google Drive filename/);
 });
