@@ -60,6 +60,8 @@ jobs:
         run: node --test experiments/lantern-commons-014/test_solo_025.mjs
       - name: Verify Google Drive and GitHub create-only adapters and provider readback checks
         run: node --test experiments/lantern-commons-014/test_provider_adapters_025.mjs
+      - name: Verify LIVE SPAWN 025 public app download and no unapproved account sign-in claims
+        run: node --test experiments/lantern-commons-014/test_live_app_025.mjs
       - name: Verify standalone HTML, no remote assets, and no automatic completion claims
         run: |
           python3 - <<'PY'
