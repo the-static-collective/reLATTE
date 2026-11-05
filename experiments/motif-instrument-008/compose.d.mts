@@ -32,7 +32,7 @@ export interface GamePack {
   plan_operations:number;
   build_plan_sha256:string;
 }
-export function extractAuthenticatedPrior(audit:Record<string,unknown>):ObservedFault[];
+export function extractAuthenticatedPrior(audit:unknown):ObservedFault[];
 export function composeNativeMinecraftExperiment(input:{
   motifRoot:string;sourceBytes:Buffer;
 }):Promise<{
