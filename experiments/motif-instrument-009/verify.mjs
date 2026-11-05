@@ -11,7 +11,7 @@ import {verifyCrossingEnvelope,verifyReceipt}
 import {verifyExistingCustodyBytes,SOURCE_SHA256}
   from '../riff-raft-minecraft-007/custody-audit.mjs';
 import {checkGameTrace,RESULT_SCHEMA,BUNDLE_SCHEMA}
-  from './execute.mjs';
+  from './trace-verifier.mjs';
 
 const insist=(x,s)=>{if(!x)throw Error('MOTIF_MC009_REPLAY_'+s)};
 const hash=x=>createHash('sha256').update(x).digest('hex');
