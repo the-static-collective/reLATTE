@@ -32,7 +32,7 @@ export interface GamePack {
   plan_operations:number;
   build_plan_sha256:string;
 }
-export function extractAuthenticatedPrior(audit:VerifiedHistory):ObservedFault[];
+export function extractAuthenticatedPrior(audit:Partial<VerifiedHistory>&Record<string,unknown>):ObservedFault[];
 export function composeNativeMinecraftExperiment(input:{
   motifRoot:string;sourceBytes:Buffer;
 }):Promise<{
@@ -44,8 +44,8 @@ export function composeNativeMinecraftExperiment(input:{
   pack:GamePack;
   audit:VerifiedHistory;
 }>;
-export function buildMinecraftDatapack(plan:unknown,state:InstrumentState):GamePack;
-export function sealSyntheticQuest(state:InstrumentState):Promise<{
+export function buildMinecraftDatapack(plan:unknown,state:Partial<InstrumentState>&Record<string,unknown>):GamePack;
+export function sealSyntheticQuest(state:Partial<InstrumentState>&Record<string,unknown>):Promise<{
   schema:string;
   crossing:Record<string,any>;
   receipt:Record<string,any>;
