@@ -66,3 +66,28 @@ export async function scanDriveMetadata({token,fetcher=fetch,maxPages=100,maxEnt
  return {entries,coverage:{provider:"google-drive",scope:grantedScope+" (user corpus / OAuth-authorized files only)",
   pages,complete:!cursor&&!incomplete,reason:reason.trim()}};
 }
+
+export async function scanGithubInstallation({token,fetcher=fetch,maxPages=100,maxEntries=LIMIT,
+ includeTrees=false,selectedRepositories=[],maxTrees=20}){
+ authorizedToken(token);
+ if(!Number.isInteger(maxPages)||maxPages<1||maxPages>1000||!Number.isInteger(maxEntries)||maxEntries<1||maxEntries>LIMIT||
+ !Number.isInteger(maxTrees)||maxTrees<0||maxTrees>50||!Array.isArray(selectedRepositories)||selectedRepositories.length>50)err("SCAN_BOUND_INVALID");
+ const entries=[],seen=new Set();let pages=0,reason="",complete=true,repos=[];
+ while(pages<maxPages&&entries.length<maxEntries){
+  const data=await getJSON(GITHUB+"/installation/repositories?per_page=100&page="+(pages+1),token,fetcher);
+  if(!Array.isArray(data.repositories)||!Number.isInteger(data.total_count))err("GITHUB_INSTALLATION_RESPONSE_INVALID");
+  pages++;
+  for(const item of data.repositories){
+   if(entries.length>=maxEntries)break;
+   if(!item||typeof item.full_name!=="string"||seen.has(item.full_name))continue;
+   seen.add(item.full_name);repos.push(item);
+   entries.push(record("github",item.full_name,item.name||item.full_name,"repository",
+    "application/vnd.github.repository",item.updated_at||"",item.full_name,
+    item.html_url||"",item.description||"",item.private?"private":"public"));
+  }
+  if(repos.length>=data.total_count)break;
+  if(!data.repositories.length){complete=false;reason="Provider returned an empty page before reported count.";break}
+  if(pages>=maxPages||entries.length>=maxEntries){
+   complete=false;reason="Repository enumeration stopped at a page or item limit.";break
+  }
+ }
