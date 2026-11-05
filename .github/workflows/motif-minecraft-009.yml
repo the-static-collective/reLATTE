@@ -37,7 +37,7 @@ jobs:
         run: node --test --experimental-strip-types test/motif-instrument-009.test.mjs
       - name: Reverify P256 source 004 and 005; generate MOTIF-selected datapack
         env:
-          MOTIF_ROOT: \${{ github.workspace }}/motif-source
+          MOTIF_ROOT: ${{ github.workspace }}/motif-source
         run: |
           node --experimental-strip-types experiments/motif-instrument-008/compose.mjs
           test -s work/motif-minecraft-instrument-008/datapack/pack.mcmeta
