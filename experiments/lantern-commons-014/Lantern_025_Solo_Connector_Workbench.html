@@ -1611,7 +1611,7 @@ function validSoloWork(obj){
  typeof x.projectId==='string'&&x.projectId.length<=100&&
  typeof x.taskId==='string'&&x.taskId.length<=100&&
  typeof x.title==='string'&&x.title.length<=160&&
- Object.hasOwn(SOLO_FORMATS,x.format)&&
+ ['page','checklist','tracker','recipe'].includes(x.format)&&
  typeof x.filename==='string'&&x.filename.length<=180&&
  typeof x.hash==='string'&&/^[0-9a-f]{64}$/.test(x.hash)&&
  Number.isInteger(x.bytes)&&x.bytes>=1&&x.bytes<=30000&&
