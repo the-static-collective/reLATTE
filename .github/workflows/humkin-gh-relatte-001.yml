@@ -1,0 +1,104 @@
+name: HUMKIN-GH-RELATTE-001 public catalog to signed sovereign HOLD
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - experiment/humkin-gh-relatte-catalog-001
+    paths:
+      - 'scripts/humkin-gh-relatte-001.mjs'
+      - 'test/humkin-gh-relatte-001.test.mjs'
+      - '.github/workflows/humkin-gh-relatte-001.yml'
+  pull_request:
+    paths:
+      - 'scripts/humkin-gh-relatte-001.mjs'
+      - 'test/humkin-gh-relatte-001.test.mjs'
+      - '.github/workflows/humkin-gh-relatte-001.yml'
+permissions:
+  contents: read
+
+jobs:
+  sender:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: relatte
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: the-static-collective/HUMKIN
+          ref: main
+          path: humkin
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install reLATTE dependency versions
+        working-directory: relatte
+        run: npm install --ignore-scripts
+      - name: Test native crossing and hostile mutation refusals
+        working-directory: relatte
+        run: node --experimental-strip-types --test test/humkin-gh-relatte-001.test.mjs
+      - name: Carry actual public HUMKIN JSON plus observed Git commit identity
+        working-directory: relatte
+        run: node --experimental-strip-types scripts/humkin-gh-relatte-001.mjs sender ../humkin ../work/carrier
+      - uses: actions/upload-artifact@v4
+        with:
+          name: humkin-catalog-public-bytes
+          path: work/carrier/
+          if-no-files-found: error
+          retention-days: 7
+
+  receiver:
+    runs-on: ubuntu-latest
+    needs: sender
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: relatte
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install receiver-owned reLATTE
+        working-directory: relatte
+        run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: humkin-catalog-public-bytes
+          path: work/carrier
+      - name: Sign native crossing and HOLD; verify local journal on cold replay
+        working-directory: relatte
+        run: node --experimental-strip-types scripts/humkin-gh-relatte-001.mjs receiver ../work/carrier ../work/receiver
+      - name: Export public bytes, signed crossing and signed receipts only
+        uses: actions/upload-artifact@v4
+        with:
+          name: humkin-relatte-public-hold-witness
+          path: work/receiver/public/
+          if-no-files-found: error
+          retention-days: 7
+
+  independent-verifier:
+    runs-on: ubuntu-latest
+    needs: receiver
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: relatte
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install independent verifier
+        working-directory: relatte
+        run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: humkin-relatte-public-hold-witness
+          path: work/public
+      - name: Independently verify bytes, public keys, signatures and exact HOLD disposition
+        working-directory: relatte
+        run: node --experimental-strip-types scripts/humkin-gh-relatte-001.mjs verify ../work/public
