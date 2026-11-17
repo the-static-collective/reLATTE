@@ -7,6 +7,7 @@ on:
     paths:
       - 'scripts/humkin-gh-relatte-001.mjs'
       - 'scripts/humkin-gh-relatte-002.mjs'
+      - 'test/humkin-gh-relatte-002-negatives.test.mjs'
       - 'test/humkin-gh-relatte-001.test.mjs'
       - '.github/workflows/humkin-gh-relatte-001.yml'
   pull_request:
@@ -189,6 +190,12 @@ jobs:
           node --experimental-strip-types scripts/humkin-gh-relatte-002.mjs verify ../work/origin ../work/return | tee ../work/independent-final-witness.json
           grep -q '"cryptographic_return_verified": true' ../work/independent-final-witness.json
           grep -q '"status": "VERIFIED_CANDIDATE_ONLY"' ../work/independent-final-witness.json
+      - name: Hostile mutation checks against actual independent return artifacts
+        working-directory: relatte
+        env:
+          HUMKIN_ORIGIN_HOLD: ../work/origin
+          HUMKIN_GHOT_RETURN: ../work/return
+        run: node --experimental-strip-types --test test/humkin-gh-relatte-002-negatives.test.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: humkin-ghot-independently-verified-final-witness
