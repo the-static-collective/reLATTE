@@ -216,3 +216,51 @@ export async function deliverProgramForLocalReview(
   if (input.archive) await input.archive.saveReview(record);
   return {proposal,record};
 }
+
+/**
+ * Public-interface verification for a completed review, intended for a future
+ * authenticated Neon Function. The receiver key must have been pinned OUTSIDE
+ * the submitted packet, by the destination's owner.
+ */
+export interface DestinationPin {
+  world: string;
+  particular: string;
+  public_key: SourcePin['public_key'];
+}
+export async function verifyCompletedProgramReview(
+  carrierValue: unknown,
+  responseValue: unknown,
+  sourcePin: SourcePin,
+  destinationPin: DestinationPin,
+): Promise<ReviewRecord> {
+  const {carrier,digest}=await verifyProgramCarrier(carrierValue,sourcePin,destinationPin.world);
+  const bundle=object(responseValue,'INVALID_REVIEW_BUNDLE');
+  if (!(await verifySovereignResponseBundle(bundle,carrier.crossing.crossing_id)) ||
+      bundle.world_id!==destinationPin.world ||
+      bundle.receiver_particular!==destinationPin.particular ||
+      !sameKey(bundle.receive_receipt?.signing?.public_key,destinationPin.public_key) ||
+      !sameKey(bundle.disposition_receipt?.signing?.public_key,destinationPin.public_key) ||
+      !['R3_HOLD','R3_REFUSE'].includes(bundle.disposition_receipt?.kind) ||
+      bundle.disposition_receipt?.semantic_effect!=='none') {
+    throw Error('UNTRUSTED_OR_CONSEQUENTIAL_RECEIVER_BUNDLE');
+  }
+  return {
+    crossing_id:carrier.crossing.crossing_id,source_world:sourcePin.world,
+    destination_world:destinationPin.world,
+    source_key_fingerprint:sha256Hex(Buffer.from(JSON.stringify(sourcePin.public_key),'utf8')),
+    payload_sha256:digest,payload_base64:carrier.payload_base64,
+    crossing:carrier.crossing,response_bundle:bundle,
+    disposition:bundle.disposition_receipt.kind==='R3_HOLD'?'HOLD':'REFUSE',
+  };
+}
+export async function archiveCompletedProgramReview(
+  carrier: unknown,
+  response: unknown,
+  sourcePin: SourcePin,
+  destinationPin: DestinationPin,
+  archive: ReviewArchive,
+): Promise<ReviewRecord> {
+  const record=await verifyCompletedProgramReview(carrier,response,sourcePin,destinationPin);
+  await archive.saveReview(record);
+  return record;
+}
