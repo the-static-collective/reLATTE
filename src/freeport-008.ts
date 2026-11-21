@@ -264,3 +264,39 @@ export async function archiveCompletedProgramReview(
   await archive.saveReview(record);
   return record;
 }
+
+/**
+ * Owner-facing projection ONLY. HUMKIN's existing Radio House program/v1
+ * is a draft artifact, never a Tower queue command or Cloud HOUSE publication.
+ * Approval remains with HUMKIN's existing owner-side review and catalog gates.
+ */
+export interface HumkinRadiohouseDraft {
+  schema: 'humkin.radiohouse.program/v1';
+  station_id: string;
+  revision: string;
+  items: Array<{recording_id:string}>;
+  publication_state: 'draft';
+  approval_ref: string;
+}
+
+export async function projectSignedReviewToHumkinDraft(
+  carrierValue: unknown,
+  responseValue: unknown,
+  sourcePin: SourcePin,
+  destinationPin: DestinationPin,
+  stationId: string,
+): Promise<HumkinRadiohouseDraft> {
+  if (!/^[a-z0-9][a-z0-9-]{0,31}$/.test(stationId)) throw Error('INVALID_HUMKIN_STATION');
+  const checked=await verifyCompletedProgramReview(carrierValue,responseValue,sourcePin,destinationPin);
+  if (checked.disposition!=='HOLD') throw Error('REFUSED_PROGRAM_CANNOT_PROJECT');
+  const {proposal}=await verifyProgramCarrier(carrierValue,sourcePin,destinationPin.world);
+  const items=proposal.tracks.map(track=>({recording_id:track.ref.slice('catalog:'.length)}));
+  return {
+    schema:'humkin.radiohouse.program/v1',
+    station_id:stationId,
+    revision:'freeport008:'+checked.crossing_id,
+    items,
+    publication_state:'draft',
+    approval_ref:checked.response_bundle.disposition_receipt.receipt_id,
+  };
+}
