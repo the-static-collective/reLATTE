@@ -6,7 +6,7 @@ import test from 'node:test';
 import {LocalReceiver} from '../src/receiver.ts';
 import {generateP256KeyPair} from '../src/protocol.ts';
 import {sealProgramProposal,deliverProgramForLocalReview,
-  verifyCompletedProgramReview,archiveCompletedProgramReview} from '../src/freeport-008.ts';
+  verifyCompletedProgramReview,archiveCompletedProgramReview,projectSignedReviewToHumkinDraft} from '../src/freeport-008.ts';
 import type {SourcePin,DestinationPin,ReviewRecord} from '../src/freeport-008.ts';
 import {NeonFreeportReviewArchive} from '../src/freeport-neon-store.ts';
 
@@ -40,6 +40,17 @@ test('native reLATTE receipts survive independently pinned verification and mock
     const valid=await verifyCompletedProgramReview(carrier,local.record.response_bundle,source,destination);
     assert.equal(valid.disposition,'HOLD');
     assert.equal(valid.crossing_id,carrier.crossing.crossing_id);
+    const draft=await projectSignedReviewToHumkinDraft(
+      carrier,local.record.response_bundle,source,destination,'long-wave',
+    );
+    assert.equal(draft.schema,'humkin.radiohouse.program/v1');
+    assert.equal(draft.publication_state,'draft');
+    assert.equal(draft.items.length,1);
+    assert.equal(draft.items[0].recording_id,'test-a');
+    assert.equal(draft.approval_ref,local.record.response_bundle.disposition_receipt.receipt_id);
+    await assert.rejects(()=>projectSignedReviewToHumkinDraft(
+      carrier,local.record.response_bundle,source,destination,'INVALID STATION',
+    ),/INVALID_HUMKIN_STATION/);
     const stored=new Map<string,Record<string,unknown>>();
     const columns=['crossing_id','source_world','destination_world','source_key_fingerprint',
       'payload_sha256','payload_base64','crossing_envelope','response_bundle','disposition'];
