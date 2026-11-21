@@ -1,0 +1,24 @@
+name: FREEPORT 008 synthetic signed crossing evidence
+on:
+  push:
+    branches:
+      - feature/freeport-008-program-crossing
+    paths:
+      - scripts/freeport-008-evidence.ts
+      - src/freeport-008.ts
+      - .github/workflows/freeport-008-evidence.yml
+  pull_request:
+    paths:
+      - scripts/freeport-008-evidence.ts
+      - src/freeport-008.ts
+      - .github/workflows/freeport-008-evidence.yml
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install
+      - run: node --experimental-strip-types scripts/freeport-008-evidence.ts
