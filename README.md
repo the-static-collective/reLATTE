@@ -437,3 +437,7 @@ The shared substrate is forbidden from learning either donor family's semantics.
 ## PLANZ-RETURN-TRANSPORT-001 — Signed review candidates
 
 [PlanZ Return Transport 001](docs/PLANZ-RETURN-TRANSPORT-001.md) binds JAR;VIS's local `planz.return-candidate/v0` to a content-addressed `claim` observation and P-256-signed reLATTE crossing. An independent planZ receiver can HOLD, REFUSE or ADMIT the observation for review; ADMIT never means task completion, beneficiary confirmation or Full Measure capacity. No keys, guest records or private reports are shared.
+
+## FREEPORT 008 — HUMKIN programming review crossing (experimental)
+
+Original reLATTE P-256 signatures, independently pinned source and destination keys, native LocalReceiver HOLD/REFUSE receipts, exact payload-byte SHA-256 and an idempotent private Neon review archive adapter now compose a synthetic MOTIF-style programming proposal. `src/freeport-008.ts` can also project a *verified HOLD* into an existing HUMKIN `humkin.radiohouse.program/v1` **draft**, never a live schedule command. The owner-controlled HUMKIN Gambit queue and Cloud HOUSE publisher remain the authoritative paths. The Neon bridge is a review-only experiment, not an authenticated deployed service or proven on-air integration.
