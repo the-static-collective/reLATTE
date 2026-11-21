@@ -28,7 +28,8 @@ function digest(value: Record<string,unknown>): string {
 }
 
 export class NeonFreeportReviewArchive implements ReviewArchive {
-  constructor(private readonly db:FreeportSqlClient) {}
+  private readonly db: FreeportSqlClient;
+  constructor(db:FreeportSqlClient) { this.db = db; }
   async saveReview(record: ReviewRecord): Promise<void> {
     const data=comparable(record);
     const values=COLUMNS.map(key=>data[key]);
