@@ -1,0 +1,13 @@
+{
+  "pack": {
+    "description": "Lantern Commons 002 | Society that grows from witnessed games",
+    "min_format": [
+      101,
+      1
+    ],
+    "max_format": [
+      101,
+      1
+    ]
+  }
+}
