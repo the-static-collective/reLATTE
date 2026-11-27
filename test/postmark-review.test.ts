@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {generateP256KeyPair,sealReceipt} from '../src/protocol.ts';
+import {sha256Hex} from '../src/canonical.ts';
+import {preparePostmark,reviewPostmark,verifyPostmarkReview} from '../src/postmark-review.ts';
+const bytes=Buffer.from('synthetic opaque file'),pin=sha256Hex(bytes),a=await generateP256KeyPair(),b=await generateP256KeyPair(),c=await generateP256KeyPair(),at='2026-11-27T12:00:00.000Z';
+const cross=await preparePostmark(bytes,pin,a,b.publicKeyJwk,at);
+const hold=await reviewPostmark(bytes,pin,cross,a.publicKeyJwk,b,'HOLD',at);
+const verify=(r=hold,p=bytes,s=a.publicKeyJwk,t=b.publicKeyJwk)=>verifyPostmarkReview(p,pin,cross,r,s,t,'HOLD');
+test('native signed crossing and independent review bind exact bytes',async()=>{const r=await verify();assert.equal(r.sha256,pin);assert.equal(r.decision,'HOLD');assert.equal(r.admission,'none')});
+test('wrong bytes or pin refused',async()=>{await assert.rejects(verify(hold,Buffer.from('modified')));await assert.rejects(preparePostmark(bytes,'0'.repeat(64),a,b.publicKeyJwk,at))});
+test('wrong sender and receiver refused',async()=>{await assert.rejects(verify(hold,bytes,c.publicKeyJwk));await assert.rejects(verify(hold,bytes,a.publicKeyJwk,c.publicKeyJwk));await assert.rejects(reviewPostmark(bytes,pin,cross,a.publicKeyJwk,c,'HOLD',at))});
+test('same key cannot independently receive',async()=>{await assert.rejects(preparePostmark(bytes,pin,a,a.publicKeyJwk,at))});
+test('validly signed receipt with unauthorized effect refused',async()=>{const bad=await sealReceipt({...hold,semantic_effect:'admitted'},b);await assert.rejects(verify(bad))});
+test('premature receipt and unsupported disposition refused',async()=>{await assert.rejects(reviewPostmark(bytes,pin,cross,a.publicKeyJwk,b,'HOLD','2026-11-27T11:59:59.999Z'));await assert.rejects(reviewPostmark(bytes,pin,cross,a.publicKeyJwk,b,'ADMIT' as 'HOLD',at))});
+test('independent REFUSE remains distinct',async()=>{const r=await reviewPostmark(bytes,pin,cross,a.publicKeyJwk,b,'REFUSE',at);assert.equal((await verifyPostmarkReview(bytes,pin,cross,r,a.publicKeyJwk,b.publicKeyJwk,'REFUSE')).decision,'REFUSE');await assert.rejects(verify(r))});
